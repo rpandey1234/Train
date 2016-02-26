@@ -4,8 +4,7 @@ VidTrain (Placeholder Name) is a collaborative video sharing app. A user can cre
 
 Other users can comment on the videos with annotations to particular points in the video.
 
-## User Stories
-
+	* User Stories
 		*  :white_large_square: User should be able to log in with facebook
 		*  :white_large_square: User should be able to see map screen with locations of videos
 			*  :white_large_square: Map markers should show video preview when tapped on
