@@ -11,17 +11,18 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.CAMERA" />
 
-    <uses-feature android:name="android.hardware.camera"
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="true" />
 
     <application
-        tools:replace = "android:theme"
         android:name=".networking.VidtrainApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:replace="android:theme">
         <activity android:name=".actitivities.LogInActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,11 +30,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.facebook.FacebookActivity"
-            android:configChanges=
-                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:label="@string/app_name" />
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity android:name="com.desmond.squarecamera.CameraActivity" />
 
         <meta-data
@@ -42,9 +43,12 @@
         <meta-data
             android:name="com.parse.CLIENT_KEY"
             android:value="vidtrainmasterkey" />
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
 
-        <activity android:name=".actitivities.DiscoveryActivity"></activity>
+        <activity android:name=".actitivities.DiscoveryActivity" />
+        <activity android:name=".actitivities.ProfileActivity"></activity>
     </application>
 
 </manifest>
