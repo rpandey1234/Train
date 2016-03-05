@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.franklinho.vidtrain_android.R;
+import com.franklinho.vidtrain_android.fragment.FragmentPagerAdapter;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -18,7 +19,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        viewPager.setAdapter(new com.franklinho.vidtrain_android.fragment.FragmentPagerAdapter(getSupportFragmentManager(),
+        viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager(),
                 HomeActivity.this));
 
         // Give the TabLayout the ViewPager

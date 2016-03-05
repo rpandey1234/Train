@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "22.0.1"
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
         applicationId "com.franklinho.vidtrain_android"
@@ -39,6 +39,4 @@ dependencies {
     compile 'com.github.danylovolokh:video-player-manager:0.2.0'
     compile 'com.github.bumptech.glide:glide:3.5.2'
     compile 'com.github.boxme:squarecamera:1.1.0'
-
-
 }
