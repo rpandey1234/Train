@@ -36,11 +36,11 @@ public class PageFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = null;
-        if(mPage == 1){
+        if (mPage == 1) {
             view = inflater.inflate(R.layout.fragment_map, container, false);
-        }else if(mPage == 2){
+        } else if (mPage == 2) {
             view = inflater.inflate(R.layout.fragment_list, container, false);
-        }else if(mPage == 3){
+        } else if (mPage == 3) {
             view = inflater.inflate(R.layout.fragment_popular, container, false);
         }
 
