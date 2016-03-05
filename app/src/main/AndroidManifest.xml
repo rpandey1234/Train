@@ -48,7 +48,8 @@
             android:value="@string/facebook_app_id" />
 
         <activity android:name=".actitivities.DiscoveryActivity" />
-        <activity android:name=".actitivities.ProfileActivity"></activity>
+        <activity android:name=".actitivities.ProfileActivity" />
+        <activity android:name=".actitivities.HomeActivity"></activity>
     </application>
 
 </manifest>

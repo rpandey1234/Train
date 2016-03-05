@@ -20,10 +20,14 @@ public class LogInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
-        ParseUser currentUser = ParseUser.getCurrentUser();
-        if (currentUser != null) {
-            sendToDiscoveryActivity();
-        }
+        //ParseUser currentUser = ParseUser.getCurrentUser();
+        //if (currentUser != null) {
+            sendToHomeActivity();
+            //sendToDiscoveryActivity();
+
+        //}
+
+
     }
 
     @Override
@@ -52,4 +56,14 @@ public class LogInActivity extends AppCompatActivity {
         Log.d("Vidtrain", "Logged in with Facebook");
         Toast.makeText(getBaseContext(), "Successfully logged in with Facebook", Toast.LENGTH_SHORT).show();
     }
+
+    public void sendToHomeActivity() {
+        Intent i = new Intent(getBaseContext(), HomeActivity.class);
+        startActivity(i);
+        Log.d("Vidtrain", "Logged in with Facebook");
+        Toast.makeText(getBaseContext(), "Successfully logged in with Facebook", Toast.LENGTH_SHORT).show();
+    }
+
+
+
 }
