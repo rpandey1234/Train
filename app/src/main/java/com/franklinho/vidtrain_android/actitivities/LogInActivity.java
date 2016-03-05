@@ -20,10 +20,10 @@ public class LogInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
-        ParseUser currentUser = ParseUser.getCurrentUser();
-        if (currentUser != null) {
+        //ParseUser currentUser = ParseUser.getCurrentUser();
+        //if (currentUser != null) {
             sendToDiscoveryActivity();
-        }
+        //}
     }
 
     @Override
