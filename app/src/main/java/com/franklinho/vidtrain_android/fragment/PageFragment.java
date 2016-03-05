@@ -33,16 +33,21 @@ public class PageFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        View view = null;
-        if (mPage == 1) {
-            view = inflater.inflate(R.layout.fragment_map, container, false);
-        } else if (mPage == 2) {
-            view = inflater.inflate(R.layout.fragment_list, container, false);
-        } else if (mPage == 3) {
-            view = inflater.inflate(R.layout.fragment_popular, container, false);
+            Bundle savedInstanceState) {
+        int layout;
+        switch (mPage) {
+            case 0:
+                layout = R.layout.fragment_map;
+                break;
+            case 1:
+                layout = R.layout.fragment_list;
+                break;
+            case 2:
+            default:
+                layout = R.layout.fragment_popular;
+                break;
         }
+        View view = inflater.inflate(layout, container, false);
 
         LinearLayout linearLayout = (LinearLayout) view;
         return view;

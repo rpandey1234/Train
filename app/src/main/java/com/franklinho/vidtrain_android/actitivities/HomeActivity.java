@@ -10,20 +10,25 @@ import android.view.MenuItem;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.fragment.FragmentPagerAdapter;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class HomeActivity extends AppCompatActivity {
+
+    @Bind(R.id.viewpager) ViewPager viewPager;
+    @Bind(R.id.sliding_tabs) TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        ButterKnife.bind(this);
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager(),
                 HomeActivity.this));
 
         // Give the TabLayout the ViewPager
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
     }
 

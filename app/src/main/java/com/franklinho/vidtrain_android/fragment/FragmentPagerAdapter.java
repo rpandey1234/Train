@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 public class FragmentPagerAdapter extends android.support.v4.app.FragmentPagerAdapter {
-    final int PAGE_COUNT = 3;
     private String tabTitles[] = new String[]{"Map", "List", "Popular"};
     private Context context;
 
@@ -16,12 +15,12 @@ public class FragmentPagerAdapter extends android.support.v4.app.FragmentPagerAd
 
     @Override
     public int getCount() {
-        return PAGE_COUNT;
+        return tabTitles.length;
     }
 
     @Override
     public Fragment getItem(int position) {
-        return PageFragment.newInstance(position + 1);
+        return PageFragment.newInstance(position);
     }
 
     @Override

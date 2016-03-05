@@ -23,11 +23,9 @@ public class LogInActivity extends AppCompatActivity {
         //ParseUser currentUser = ParseUser.getCurrentUser();
         //if (currentUser != null) {
             sendToHomeActivity();
-            //sendToDiscoveryActivity();
+//            sendToDiscoveryActivity();
 
         //}
-
-
     }
 
     @Override
