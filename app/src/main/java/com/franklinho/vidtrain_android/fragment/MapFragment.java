@@ -7,8 +7,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Marker;
 
 import com.franklinho.vidtrain_android.R;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,6 +28,8 @@ import com.franklinho.vidtrain_android.R;
  * create an instance of this fragment.
  */
 public class MapFragment extends Fragment {
+
+    private SupportMapFragment mapFragment;
     private OnFragmentInteractionListener mListener;
 
     public MapFragment() {
@@ -39,11 +50,32 @@ public class MapFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_map, container, false);
+        View view = inflater.inflate(R.layout.fragment_map, container, false);
+        ButterKnife.bind(view);
+        mapFragment = ((SupportMapFragment) getFragmentManager().findFragmentById(R.id.map));
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap map) {
+                    loadMap(map);
+                }
+            });
+        } else {
+            Toast.makeText(getContext(), "Error - Map Fragment was null!!", Toast.LENGTH_SHORT).show();
+        }
+
+        return view;
     }
+
+    // The Map is verified. It is now safe to manipulate the map.
+    protected void loadMap(GoogleMap googleMap) {
+        if (googleMap != null) {
+            // ... use map here
+        }
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -68,6 +100,24 @@ public class MapFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
+    protected void setUpMapIfNeeded() {
+        // Do a null check to confirm that we have not already instantiated the map.
+        if (mapFragment == null) {
+            mapFragment = ((SupportMapFragment) getFragmentManager().findFragmentById(R.id.map));
+            // Check if we were successful in obtaining the map.
+            if (mapFragment != null) {
+                mapFragment.getMapAsync(new OnMapReadyCallback() {
+                    @Override
+                    public void onMapReady(GoogleMap map) {
+                        loadMap(map);
+                    }
+                });
+            }
+        }
+    }
+
+
 
     /**
      * This interface must be implemented by activities that contain this
