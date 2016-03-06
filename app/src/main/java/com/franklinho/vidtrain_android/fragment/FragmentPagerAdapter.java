@@ -4,8 +4,10 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
+import com.franklinho.vidtrain_android.R;
+
 public class FragmentPagerAdapter extends android.support.v4.app.FragmentPagerAdapter {
-    private String tabTitles[] = new String[]{"Map", "List", "Popular"};
+    private String tabTitles[] = new String[]{"Map", "Popular"};
     private Context context;
 
     public FragmentPagerAdapter(FragmentManager fm, Context context) {
@@ -20,7 +22,11 @@ public class FragmentPagerAdapter extends android.support.v4.app.FragmentPagerAd
 
     @Override
     public Fragment getItem(int position) {
-        return PageFragment.newInstance(position);
+        if (position == 0) {
+            return MapFragment.newInstance();
+        } else {
+            return PopularFragment.newInstance();
+        }
     }
 
     @Override

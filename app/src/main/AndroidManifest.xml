@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.franklinho.vidtrain_android">
 
+    <permission android:name="com.example.mapdemo.permission.MAPS_RECEIVE" android:protectionLevel="signature"/>
+    <permission android:name="android.permission.ACCESS_FINE_LOCATION" android:protectionLevel="dangerous"/>
+    <permission android:name="android.permission.ACCESS_COARSE_LOCATION" android:protectionLevel="dangerous"/>
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -10,6 +14,9 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="com.example.mapdemo.permission.MAPS_RECEIVE" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -23,7 +30,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:theme">
-        <activity android:name=".actitivities.LogInActivity">
+        <activity android:name=".activities.LogInActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,6 +44,16 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity android:name="com.desmond.squarecamera.CameraActivity" />
 
+        <uses-library android:required="true" android:name="com.google.android.maps" />
+
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyB2r_ZZQ1nEgEo4lwYaYEJvAhyiduhOCAM" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
         <meta-data
             android:name="com.parse.APPLICATION_ID"
             android:value="vidtrain" />
@@ -47,9 +64,9 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".actitivities.DiscoveryActivity" />
-        <activity android:name=".actitivities.ProfileActivity" />
-        <activity android:name=".actitivities.HomeActivity"></activity>
+        <activity android:name=".activities.DiscoveryActivity" />
+        <activity android:name=".activities.ProfileActivity" />
+        <activity android:name=".activities.HomeActivity" />
     </application>
 
 </manifest>

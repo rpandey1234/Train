@@ -1,4 +1,12 @@
-# vidtrain-android
+# Vidtrain
+
+Setup instructions: 
+
+You need to use the debug.keystore in this repository for the Google Maps API calls to succeed. 
+Copy debug.keystore from this repo into ~/.android/ (on Mac) or C:\Users\.android\ (on Windows).
+Reference: http://stackoverflow.com/questions/9653882/how-to-develop-an-android-app-with-google-maps-api-on-multiple-computers/9653946#9653946 and http://guides.codepath.com/android/Google-Maps-Fragment-Guide. 
+
+## About the app
 
 VidTrain (Placeholder Name) is a collaborative video sharing app. A user can create new stories that have a location associated with them and then invite collaborators to add additional videos.
 

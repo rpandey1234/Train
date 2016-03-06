@@ -1,4 +1,4 @@
-package com.franklinho.vidtrain_android.actitivities;
+package com.franklinho.vidtrain_android.activities;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;

@@ -1,4 +1,4 @@
-package com.franklinho.vidtrain_android.actitivities;
+package com.franklinho.vidtrain_android.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;

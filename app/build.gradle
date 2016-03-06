@@ -10,6 +10,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -19,11 +20,13 @@ android {
     }
 }
 
+apply plugin: 'android-apt'
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
+    //    compile 'com.parse:parse-android:1.+'
     compile 'com.android.support:appcompat-v7:23.1.1'
-//    compile 'com.parse:parse-android:1.+'
     compile 'com.parse:parseinterceptors:0.0.2'
     compile 'com.parse.bolts:bolts-android:1.+'
     compile 'com.parse:parsefacebookutils-v4-android:1.10.3@aar'
@@ -35,8 +38,12 @@ dependencies {
     compile 'com.android.support:support-v4:23.1.1'
     compile 'com.makeramen:roundedimageview:2.2.1'
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
-    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
+    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
     compile 'com.github.danylovolokh:video-player-manager:0.2.0'
     compile 'com.github.bumptech.glide:glide:3.5.2'
     compile 'com.github.boxme:squarecamera:1.1.0'
+    compile 'com.google.android.gms:play-services-maps:8.4.0'
+    compile 'com.google.android.gms:play-services-location:8.4.0'
+    compile 'com.github.hotchemi:permissionsdispatcher:2.0.7'
+    apt 'com.github.hotchemi:permissionsdispatcher-processor:2.0.7'
 }

@@ -1,4 +1,4 @@
-package com.franklinho.vidtrain_android.actitivities;
+package com.franklinho.vidtrain_android.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
