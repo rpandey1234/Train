@@ -12,8 +12,8 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Log In With Facebook"
-        android:id="@+id/button"
+        android:text="@string/fb_login"
+        android:id="@+id/login_button"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:background="@color/facebookBlue"
