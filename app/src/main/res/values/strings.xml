@@ -16,4 +16,7 @@
     <string name="fb_login">Log In With Facebook</string>
     <string name="likes">0 LIKES</string>
     <string name="comments">0 COMMENTS</string>
+    <string name="leave_a_comment">Leave a comment</string>
+    <string name="username">Username</string>
+    <string name="comment_text">Comment Text</string>
 </resources>

@@ -9,8 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.franklinho.vidtrain_android.R;
-import com.franklinho.vidtrain_android.adapters.VidTrainArrayAdapter;
-import com.franklinho.vidtrain_android.models.VidTrain;
+import com.franklinho.vidtrain_android.adapters.CommentArrayAdapter;
+import com.franklinho.vidtrain_android.models.Comment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,18 +21,18 @@ import butterknife.ButterKnife;
 /**
  * Created by rahul on 3/5/16.
  */
-public class PopularFragment extends Fragment {
-    @Bind(R.id.rvVidTrains)
-    public RecyclerView rvVidTrains;
-    List<VidTrain> vidTrains;
-    VidTrainArrayAdapter aVidTrains;
+public class CommentFragment extends Fragment {
+    @Bind(R.id.rvComments)
+    public RecyclerView rvComments;
+    List<Comment> comments;
+    CommentArrayAdapter aComments;
 
-    public PopularFragment() {
+    public CommentFragment() {
         // Required empty public constructor
     }
 
-    public static PopularFragment newInstance() {
-        PopularFragment fragment = new PopularFragment();
+    public static CommentFragment newInstance() {
+        CommentFragment fragment = new CommentFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -42,24 +42,24 @@ public class PopularFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Create arraylist datasource
-        vidTrains = new ArrayList<>();
+        comments = new ArrayList<>();
         //Construct the adapter
         for (int i = 0;  i < 5; i++) {
-            vidTrains.add(new VidTrain());
+            comments.add(new Comment());
         }
-        aVidTrains = new VidTrainArrayAdapter(vidTrains, getContext());
+        aComments = new CommentArrayAdapter(comments, getContext());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_popular, container, false);
+        View v = inflater.inflate(R.layout.fragment_comments, container, false);
         ButterKnife.bind(this, v);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        rvVidTrains.setAdapter(aVidTrains);
-        rvVidTrains.setLayoutManager(linearLayoutManager);
+        rvComments.setAdapter(aComments);
+        rvComments.setLayoutManager(linearLayoutManager);
 
 
 

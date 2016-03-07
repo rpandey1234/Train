@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.franklinho.vidtrain_android.activities.VidTrainDetailActivity">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/ivCollaborators"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/profile_icon"
+            android:background="@android:color/darker_gray"
+            app:riv_corner_radius="25dp"
+            android:layout_marginBottom="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2 VIDEOS"
+            android:id="@+id/tvVideoCount"
+            android:layout_alignTop="@id/ivCollaborators"
+            android:layout_alignBottom="@id/ivCollaborators"
+            android:layout_alignParentEnd="true"
+            android:gravity="center_vertical|right"
+            android:textSize="20dp"
+            android:layout_toRightOf="@id/ivCollaborators"
+            android:layout_marginLeft="10dp"/>
+
+        <com.franklinho.vidtrain_android.models.DynamicHeightVideoPlayerManagerView
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_below="@id/ivCollaborators"
+            android:id="@+id/vvPreview"/>
+
+        <ImageButton
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:src="@drawable/heart_icon"
+            android:layout_below="@id/vvPreview"
+            android:layout_marginTop="10dp"
+            android:scaleType="centerInside"
+            android:background="@android:color/transparent"
+            android:id="@+id/ibtnLike"
+            android:padding="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/ibtnLike"
+            android:text="@string/likes"
+            android:layout_alignTop="@id/ibtnLike"
+            android:layout_alignBottom="@id/ibtnLike"
+            android:gravity="center_vertical"
+            android:textSize="22dp"
+            android:id="@+id/tvLikeCount"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/tvLikeCount"
+            android:layout_alignParentRight="true"
+            android:id="@+id/tvCommentCount"
+            android:text="@string/comments"
+            android:layout_alignTop="@id/ibtnLike"
+            android:layout_alignBottom="@id/ibtnLike"
+            android:gravity="center_vertical|right"
+            android:textSize="22dp" />
+
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/etCommentField"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentEnd="true"
+            android:hint="@string/leave_a_comment"
+            android:layout_below="@id/ibtnLike"/>
+
+        <fragment
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/etCommentField"
+            android:id="@+id/commentsFragment"
+            android:name="com.franklinho.vidtrain_android.fragment.CommentFragment"
+            tools:layout="@layout/fragment_comments" />
+
+    </RelativeLayout>
+
+
+</android.support.v4.widget.NestedScrollView>

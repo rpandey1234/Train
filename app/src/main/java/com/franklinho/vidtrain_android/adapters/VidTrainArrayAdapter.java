@@ -1,6 +1,7 @@
 package com.franklinho.vidtrain_android.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.franklinho.vidtrain_android.R;
+import com.franklinho.vidtrain_android.activities.VidTrainDetailActivity;
 import com.franklinho.vidtrain_android.models.DynamicHeightVideoPlayerManagerView;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.volokh.danylo.video_player_manager.manager.PlayerItemChangeListener;
@@ -64,10 +66,9 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainArrayAdap
 
         @Override
         public void onClick(View v) {
-//            int position = getLayoutPosition();
-//            Intent i = new Intent(context, VidTrainDetailActivity.class);
-//            i.putExtra("status", status );
-//            context.startActivity(i);
+            int position = getLayoutPosition();
+            Intent i = new Intent(context, VidTrainDetailActivity.class);
+            context.startActivity(i);
         }
 
 
