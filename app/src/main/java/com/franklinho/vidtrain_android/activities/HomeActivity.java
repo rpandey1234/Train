@@ -1,7 +1,11 @@
 package com.franklinho.vidtrain_android.activities;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -13,10 +17,22 @@ import android.widget.Toast;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.fragment.FragmentPagerAdapter;
 
+import java.io.File;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity {
+    public final String APP_TAG = "VidTrain";
+    public String videoFileName = "myvideo.mp4";
+    private static final int REQUEST_CAMERA = 0;
+    private static final int REQUEST_CAMERA_PERMISSION = 1;
+    public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
+
+    private static final int VIDEO_CAPTURE = 101;
+
+    Uri videoUri;
+
 
     @Bind(R.id.viewpager) ViewPager viewPager;
     @Bind(R.id.sliding_tabs) TabLayout tabLayout;
@@ -66,12 +82,41 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void showCreateFlow(View view) {
-        Toast.makeText(this, "Should navigate to creation flow", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Should navigate to creation flow", Toast.LENGTH_SHORT).show();
 
-//        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
-//            startCameraActivity();
-//        } else {
-//            Toast.makeText(this, "No camera on device", Toast.LENGTH_LONG).show();
-//        }
+        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
+            startCameraActivity();
+        } else {
+            Toast.makeText(this, "No camera on device", Toast.LENGTH_LONG).show();
+        }
     }
+
+    public void startCameraActivity() {
+//        Intent startCustomCameraIntent = new Intent(this, CameraActivity.class);
+//        startActivityForResult(startCustomCameraIntent, REQUEST_CAMERA);
+
+        File mediaFile =
+                new File(
+                        getExternalFilesDir(Environment.DIRECTORY_MOVIES), APP_TAG+"/"+videoFileName);
+        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        videoUri = Uri.fromFile(mediaFile);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
+        startActivityForResult(intent, VIDEO_CAPTURE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == VIDEO_CAPTURE) {
+            if (resultCode == RESULT_OK) {
+                Toast.makeText(this, "Video has been saved to:\n" + data.getData(), Toast.LENGTH_LONG).show();
+                Uri videoUri = data.getData();
+//                playbackRecordedVideo(videoUri);
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(this, "Video recording cancelled.",  Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Failed to record video",  Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
 }
