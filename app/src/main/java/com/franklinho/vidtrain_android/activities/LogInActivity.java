@@ -9,20 +9,13 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.franklinho.vidtrain_android.R;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -64,7 +57,8 @@ public class LogInActivity extends AppCompatActivity {
                             Log.d("Vidtrain", "Uh oh. The user cancelled the Facebook login.");
                         } else {
 //                            System.out.println("user found!!!");
-                            sendToDiscoveryActivity();
+//                            sendToDiscoveryActivity();
+                            sendToHomeActivity();
                         }
 
                     }
