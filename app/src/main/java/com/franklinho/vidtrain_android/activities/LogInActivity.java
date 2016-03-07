@@ -37,6 +37,8 @@ public class LogInActivity extends AppCompatActivity {
             sendToHomeActivity();
 //            sendToDiscoveryActivity();
         }
+
+
     }
 
 

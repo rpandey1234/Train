@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.franklinho.vidtrain_android.R;
@@ -62,5 +63,15 @@ public class HomeActivity extends AppCompatActivity {
     private void profileView() {
         Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
+    }
+
+    public void showCreateFlow(View view) {
+        Toast.makeText(this, "Should navigate to creation flow", Toast.LENGTH_SHORT).show();
+
+//        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
+//            startCameraActivity();
+//        } else {
+//            Toast.makeText(this, "No camera on device", Toast.LENGTH_LONG).show();
+//        }
     }
 }
