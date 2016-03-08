@@ -43,3 +43,5 @@ Other users can comment on the videos with annotations to particular points in t
 				*  :white_large_square: autocomplete of user's friends
 			*  :white_large_square: Story can be set to public so anyone can collaborate
 			*  :white_large_square: Story privacy can be set to public or private. If private, only viewable by collaborators
+
+![Skeleton Functionality](https://github.com/franklinho/vidtrain-android/blob/master/VidTrainWalkThrough.gif)
