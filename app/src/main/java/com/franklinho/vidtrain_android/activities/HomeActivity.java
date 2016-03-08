@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -16,8 +14,6 @@ import android.widget.Toast;
 
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.fragment.FragmentPagerAdapter;
-
-import java.io.File;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -92,16 +88,19 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void startCameraActivity() {
-//        Intent startCustomCameraIntent = new Intent(this, CameraActivity.class);
+//        Intent startCustomCameraIntent = new Intent(this, CustomCameraActivity.class);
 //        startActivityForResult(startCustomCameraIntent, REQUEST_CAMERA);
 
-        File mediaFile =
-                new File(
-                        getExternalFilesDir(Environment.DIRECTORY_MOVIES), APP_TAG+"/"+videoFileName);
-        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        videoUri = Uri.fromFile(mediaFile);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
-        startActivityForResult(intent, VIDEO_CAPTURE);
+//        File mediaFile =
+//                new File(
+//                        getExternalFilesDir(Environment.DIRECTORY_MOVIES), APP_TAG+"/"+videoFileName);
+//        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+//        videoUri = Uri.fromFile(mediaFile);
+//        intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
+//        startActivityForResult(intent, VIDEO_CAPTURE);
+
+        Intent i = new Intent(this, CustomCameraActivity.class);
+        startActivity(i);
     }
 
     @Override

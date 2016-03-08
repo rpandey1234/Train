@@ -50,7 +50,7 @@ public class DiscoveryActivity extends AppCompatActivity {
     }
 
     public void startCameraActivity() {
-//        Intent startCustomCameraIntent = new Intent(this, CameraActivity.class);
+//        Intent startCustomCameraIntent = new Intent(this, CustomCameraActivity.class);
 //        startActivityForResult(startCustomCameraIntent, REQUEST_CAMERA);
 
         File mediaFile =

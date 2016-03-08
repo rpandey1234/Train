@@ -48,4 +48,5 @@ dependencies {
     apt 'com.github.hotchemi:permissionsdispatcher-processor:2.0.7'
     compile 'com.github.danylovolokh:video-player-manager:0.2.0'
     compile 'com.android.support:percent:23.1.0'
+    compile "com.android.support:support-v13:23.1.0"
 }

@@ -27,6 +27,9 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="true" />
 
     <application
         android:name=".networking.VidtrainApplication"
@@ -73,7 +76,8 @@
         <activity android:name=".activities.DiscoveryActivity" />
         <activity android:name=".activities.ProfileActivity" />
         <activity android:name=".activities.HomeActivity" />
-        <activity android:name=".activities.VidTrainDetailActivity"></activity>
+        <activity android:name=".activities.VidTrainDetailActivity" />
+        <activity android:name=".activities.CustomCameraActivity"></activity>
     </application>
 
 </manifest>
