@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.franklinho.vidtrain_android.R;
-import com.franklinho.vidtrain_android.fragment.Camera2BasicFragment;
+import com.franklinho.vidtrain_android.fragment.Camera2VideoFragment;
 
 public class CustomCameraActivity extends AppCompatActivity {
 
@@ -14,7 +14,7 @@ public class CustomCameraActivity extends AppCompatActivity {
         setContentView(R.layout.activity_camera);
         if (null == savedInstanceState) {
             getFragmentManager().beginTransaction()
-                    .replace(R.id.container, Camera2BasicFragment.newInstance())
+                    .replace(R.id.container, Camera2VideoFragment.newInstance())
                     .commit();
         }
     }
