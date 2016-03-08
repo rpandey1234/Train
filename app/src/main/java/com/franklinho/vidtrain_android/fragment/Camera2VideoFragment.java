@@ -24,6 +24,7 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Matrix;
@@ -38,6 +39,7 @@ import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -62,6 +64,8 @@ import android.widget.Toast;
 import com.desmond.squarecamera.ImageParameters;
 import com.desmond.squarecamera.ResizeAnimation;
 import com.franklinho.vidtrain_android.R;
+import com.franklinho.vidtrain_android.activities.CreationDetailActivity;
+import com.franklinho.vidtrain_android.activities.VidTrainDetailActivity;
 import com.franklinho.vidtrain_android.models.AutoFitTextureView;
 
 import java.io.File;
@@ -214,10 +218,10 @@ public class Camera2VideoFragment extends Fragment
             mCameraOpenCloseLock.release();
             cameraDevice.close();
             mCameraDevice = null;
-            Activity activity = getActivity();
-            if (null != activity) {
-                activity.finish();
-            }
+//            Activity activity = getActivity();
+//            if (null != activity) {
+//                activity.finish();
+//            }
         }
 
     };
@@ -546,7 +550,7 @@ public class Camera2VideoFragment extends Fragment
                 public void onConfigureFailed(CameraCaptureSession cameraCaptureSession) {
                     Activity activity = getActivity();
                     if (null != activity) {
-                        Toast.makeText(activity, "Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, "Failed to configure camera", Toast.LENGTH_SHORT).show();
                     }
                 }
             }, mBackgroundHandler);
@@ -657,8 +661,14 @@ public class Camera2VideoFragment extends Fragment
         if (null != activity) {
             Toast.makeText(activity, "Video saved: " + getVideoFile(activity),
                     Toast.LENGTH_SHORT).show();
+            activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(getVideoFile(activity))));
+            Intent i = new Intent(activity, CreationDetailActivity.class);
+            i.putExtra("videoPath", getVideoFile(activity).getPath());
+            activity.startActivity(i);
         }
-        startPreview();
+
+
+//        startPreview();
     }
 
     /**

@@ -100,6 +100,7 @@ public class HomeActivity extends AppCompatActivity {
 //        startActivityForResult(intent, VIDEO_CAPTURE);
 
         Intent i = new Intent(this, CustomCameraActivity.class);
+        i.setFlags(i.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(i);
     }
 

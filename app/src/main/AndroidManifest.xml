@@ -77,7 +77,8 @@
         <activity android:name=".activities.ProfileActivity" />
         <activity android:name=".activities.HomeActivity" />
         <activity android:name=".activities.VidTrainDetailActivity" />
-        <activity android:name=".activities.CustomCameraActivity"></activity>
+        <activity android:name=".activities.CustomCameraActivity" />
+        <activity android:name=".activities.CreationDetailActivity"></activity>
     </application>
 
 </manifest>
