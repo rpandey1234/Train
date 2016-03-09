@@ -60,4 +60,8 @@ public class VidTrain extends ParseObject {
     public void setWritePrivacy(Boolean writePrivacy) {
         put(WRITE_PRIVACY_KEY, writePrivacy);
     }
+
+    public void setLL(ParseGeoPoint geoPoint) {
+        put(LL_KEY, geoPoint);
+    }
 }

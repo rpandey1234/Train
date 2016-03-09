@@ -1,5 +1,8 @@
 package com.franklinho.vidtrain_android.activities;
 
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -16,6 +19,7 @@ import com.franklinho.vidtrain_android.models.Video;
 import com.google.common.io.Files;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.volokh.danylo.video_player_manager.manager.PlayerItemChangeListener;
@@ -104,10 +108,50 @@ public class CreationDetailActivity extends AppCompatActivity {
                                 vidTrain.setReadPrivacy(true);
                             }
 
+                            LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+                            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                            double longitude = location.getLongitude();
+                            double latitude = location.getLatitude();
+
+                            vidTrain.setLL(new ParseGeoPoint(latitude,longitude));
+
+
+
+
                             vidTrain.saveInBackground(new SaveCallback() {
                                 @Override
                                 public void done(ParseException e) {
-                                    successfullySavedVidTrain();
+                                    video.setVidTrain(vidTrain);
+                                    video.saveInBackground();
+
+                                    ArrayList<String> vidTrains;
+                                    if (ParseUser.getCurrentUser().get("vidtrains") == null) {
+                                        vidTrains = new ArrayList<>();
+
+                                    } else {
+                                        vidTrains = (ArrayList<String>) ParseUser.getCurrentUser().get("vidtrains");
+                                    }
+                                    vidTrains.add(vidTrain.getObjectId());
+                                    ParseUser.getCurrentUser().put("vidtrains", vidTrains);
+
+
+                                    ArrayList<String> videos;
+                                    if (ParseUser.getCurrentUser().get("videos") == null) {
+                                        videos = new ArrayList<>();
+                                    } else {
+                                        videos = (ArrayList<String>) ParseUser.getCurrentUser().get("vidtrains");
+                                    }
+                                    videos.add(video.getObjectId());
+                                    ParseUser.getCurrentUser().put("videos", vidTrains);
+
+                                    ParseUser.getCurrentUser().saveInBackground(new SaveCallback() {
+                                        @Override
+                                        public void done(ParseException e) {
+                                            successfullySavedVidTrain();
+                                        }
+                                    });
+
+
                                 }
                             });
 
