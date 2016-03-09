@@ -39,7 +39,7 @@
             android:layout_alignLeft="@+id/tvName"
             android:layout_alignStart="@+id/tvName"
             android:layout_below="@+id/tvName"
-            android:text="@string/tagline"
+            android:text=""
             android:textSize="12sp"
             />
 
@@ -70,5 +70,10 @@
             />
 
     </LinearLayout>
+
+    <View
+        android:layout_below="@id/llContents"
+        style="@style/section_item_divider"
+        />
 
 </RelativeLayout>

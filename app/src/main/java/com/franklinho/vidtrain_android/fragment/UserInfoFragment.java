@@ -4,22 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.AccessToken;
-import com.facebook.GraphRequest;
-import com.facebook.GraphRequest.Callback;
-import com.facebook.GraphResponse;
+import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.activities.LogInActivity;
 import com.parse.ParseUser;
-
-import org.json.JSONException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -46,26 +40,15 @@ public class UserInfoFragment extends Fragment {
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_info, container, false);
         ButterKnife.bind(this, view);
-        ParseUser currentUser = ParseUser.getCurrentUser();
-        if (currentUser != null) {
-            Log.d("Vidtrain", currentUser.toString());
-            GraphRequest graphRequest = new GraphRequest(AccessToken.getCurrentAccessToken(), "me");
-            graphRequest.setCallback(new Callback() {
-                @Override
-                public void onCompleted(GraphResponse response) {
-                    System.out.println(response);
-                    try {
-                        // TODO: get more data from fb, properly parse it
-                        tvName.setText(response.getJSONObject().getString("name"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            graphRequest.executeAsync();
-        } else {
+        final ParseUser currentUser = ParseUser.getCurrentUser();
+        if (currentUser == null) {
             Intent intent = new Intent(getContext(), LogInActivity.class);
             startActivity(intent);
+        } else {
+            String name = currentUser.getString("name");
+            String profileImageUrl = currentUser.getString("profileImageUrl");
+            tvName.setText(name);
+            Glide.with(this).load(profileImageUrl).into(ivProfileImage);
         }
         return view;
     }

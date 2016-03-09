@@ -8,12 +8,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
+import com.facebook.GraphRequest;
+import com.facebook.GraphRequest.GraphJSONObjectCallback;
+import com.facebook.GraphResponse;
 import com.franklinho.vidtrain_android.R;
+import com.franklinho.vidtrain_android.models.User;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
+
+import org.json.JSONObject;
 
 import java.util.Arrays;
 
@@ -34,14 +41,31 @@ public class LogInActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
+            if (currentUser.get("name") == null) {
+                updateUserInfo(currentUser);
+            }
             sendToHomeActivity();
 //            sendToDiscoveryActivity();
         }
-
-
     }
 
+    private void updateUserInfo(final ParseUser user) {
+        if (!ParseFacebookUtils.isLinked(user)) {
+            return;
+        }
+        GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(),
+                new GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+                        User.updateFacebookData(user, response);
+                    }
+                });
+        Bundle parameters = new Bundle();
 
+        parameters.putString("fields", "id,name,link,location,about,email,friends");
+        request.setParameters(parameters);
+        request.executeAsync();
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -51,13 +75,14 @@ public class LogInActivity extends AppCompatActivity {
 
     public void logInWithFaceBook(View view) {
         ParseFacebookUtils.logInWithReadPermissionsInBackground(this,
-                Arrays.asList("user_friends", "email", "public_profile"),
+                Arrays.asList("user_friends", "email", "public_profile", "about"),
                 new LogInCallback() {
                     @Override
                     public void done(ParseUser user, ParseException e) {
                         if (user == null) {
                             Log.d("Vidtrain", "Uh oh. The user cancelled the Facebook login.");
                         } else {
+                            updateUserInfo(user);
 //                            System.out.println("user found!!!");
 //                            sendToDiscoveryActivity();
                             sendToHomeActivity();
