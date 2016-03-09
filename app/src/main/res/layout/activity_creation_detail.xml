@@ -104,5 +104,15 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="10dp" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/spnReadPrivacy"
+        android:layout_marginBottom="10dp"
+        android:onClick="submitVidTrain"
+        android:id="@+id/btnSubmit"/>
+
 </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>
