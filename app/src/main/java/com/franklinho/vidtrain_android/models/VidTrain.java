@@ -1,6 +1,7 @@
 package com.franklinho.vidtrain_android.models;
 
 import com.parse.ParseClassName;
+import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -33,6 +34,7 @@ public class VidTrain extends ParseObject {
     public static final String READ_PRIVACY_KEY = "readPrivacy";
     public static final String WRITE_PRIVACY_KEY = "writePrivacy";
     public static final String LL_KEY = "ll";
+    public static final String THUMBNAIL_KEY = "thumbnail";
 
 
     public void setUser(ParseUser user) {
@@ -64,4 +66,9 @@ public class VidTrain extends ParseObject {
     public void setLL(ParseGeoPoint geoPoint) {
         put(LL_KEY, geoPoint);
     }
+
+    public void setThumbnailFile(ParseFile file) {
+        put(THUMBNAIL_KEY, file);
+    }
+
 }

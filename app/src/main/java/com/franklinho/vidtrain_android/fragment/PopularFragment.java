@@ -11,6 +11,9 @@ import android.view.ViewGroup;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.adapters.VidTrainArrayAdapter;
 import com.franklinho.vidtrain_android.models.VidTrain;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,9 +47,9 @@ public class PopularFragment extends Fragment {
         //Create arraylist datasource
         vidTrains = new ArrayList<>();
         //Construct the adapter
-        for (int i = 0;  i < 5; i++) {
-            vidTrains.add(new VidTrain());
-        }
+//        for (int i = 0;  i < 5; i++) {
+//            vidTrains.add(new VidTrain());
+//        }
         aVidTrains = new VidTrainArrayAdapter(vidTrains, getContext());
     }
 
@@ -62,9 +65,27 @@ public class PopularFragment extends Fragment {
         rvVidTrains.setLayoutManager(linearLayoutManager);
 
 
-
+        requestVidTrains(true);
 
 
         return v;
+    }
+
+    public void requestVidTrains(final boolean newTimeline) {
+        final int currentSize = vidTrains.size();
+        ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
+        query.findInBackground(new FindCallback<VidTrain>() {
+            @Override
+            public void done(List<VidTrain> objects, ParseException e) {
+                if (e == null) {
+                    vidTrains.addAll(objects);
+                    if (newTimeline == false) {
+                        aVidTrains.notifyItemRangeInserted(currentSize, vidTrains.size() - 1);
+                    } else {
+                        aVidTrains.notifyDataSetChanged();
+                    }
+                }
+            }
+        });
     }
 }

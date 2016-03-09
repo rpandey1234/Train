@@ -108,6 +108,8 @@ public class CreationDetailActivity extends AppCompatActivity {
                                 vidTrain.setReadPrivacy(true);
                             }
 
+                            vidTrain.setThumbnailFile(parseFile);
+
                             LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
                             Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                             double longitude = location.getLongitude();
@@ -124,24 +126,24 @@ public class CreationDetailActivity extends AppCompatActivity {
                                     video.setVidTrain(vidTrain);
                                     video.saveInBackground();
 
-                                    ArrayList<String> vidTrains;
+                                    ArrayList<VidTrain> vidTrains;
                                     if (ParseUser.getCurrentUser().get("vidtrains") == null) {
                                         vidTrains = new ArrayList<>();
 
                                     } else {
-                                        vidTrains = (ArrayList<String>) ParseUser.getCurrentUser().get("vidtrains");
+                                        vidTrains = (ArrayList<VidTrain>) ParseUser.getCurrentUser().get("vidtrains");
                                     }
-                                    vidTrains.add(vidTrain.getObjectId());
+                                    vidTrains.add(vidTrain);
                                     ParseUser.getCurrentUser().put("vidtrains", vidTrains);
 
 
-                                    ArrayList<String> videos;
+                                    ArrayList<Video> videos;
                                     if (ParseUser.getCurrentUser().get("videos") == null) {
                                         videos = new ArrayList<>();
                                     } else {
-                                        videos = (ArrayList<String>) ParseUser.getCurrentUser().get("vidtrains");
+                                        videos = (ArrayList<Video>) ParseUser.getCurrentUser().get("vidtrains");
                                     }
-                                    videos.add(video.getObjectId());
+                                    videos.add(video);
                                     ParseUser.getCurrentUser().put("videos", vidTrains);
 
                                     ParseUser.getCurrentUser().saveInBackground(new SaveCallback() {

@@ -14,10 +14,12 @@ import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.activities.VidTrainDetailActivity;
 import com.franklinho.vidtrain_android.models.DynamicHeightVideoPlayerManagerView;
 import com.franklinho.vidtrain_android.models.VidTrain;
+import com.parse.ParseFile;
 import com.volokh.danylo.video_player_manager.manager.PlayerItemChangeListener;
 import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
 import com.volokh.danylo.video_player_manager.manager.VideoPlayerManager;
 import com.volokh.danylo.video_player_manager.meta.MetaData;
+import com.volokh.danylo.video_player_manager.ui.SimpleMainThreadMediaPlayerListener;
 
 import java.util.List;
 
@@ -102,11 +104,23 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainArrayAdap
         holder.vidTrain = vidTrain;
 
         ImageView ivCollaborators = holder.ivCollaborators;
-        DynamicHeightVideoPlayerManagerView vvPreview = holder.vvPreview;
+        final DynamicHeightVideoPlayerManagerView vvPreview = holder.vvPreview;
         ImageButton ibtnLike = holder.ibtnLike;
         TextView tvLikeCount = holder.tvLikeCount;
         TextView tvCommentCount = holder.tvCommentCount;
 
+
         vvPreview.setHeightRatio(1);
+        ParseFile parseFile = (ParseFile) vidTrain.get("thumbnail");
+
+        vvPreview.setVisibility(View.VISIBLE);
+        vvPreview.addMediaPlayerListener(new SimpleMainThreadMediaPlayerListener() {
+            @Override
+            public void onVideoCompletionMainThread() {
+                vvPreview.start();
+            }
+        });
+
+        mVideoPlayerManager.playNewVideo(null, vvPreview, parseFile.getUrl());
     }
 }
