@@ -3,6 +3,25 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppBaseTheme">
+
+        <!-- Toolbar is the actual app bar with text an
+        d the action items -->
+
+        <include
+            layout="@layout/toolbar_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|enterAlways"/>
+
+
+
+    </android.support.design.widget.AppBarLayout>
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -13,7 +32,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.franklinho.vidtrain_android.activities.VidTrainDetailActivity"
-    android:id="@+id/nsvContent">
+    android:id="@+id/nsvContent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -84,7 +104,9 @@
             android:layout_alignTop="@id/ibtnLike"
             android:layout_alignBottom="@id/ibtnLike"
             android:gravity="center_vertical|right"
-            android:textSize="22dp" />
+            android:textSize="22dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"/>
 
 
         <EditText
@@ -122,7 +144,8 @@
         app:layout_anchor="@+id/nsvContent"
         app:layout_anchorGravity="bottom|right|end"
         android:layout_margin="16dp"
-        android:onClick="showCreateFlow"/>
+        android:onClick="showCreateFlow"
+        app:layout_behavior="com.franklinho.vidtrain_android.utilities.ScrollAwareFABBehavior"/>
 
 
 </android.support.design.widget.CoordinatorLayout>

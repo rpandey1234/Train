@@ -1,24 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/sliding_tabs"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabMode="fixed"
-        />
+        android:theme="@style/AppBaseTheme">
+
+        <!-- Toolbar is the actual app bar with text an
+        d the action items -->
+
+        <include
+            layout="@layout/toolbar_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|enterAlways"/>
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/sliding_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabMode="fixed"
+            />
+
+    </android.support.design.widget.AppBarLayout>
+
+
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/sliding_tabs"
         android:layout_weight="1"
         android:background="@android:color/white"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         />
 
     <android.support.design.widget.FloatingActionButton
@@ -33,6 +52,7 @@
         app:layout_anchor="@+id/viewpager"
         app:layout_anchorGravity="bottom|right|end"
         android:layout_margin="16dp"
-        android:onClick="showCreateFlow"/>
+        android:onClick="showCreateFlow"
+        app:layout_behavior="com.franklinho.vidtrain_android.utilities.ScrollAwareFABBehavior"/>
 
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

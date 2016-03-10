@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,12 +33,17 @@ public class HomeActivity extends AppCompatActivity {
 
     @Bind(R.id.viewpager) ViewPager viewPager;
     @Bind(R.id.sliding_tabs) TabLayout tabLayout;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
+
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager(),
