@@ -34,9 +34,8 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
     private VideoPlayerManager<MetaData> mVideoPlayerManager;
 
 
-    public VidTrainArrayAdapter(VideoPlayerManager videoPlayerManager, List<VidTrain> vidTrains, Context context) {
+    public VidTrainArrayAdapter( List<VidTrain> vidTrains, Context context) {
         mVidTrains = vidTrains;
-        mVideoPlayerManager = videoPlayerManager;
         this.context = context;
     }
 

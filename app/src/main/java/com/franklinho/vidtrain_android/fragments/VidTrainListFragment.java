@@ -2,6 +2,7 @@ package com.franklinho.vidtrain_android.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,11 +13,13 @@ import android.view.ViewGroup;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.adapters.VidTrainArrayAdapter;
 import com.franklinho.vidtrain_android.models.VidTrain;
+
 import com.franklinho.vidtrain_android.utilities.EndlessRecyclerViewScrollListener;
 import com.volokh.danylo.video_player_manager.manager.PlayerItemChangeListener;
 import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
 import com.volokh.danylo.video_player_manager.manager.VideoPlayerManager;
 import com.volokh.danylo.video_player_manager.meta.MetaData;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +73,8 @@ public class VidTrainListFragment extends Fragment {
 //        for (int i = 0;  i < 5; i++) {
 //            vidTrains.add(new VidTrain());
 //        }
-        aVidTrains = new VidTrainArrayAdapter(mVideoPlayerManager, vidTrains, getContext());
+
+        aVidTrains = new VidTrainArrayAdapter(vidTrains, getContext());
     }
 
     @Override
@@ -127,6 +131,12 @@ public class VidTrainListFragment extends Fragment {
                 requestVidTrains(true);
             }
         });
+
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        rvVidTrains.setAdapter(aVidTrains);
+        rvVidTrains.setLayoutManager(linearLayoutManager);
+
 
 
         return v;
