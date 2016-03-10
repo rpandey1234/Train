@@ -19,6 +19,8 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.volokh.danylo.video_player_manager.manager.PlayerItemChangeListener;
+import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
 import com.volokh.danylo.video_player_manager.manager.VideoPlayerManager;
 import com.volokh.danylo.video_player_manager.meta.MetaData;
 import com.volokh.danylo.video_player_manager.ui.SimpleMainThreadMediaPlayerListener;
@@ -31,7 +33,12 @@ import java.util.List;
 public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolder> {
     private List<VidTrain> mVidTrains;
     private Context context;
-    private VideoPlayerManager<MetaData> mVideoPlayerManager;
+    private VideoPlayerManager<MetaData> mVideoPlayerManager = new SingleVideoPlayerManager(new PlayerItemChangeListener() {
+        @Override
+        public void onPlayerItemChanged(MetaData metaData) {
+
+        }
+    });
 
 
     public VidTrainArrayAdapter( List<VidTrain> vidTrains, Context context) {
@@ -98,6 +105,10 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
 //        holder.vidTrain.mVideoPlayerManager = mVideoPlayerManager;
 //        holder.vidTrain.mDirectUrl = ((ParseFile) vidTrain.get("thumbnail")).getUrl();
 
-        mVideoPlayerManager.playNewVideo(null, vvPreview, ((ParseFile) vidTrain.get("thumbnail")).getUrl());
+        ParseFile parseFile = ((ParseFile) vidTrain.get("thumbnail"));
+        if (parseFile != null) {
+            mVideoPlayerManager.playNewVideo(null, vvPreview, parseFile.getUrl());
+        }
+
     }
 }

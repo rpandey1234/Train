@@ -37,7 +37,7 @@ public class PopularFragment extends VidTrainListFragment {
             vidTrains.clear();
             currentSize = 0;
         } else {
-            currentSize  = aVidTrains.getItemCount();
+            currentSize  = vidTrains.size();
         }
 
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
@@ -51,7 +51,8 @@ public class PopularFragment extends VidTrainListFragment {
                 if (e == null) {
                     vidTrains.addAll(objects);
                     if (newTimeline == false) {
-                        aVidTrains.notifyItemRangeInserted(aVidTrains.getItemCount(), vidTrains.size() - 1);
+                        aVidTrains.notifyItemRangeInserted(currentSize
+                                , vidTrains.size() - 1);
                     } else {
                         aVidTrains.notifyDataSetChanged();
                     }

@@ -145,31 +145,31 @@ public class VidTrainListFragment extends Fragment {
     public void requestVidTrains(final boolean newTimeline) {
 
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-//        if(!vidTrains.isEmpty()){
-//            // need to call this method from list view handler in order to have filled list
 //
-//            rvVidTrains.post(new Runnable() {
-//                @Override
-//                public void run() {
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+////        if(!vidTrains.isEmpty()){
+////            // need to call this method from list view handler in order to have filled list
+////
+////            rvVidTrains.post(new Runnable() {
+////                @Override
+////                public void run() {
+////
+////                    mVideoVisibilityCalculator.onScrollStateIdle(
+////                            mItemsPositionGetter,
+////                            linearLayoutManager.findFirstVisibleItemPosition(),
+////                            linearLayoutManager.findLastVisibleItemPosition());
+////
+////                }
+////            });
+////        }
+//    }
 //
-//                    mVideoVisibilityCalculator.onScrollStateIdle(
-//                            mItemsPositionGetter,
-//                            linearLayoutManager.findFirstVisibleItemPosition(),
-//                            linearLayoutManager.findLastVisibleItemPosition());
-//
-//                }
-//            });
-//        }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        // we have to stop any playback in onStop
-        mVideoPlayerManager.resetMediaPlayer();
-    }
+//    @Override
+//    public void onStop() {
+//        super.onStop();
+//        // we have to stop any playback in onStop
+//        mVideoPlayerManager.resetMediaPlayer();
+//    }
 }

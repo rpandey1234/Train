@@ -15,11 +15,12 @@ public class CustomCameraActivity extends AppCompatActivity {
         setContentView(R.layout.activity_camera);
         if (null == savedInstanceState) {
             if (getIntent().getExtras() != null){
-                if (getIntent().getExtras().getBoolean("newVidTrain") == true) {
+                if (getIntent().getExtras().getBoolean("newVidTrain") == false) {
                     getFragmentManager().beginTransaction()
                             .replace(R.id.container, AddVideoToVidTrainFragment.newInstance(this))
                             .commit();
                 } else {
+
 
                     getFragmentManager().beginTransaction()
                             .replace(R.id.container, NewVidTrainFragment.newInstance())
