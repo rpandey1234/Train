@@ -16,6 +16,12 @@ import java.util.List;
  * Created by rahul on 3/5/16.
  */
 public class PopularFragment extends VidTrainListFragment {
+
+    public static PopularFragment newInstance() {
+        PopularFragment popularFragment = new PopularFragment();
+        return popularFragment;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

@@ -14,7 +14,6 @@ import com.franklinho.vidtrain_android.models.DynamicHeightVideoPlayerManagerVie
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
-import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -88,12 +87,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                         }
                     });
 
-                    ((ParseFile) vidTrain.get("thumbnail")).getDataInBackground(new GetDataCallback() {
-                        @Override
-                        public void done(byte[] data, ParseException e) {
 
-                        }
-                    });
                     mVideoPlayerManager.playNewVideo(null, vvPreview, ((ParseFile) vidTrain.get("thumbnail")).getUrl());
                 } else {
                     invalidVidTrain();
