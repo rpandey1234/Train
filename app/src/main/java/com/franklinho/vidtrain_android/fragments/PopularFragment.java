@@ -32,13 +32,18 @@ public class PopularFragment extends VidTrainListFragment {
     @Override
     public void requestVidTrains(final boolean newTimeline) {
         super.requestVidTrains(newTimeline);
+        final int currentSize;
         if (newTimeline == true) {
             vidTrains.clear();
+            currentSize = 0;
+        } else {
+            currentSize  = aVidTrains.getItemCount();
         }
-        final int currentSize = vidTrains.size();
+
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
         query.addDescendingOrder("createdAt");
         query.setSkip(currentSize);
+        query.setLimit(5);
         query.findInBackground(new FindCallback<VidTrain>() {
             @Override
             public void done(List<VidTrain> objects, ParseException e) {
@@ -46,7 +51,7 @@ public class PopularFragment extends VidTrainListFragment {
                 if (e == null) {
                     vidTrains.addAll(objects);
                     if (newTimeline == false) {
-                        aVidTrains.notifyItemRangeInserted(currentSize, vidTrains.size() - 1);
+                        aVidTrains.notifyItemRangeInserted(aVidTrains.getItemCount(), vidTrains.size() - 1);
                     } else {
                         aVidTrains.notifyDataSetChanged();
                     }

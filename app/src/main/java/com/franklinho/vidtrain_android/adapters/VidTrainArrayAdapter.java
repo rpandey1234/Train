@@ -95,10 +95,10 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
                 vvPreview.start();
             }
         });
+//
+//        holder.vidTrain.mVideoPlayerManager = mVideoPlayerManager;
+//        holder.vidTrain.mDirectUrl = ((ParseFile) vidTrain.get("thumbnail")).getUrl();
 
-        holder.vidTrain.mVideoPlayerManager = mVideoPlayerManager;
-        holder.vidTrain.mDirectUrl = ((ParseFile) vidTrain.get("thumbnail")).getUrl();
-
-//        mVideoPlayerManager.playNewVideo(null, vvPreview, ((ParseFile) vidTrain.get("thumbnail")).getUrl());
+        mVideoPlayerManager.playNewVideo(null, vvPreview, ((ParseFile) vidTrain.get("thumbnail")).getUrl());
     }
 }

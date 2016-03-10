@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.adapters.VidTrainArrayAdapter;
@@ -18,11 +17,6 @@ import com.volokh.danylo.video_player_manager.manager.PlayerItemChangeListener;
 import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
 import com.volokh.danylo.video_player_manager.manager.VideoPlayerManager;
 import com.volokh.danylo.video_player_manager.meta.MetaData;
-import com.volokh.danylo.visibility_utils.calculator.DefaultSingleItemCalculatorCallback;
-import com.volokh.danylo.visibility_utils.calculator.ListItemsVisibilityCalculator;
-import com.volokh.danylo.visibility_utils.calculator.SingleListViewItemActiveCalculator;
-import com.volokh.danylo.visibility_utils.scroll_utils.ItemsPositionGetter;
-import com.volokh.danylo.visibility_utils.scroll_utils.RecyclerViewItemPositionGetter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,10 +36,10 @@ public class VidTrainListFragment extends Fragment {
     SwipeRefreshLayout swipeContainer;
     LinearLayoutManager linearLayoutManager;
 
-    private final ListItemsVisibilityCalculator mVideoVisibilityCalculator =
-            new SingleListViewItemActiveCalculator(new DefaultSingleItemCalculatorCallback(), vidTrains);
-    private ItemsPositionGetter mItemsPositionGetter;
-    private int mScrollState = AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
+//    private final ListItemsVisibilityCalculator mVideoVisibilityCalculator =
+//            new SingleListViewItemActiveCalculator(new DefaultSingleItemCalculatorCallback(), vidTrains);
+//    private ItemsPositionGetter mItemsPositionGetter;
+//    private int mScrollState = AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 
 
 
@@ -88,32 +82,32 @@ public class VidTrainListFragment extends Fragment {
 
         linearLayoutManager = new LinearLayoutManager(getContext());
         rvVidTrains.setAdapter(aVidTrains);
-        mItemsPositionGetter = new RecyclerViewItemPositionGetter(linearLayoutManager, rvVidTrains);
-        rvVidTrains.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int scrollState) {
-                mScrollState = scrollState;
-                if (scrollState == RecyclerView.SCROLL_STATE_IDLE && !vidTrains.isEmpty()) {
-
-                    mVideoVisibilityCalculator.onScrollStateIdle(
-                            mItemsPositionGetter,
-                            linearLayoutManager.findFirstVisibleItemPosition(),
-                            linearLayoutManager.findLastVisibleItemPosition());
-                }
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (!vidTrains.isEmpty()) {
-                    mVideoVisibilityCalculator.onScroll(
-                            mItemsPositionGetter,
-                            linearLayoutManager.findFirstVisibleItemPosition(),
-                            linearLayoutManager.findLastVisibleItemPosition() - linearLayoutManager.findFirstVisibleItemPosition() + 1,
-                            mScrollState);
-                }
-            }
-
-        });
+//        mItemsPositionGetter = new RecyclerViewItemPositionGetter(linearLayoutManager, rvVidTrains);
+//        rvVidTrains.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView, int scrollState) {
+//                mScrollState = scrollState;
+//                if (scrollState == RecyclerView.SCROLL_STATE_IDLE && !vidTrains.isEmpty()) {
+//
+//                    mVideoVisibilityCalculator.onScrollStateIdle(
+//                            mItemsPositionGetter,
+//                            linearLayoutManager.findFirstVisibleItemPosition(),
+//                            linearLayoutManager.findLastVisibleItemPosition());
+//                }
+//            }
+//
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                if (!vidTrains.isEmpty()) {
+//                    mVideoVisibilityCalculator.onScroll(
+//                            mItemsPositionGetter,
+//                            linearLayoutManager.findFirstVisibleItemPosition(),
+//                            linearLayoutManager.findLastVisibleItemPosition() - linearLayoutManager.findFirstVisibleItemPosition() + 1,
+//                            mScrollState);
+//                }
+//            }
+//
+//        });
 
 
 
@@ -145,21 +139,21 @@ public class VidTrainListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(!vidTrains.isEmpty()){
-            // need to call this method from list view handler in order to have filled list
-
-            rvVidTrains.post(new Runnable() {
-                @Override
-                public void run() {
-
-                    mVideoVisibilityCalculator.onScrollStateIdle(
-                            mItemsPositionGetter,
-                            linearLayoutManager.findFirstVisibleItemPosition(),
-                            linearLayoutManager.findLastVisibleItemPosition());
-
-                }
-            });
-        }
+//        if(!vidTrains.isEmpty()){
+//            // need to call this method from list view handler in order to have filled list
+//
+//            rvVidTrains.post(new Runnable() {
+//                @Override
+//                public void run() {
+//
+//                    mVideoVisibilityCalculator.onScrollStateIdle(
+//                            mItemsPositionGetter,
+//                            linearLayoutManager.findFirstVisibleItemPosition(),
+//                            linearLayoutManager.findLastVisibleItemPosition());
+//
+//                }
+//            });
+//        }
     }
 
     @Override
