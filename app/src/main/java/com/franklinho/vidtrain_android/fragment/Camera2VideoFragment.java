@@ -624,7 +624,6 @@ public class Camera2VideoFragment extends Fragment
         mMediaRecorder.setOutputFile(getVideoFile(activity).getAbsolutePath());
         mMediaRecorder.setVideoEncodingBitRate(500000);
         mMediaRecorder.setVideoFrameRate(25);
-//        mMediaRecorder.setVideoSize(mVideoSize.getWidth(), mVideoSize.getHeight());
         mMediaRecorder.setVideoSize(mVideoSize.getWidth(), mVideoSize.getHeight());
         mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
         mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
@@ -634,7 +633,7 @@ public class Camera2VideoFragment extends Fragment
         mMediaRecorder.prepare();
     }
 
-    private File getVideoFile(Context context) {
+    public File getVideoFile(Context context) {
         return new File(context.getExternalFilesDir(null), "video.mp4");
     }
 
@@ -651,22 +650,15 @@ public class Camera2VideoFragment extends Fragment
         }
     }
 
-    private void stopRecordingVideo() {
+    public void stopRecordingVideo() {
         // UI
         mIsRecordingVideo = false;
         mButtonVideo.setText(R.string.record);
         // Stop recording
         mMediaRecorder.stop();
         mMediaRecorder.reset();
-        Activity activity = getActivity();
-        if (null != activity) {
-            Toast.makeText(activity, "Video saved: " + getVideoFile(activity),
-                    Toast.LENGTH_SHORT).show();
-            activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(getVideoFile(activity))));
-            Intent i = new Intent(activity, CreationDetailActivity.class);
-            i.putExtra("videoPath", getVideoFile(activity).getPath());
-            activity.startActivity(i);
-        }
+
+
 
 
 //        startPreview();

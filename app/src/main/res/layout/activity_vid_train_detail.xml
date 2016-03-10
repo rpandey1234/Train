@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,7 +12,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.franklinho.vidtrain_android.activities.VidTrainDetailActivity">
+    tools:context="com.franklinho.vidtrain_android.activities.VidTrainDetailActivity"
+    android:id="@+id/nsvContent">
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -104,3 +109,20 @@
 
 
 </android.support.v4.widget.NestedScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fabSize= "normal"
+        android:src="@android:drawable/ic_menu_add"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        app:backgroundTint="@color/colorPrimaryDark"
+        app:layout_anchor="@+id/nsvContent"
+        app:layout_anchorGravity="bottom|right|end"
+        android:layout_margin="16dp"
+        android:onClick="showCreateFlow"/>
+
+
+</android.support.design.widget.CoordinatorLayout>
