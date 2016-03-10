@@ -71,4 +71,8 @@ public class VidTrain extends ParseObject {
         put(THUMBNAIL_KEY, file);
     }
 
+    public ParseUser getUser() {
+        return (ParseUser) get(USER_KEY);
+    }
+
 }

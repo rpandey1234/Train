@@ -10,11 +10,16 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.activities.VidTrainDetailActivity;
 import com.franklinho.vidtrain_android.models.DynamicHeightVideoPlayerManagerView;
 import com.franklinho.vidtrain_android.models.VidTrain;
+import com.parse.GetCallback;
+import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
+import com.parse.ParseUser;
 import com.volokh.danylo.video_player_manager.manager.PlayerItemChangeListener;
 import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
 import com.volokh.danylo.video_player_manager.manager.VideoPlayerManager;
@@ -70,6 +75,7 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainArrayAdap
         public void onClick(View v) {
             int position = getLayoutPosition();
             Intent i = new Intent(context, VidTrainDetailActivity.class);
+            i.putExtra("vidTrain", vidTrain.getObjectId());
             context.startActivity(i);
         }
 
@@ -99,19 +105,28 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainArrayAdap
 //        return 5;
     }
 
-    private void configureVidTrainViewHolder(VidTrainViewHolder holder, int position) {
+    private void configureVidTrainViewHolder(final VidTrainViewHolder holder, int position) {
         final VidTrain vidTrain = mVidTrains.get(position);
         holder.vidTrain = vidTrain;
 
-        ImageView ivCollaborators = holder.ivCollaborators;
+        final ImageView ivCollaborators = holder.ivCollaborators;
         final DynamicHeightVideoPlayerManagerView vvPreview = holder.vvPreview;
         ImageButton ibtnLike = holder.ibtnLike;
         TextView tvLikeCount = holder.tvLikeCount;
         TextView tvCommentCount = holder.tvCommentCount;
 
+        ivCollaborators.setImageResource(0);
+
+        vidTrain.getUser().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                String profileImageUrl = ((ParseUser) vidTrain.getUser()).getString("profileImageUrl");
+                Glide.with(holder.context).load(profileImageUrl).into(ivCollaborators);
+            }
+        });
+
 
         vvPreview.setHeightRatio(1);
-        ParseFile parseFile = (ParseFile) vidTrain.get("thumbnail");
 
         vvPreview.setVisibility(View.VISIBLE);
         vvPreview.addMediaPlayerListener(new SimpleMainThreadMediaPlayerListener() {
@@ -121,6 +136,6 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainArrayAdap
             }
         });
 
-        mVideoPlayerManager.playNewVideo(null, vvPreview, parseFile.getUrl());
+        mVideoPlayerManager.playNewVideo(null, vvPreview, ((ParseFile) vidTrain.get("thumbnail")).getUrl());
     }
 }
