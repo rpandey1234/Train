@@ -1,7 +1,6 @@
-package com.franklinho.vidtrain_android.fragment;
+package com.franklinho.vidtrain_android.fragments;
 
 import android.app.Dialog;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.IntentSender;
 import android.location.Location;
@@ -16,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.ErrorDialogFragment;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -28,12 +26,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 
 import com.franklinho.vidtrain_android.Manifest;
 import com.franklinho.vidtrain_android.R;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;

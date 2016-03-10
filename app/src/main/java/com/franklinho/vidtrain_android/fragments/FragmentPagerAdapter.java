@@ -1,10 +1,8 @@
-package com.franklinho.vidtrain_android.fragment;
+package com.franklinho.vidtrain_android.fragments;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-
-import com.franklinho.vidtrain_android.R;
 
 public class FragmentPagerAdapter extends android.support.v4.app.FragmentPagerAdapter {
     private String tabTitles[] = new String[]{"Map", "Popular"};

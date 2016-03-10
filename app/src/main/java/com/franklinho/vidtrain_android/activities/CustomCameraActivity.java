@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.franklinho.vidtrain_android.R;
-import com.franklinho.vidtrain_android.fragment.AddVideoToVidTrainFragment;
-import com.franklinho.vidtrain_android.fragment.NewVidTrainFragment;
+import com.franklinho.vidtrain_android.fragments.AddVideoToVidTrainFragment;
+import com.franklinho.vidtrain_android.fragments.NewVidTrainFragment;
 
 public class CustomCameraActivity extends AppCompatActivity {
 

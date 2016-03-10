@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.franklinho.vidtrain_android.R;
-import com.franklinho.vidtrain_android.fragment.FragmentPagerAdapter;
+import com.franklinho.vidtrain_android.fragments.FragmentPagerAdapter;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

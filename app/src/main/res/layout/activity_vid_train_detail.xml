@@ -102,7 +102,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/etCommentField"
             android:id="@+id/commentsFragment"
-            android:name="com.franklinho.vidtrain_android.fragment.CommentFragment"
+            android:name="com.franklinho.vidtrain_android.fragments.CommentFragment"
             tools:layout="@layout/fragment_comments" />
 
     </RelativeLayout>

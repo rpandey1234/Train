@@ -62,7 +62,7 @@ public class LogInActivity extends AppCompatActivity {
                 });
         Bundle parameters = new Bundle();
 
-        parameters.putString("fields", "id,name,link,location,about,email,friends");
+        parameters.putString("fields", "id,name,link,location,email,friends");
         request.setParameters(parameters);
         request.executeAsync();
     }
@@ -75,7 +75,7 @@ public class LogInActivity extends AppCompatActivity {
 
     public void logInWithFaceBook(View view) {
         ParseFacebookUtils.logInWithReadPermissionsInBackground(this,
-                Arrays.asList("user_friends", "email", "public_profile", "about"),
+                Arrays.asList("user_friends", "email", "public_profile"),
                 new LogInCallback() {
                     @Override
                     public void done(ParseUser user, ParseException e) {

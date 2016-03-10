@@ -1,4 +1,4 @@
-package com.franklinho.vidtrain_android.fragment;
+package com.franklinho.vidtrain_android.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;

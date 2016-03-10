@@ -1,7 +1,6 @@
 package com.franklinho.vidtrain_android.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
-import com.franklinho.vidtrain_android.activities.VidTrainDetailActivity;
+import com.franklinho.vidtrain_android.adapters.holders.VidTrainViewHolder;
 import com.franklinho.vidtrain_android.models.DynamicHeightVideoPlayerManagerView;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.parse.GetCallback;
@@ -20,70 +19,31 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
-import com.volokh.danylo.video_player_manager.manager.PlayerItemChangeListener;
-import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
 import com.volokh.danylo.video_player_manager.manager.VideoPlayerManager;
 import com.volokh.danylo.video_player_manager.meta.MetaData;
 import com.volokh.danylo.video_player_manager.ui.SimpleMainThreadMediaPlayerListener;
 
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-
 /**
  * Created by franklinho on 3/7/16.
  */
-public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainArrayAdapter.VidTrainViewHolder> {
+public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolder> {
     private List<VidTrain> mVidTrains;
     private Context context;
-    private VideoPlayerManager<MetaData> mVideoPlayerManager = new SingleVideoPlayerManager(new PlayerItemChangeListener() {
-        @Override
-        public void onPlayerItemChanged(MetaData metaData) {
+    private VideoPlayerManager<MetaData> mVideoPlayerManager;
 
-        }
-    });
 
-    public VidTrainArrayAdapter(List<VidTrain> vidTrains, Context context) {
+    public VidTrainArrayAdapter(VideoPlayerManager videoPlayerManager, List<VidTrain> vidTrains, Context context) {
         mVidTrains = vidTrains;
+        mVideoPlayerManager = videoPlayerManager;
         this.context = context;
     }
 
-    public static class VidTrainViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener {
-        public VidTrain vidTrain;
-        @Bind(R.id.ivCollaborators)
-        ImageView ivCollaborators;
-        @Bind(R.id.vvPreview)
-        DynamicHeightVideoPlayerManagerView vvPreview;
-        @Bind(R.id.ibtnLike)
-        ImageButton ibtnLike;
-        @Bind(R.id.tvLikeCount)
-        TextView tvLikeCount;
-        @Bind(R.id.tvCommentCount)
-        TextView tvCommentCount;
 
-        private Context context;
-
-        public VidTrainViewHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-            context = itemView.getContext();
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            int position = getLayoutPosition();
-            Intent i = new Intent(context, VidTrainDetailActivity.class);
-            i.putExtra("vidTrain", vidTrain.getObjectId());
-            context.startActivity(i);
-        }
-
-
-    }
 
     @Override
-    public VidTrainArrayAdapter.VidTrainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public VidTrainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
@@ -136,6 +96,9 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainArrayAdap
             }
         });
 
-        mVideoPlayerManager.playNewVideo(null, vvPreview, ((ParseFile) vidTrain.get("thumbnail")).getUrl());
+        holder.vidTrain.mVideoPlayerManager = mVideoPlayerManager;
+        holder.vidTrain.mDirectUrl = ((ParseFile) vidTrain.get("thumbnail")).getUrl();
+
+//        mVideoPlayerManager.playNewVideo(null, vvPreview, ((ParseFile) vidTrain.get("thumbnail")).getUrl());
     }
 }

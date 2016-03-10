@@ -5,9 +5,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import com.franklinho.vidtrain_android.R;
-import com.franklinho.vidtrain_android.fragment.PopularFragment;
-import com.franklinho.vidtrain_android.fragment.UserInfoFragment;
-import com.franklinho.vidtrain_android.fragment.VidTrainListFragment;
+import com.franklinho.vidtrain_android.fragments.PopularFragment;
+import com.franklinho.vidtrain_android.fragments.UserInfoFragment;
 
 import butterknife.ButterKnife;
 

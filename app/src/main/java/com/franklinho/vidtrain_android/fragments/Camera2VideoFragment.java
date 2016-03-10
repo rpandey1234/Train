@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.franklinho.vidtrain_android.fragment;
+package com.franklinho.vidtrain_android.fragments;
 
 import android.Manifest;
 import android.app.Activity;
@@ -24,7 +24,6 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Matrix;
@@ -39,7 +38,6 @@ import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.MediaRecorder;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -64,8 +62,6 @@ import android.widget.Toast;
 import com.desmond.squarecamera.ImageParameters;
 import com.desmond.squarecamera.ResizeAnimation;
 import com.franklinho.vidtrain_android.R;
-import com.franklinho.vidtrain_android.activities.CreationDetailActivity;
-import com.franklinho.vidtrain_android.activities.VidTrainDetailActivity;
 import com.franklinho.vidtrain_android.models.AutoFitTextureView;
 
 import java.io.File;
@@ -471,7 +467,8 @@ public class Camera2VideoFragment extends Fragment
             CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
             StreamConfigurationMap map = characteristics
                     .get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
-            mVideoSize = chooseVideoSize(map.getOutputSizes(MediaRecorder.class));
+            Size[] outputSizes = map.getOutputSizes(MediaRecorder.class);
+            mVideoSize = chooseVideoSize(outputSizes);
             mPreviewSize = chooseOptimalSize(map.getOutputSizes(SurfaceTexture.class),
                     width, height, mVideoSize);
 
@@ -627,6 +624,10 @@ public class Camera2VideoFragment extends Fragment
         mMediaRecorder.setVideoSize(mVideoSize.getWidth(), mVideoSize.getHeight());
         mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
         mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+//
+//        CamcorderProfile cpLow = CamcorderProfile.get(CamcorderProfile.QUALITY_LOW);
+//        mMediaRecorder.setProfile(cpLow);
+
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
         int orientation = ORIENTATIONS.get(rotation);
         mMediaRecorder.setOrientationHint(orientation);

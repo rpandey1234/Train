@@ -1,4 +1,4 @@
-package com.franklinho.vidtrain_android.fragment;
+package com.franklinho.vidtrain_android.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -23,21 +23,26 @@ public class PopularFragment extends VidTrainListFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
-        requestVidTrains(true, 0);
+        requestVidTrains(true);
         return v;
     }
 
-    public void requestVidTrains(final boolean newTimeline, int skip) {
+    @Override
+    public void requestVidTrains(final boolean newTimeline) {
+        super.requestVidTrains(newTimeline);
+        if (newTimeline == true) {
+            vidTrains.clear();
+        }
         final int currentSize = vidTrains.size();
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
         query.addDescendingOrder("createdAt");
-        query.setSkip(skip);
+        query.setSkip(currentSize);
         query.findInBackground(new FindCallback<VidTrain>() {
             @Override
             public void done(List<VidTrain> objects, ParseException e) {
+                swipeContainer.setRefreshing(false);
                 if (e == null) {
                     vidTrains.addAll(objects);
                     if (newTimeline == false) {
@@ -48,5 +53,6 @@ public class PopularFragment extends VidTrainListFragment {
                 }
             }
         });
+
     }
 }

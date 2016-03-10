@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.franklinho.vidtrain_android.fragment;
+package com.franklinho.vidtrain_android.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
