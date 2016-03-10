@@ -1,0 +1,62 @@
+package com.franklinho.vidtrain_android.fragments;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.franklinho.vidtrain_android.R;
+import com.franklinho.vidtrain_android.activities.LogInActivity;
+import com.parse.ParseUser;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
+/**
+ * Created by rahul on 3/5/16.
+ */
+public class UserInfoFragment extends Fragment {
+
+    @Bind(R.id.ivProfileImage) ImageView ivProfileImage;
+    @Bind(R.id.tvName) TextView tvName;
+    @Bind(R.id.tvTagline) TextView tvTagline;
+    @Bind(R.id.tvStories) TextView tvStories;
+    @Bind(R.id.tvPoints) TextView tvPoints;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_user_info, container, false);
+        ButterKnife.bind(this, view);
+        final ParseUser currentUser = ParseUser.getCurrentUser();
+        if (currentUser == null) {
+            Intent intent = new Intent(getContext(), LogInActivity.class);
+            startActivity(intent);
+        } else {
+            String name = currentUser.getString("name");
+            String profileImageUrl = currentUser.getString("profileImageUrl");
+            tvName.setText(name);
+            Glide.with(this).load(profileImageUrl).into(ivProfileImage);
+        }
+        return view;
+    }
+
+    public static UserInfoFragment newInstance() {
+        UserInfoFragment userInfoFragment = new UserInfoFragment();
+        Bundle args = new Bundle();
+        userInfoFragment.setArguments(args);
+        return userInfoFragment;
+    }
+}
