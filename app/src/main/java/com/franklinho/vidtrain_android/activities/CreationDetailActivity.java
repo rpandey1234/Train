@@ -1,6 +1,7 @@
 package com.franklinho.vidtrain_android.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+
 import com.google.common.io.Files;
 
 import com.franklinho.vidtrain_android.R;
@@ -36,11 +38,18 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class CreationDetailActivity extends AppCompatActivity {
-    @Bind(R.id.vvPreview) DynamicHeightVideoPlayerManagerView vvPreview;
-    @Bind(R.id.btnSubmit) Button btnSubmit;
-    @Bind(R.id.spnReadPrivacy) Spinner spnReadPrivacy;
-    @Bind(R.id.etTitle) EditText etTitle;
-    @Bind(R.id.cbWritePermissions) CheckBox cbWritePermissions;
+    @Bind(R.id.vvPreview)
+    DynamicHeightVideoPlayerManagerView vvPreview;
+    @Bind(R.id.btnSubmit)
+    Button btnSubmit;
+    @Bind(R.id.spnReadPrivacy)
+    Spinner spnReadPrivacy;
+    @Bind(R.id.etTitle)
+    EditText etTitle;
+    @Bind(R.id.cbWritePermissions)
+    CheckBox cbWritePermissions;
+    @Bind(R.id.etCollaborators)
+    EditText etCollaborators;
 
     String videoPath;
 
@@ -74,9 +83,18 @@ public class CreationDetailActivity extends AppCompatActivity {
     }
 
     public void submitVidTrain(View view) {
+
+
+        if (etCollaborators.getText() != null) {
+            Intent intent = new Intent(this, TestResultActivity.class);
+            intent.putExtra("name", etCollaborators.getText().toString());
+            startActivity(intent);
+        }
+
         File file = new File(videoPath);
         final Video video = new Video();
         final VidTrain vidTrain = new VidTrain();
+
 
         byte[] data;
         try {
@@ -104,14 +122,12 @@ public class CreationDetailActivity extends AppCompatActivity {
 
                             vidTrain.setThumbnailFile(parseFile);
 
-                            LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+                            LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                             Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                             double longitude = location.getLongitude();
                             double latitude = location.getLatitude();
 
-                            vidTrain.setLL(new ParseGeoPoint(latitude,longitude));
-
-
+                            vidTrain.setLL(new ParseGeoPoint(latitude, longitude));
 
 
                             vidTrain.saveInBackground(new SaveCallback() {
@@ -163,6 +179,7 @@ public class CreationDetailActivity extends AppCompatActivity {
     public void successfullySavedVidTrain() {
         Toast.makeText(getBaseContext(), "Successfully saved vidtrain",
                 Toast.LENGTH_SHORT).show();
+
         this.finish();
     }
 }
