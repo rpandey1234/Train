@@ -1,7 +1,6 @@
 package com.franklinho.vidtrain_android.adapters;
 
 import android.content.Context;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +16,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.adapters.holders.VidTrainViewHolder;
-import com.franklinho.vidtrain_android.models.DynamicHeightScalableVideoView;
+import com.franklinho.vidtrain_android.models.DynamicHeightVideoPlayerManagerView;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
@@ -29,10 +28,11 @@ import com.volokh.danylo.video_player_manager.manager.PlayerItemChangeListener;
 import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
 import com.volokh.danylo.video_player_manager.manager.VideoPlayerManager;
 import com.volokh.danylo.video_player_manager.meta.MetaData;
-
-import org.apache.commons.io.FileUtils;
+import com.volokh.danylo.video_player_manager.ui.SimpleMainThreadMediaPlayerListener;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -42,12 +42,7 @@ import java.util.List;
 public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolder> {
     private List<VidTrain> mVidTrains;
     private Context context;
-    private VideoPlayerManager<MetaData> mVideoPlayerManager = new SingleVideoPlayerManager(new PlayerItemChangeListener() {
-        @Override
-        public void onPlayerItemChanged(MetaData metaData) {
 
-        }
-    });
 
 
     public VidTrainArrayAdapter( List<VidTrain> vidTrains, Context context) {
@@ -56,6 +51,12 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
     }
 
 
+    private VideoPlayerManager<MetaData> mVideoPlayerManager = new SingleVideoPlayerManager(new PlayerItemChangeListener() {
+        @Override
+        public void onPlayerItemChanged(MetaData metaData) {
+
+        }
+    });
 
     @Override
     public VidTrainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -85,7 +86,7 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
         holder.vidTrain = vidTrain;
 
         final ImageView ivCollaborators = holder.ivCollaborators;
-        final DynamicHeightScalableVideoView vvPreview = holder.vvPreview;
+        final DynamicHeightVideoPlayerManagerView vvPreview = holder.vvPreview;
         ImageButton ibtnLike = holder.ibtnLike;
         TextView tvLikeCount = holder.tvLikeCount;
         TextView tvCommentCount = holder.tvCommentCount;
@@ -124,22 +125,47 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
             @Override
             public void done(byte[] data, ParseException e) {
                 try {
-                    FileUtils.writeByteArrayToFile(getOutputMediaFile(vidTrain.getObjectId().toString()), data);
-                    vvPreview.setDataSource(getOutputMediaFileUri(vidTrain.getObjectId()).toString());
-//                    vvPreview.setDataSource(holder.context, getOutputMediaFileUri(vidTrain.getObjectId().toString()));
-                    vvPreview.setVolume(0, 0);
-                    vvPreview.setLooping(true);
-                    vvPreview.prepare(new MediaPlayer.OnPreparedListener() {
-                        @Override
-                        public void onPrepared(MediaPlayer mp) {
-//                    vvPreview.start();
-                            Toast.makeText(holder.context, "Video has been prepared from:\n" + parseFile.getUrl().toString(), Toast.LENGTH_LONG).show();
+//                                FileUtils.writeByteArrayToFile(getOutputMediaFile(vidTrain.getObjectId().toString()), data);
 
+                    File videoFile = getOutputMediaFile(vidTrain.getObjectId().toString());
+                    FileOutputStream out;
+
+                    out = new FileOutputStream(videoFile);
+                    out.write(data);
+                    out.close();
+
+                    vvPreview.addMediaPlayerListener(new SimpleMainThreadMediaPlayerListener() {
+                        @Override
+                        public void onVideoCompletionMainThread() {
+                            Toast.makeText(holder.context, "Video has been prepared from:\n" + parseFile.getUrl().toString() + "Video has been saved to :\n" + getOutputMediaFile(vidTrain.getObjectId().toString()), Toast.LENGTH_LONG).show();
+                            vvPreview.start();
                         }
                     });
+                    mVideoPlayerManager.playNewVideo(null, vvPreview, getOutputMediaFile(vidTrain.getObjectId().toString()).getPath());
+                } catch (FileNotFoundException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                    Log.d("TAG", "Error: " + e1.toString());
                 } catch (IOException ioe) {
-                    Toast.makeText(holder.context, "IOException:" + ioe.toString(), Toast.LENGTH_LONG).show();
+                    ioe.printStackTrace();
                 }
+//                try {
+//                    FileUtils.writeByteArrayToFile(getOutputMediaFile(vidTrain.getObjectId().toString()), data);
+//                    vvPreview.setDataSource(getOutputMediaFileUri(vidTrain.getObjectId()).toString());
+////                    vvPreview.setDataSource(holder.context, getOutputMediaFileUri(vidTrain.getObjectId().toString()));
+//                    vvPreview.setVolume(0, 0);
+//                    vvPreview.setLooping(true);
+//                    vvPreview.prepare(new MediaPlayer.OnPreparedListener() {
+//                        @Override
+//                        public void onPrepared(MediaPlayer mp) {
+////                    vvPreview.start();
+//                            Toast.makeText(holder.context, "Video has been prepared from:\n" + parseFile.getUrl().toString(), Toast.LENGTH_LONG).show();
+//
+//                        }
+//                    });
+//                } catch (IOException ioe) {
+//                    Toast.makeText(holder.context, "IOException:" + ioe.toString(), Toast.LENGTH_LONG).show();
+//                }
             }
         });
 

@@ -10,10 +10,6 @@ import android.widget.TextView;
 
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.models.Comment;
-import com.volokh.danylo.video_player_manager.manager.PlayerItemChangeListener;
-import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
-import com.volokh.danylo.video_player_manager.manager.VideoPlayerManager;
-import com.volokh.danylo.video_player_manager.meta.MetaData;
 
 import java.util.List;
 
@@ -26,12 +22,7 @@ import butterknife.ButterKnife;
 public class CommentArrayAdapter extends RecyclerView.Adapter<CommentArrayAdapter.CommentViewHolder> {
     private List<Comment> mComments;
     private Context context;
-    private VideoPlayerManager<MetaData> mVideoPlayerManager = new SingleVideoPlayerManager(new PlayerItemChangeListener() {
-        @Override
-        public void onPlayerItemChanged(MetaData metaData) {
 
-        }
-    });
 
     public CommentArrayAdapter(List<Comment> comments, Context context) {
         mComments = comments;

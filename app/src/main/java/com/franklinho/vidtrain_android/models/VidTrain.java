@@ -7,8 +7,6 @@ import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
-import com.volokh.danylo.video_player_manager.manager.VideoPlayerManager;
-import com.volokh.danylo.video_player_manager.meta.MetaData;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,7 +31,6 @@ public class VidTrain extends ParseObject implements Serializable {
     public String mDirectUrl;
     private final Rect mCurrentViewRect = new Rect();
 
-    public VideoPlayerManager<MetaData> mVideoPlayerManager;
 
     public static final String USER_KEY = "user";
     public static final String TITLE_KEY = "title";
@@ -95,53 +92,5 @@ public class VidTrain extends ParseObject implements Serializable {
     public ParseUser getUser() {
         return (ParseUser) get(USER_KEY);
     }
-//
-//    @Override
-//    public int getVisibilityPercents(View currentView) {
-//
-//        int percents = 100;
-//
-//        currentView.getLocalVisibleRect(mCurrentViewRect);
-//
-//        int height = currentView.getHeight();
-//
-//        if(viewIsPartiallyHiddenTop()){
-//            // view is partially hidden behind the top edge
-//            percents = (height - mCurrentViewRect.top) * 100 / height;
-//        } else if(viewIsPartiallyHiddenBottom(height)){
-//            percents = mCurrentViewRect.bottom * 100 / height;
-//        }
-//
-//
-//        return percents;
-//    }
-//    private boolean viewIsPartiallyHiddenBottom(int height) {
-//        return mCurrentViewRect.bottom > 0 && mCurrentViewRect.bottom < height;
-//    }
-//
-//    private boolean viewIsPartiallyHiddenTop() {
-//        return mCurrentViewRect.top > 0;
-//    }
-//
-//    @Override
-//    public void setActive(View newActiveView, int newActiveViewPosition) {
-//        VidTrainViewHolder viewHolder = (VidTrainViewHolder) newActiveView.getTag();
-//        playNewVideo(new CurrentItemMetaData(newActiveViewPosition, newActiveView), viewHolder.vvPreview, mVideoPlayerManager);
-//
-//    }
-//
-//    @Override
-//    public void deactivate(View currentView, int position) {
-//        stopPlayback(mVideoPlayerManager);
-//    }
-//
-//    @Override
-//    public void playNewVideo(MetaData currentItemMetaData, VideoPlayerView player, VideoPlayerManager<MetaData> videoPlayerManager) {
-//        videoPlayerManager.playNewVideo(currentItemMetaData, player, mDirectUrl);
-//    }
-//
-//    @Override
-//    public void stopPlayback(VideoPlayerManager videoPlayerManager) {
-//        videoPlayerManager.stopAnyPlayback();
-//    }
+
 }

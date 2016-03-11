@@ -15,10 +15,6 @@ import com.franklinho.vidtrain_android.adapters.VidTrainArrayAdapter;
 import com.franklinho.vidtrain_android.models.VidTrain;
 
 import com.franklinho.vidtrain_android.utilities.EndlessRecyclerViewScrollListener;
-import com.volokh.danylo.video_player_manager.manager.PlayerItemChangeListener;
-import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
-import com.volokh.danylo.video_player_manager.manager.VideoPlayerManager;
-import com.volokh.danylo.video_player_manager.meta.MetaData;
 
 
 import java.util.ArrayList;
@@ -46,12 +42,6 @@ public class VidTrainListFragment extends Fragment {
 
 
 
-    private VideoPlayerManager<MetaData> mVideoPlayerManager = new SingleVideoPlayerManager(new PlayerItemChangeListener() {
-        @Override
-        public void onPlayerItemChanged(MetaData metaData) {
-
-        }
-    });
 
     public VidTrainListFragment() {
         // Required empty public constructor

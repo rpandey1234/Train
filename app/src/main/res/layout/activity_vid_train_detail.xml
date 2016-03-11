@@ -64,7 +64,7 @@
             android:layout_toRightOf="@id/ivCollaborators"
             android:layout_marginLeft="10dp"/>
 
-        <com.franklinho.vidtrain_android.models.DynamicHeightScalableVideoView
+        <com.franklinho.vidtrain_android.models.DynamicHeightVideoPlayerManagerView
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:layout_below="@id/ivCollaborators"
