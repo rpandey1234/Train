@@ -125,7 +125,8 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
             public void done(byte[] data, ParseException e) {
                 try {
                     FileUtils.writeByteArrayToFile(getOutputMediaFile(vidTrain.getObjectId().toString()), data);
-                    vvPreview.setDataSource(holder.context, getOutputMediaFileUri(vidTrain.getObjectId().toString()));
+                    vvPreview.setDataSource(getOutputMediaFileUri(vidTrain.getObjectId()).toString());
+//                    vvPreview.setDataSource(holder.context, getOutputMediaFileUri(vidTrain.getObjectId().toString()));
                     vvPreview.setVolume(0, 0);
                     vvPreview.setLooping(true);
                     vvPreview.prepare(new MediaPlayer.OnPreparedListener() {
@@ -137,7 +138,7 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
                         }
                     });
                 } catch (IOException ioe) {
-
+                    Toast.makeText(holder.context, "IOException:" + ioe.toString(), Toast.LENGTH_LONG).show();
                 }
             }
         });

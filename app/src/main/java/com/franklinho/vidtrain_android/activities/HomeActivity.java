@@ -94,6 +94,7 @@ public class HomeActivity extends AppCompatActivity {
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 5);
 
+
 //        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
 //        videoUri = getVideoFile(this).getAbsolutePath();
         Uri videoUri = getOutputMediaFileUri();  // create a file to save the video
