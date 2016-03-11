@@ -33,7 +33,7 @@ public class PopularFragment extends VidTrainListFragment {
     public void requestVidTrains(final boolean newTimeline) {
         super.requestVidTrains(newTimeline);
         final int currentSize;
-        if (newTimeline == true) {
+        if (newTimeline) {
             vidTrains.clear();
             currentSize = 0;
         } else {
@@ -50,11 +50,10 @@ public class PopularFragment extends VidTrainListFragment {
                 swipeContainer.setRefreshing(false);
                 if (e == null) {
                     vidTrains.addAll(objects);
-                    if (newTimeline == false) {
-                        aVidTrains.notifyItemRangeInserted(currentSize
-                                , vidTrains.size() - 1);
-                    } else {
+                    if (newTimeline) {
                         aVidTrains.notifyDataSetChanged();
+                    } else {
+                        aVidTrains.notifyItemRangeInserted(currentSize, vidTrains.size() - 1);
                     }
                 }
             }
