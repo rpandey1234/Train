@@ -1,5 +1,6 @@
 package com.franklinho.vidtrain_android.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -32,8 +33,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private static final int VIDEO_CAPTURE = 101;
 
-    Uri videoUri;
-
+//    String videoUri;
 
     @Bind(R.id.viewpager) ViewPager viewPager;
     @Bind(R.id.sliding_tabs) TabLayout tabLayout;
@@ -101,14 +101,14 @@ public class HomeActivity extends AppCompatActivity {
 //        Intent startCustomCameraIntent = new Intent(this, CustomCameraActivity.class);
 //        startActivityForResult(startCustomCameraIntent, REQUEST_CAMERA);
 
-//        File mediaFile =
-//                new File(
-//                        getExternalFilesDir(Environment.DIRECTORY_MOVIES), APP_TAG+"/"+videoFileName);
-        File mediaFile = new File(
-                Environment.getExternalStorageDirectory().getAbsolutePath() + "/myvideo.mp4");
+        File mediaFile =
+                new File(
+                        getExternalFilesDir(Environment.DIRECTORY_MOVIES), APP_TAG+"/"+videoFileName);
+//        File mediaFile = new File(
+//                Environment.getExternalStorageDirectory().getAbsolutePath() + "/myvideo.mp4");
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        videoUri = Uri.fromFile(mediaFile);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
+//        videoUri = getVideoFile(this).getAbsolutePath();
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, getVideoFile(this));
         startActivityForResult(intent, VIDEO_CAPTURE);
 
 //        Intent i = new Intent(this, CustomCameraActivity.class);
@@ -124,7 +124,7 @@ public class HomeActivity extends AppCompatActivity {
                 Uri videoUri = data.getData();
 //                playbackRecordedVideo(videoUri);
                 Intent i = new Intent(this, CreationDetailActivity.class);
-                i.putExtra("videoPath", videoUri.toString());
+                i.putExtra("videoPath", getVideoFile(this).getPath());
                 startActivity(i);
             } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, "Video recording cancelled.",  Toast.LENGTH_LONG).show();
@@ -132,6 +132,10 @@ public class HomeActivity extends AppCompatActivity {
                 Toast.makeText(this, "Failed to record video",  Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    public File getVideoFile(Context context) {
+        return new File(context.getExternalFilesDir(null), "video.mp4");
     }
 
 }

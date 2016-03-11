@@ -81,6 +81,8 @@ public class CreationDetailActivity extends AppCompatActivity {
         }
     }
 
+
+
     public void submitVidTrain(View view) {
         File file = new File(videoPath);
         final Video video = new Video();
