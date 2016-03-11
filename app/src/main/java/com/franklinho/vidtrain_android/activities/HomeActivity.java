@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +17,8 @@ import android.widget.Toast;
 
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.fragments.FragmentPagerAdapter;
+
+import java.io.File;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -100,14 +104,16 @@ public class HomeActivity extends AppCompatActivity {
 //        File mediaFile =
 //                new File(
 //                        getExternalFilesDir(Environment.DIRECTORY_MOVIES), APP_TAG+"/"+videoFileName);
-//        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-//        videoUri = Uri.fromFile(mediaFile);
-//        intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
-//        startActivityForResult(intent, VIDEO_CAPTURE);
+        File mediaFile = new File(
+                Environment.getExternalStorageDirectory().getAbsolutePath() + "/myvideo.mp4");
+        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        videoUri = Uri.fromFile(mediaFile);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
+        startActivityForResult(intent, VIDEO_CAPTURE);
 
-        Intent i = new Intent(this, CustomCameraActivity.class);
-        i.setFlags(i.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
-        startActivity(i);
+//        Intent i = new Intent(this, CustomCameraActivity.class);
+//        i.setFlags(i.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+//        startActivity(i);
     }
 
     @Override
@@ -117,6 +123,9 @@ public class HomeActivity extends AppCompatActivity {
                 Toast.makeText(this, "Video has been saved to:\n" + data.getData(), Toast.LENGTH_LONG).show();
                 Uri videoUri = data.getData();
 //                playbackRecordedVideo(videoUri);
+                Intent i = new Intent(this, CreationDetailActivity.class);
+                i.putExtra("videoPath", videoUri.toString());
+                startActivity(i);
             } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, "Video recording cancelled.",  Toast.LENGTH_LONG).show();
             } else {

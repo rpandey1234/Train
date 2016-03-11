@@ -37,6 +37,7 @@ import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
+import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
@@ -624,9 +625,9 @@ public class Camera2VideoFragment extends Fragment
         mMediaRecorder.setVideoSize(mVideoSize.getWidth(), mVideoSize.getHeight());
         mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
         mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-//
-//        CamcorderProfile cpLow = CamcorderProfile.get(CamcorderProfile.QUALITY_LOW);
-//        mMediaRecorder.setProfile(cpLow);
+
+        CamcorderProfile cpLow = CamcorderProfile.get(CamcorderProfile.QUALITY_LOW);
+        mMediaRecorder.setProfile(cpLow);
 
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
         int orientation = ORIENTATIONS.get(rotation);
