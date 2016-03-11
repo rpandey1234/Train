@@ -10,6 +10,7 @@ import com.parse.ParseUser;
 import com.volokh.danylo.video_player_manager.manager.VideoPlayerManager;
 import com.volokh.danylo.video_player_manager.meta.MetaData;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,7 @@ import java.util.List;
  * Created by franklinho on 3/1/16.
  */
 @ParseClassName("VidTrain")
-public class VidTrain extends ParseObject {
+public class VidTrain extends ParseObject implements Serializable {
 
     User user;
     List<User> collaborators;
@@ -43,6 +44,10 @@ public class VidTrain extends ParseObject {
     public static final String WRITE_PRIVACY_KEY = "writePrivacy";
     public static final String LL_KEY = "ll";
     public static final String THUMBNAIL_KEY = "thumbnail";
+
+    public VidTrain() {
+
+    }
 
 
     public void setUser(ParseUser user) {

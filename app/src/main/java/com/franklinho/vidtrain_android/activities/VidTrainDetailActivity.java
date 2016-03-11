@@ -23,6 +23,7 @@ import com.franklinho.vidtrain_android.models.Video;
 import com.google.common.io.Files;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
+import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -36,6 +37,8 @@ import com.volokh.danylo.video_player_manager.meta.MetaData;
 import com.volokh.danylo.video_player_manager.ui.SimpleMainThreadMediaPlayerListener;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,6 +78,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
 
         String vidTrainObjectID = getIntent().getExtras().getString("vidTrain");
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
+        query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
         query.whereEqualTo("objectId",vidTrainObjectID);
         query.setLimit(1);
         query.findInBackground(new FindCallback<VidTrain>() {
@@ -104,6 +108,23 @@ public class VidTrainDetailActivity extends AppCompatActivity {
 
 
                     mVideoPlayerManager.playNewVideo(null, vvPreview, ((ParseFile) vidTrain.get("thumbnail")).getUrl());
+//                    ((ParseFile) vidTrain.get("thumbnail")).getDataInBackground(new GetDataCallback() {
+//                        @Override
+//                        public void done(byte[] data, ParseException e) {
+//                            File file = getOutputMediaFile();
+//                            try {
+//                                FileInputStream fis = new FileInputStream(file);
+//                                fis.read(data);
+//                                fis.close();
+//                                mVideoPlayerManager.playNewVideo(null, vvPreview,getAssets().openFd(getOutputMediaFile()).getFileDescriptor());
+//                            } catch (FileNotFoundException fnfe){
+//                                // do stuff here..
+//
+//                            } catch (IOException ioe){
+//
+//                            }
+//                        }
+//                    });
                 } else {
                     invalidVidTrain();
                 }
@@ -133,7 +154,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                 Environment.getExternalStorageDirectory().getAbsolutePath() + "/myvidtrainvideo.mp4");
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 5);
-        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
+//        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
 //        videoUri = getVideoFile(this).getAbsolutePath();
         videoUri = getOutputMediaFileUri();  // create a file to save the video
         intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri); ;

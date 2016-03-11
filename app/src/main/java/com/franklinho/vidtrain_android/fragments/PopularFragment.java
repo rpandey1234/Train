@@ -41,6 +41,7 @@ public class PopularFragment extends VidTrainListFragment {
         }
 
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
+        query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
         query.addDescendingOrder("createdAt");
         query.setSkip(currentSize);
         query.setLimit(5);
