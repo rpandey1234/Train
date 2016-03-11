@@ -3,7 +3,6 @@ package com.franklinho.vidtrain_android.activities;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -12,12 +11,12 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+import com.google.common.io.Files;
 
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.models.DynamicHeightVideoPlayerManagerView;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
-import com.google.common.io.Files;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
@@ -38,15 +37,10 @@ import butterknife.ButterKnife;
 
 public class CreationDetailActivity extends AppCompatActivity {
     @Bind(R.id.vvPreview) DynamicHeightVideoPlayerManagerView vvPreview;
-    @Bind(R.id.btnSubmit)
-    Button btnSubmit;
-    @Bind(R.id.spnReadPrivacy)
-    Spinner spnReadPrivacy;
-    @Bind(R.id.etTitle)
-    EditText etTitle;
-    @Bind(R.id.cbWritePermissions)
-    CheckBox cbWritePermissions;
-
+    @Bind(R.id.btnSubmit) Button btnSubmit;
+    @Bind(R.id.spnReadPrivacy) Spinner spnReadPrivacy;
+    @Bind(R.id.etTitle) EditText etTitle;
+    @Bind(R.id.cbWritePermissions) CheckBox cbWritePermissions;
 
     String videoPath;
 
@@ -75,13 +69,9 @@ public class CreationDetailActivity extends AppCompatActivity {
                     vvPreview.start();
                 }
             });
-
             mVideoPlayerManager.playNewVideo(null, vvPreview, videoPath);
-
         }
     }
-
-
 
     public void submitVidTrain(View view) {
         File file = new File(videoPath);
@@ -168,8 +158,6 @@ public class CreationDetailActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
     public void successfullySavedVidTrain() {
