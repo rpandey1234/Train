@@ -3,6 +3,7 @@ package com.franklinho.vidtrain_android.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -17,7 +18,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
-import com.franklinho.vidtrain_android.models.DynamicHeightVideoPlayerManagerView;
+import com.franklinho.vidtrain_android.models.DynamicHeightScalableVideoView;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
 import com.google.common.io.Files;
@@ -34,11 +35,10 @@ import com.volokh.danylo.video_player_manager.manager.PlayerItemChangeListener;
 import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
 import com.volokh.danylo.video_player_manager.manager.VideoPlayerManager;
 import com.volokh.danylo.video_player_manager.meta.MetaData;
-import com.volokh.danylo.video_player_manager.ui.SimpleMainThreadMediaPlayerListener;
+
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,18 +47,17 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class VidTrainDetailActivity extends AppCompatActivity {
-    public VidTrain vidTrain;
-    @Bind(R.id.ivCollaborators)
-    ImageView ivCollaborators;
+    @Bind(R.id.ivCollaborators) ImageView ivCollaborators;
     @Bind(R.id.vvPreview)
-    DynamicHeightVideoPlayerManagerView vvPreview;
-    @Bind(R.id.ibtnLike)
-    ImageButton ibtnLike;
-    @Bind(R.id.tvLikeCount)
-    TextView tvLikeCount;
-    @Bind(R.id.tvCommentCount)
-    TextView tvCommentCount;
+    DynamicHeightScalableVideoView vvPreview;
+    @Bind(R.id.ibtnLike) ImageButton ibtnLike;
+    @Bind(R.id.tvLikeCount) TextView tvLikeCount;
+    @Bind(R.id.tvCommentCount) TextView tvCommentCount;
+    @Bind(R.id.tvVideoCount) TextView tvVideoCount;
+
     Uri videoUri;
+    public VidTrain vidTrain;
+    ArrayList<Video> videos;
     private static final int VIDEO_CAPTURE = 101;
 
     private VideoPlayerManager<MetaData> mVideoPlayerManager = new SingleVideoPlayerManager(new PlayerItemChangeListener() {
@@ -76,16 +75,20 @@ public class VidTrainDetailActivity extends AppCompatActivity {
 
         vvPreview.setHeightRatio(1);
 
-        String vidTrainObjectID = getIntent().getExtras().getString("vidTrain");
+        final String vidTrainObjectID = getIntent().getExtras().getString("vidTrain");
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
         query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
-        query.whereEqualTo("objectId",vidTrainObjectID);
+        query.whereEqualTo("objectId",vidTrainObjectID);;
+
         query.setLimit(1);
         query.findInBackground(new FindCallback<VidTrain>() {
             @Override
             public void done(List<VidTrain> objects, ParseException e) {
                 if (e == null) {
                     vidTrain = objects.get(0);
+                    String countString = String.format(getString(R.string.video_count),
+                            vidTrain.getVideosCount());
+                    tvVideoCount.setText(countString);
 
                     vidTrain.getUser().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
                         @Override
@@ -95,19 +98,51 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                         }
                     });
 
+                    videos = vidTrain.getVideos();
+                    for (Video video : videos) {
+                        try {
+                            video.fetchIfNeeded();
+                        } catch (ParseException parseException) {
+
+                        }
+                    }
+
 
                     vvPreview.setHeightRatio(1);
 
                     vvPreview.setVisibility(View.VISIBLE);
-                    vvPreview.addMediaPlayerListener(new SimpleMainThreadMediaPlayerListener() {
+//                    vvPreview.addMediaPlayerListener(new SimpleMainThreadMediaPlayerListener() {
+//                        @Override
+//                        public void onVideoCompletionMainThread() {
+//                            vvPreview.start();
+//                        }
+//                    });
+
+
+                    final ParseFile parseFile = ((ParseFile) vidTrain.get("thumbnail"));
+
+                    parseFile.getDataInBackground(new GetDataCallback() {
                         @Override
-                        public void onVideoCompletionMainThread() {
-                            vvPreview.start();
+                        public void done(byte[] data, ParseException e) {
+                            try {
+                                FileUtils.writeByteArrayToFile(getOutputMediaFile(vidTrain.getObjectId().toString()), data);
+                                vvPreview.setDataSource(getBaseContext(), getOutputMediaFileUri(vidTrain.getObjectId().toString()));
+                                vvPreview.setVolume(0, 0);
+                                vvPreview.setLooping(true);
+                                vvPreview.prepare(new MediaPlayer.OnPreparedListener() {
+                                    @Override
+                                    public void onPrepared(MediaPlayer mp) {
+//                    vvPreview.start();
+                                        Toast.makeText(getBaseContext(), "Video has been prepared from:\n" + parseFile.getUrl().toString() + "Video has been saved to :\n" + getOutputMediaFile(vidTrain.getObjectId().toString()), Toast.LENGTH_LONG).show();
+
+                                    }
+                                });
+                            } catch (IOException ioe) {
+
+                            }
                         }
                     });
 
-
-                    mVideoPlayerManager.playNewVideo(null, vvPreview, ((ParseFile) vidTrain.get("thumbnail")).getUrl());
 //                    ((ParseFile) vidTrain.get("thumbnail")).getDataInBackground(new GetDataCallback() {
 //                        @Override
 //                        public void done(byte[] data, ParseException e) {
@@ -269,6 +304,17 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     /** Create a File for saving an image or video */
     private static File getOutputMediaFile()
     {
+        return getOutputMediaFile("");
+    }
+
+    /** Create a file Uri for saving an image or video */
+    private static Uri getOutputMediaFileUri(String objectId)
+    {
+        return Uri.fromFile(getOutputMediaFile(objectId));
+    }
+    /** Create a File for saving an image or video */
+    private static File getOutputMediaFile(String objectId)
+    {
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_MOVIES), "VidTrainApp");
 
@@ -280,7 +326,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         }
         File mediaFile;
         mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                "VID_CAPTURED" + ".mp4");
+                "VID_CAPTURED" + objectId+ ".mp4");
         return mediaFile;
     }
 }

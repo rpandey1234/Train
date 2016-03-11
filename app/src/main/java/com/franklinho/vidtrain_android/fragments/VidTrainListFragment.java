@@ -31,12 +31,12 @@ import butterknife.ButterKnife;
  * Created by rahul on 3/5/16.
  */
 public class VidTrainListFragment extends Fragment {
-    @Bind(R.id.rvVidTrains)
-    public RecyclerView rvVidTrains;
+
+    @Bind(R.id.rvVidTrains) public RecyclerView rvVidTrains;
+    @Bind(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
+
     List<VidTrain> vidTrains;
     VidTrainArrayAdapter aVidTrains;
-    @Bind(R.id.swipeContainer)
-    SwipeRefreshLayout swipeContainer;
     LinearLayoutManager linearLayoutManager;
 
 //    private final ListItemsVisibilityCalculator mVideoVisibilityCalculator =
@@ -70,10 +70,6 @@ public class VidTrainListFragment extends Fragment {
         //Create arraylist datasource
         vidTrains = new ArrayList<>();
         //Construct the adapter
-//        for (int i = 0;  i < 5; i++) {
-//            vidTrains.add(new VidTrain());
-//        }
-
         aVidTrains = new VidTrainArrayAdapter(vidTrains, getContext());
     }
 
@@ -132,12 +128,9 @@ public class VidTrainListFragment extends Fragment {
             }
         });
 
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         rvVidTrains.setAdapter(aVidTrains);
         rvVidTrains.setLayoutManager(linearLayoutManager);
-
-
 
         return v;
     }

@@ -1,6 +1,5 @@
 package com.franklinho.vidtrain_android.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -27,19 +26,15 @@ import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity {
     public final String APP_TAG = "VidTrain";
-    public String videoFileName = "video.mp4";
     private static final int REQUEST_CAMERA = 0;
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
 
     private static final int VIDEO_CAPTURE = 101;
 
-    Uri videoUri;
-
     @Bind(R.id.viewpager) ViewPager viewPager;
     @Bind(R.id.sliding_tabs) TabLayout tabLayout;
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
+    @Bind(R.id.toolbar) Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +43,6 @@ public class HomeActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager(),
@@ -89,8 +83,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void showCreateFlow(View view) {
-//        Toast.makeText(this, "Should navigate to creation flow", Toast.LENGTH_SHORT).show();
-
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
             startCameraActivity();
         } else {
@@ -99,25 +91,14 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void startCameraActivity() {
-//        Intent startCustomCameraIntent = new Intent(this, CustomCameraActivity.class);
-//        startActivityForResult(startCustomCameraIntent, REQUEST_CAMERA);
-
-//        File mediaFile =
-//                new File(
-//                        getExternalFilesDir(Environment.DIRECTORY_MOVIES), APP_TAG+"/"+videoFileName);
-        File mediaFile = new File(
-                Environment.getExternalStorageDirectory().getAbsolutePath() + "/myvideo.mp4");
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 5);
+
 //        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
 //        videoUri = getVideoFile(this).getAbsolutePath();
-        videoUri = getOutputMediaFileUri();  // create a file to save the video
+        Uri videoUri = getOutputMediaFileUri();  // create a file to save the video
         intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri); ;
         startActivityForResult(intent, VIDEO_CAPTURE);
-
-//        Intent i = new Intent(this, CustomCameraActivity.class);
-//        i.setFlags(i.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
-//        startActivity(i);
     }
 
     @Override
@@ -125,8 +106,6 @@ public class HomeActivity extends AppCompatActivity {
         if (requestCode == VIDEO_CAPTURE) {
             if (resultCode == RESULT_OK) {
                 Toast.makeText(this, "Video has been saved to:\n" + data.getData(), Toast.LENGTH_LONG).show();
-                Uri videoUri = data.getData();
-//                playbackRecordedVideo(videoUri);
                 Intent i = new Intent(this, CreationDetailActivity.class);
                 i.putExtra("videoPath", getOutputMediaFile().getPath());
                 startActivity(i);
@@ -136,12 +115,6 @@ public class HomeActivity extends AppCompatActivity {
                 Toast.makeText(this, "Failed to record video",  Toast.LENGTH_LONG).show();
             }
         }
-    }
-
-    public File getVideoFile(Context context) {
-//        return new File(context.getExternalFilesDir(null), APP_TAG+"/"+videoFileName);
-        return new File(
-                Environment.getExternalStorageDirectory().getAbsolutePath() + "/myvideo.mp4");
     }
 
     /** Create a file Uri for saving an image or video */
