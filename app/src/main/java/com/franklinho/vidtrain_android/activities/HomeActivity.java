@@ -26,14 +26,14 @@ import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity {
     public final String APP_TAG = "VidTrain";
-    public String videoFileName = "myvideo.mp4";
+    public String videoFileName = "video.mp4";
     private static final int REQUEST_CAMERA = 0;
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
 
     private static final int VIDEO_CAPTURE = 101;
 
-//    String videoUri;
+    Uri videoUri;
 
     @Bind(R.id.viewpager) ViewPager viewPager;
     @Bind(R.id.sliding_tabs) TabLayout tabLayout;
@@ -101,13 +101,16 @@ public class HomeActivity extends AppCompatActivity {
 //        Intent startCustomCameraIntent = new Intent(this, CustomCameraActivity.class);
 //        startActivityForResult(startCustomCameraIntent, REQUEST_CAMERA);
 
-        File mediaFile =
-                new File(
-                        getExternalFilesDir(Environment.DIRECTORY_MOVIES), APP_TAG+"/"+videoFileName);
-//        File mediaFile = new File(
-//                Environment.getExternalStorageDirectory().getAbsolutePath() + "/myvideo.mp4");
+//        File mediaFile =
+//                new File(
+//                        getExternalFilesDir(Environment.DIRECTORY_MOVIES), APP_TAG+"/"+videoFileName);
+        File mediaFile = new File(
+                Environment.getExternalStorageDirectory().getAbsolutePath() + "/myvideo.mp4");
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 5);
+        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
 //        videoUri = getVideoFile(this).getAbsolutePath();
+        videoUri = Uri.fromFile(mediaFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, getVideoFile(this));
         startActivityForResult(intent, VIDEO_CAPTURE);
 
@@ -135,7 +138,9 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public File getVideoFile(Context context) {
-        return new File(context.getExternalFilesDir(null), "video.mp4");
+//        return new File(context.getExternalFilesDir(null), APP_TAG+"/"+videoFileName);
+        return new File(
+                Environment.getExternalStorageDirectory().getAbsolutePath() + "/myvideo.mp4");
     }
 
 }
