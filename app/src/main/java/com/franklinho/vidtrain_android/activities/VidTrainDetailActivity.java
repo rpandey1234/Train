@@ -21,6 +21,8 @@ import com.franklinho.vidtrain_android.models.DynamicHeightVideoPlayerManagerVie
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
 import com.google.common.io.Files;
+import com.google.common.io.Resources;
+
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -44,18 +46,15 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class VidTrainDetailActivity extends AppCompatActivity {
-    public VidTrain vidTrain;
-    @Bind(R.id.ivCollaborators)
-    ImageView ivCollaborators;
-    @Bind(R.id.vvPreview)
-    DynamicHeightVideoPlayerManagerView vvPreview;
-    @Bind(R.id.ibtnLike)
-    ImageButton ibtnLike;
-    @Bind(R.id.tvLikeCount)
-    TextView tvLikeCount;
-    @Bind(R.id.tvCommentCount)
-    TextView tvCommentCount;
+    @Bind(R.id.ivCollaborators) ImageView ivCollaborators;
+    @Bind(R.id.vvPreview) DynamicHeightVideoPlayerManagerView vvPreview;
+    @Bind(R.id.ibtnLike) ImageButton ibtnLike;
+    @Bind(R.id.tvLikeCount) TextView tvLikeCount;
+    @Bind(R.id.tvCommentCount) TextView tvCommentCount;
+    @Bind(R.id.tvVideoCount) TextView tvVideoCount;
+
     Uri videoUri;
+    public VidTrain vidTrain;
     private static final int VIDEO_CAPTURE = 101;
 
     private VideoPlayerManager<MetaData> mVideoPlayerManager = new SingleVideoPlayerManager(new PlayerItemChangeListener() {
@@ -75,13 +74,16 @@ public class VidTrainDetailActivity extends AppCompatActivity {
 
         String vidTrainObjectID = getIntent().getExtras().getString("vidTrain");
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
-        query.whereEqualTo("objectId",vidTrainObjectID);
+        query.whereEqualTo("objectId", vidTrainObjectID);
         query.setLimit(1);
         query.findInBackground(new FindCallback<VidTrain>() {
             @Override
             public void done(List<VidTrain> objects, ParseException e) {
                 if (e == null) {
                     vidTrain = objects.get(0);
+                    String countString = String.format(getString(R.string.video_count),
+                            vidTrain.getVideosCount());
+                    tvVideoCount.setText(countString);
 
                     vidTrain.getUser().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
                         @Override

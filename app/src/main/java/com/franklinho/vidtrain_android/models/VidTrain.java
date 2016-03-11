@@ -61,6 +61,14 @@ public class VidTrain extends ParseObject {
         put(VIDEOS_KEY, videos);
     }
 
+    public ArrayList<Video> getVideos() {
+        return (ArrayList<Video>) get(VIDEOS_KEY);
+    }
+
+    public int getVideosCount() {
+        return getVideos().size();
+    }
+
     public void setComments(ArrayList<Comment> comments) {
         put(COMMENTS_KEY, comments);
     }
