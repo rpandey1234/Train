@@ -11,6 +11,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -110,8 +111,8 @@ public class HomeActivity extends AppCompatActivity {
         intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 5);
         intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
 //        videoUri = getVideoFile(this).getAbsolutePath();
-        videoUri = Uri.fromFile(mediaFile);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, getVideoFile(this));
+        videoUri = getOutputMediaFileUri();  // create a file to save the video
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri); ;
         startActivityForResult(intent, VIDEO_CAPTURE);
 
 //        Intent i = new Intent(this, CustomCameraActivity.class);
@@ -127,7 +128,7 @@ public class HomeActivity extends AppCompatActivity {
                 Uri videoUri = data.getData();
 //                playbackRecordedVideo(videoUri);
                 Intent i = new Intent(this, CreationDetailActivity.class);
-                i.putExtra("videoPath", getVideoFile(this).getPath());
+                i.putExtra("videoPath", getOutputMediaFile().getPath());
                 startActivity(i);
             } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, "Video recording cancelled.",  Toast.LENGTH_LONG).show();
@@ -141,6 +142,30 @@ public class HomeActivity extends AppCompatActivity {
 //        return new File(context.getExternalFilesDir(null), APP_TAG+"/"+videoFileName);
         return new File(
                 Environment.getExternalStorageDirectory().getAbsolutePath() + "/myvideo.mp4");
+    }
+
+    /** Create a file Uri for saving an image or video */
+    private static Uri getOutputMediaFileUri()
+    {
+        return Uri.fromFile(getOutputMediaFile());
+    }
+
+    /** Create a File for saving an image or video */
+    private static File getOutputMediaFile()
+    {
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_MOVIES), "VidTrainApp");
+
+        if (! mediaStorageDir.exists()){
+            if (! mediaStorageDir.mkdirs()){
+                Log.d("VidTrainApp", "failed to create directory");
+                return null;
+            }
+        }
+        File mediaFile;
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+                "VID_CAPTURED" + ".mp4");
+        return mediaFile;
     }
 
 }
