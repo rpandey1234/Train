@@ -6,6 +6,9 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -19,9 +22,11 @@ import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.models.DynamicHeightVideoPlayerManagerView;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.volokh.danylo.video_player_manager.manager.PlayerItemChangeListener;
@@ -33,6 +38,7 @@ import com.volokh.danylo.video_player_manager.ui.SimpleMainThreadMediaPlayerList
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -80,16 +86,45 @@ public class CreationDetailActivity extends AppCompatActivity {
             });
             mVideoPlayerManager.playNewVideo(null, vvPreview, videoPath);
         }
+
+        etCollaborators.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                Intent in = new Intent(getBaseContext(), TestResultActivity.class);
+                startActivity(in);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+//                ParseQuery<ParseUser> query = ParseUser.getQuery();
+//                query.whereEqualTo("name","Vimalathithan Rajasekaran");
+//                query.findInBackground(new FindCallback<ParseUser>() {
+//                    public void done(List<ParseUser> objects, ParseException e) {
+//                        if (e == null) {
+//                            // The query was successful.
+//                            Log.d("Vidtrain", "" + objects.size());
+//                            for (ParseUser user: objects) {
+//                                Log.d("Vidtrain", user.getEmail());
+//                            }
+//                        } else {
+//                            // Something went wrong.
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                });
+//            }
+//        });
+
+            }
+        });
     }
 
     public void submitVidTrain(View view) {
-
-
-        if (etCollaborators.getText() != null) {
-            Intent intent = new Intent(this, TestResultActivity.class);
-            intent.putExtra("name", etCollaborators.getText().toString());
-            startActivity(intent);
-        }
 
         File file = new File(videoPath);
         final Video video = new Video();
