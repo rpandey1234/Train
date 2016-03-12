@@ -19,6 +19,8 @@ import android.widget.Toast;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.fragments.FragmentPagerAdapter;
 
+import junit.framework.Test;
+
 import java.io.File;
 
 import butterknife.Bind;
@@ -70,7 +72,8 @@ public class HomeActivity extends AppCompatActivity {
             profileView();
             return true;
         } else if (id == R.id.miCompose) {
-            Toast.makeText(this, "Should navigate to creation flow", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, CreationDetailActivity.class);
+            startActivity(intent);
             return true;
         }
 

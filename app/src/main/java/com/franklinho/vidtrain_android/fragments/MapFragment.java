@@ -234,7 +234,6 @@ public class MapFragment extends Fragment implements
         if (map != null) {
             map.setOnMarkerClickListener(this);
             // Map is ready
-            Toast.makeText(getContext(), "Map Fragment was loaded properly!", Toast.LENGTH_SHORT).show();
 //            map.setOnMapLongClickListener(this);
             MapFragmentPermissionsDispatcher.getMyLocationWithCheck(this);
         } else {

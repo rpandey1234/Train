@@ -6,6 +6,7 @@ import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphRequest.GraphJSONObjectCallback;
 import com.facebook.GraphResponse;
+import com.parse.Parse;
 import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -91,5 +92,13 @@ public class User extends ParseObject implements Serializable {
             System.out.println("Failed parsing facebook response: " + e.toString());
             e.printStackTrace();
         }
+    }
+
+    public static String getName(ParseUser user) {
+        return user.getString(NAME);
+    }
+
+    public static String getProfileImageUrl(ParseUser user) {
+        return user.getString("profileImageUrl");
     }
 }

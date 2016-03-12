@@ -43,6 +43,7 @@ public class VidTrain extends ParseObject implements Serializable {
     public static final String WRITE_PRIVACY_KEY = "writePrivacy";
     public static final String LL_KEY = "ll";
     public static final String THUMBNAIL_KEY = "thumbnail";
+    public static final String COLLABORATORS = "collaborators";
 
     public VidTrain() {
 
@@ -105,5 +106,13 @@ public class VidTrain extends ParseObject implements Serializable {
 
     public String getTitle() {
         return getString(TITLE_KEY);
+    }
+
+    public void setCollaborators(List<ParseUser> collaborators) {
+        put(COLLABORATORS, collaborators);
+    }
+
+    public List<ParseUser> getCollaborators() {
+        return (List<ParseUser>) get(COLLABORATORS);
     }
 }

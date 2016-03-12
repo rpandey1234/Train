@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.activities.LogInActivity;
+import com.franklinho.vidtrain_android.models.User;
 import com.parse.ParseUser;
 
 import butterknife.Bind;
@@ -46,7 +47,7 @@ public class UserInfoFragment extends Fragment {
             startActivity(intent);
         } else {
             String name = currentUser.getString("name");
-            String profileImageUrl = currentUser.getString("profileImageUrl");
+            String profileImageUrl = User.getProfileImageUrl(currentUser);
             tvName.setText(name);
             Glide.with(this).load(profileImageUrl).into(ivProfileImage);
         }

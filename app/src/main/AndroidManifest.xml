@@ -78,7 +78,6 @@
         <activity android:name=".activities.HomeActivity" />
         <activity android:name=".activities.VidTrainDetailActivity" />
         <activity android:name=".activities.CreationDetailActivity" />
-        <activity android:name=".activities.TestResultActivity"></activity>
     </application>
 
 </manifest>

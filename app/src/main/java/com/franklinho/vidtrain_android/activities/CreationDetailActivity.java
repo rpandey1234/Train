@@ -1,25 +1,30 @@
 package com.franklinho.vidtrain_android.activities;
 
 import android.content.Context;
-import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
-import android.widget.Spinner;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.common.io.Files;
 
 import com.franklinho.vidtrain_android.R;
+import com.franklinho.vidtrain_android.adapters.UsersAdapter;
 import com.franklinho.vidtrain_android.models.DynamicHeightVideoPlayerManagerView;
+import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
 import com.parse.FindCallback;
@@ -44,20 +49,16 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class CreationDetailActivity extends AppCompatActivity {
-    @Bind(R.id.vvPreview)
-    DynamicHeightVideoPlayerManagerView vvPreview;
-    @Bind(R.id.btnSubmit)
-    Button btnSubmit;
-    @Bind(R.id.spnReadPrivacy)
-    Spinner spnReadPrivacy;
-    @Bind(R.id.etTitle)
-    EditText etTitle;
-    @Bind(R.id.cbWritePermissions)
-    CheckBox cbWritePermissions;
-    @Bind(R.id.etCollaborators)
-    EditText etCollaborators;
+    @Bind(R.id.vvPreview) DynamicHeightVideoPlayerManagerView vvPreview;
+    @Bind(R.id.btnSubmit) Button btnSubmit;
+    @Bind(R.id.etTitle) EditText etTitle;
+    @Bind(R.id.toggleBtn) Switch toggleBtn;
+    @Bind(R.id.etCollaborators) AutoCompleteTextView etCollaborators;
+    @Bind(R.id.tvCollaboratorsAdded) TextView tvCollaboratorsAdded;
 
     String videoPath;
+    List<ParseUser> collaborators;
+    List<ParseUser> usersFromAutocomplete;
 
     private VideoPlayerManager<MetaData> mVideoPlayerManager = new SingleVideoPlayerManager(new PlayerItemChangeListener() {
         @Override
@@ -72,11 +73,21 @@ public class CreationDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_creation_detail);
         ButterKnife.bind(this);
         videoPath = getIntent().getExtras().getString("videoPath");
-        Toast.makeText(this, "Video path: " + videoPath,
-                Toast.LENGTH_SHORT).show();
+        collaborators = new ArrayList<>();
+        toggleBtn.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    etCollaborators.setVisibility(View.VISIBLE);
+                    tvCollaboratorsAdded.setVisibility(View.VISIBLE);
+                } else {
+                    etCollaborators.setVisibility(View.GONE);
+                    tvCollaboratorsAdded.setVisibility(View.GONE);
+                }
+            }
+        });
 
         vvPreview.setHeightRatio(1);
-
         if (videoPath != null) {
             vvPreview.addMediaPlayerListener(new SimpleMainThreadMediaPlayerListener() {
                 @Override
@@ -89,52 +100,66 @@ public class CreationDetailActivity extends AppCompatActivity {
 
         etCollaborators.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                Intent in = new Intent(getBaseContext(), TestResultActivity.class);
-                startActivity(in);
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                ParseQuery<ParseUser> query = ParseUser.getQuery();
+                query.whereMatches("name", "^" + s.toString(), "i");
+                query.setLimit(4);
+                query.findInBackground(new FindCallback<ParseUser>() {
+                    public void done(List<ParseUser> objects, ParseException e) {
+                        if (e == null) {
+                            usersFromAutocomplete = objects;
+                            // Create the adapter and set it to the AutoCompleteTextView
+                            ArrayAdapter<ParseUser> adapter = new UsersAdapter(getApplicationContext(), usersFromAutocomplete);
+                            etCollaborators.setAdapter(adapter);
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            e.printStackTrace();
+                        }
+                    }
+                });
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-//                ParseQuery<ParseUser> query = ParseUser.getQuery();
-//                query.whereEqualTo("name","Vimalathithan Rajasekaran");
-//                query.findInBackground(new FindCallback<ParseUser>() {
-//                    public void done(List<ParseUser> objects, ParseException e) {
-//                        if (e == null) {
-//                            // The query was successful.
-//                            Log.d("Vidtrain", "" + objects.size());
-//                            for (ParseUser user: objects) {
-//                                Log.d("Vidtrain", user.getEmail());
-//                            }
-//                        } else {
-//                            // Something went wrong.
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                });
-//            }
-//        });
+            public void afterTextChanged(Editable s) {}
+        });
 
+        etCollaborators.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // TODO: should not allow duplicate names to be added
+                ParseUser parseUser = usersFromAutocomplete.get(position);
+                // 1. Add this user to the textview
+                String name = User.getName(parseUser);
+                String currentText = tvCollaboratorsAdded.getText().toString();
+                if (currentText.isEmpty()) {
+                    tvCollaboratorsAdded.setText(name);
+                } else {
+                    tvCollaboratorsAdded.setText(currentText + ", " + name);
+                }
+
+                // 2. Clear the text field
+                etCollaborators.clearListSelection();
+                etCollaborators.setText("");
+
+                // 3. Add the user to the collaborators AL
+                collaborators.add(parseUser);
             }
         });
     }
 
     public void submitVidTrain(View view) {
-
         File file = new File(videoPath);
         final Video video = new Video();
         final VidTrain vidTrain = new VidTrain();
-
 
         byte[] data;
         try {
             data = Files.toByteArray(file);
             final ParseFile parseFile = new ParseFile("video.mp4", data);
+
             parseFile.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
@@ -148,13 +173,11 @@ public class CreationDetailActivity extends AppCompatActivity {
                             ArrayList<Video> videos = new ArrayList<>();
                             videos.add(video);
                             vidTrain.setVideos(videos);
-                            vidTrain.setWritePrivacy(cbWritePermissions.isChecked());
-                            if (spnReadPrivacy.getSelectedItemPosition() == 0) {
-                                vidTrain.setReadPrivacy(false);
-                            } else {
-                                vidTrain.setReadPrivacy(true);
+                            if (toggleBtn.isChecked() && !collaborators.isEmpty()) {
+                                vidTrain.setWritePrivacy(true);
+                                vidTrain.setCollaborators(collaborators);
                             }
-
+                            vidTrain.setReadPrivacy(false);
                             vidTrain.setThumbnailFile(parseFile);
 
                             LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -212,9 +235,7 @@ public class CreationDetailActivity extends AppCompatActivity {
     }
 
     public void successfullySavedVidTrain() {
-        Toast.makeText(getBaseContext(), "Successfully saved vidtrain",
-                Toast.LENGTH_SHORT).show();
-
+        Toast.makeText(getBaseContext(), "Successfully saved vidtrain", Toast.LENGTH_SHORT).show();
         this.finish();
     }
 }

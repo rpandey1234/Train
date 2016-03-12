@@ -14,26 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:id="@+id/vvPreview"
-        android:layout_below="@+id/ivCollaborators"
         android:background="@android:color/black"
-        />
-
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Title:"
-        android:layout_below="@id/vvPreview"
-        android:layout_marginLeft="10dp"
-        android:id="@+id/tvTitle"
-        android:textSize="25dp"
-
-        android:layout_alignParentLeft="true"
-        android:gravity="bottom"
-        android:layout_marginBottom="5dp"
-        android:layout_marginRight="10dp"
-
         />
 
     <EditText
@@ -41,10 +22,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/etTitle"
         android:layout_below="@id/vvPreview"
-        android:hint="Enter title here"
-        android:layout_toRightOf="@id/tvTitle"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"/>
+        android:hint="Enter title"
+        android:layout_margin="10dp"
+        />
 
 
     <TextView
@@ -58,58 +38,46 @@
         android:layout_alignParentLeft="true"
         android:gravity="bottom"
         android:layout_marginRight="10dp"
-
         />
 
-    <CheckBox
+    <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Set to open"
-        android:id="@+id/cbWritePermissions"
-        android:layout_alignBottom="@+id/tvCollaborators"
-        android:layout_toEndOf="@+id/tvCollaborators" />
+        android:id="@+id/toggleBtn"
+        android:layout_toRightOf="@+id/tvCollaborators"
+        android:layout_below="@+id/etTitle"
+        android:layout_marginLeft="10dp"
+        android:textOff="Public"
+        android:textOn="Friends"
+        android:showText="true"
+        />
 
-    <EditText
+    <AutoCompleteTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/etCollaborators"
         android:layout_below="@id/tvCollaborators"
         android:hint="Type for autocomplete of friends"
-       android:layout_margin="10dp"/>
-
+        android:visibility="gone"
+        android:layout_margin="10dp"
+        />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Privacy:"
-        android:layout_below="@id/etCollaborators"
-        android:layout_marginLeft="10dp"
-        android:id="@+id/tvPrivacy"
-        android:textSize="25dp"
-        android:layout_alignParentLeft="true"
-        android:gravity="bottom"
-        android:layout_marginRight="10dp"
-
-        />
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/spnReadPrivacy"
+        android:id="@+id/tvCollaboratorsAdded"
+        android:visibility="gone"
         android:layout_below="@+id/etCollaborators"
-
-        android:layout_alignParentEnd="true"
-        android:entries="@array/privacy_states"
-        android:layout_toRightOf="@+id/tvPrivacy"
-        android:spinnerMode="dropdown"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="10dp" />
+        android:layout_marginBottom="50dp"
+        android:layout_margin="10dp"
+        />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Submit"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/spnReadPrivacy"
+        android:layout_below="@id/tvCollaboratorsAdded"
         android:layout_marginBottom="10dp"
         android:onClick="submitVidTrain"
         android:id="@+id/btnSubmit"/>
