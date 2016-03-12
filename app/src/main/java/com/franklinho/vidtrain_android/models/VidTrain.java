@@ -2,6 +2,8 @@ package com.franklinho.vidtrain_android.models;
 
 import android.graphics.Rect;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
@@ -93,4 +95,15 @@ public class VidTrain extends ParseObject implements Serializable {
         return (ParseUser) get(USER_KEY);
     }
 
+    public LatLng getLatLong() {
+        ParseGeoPoint parseGeoPoint = getParseGeoPoint(LL_KEY);
+        double latitude = parseGeoPoint.getLatitude();
+        double longitude = parseGeoPoint.getLongitude();
+        return new LatLng(latitude, longitude);
+
+    }
+
+    public String getTitle() {
+        return getString(TITLE_KEY);
+    }
 }

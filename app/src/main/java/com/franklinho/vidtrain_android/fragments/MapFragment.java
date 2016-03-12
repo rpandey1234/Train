@@ -25,10 +25,22 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.franklinho.vidtrain_android.Manifest;
 import com.franklinho.vidtrain_android.R;
+import com.franklinho.vidtrain_android.models.VidTrain;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import permissions.dispatcher.NeedsPermission;
@@ -55,6 +67,9 @@ public class MapFragment extends Fragment implements
     private GoogleMap map;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
+    private List<VidTrain> vidTrains;
+
+    List<Marker> markers;
 
     /*
 	 * Define a request code to send to Google Play services This code is
@@ -76,6 +91,8 @@ public class MapFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        vidTrains = new ArrayList<>();
+        markers = new ArrayList<>();
 //        if (getArguments() != null) {}
     }
 
@@ -144,8 +161,59 @@ public class MapFragment extends Fragment implements
             public void onMapReady(GoogleMap map) {
                 loadMap(map);
 //                    map.setInfoWindowAdapter(new CustomWindowAdapter(inflater));
+                requestVidTrains(true);
             }
         });
+    }
+
+    private void requestVidTrains(final boolean newTimeline) {
+        final int currentSize;
+        if (newTimeline) {
+            vidTrains.clear();
+            currentSize = 0;
+        } else {
+            currentSize  = vidTrains.size();
+        }
+
+        // TODO: query based on current location
+        ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
+        query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        query.addDescendingOrder("createdAt");
+        query.setSkip(currentSize);
+        query.setLimit(5);
+        final BitmapDescriptor defaultMarker = BitmapDescriptorFactory.defaultMarker(
+                BitmapDescriptorFactory.HUE_GREEN);
+        query.findInBackground(new FindCallback<VidTrain>() {
+            @Override
+            public void done(List<VidTrain> objects, ParseException e) {
+                if (e == null) {
+                    for (VidTrain vidTrain : objects) {
+                        Log.d("Vidtrain", vidTrain.getTitle());
+                        Log.d("Vidtrain", vidTrain.getLatLong().toString());
+
+                        Marker marker = map.addMarker(new MarkerOptions().position(
+                                vidTrain.getLatLong())
+                                .title(vidTrain.getTitle())
+//                                .snippet(snippet)
+                                .icon(defaultMarker));
+
+                        markers.add(marker);
+
+                    }
+                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                    for (Marker marker : markers) {
+                        builder.include(marker.getPosition());
+                    }
+                    LatLngBounds bounds = builder.build();
+                    int padding = 100;
+                    CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+
+                    map.animateCamera(cu);
+                }
+
+            }
+        });
+
     }
 
     // The Map is verified. It is now safe to manipulate the map.
@@ -318,5 +386,7 @@ public class MapFragment extends Fragment implements
             return mDialog;
         }
     }
+
+    onMar
 
 }
