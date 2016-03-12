@@ -35,7 +35,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.franklinho.vidtrain_android.Manifest;
 import com.franklinho.vidtrain_android.R;
-import com.franklinho.vidtrain_android.adapters.CustomWindowAdapter;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -223,8 +222,6 @@ public class MapFragment extends Fragment implements
                     CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
 
                     map.animateCamera(cu);
-//                    map.setInfoWindowAdapter(new CustomWindowAdapter(mInflater, vidTrainsMap,
-//                            mVideoPlayerManager));
                 }
 
             }
