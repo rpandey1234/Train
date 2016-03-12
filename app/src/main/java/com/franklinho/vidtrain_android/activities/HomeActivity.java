@@ -95,7 +95,7 @@ public class HomeActivity extends AppCompatActivity {
         intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 5);
 
 
-//        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
+        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
 //        videoUri = getVideoFile(this).getAbsolutePath();
         Uri videoUri = getOutputMediaFileUri();  // create a file to save the video
         intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri); ;

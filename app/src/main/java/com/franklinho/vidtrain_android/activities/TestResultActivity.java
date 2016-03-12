@@ -3,8 +3,16 @@ package com.franklinho.vidtrain_android.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -24,61 +32,72 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 
-public class TestResultActivity extends Activity {
+public class TestResultActivity extends AppCompatActivity {
 
     private String queryString;
     private User user;
     private String queryResult;
+    private Toolbar mToolbar;
+    private TextView tvName;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_result);
-        Intent intent = getIntent();
-        ButterKnife.bind(this);
+        Log.d("Hello", "World");
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        tvName = (TextView) findViewById(R.id.tvName);
+    }
 
-        queryString = intent.getStringExtra("name");
 
-        ParseQuery<User> query = ParseQuery.getQuery("User");
-        query.whereEqualTo("name","Vimalathithan Rajasekaran");;
-        //query.setLimit(1);
-        //query.whereEqualTo("name", "vimalathithanit");
-        //query.whereStartsWith("name", queryString);
-        //query.whereContains("name", queryString);
-        //query.whereEqualTo("objectId", vidTrainObjectID);
-        //query.setLimit(1);
-        Log.i("Entering", "Start");
-        query.findInBackground(new FindCallback<User>() {
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.search_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public void done(List<User> objects, ParseException e) {
-                if (e == null) {
-                    user = objects.get(0);
-                    //user = objects.get(0).get("name").toString();
-                    queryResult = objects.get(0).get("name").toString();
-                    Log.i("Entering", user.toString());
-                    Log.i("Entering", queryResult);
-                    //queryResult = user.get("username").toString();
-                } else{
-                    Log.i("Entering", "Error");
+            public boolean onQueryTextSubmit(String query) {
+                // perform query here
 
-                }
+                // workaround to avoid issues with some emulators and keyboard devices firing twice if a keyboard enter is used
+                // see https://code.google.com/p/android/issues/detail?id=24599
+                searchView.clearFocus();
+                searchDetails();
+
+                return true;
             }
 
-//            @Override
-//            public void done(List<User> objects, ParseException e) {
-//                if (e == null) {
-//                    //user = objects.get(0).get("name").toString();
-//                    queryResult = objects.get(0).get("name").toString();
-//                    //queryResult = user.get("username").toString();
-//                }
-//            }
-
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
         });
-        Log.i("Entering", "Done");
+        return super.onCreateOptionsMenu(menu);
+    }
 
-        Toast.makeText(this, queryResult, Toast.LENGTH_LONG).show();
 
+    public void searchDetails() {
+        ParseQuery<ParseUser> query = ParseUser.getQuery();
+        query.whereEqualTo("name", "Vimalathithan Rajasekaran");
+        query.findInBackground(new FindCallback<ParseUser>() {
+            public void done(List<ParseUser> objects, ParseException e) {
+                if (e == null) {
+                    // The query was successful.
+                    Log.d("Vidtrain", "" + objects.size());
+                    for (ParseUser user : objects) {
+                        Log.d("Vidtrain", user.getEmail());
+                        tvName.setText(user.getEmail().toString());
+                    }
+                } else {
+                    // Something went wrong.
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }
+
