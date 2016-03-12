@@ -8,12 +8,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -23,6 +23,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -34,13 +35,20 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.franklinho.vidtrain_android.Manifest;
 import com.franklinho.vidtrain_android.R;
+import com.franklinho.vidtrain_android.adapters.CustomWindowAdapter;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.volokh.danylo.video_player_manager.manager.PlayerItemChangeListener;
+import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
+import com.volokh.danylo.video_player_manager.manager.VideoPlayerManager;
+import com.volokh.danylo.video_player_manager.meta.MetaData;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.ButterKnife;
 import permissions.dispatcher.NeedsPermission;
@@ -58,7 +66,8 @@ import permissions.dispatcher.RuntimePermissions;
 public class MapFragment extends Fragment implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener,
+        OnMarkerClickListener {
 
     private long UPDATE_INTERVAL = 10 * 60000;  /* 10 * 60 secs */
     private long FASTEST_INTERVAL = 10 * 5000; /* 5 secs */
@@ -68,6 +77,7 @@ public class MapFragment extends Fragment implements
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private List<VidTrain> vidTrains;
+    private Map<String, VidTrain> vidTrainsMap;
 
     List<Marker> markers;
 
@@ -76,6 +86,13 @@ public class MapFragment extends Fragment implements
 	 * returned in Activity.onActivityResult
 	 */
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    private LayoutInflater mInflater;
+    private VideoPlayerManager<MetaData> mVideoPlayerManager = new SingleVideoPlayerManager(new PlayerItemChangeListener() {
+        @Override
+        public void onPlayerItemChanged(MetaData metaData) {
+
+        }
+    });
 
     public MapFragment() {
         // Required empty public constructor
@@ -93,6 +110,7 @@ public class MapFragment extends Fragment implements
         super.onCreate(savedInstanceState);
         vidTrains = new ArrayList<>();
         markers = new ArrayList<>();
+        vidTrainsMap = new HashMap<>();
 //        if (getArguments() != null) {}
     }
 
@@ -144,9 +162,9 @@ public class MapFragment extends Fragment implements
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
+        mInflater = inflater;
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         ButterKnife.bind(view);
-
         return view;
     }
 
@@ -156,14 +174,7 @@ public class MapFragment extends Fragment implements
         android.support.v4.app.FragmentTransaction
                 transaction = getChildFragmentManager().beginTransaction();
         transaction.replace(R.id.map, mapFragment).commit();
-        mapFragment.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap map) {
-                loadMap(map);
-//                    map.setInfoWindowAdapter(new CustomWindowAdapter(inflater));
-                requestVidTrains(true);
-            }
-        });
+        setUpMapIfNeeded();
     }
 
     private void requestVidTrains(final boolean newTimeline) {
@@ -188,13 +199,16 @@ public class MapFragment extends Fragment implements
             public void done(List<VidTrain> objects, ParseException e) {
                 if (e == null) {
                     for (VidTrain vidTrain : objects) {
+                        vidTrainsMap.put(vidTrain.getObjectId(), vidTrain);
                         Log.d("Vidtrain", vidTrain.getTitle());
                         Log.d("Vidtrain", vidTrain.getLatLong().toString());
 
-                        Marker marker = map.addMarker(new MarkerOptions().position(
-                                vidTrain.getLatLong())
+//                        vidTrain.getVideos().get(0)
+
+                        Marker marker = map.addMarker(new MarkerOptions()
+                                .position(vidTrain.getLatLong())
                                 .title(vidTrain.getTitle())
-//                                .snippet(snippet)
+                                .snippet(vidTrain.getObjectId())
                                 .icon(defaultMarker));
 
                         markers.add(marker);
@@ -209,17 +223,19 @@ public class MapFragment extends Fragment implements
                     CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
 
                     map.animateCamera(cu);
+//                    map.setInfoWindowAdapter(new CustomWindowAdapter(mInflater, vidTrainsMap,
+//                            mVideoPlayerManager));
                 }
 
             }
         });
-
     }
 
     // The Map is verified. It is now safe to manipulate the map.
     protected void loadMap(GoogleMap googleMap) {
         map = googleMap;
         if (map != null) {
+            map.setOnMarkerClickListener(this);
             // Map is ready
             Toast.makeText(getContext(), "Map Fragment was loaded properly!", Toast.LENGTH_SHORT).show();
 //            map.setOnMapLongClickListener(this);
@@ -255,19 +271,14 @@ public class MapFragment extends Fragment implements
     }
 
     protected void setUpMapIfNeeded() {
-        // Do a null check to confirm that we have not already instantiated the map.
-        if (mapFragment == null) {
-            mapFragment = ((SupportMapFragment) getFragmentManager().findFragmentById(R.id.map));
-            // Check if we were successful in obtaining the map.
-            if (mapFragment != null) {
-                mapFragment.getMapAsync(new OnMapReadyCallback() {
-                    @Override
-                    public void onMapReady(GoogleMap map) {
-                        loadMap(map);
-                    }
-                });
+        mapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap map) {
+                loadMap(map);
+                requestVidTrains(true);
             }
-        }
+        });
+
     }
 
     /*
@@ -347,6 +358,17 @@ public class MapFragment extends Fragment implements
         }
     }
 
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        FragmentManager fm = getFragmentManager();
+        MapDialogFragment mapDialogFragment = MapDialogFragment.newInstance(marker.getSnippet());
+        Bundle bundle = new Bundle();
+        bundle.putString("vidTrainId", marker.getSnippet());
+        mapDialogFragment.setArguments(bundle);
+        mapDialogFragment.show(fm, "custom_info_window");
+        return true;
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this
@@ -386,7 +408,4 @@ public class MapFragment extends Fragment implements
             return mDialog;
         }
     }
-
-    onMar
-
 }

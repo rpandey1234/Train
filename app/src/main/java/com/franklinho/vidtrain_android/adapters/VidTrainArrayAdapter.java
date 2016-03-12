@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -137,11 +138,22 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
                     vvPreview.addMediaPlayerListener(new SimpleMainThreadMediaPlayerListener() {
                         @Override
                         public void onVideoCompletionMainThread() {
-                            Toast.makeText(holder.context, "Video has been prepared from:\n" + parseFile.getUrl().toString() + "Video has been saved to :\n" + getOutputMediaFile(vidTrain.getObjectId().toString()), Toast.LENGTH_LONG).show();
-                            vvPreview.start();
+                            Toast.makeText(holder.context,
+                                    "Video has been prepared from:\n" + parseFile.getUrl()
+                                            .toString() + "Video has been saved to :\n"
+                                            + getOutputMediaFile(vidTrain.getObjectId().toString()),
+                                    Toast.LENGTH_LONG).show();
+//                            vvPreview.start();
                         }
                     });
-                    mVideoPlayerManager.playNewVideo(null, vvPreview, getOutputMediaFile(vidTrain.getObjectId().toString()).getPath());
+
+                    vvPreview.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mVideoPlayerManager.playNewVideo(null, vvPreview, getOutputMediaFile(vidTrain.getObjectId().toString()).getPath());
+                        }
+                    });
+
                 } catch (FileNotFoundException e1) {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
@@ -172,12 +184,12 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
     }
 
     /** Create a file Uri for saving an image or video */
-    private static Uri getOutputMediaFileUri(String objectId)
+    public static Uri getOutputMediaFileUri(String objectId)
     {
         return Uri.fromFile(getOutputMediaFile(objectId));
     }
     /** Create a File for saving an image or video */
-    private static File getOutputMediaFile(String objectId)
+    public static File getOutputMediaFile(String objectId)
     {
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_MOVIES), "VidTrainApp");
