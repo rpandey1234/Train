@@ -54,7 +54,7 @@
             android:layout_alignTop="@id/ivCollaborators"
             android:layout_alignBottom="@id/ivCollaborators"
             android:layout_alignParentEnd="true"
-            android:gravity="center_vertical|right"
+            android:gravity="center_vertical|end"
             android:textSize="20sp"
             android:layout_toRightOf="@id/ivCollaborators"
             android:layout_marginLeft="10dp"/>
@@ -76,7 +76,8 @@
             android:id="@+id/ibtnLike"
             android:padding="5dp"
             android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="10dp"
+            android:contentDescription="@string/heart"/>
 
         <TextView
             android:layout_width="wrap_content"
