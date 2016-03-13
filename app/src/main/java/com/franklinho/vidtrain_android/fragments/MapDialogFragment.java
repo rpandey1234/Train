@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +17,9 @@ import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.models.DynamicHeightVideoPlayerManagerView;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
+import com.franklinho.vidtrain_android.utilities.Utility;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -41,21 +44,16 @@ public class MapDialogFragment extends DialogFragment {
     @Bind(R.id.tvVideoCount) TextView tvVideoCount;
     @Bind(R.id.tvTime) TextView tvTime;
 
-    VidTrain vidTrain;
+    public static final String VIDTRAIN_ID = "vidTrainId";
 
     public MapDialogFragment() {}
 
     public static MapDialogFragment newInstance(String vidTrainId) {
         MapDialogFragment frag = new MapDialogFragment();
         Bundle args = new Bundle();
-        args.putString("vidTrainId", vidTrainId);
+        args.putString(VIDTRAIN_ID, vidTrainId);
         frag.setArguments(args);
         return frag;
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
     }
 
     @Nullable
@@ -65,62 +63,54 @@ public class MapDialogFragment extends DialogFragment {
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         View v = inflater.inflate(R.layout.custom_info_window, container);
         ButterKnife.bind(this, v);
-        final String vidTrainId = getArguments().getString("vidTrainId");
+        final String vidTrainId = getArguments().getString(VIDTRAIN_ID);
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
         query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
-        query.whereEqualTo("objectId", vidTrainId);;
-
-        query.setLimit(1);
-        query.findInBackground(new FindCallback<VidTrain>() {
+        query.whereEqualTo("objectId", vidTrainId);
+        query.getFirstInBackground(new GetCallback<VidTrain>() {
             @Override
-            public void done(List<VidTrain> objects, ParseException e) {
-                if (e == null) {
-                    vidTrain = objects.get(0);
-                    titleTv.setText(vidTrain.getTitle());
-                    int videoCount = vidTrain.getVideosCount();
-                    String totalVideos = getResources().getQuantityString(R.plurals.videos_count,
-                            videoCount, videoCount);
-                    tvVideoCount.setText(totalVideos);
-                    vvPreview.setHeightRatio(1);
-                    vvPreview.setVisibility(View.VISIBLE);
-                    final ParseFile parseFile = ((ParseFile) vidTrain.get("thumbnail"));
-                    parseFile.getDataInBackground(new GetDataCallback() {
-                        @Override
-                        public void done(byte[] data, ParseException e) {
-                            try {
-                                File videoFile = VidtrainApplication.getOutputMediaFile(vidTrain.getObjectId());
-                                FileOutputStream out = new FileOutputStream(videoFile);
-                                out.write(data);
-                                out.close();
-                                vvPreview.setOnClickListener(new OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-
-                                    }
-                                });
-                                VidtrainApplication
-                                        .getVideoPlayerInstance()
-                                        .playNewVideo(null, vvPreview, videoFile.getPath());
-                            } catch (FileNotFoundException e1) {
-                                e1.printStackTrace();
-                                Log.d("TAG", "Error: " + e1.toString());
-                            } catch (IOException ioe) {
-                                ioe.printStackTrace();
-                            }
-                        }
-                    });
-                } else {
-//                    invalidVidTrain();
+            public void done(final VidTrain vidTrain, ParseException e) {
+                if (e != null) {
+                    Log.d(VidtrainApplication.TAG, e.toString());
+                    return;
                 }
+                titleTv.setText(vidTrain.getTitle());
+                int videoCount = vidTrain.getVideosCount();
+                String totalVideos = getResources().getQuantityString(R.plurals.videos_count,
+                        videoCount, videoCount);
+                tvVideoCount.setText(totalVideos);
+                tvTime.setText(Utility.getRelativeTime(vidTrain.getUpdatedAt().getTime()));
+                vvPreview.setHeightRatio(1);
+                vvPreview.setVisibility(View.VISIBLE);
+                final ParseFile parseFile = ((ParseFile) vidTrain.get("thumbnail"));
+                parseFile.getDataInBackground(new GetDataCallback() {
+                    @Override
+                    public void done(byte[] data, ParseException e) {
+                        try {
+                            File videoFile = VidtrainApplication.getOutputMediaFile(
+                                    vidTrain.getObjectId());
+                            FileOutputStream out = new FileOutputStream(videoFile);
+                            out.write(data);
+                            out.close();
+                            vvPreview.setOnClickListener(new OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                }
+                            });
+                            VidtrainApplication
+                                    .getVideoPlayerInstance()
+                                    .playNewVideo(null, vvPreview, videoFile.getPath());
+                        } catch (FileNotFoundException e1) {
+                            e1.printStackTrace();
+                            Log.d("TAG", "Error: " + e1.toString());
+                        } catch (IOException ioe) {
+                            ioe.printStackTrace();
+                        }
+                    }
+                });
             }
         });
-
-
         return v;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
     }
 }
