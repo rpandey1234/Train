@@ -42,7 +42,6 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
     private List<VidTrain> mVidTrains;
     private Context context;
 
-
     public VidTrainArrayAdapter( List<VidTrain> vidTrains, Context context) {
         mVidTrains = vidTrains;
         this.context = context;
@@ -61,8 +60,7 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
     @Override
     public void onBindViewHolder(VidTrainViewHolder holder, int position) {
         VidTrainViewHolder vidTrainViewHolder = (VidTrainViewHolder) holder;
-        configureVidTrainViewHolder( vidTrainViewHolder, position);
-
+        configureVidTrainViewHolder(vidTrainViewHolder, position);
     }
 
     @Override
@@ -103,9 +101,7 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
             @Override
             public void done(byte[] data, ParseException e) {
                 try {
-//                                FileUtils.writeByteArrayToFile(getOutputMediaFile(vidTrain.getObjectId().toString()), data);
-
-                    File videoFile = getOutputMediaFile(vidTrain.getObjectId().toString());
+                    final File videoFile = VidtrainApplication.getOutputMediaFile(vidTrain.getObjectId());
                     FileOutputStream out;
 
                     out = new FileOutputStream(videoFile);
@@ -115,12 +111,10 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
                     vvPreview.addMediaPlayerListener(new SimpleMainThreadMediaPlayerListener() {
                         @Override
                         public void onVideoCompletionMainThread() {
-                            Toast.makeText(holder.context,
-                                    "Video has been prepared from:\n" + parseFile.getUrl()
-                                            .toString() + "Video has been saved to :\n"
-                                            + getOutputMediaFile(vidTrain.getObjectId().toString()),
-                                    Toast.LENGTH_LONG).show();
-//                            vvPreview.start();
+                            Toast.makeText(
+                                    holder.context,
+                                    "Video has been prepared for: " + vidTrain.getTitle(),
+                                    Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -129,8 +123,9 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
                         public void onClick(View v) {
                             VidtrainApplication
                                     .getVideoPlayerInstance()
-                                    .playNewVideo(null, vvPreview, getOutputMediaFile(
-                                            vidTrain.getObjectId().toString()).getPath());
+                                    .playNewVideo(null,
+                                            vvPreview,
+                                            videoFile.getPath());
                         }
                     });
 
@@ -141,48 +136,8 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
                 } catch (IOException ioe) {
                     ioe.printStackTrace();
                 }
-//                try {
-//                    FileUtils.writeByteArrayToFile(getOutputMediaFile(vidTrain.getObjectId().toString()), data);
-//                    vvPreview.setDataSource(getOutputMediaFileUri(vidTrain.getObjectId()).toString());
-////                    vvPreview.setDataSource(holder.context, getOutputMediaFileUri(vidTrain.getObjectId().toString()));
-//                    vvPreview.setVolume(0, 0);
-//                    vvPreview.setLooping(true);
-//                    vvPreview.prepare(new MediaPlayer.OnPreparedListener() {
-//                        @Override
-//                        public void onPrepared(MediaPlayer mp) {
-////                    vvPreview.start();
-//                            Toast.makeText(holder.context, "Video has been prepared from:\n" + parseFile.getUrl().toString(), Toast.LENGTH_LONG).show();
-//
-//                        }
-//                    });
-//                } catch (IOException ioe) {
-//                    Toast.makeText(holder.context, "IOException:" + ioe.toString(), Toast.LENGTH_LONG).show();
-//                }
             }
         });
 
-    }
-
-    /** Create a file Uri for saving an image or video */
-    public static Uri getOutputMediaFileUri(String objectId)
-    {
-        return Uri.fromFile(getOutputMediaFile(objectId));
-    }
-    /** Create a File for saving an image or video */
-    public static File getOutputMediaFile(String objectId)
-    {
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_MOVIES), "VidTrainApp");
-
-        if (! mediaStorageDir.exists()){
-            if (! mediaStorageDir.mkdirs()){
-                Log.d("VidTrainApp", "failed to create directory");
-                return null;
-            }
-        }
-        File mediaFile;
-        mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                "VID_CAPTURED" + objectId+ ".mp4");
-        return mediaFile;
     }
 }

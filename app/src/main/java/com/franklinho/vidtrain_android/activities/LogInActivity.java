@@ -14,6 +14,7 @@ import com.facebook.GraphRequest.GraphJSONObjectCallback;
 import com.facebook.GraphResponse;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.models.User;
+import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
@@ -79,7 +80,7 @@ public class LogInActivity extends AppCompatActivity {
                     @Override
                     public void done(ParseUser user, ParseException e) {
                         if (user == null) {
-                            Log.d("Vidtrain", "Uh oh. The user cancelled the Facebook login.");
+                            Log.d(VidtrainApplication.TAG, "Uh oh. The user cancelled the Facebook login.");
                         } else {
                             updateUserInfo(user);
 //                            System.out.println("user found!!!");
@@ -94,12 +95,12 @@ public class LogInActivity extends AppCompatActivity {
     public void sendToDiscoveryActivity() {
         Intent i = new Intent(getBaseContext(), DiscoveryActivity.class);
         startActivity(i);
-        Log.d("Vidtrain", "Logged in with Facebook");
+        Log.d(VidtrainApplication.TAG, "Logged in with Facebook");
     }
 
     public void sendToHomeActivity() {
         Intent i = new Intent(getBaseContext(), HomeActivity.class);
         startActivity(i);
-        Log.d("Vidtrain", "Logged in with Facebook");
+        Log.d(VidtrainApplication.TAG, "Logged in with Facebook");
     }
 }

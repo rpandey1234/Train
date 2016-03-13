@@ -34,6 +34,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.franklinho.vidtrain_android.Manifest;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.models.VidTrain;
+import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -169,14 +170,14 @@ public class MapFragment extends Fragment implements
         query.setSkip(currentSize);
         query.setLimit(2);
         final BitmapDescriptor defaultMarker = BitmapDescriptorFactory.defaultMarker(
-                BitmapDescriptorFactory.HUE_GREEN);
+                BitmapDescriptorFactory.HUE_AZURE);
         query.findInBackground(new FindCallback<VidTrain>() {
             @Override
             public void done(List<VidTrain> objects, ParseException e) {
                 if (e == null) {
                     for (VidTrain vidTrain : objects) {
                         vidTrainsMap.put(vidTrain.getObjectId(), vidTrain);
-                        Log.d("Vidtrain", vidTrain.getTitle());
+                        Log.d(VidtrainApplication.TAG, vidTrain.getTitle());
 
                         Marker marker = map.addMarker(new MarkerOptions()
                                 .position(vidTrain.getLatLong())
@@ -185,7 +186,6 @@ public class MapFragment extends Fragment implements
                                 .icon(defaultMarker));
 
                         markers.add(marker);
-
                     }
                     LatLngBounds.Builder builder = new LatLngBounds.Builder();
                     for (Marker marker : markers) {
@@ -236,16 +236,6 @@ public class MapFragment extends Fragment implements
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
             map.moveCamera(cameraUpdate);
         }
-        startLocationUpdates();
-    }
-
-    protected void startLocationUpdates() {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        mLocationRequest.setInterval(UPDATE_INTERVAL);
-        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,
-                mLocationRequest, this);
     }
 
     /*

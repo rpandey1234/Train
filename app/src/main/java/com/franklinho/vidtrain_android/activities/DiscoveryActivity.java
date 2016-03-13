@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.MediaController;
 import android.widget.Toast;
@@ -21,8 +20,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class DiscoveryActivity extends AppCompatActivity {
-    public final String APP_TAG = "VidTrain";
-    public String videoFileName = "myvideo.mp4";
+    public static final String APP_TAG = "VidTrain";
+    public static final String VIDEO_FILENAME = "myvideo.mp4";
 
     @Bind(R.id.vvPreview) VideoView vvPreview;
     private static final int REQUEST_CAMERA = 0;
@@ -41,7 +40,6 @@ public class DiscoveryActivity extends AppCompatActivity {
     }
 
     public void showCreateFlow(View view) {
-
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
             startCameraActivity();
         } else {
@@ -50,36 +48,12 @@ public class DiscoveryActivity extends AppCompatActivity {
     }
 
     public void startCameraActivity() {
-//        Intent startCustomCameraIntent = new Intent(this, CustomCameraActivity.class);
-//        startActivityForResult(startCustomCameraIntent, REQUEST_CAMERA);
-
-        File mediaFile =
-                new File(
-                        getExternalFilesDir(Environment.DIRECTORY_MOVIES), APP_TAG+"/"+videoFileName);
+        File mediaFile = new File(
+                getExternalFilesDir(Environment.DIRECTORY_MOVIES), APP_TAG + "/" + VIDEO_FILENAME);
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         videoUri = Uri.fromFile(mediaFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
         startActivityForResult(intent, VIDEO_CAPTURE);
-    }
-
-    public Uri getVideoFileUri(String fileName) {
-        // Only continue if the SD Card is mounted
-        if (isExternalStorageAvailable()) {
-            // Get safe storage directory for photos
-            // Use `getExternalFilesDir` on Context to access package-specific directories.
-            // This way, we don't need to request external read/write runtime permissions.
-            File mediaStorageDir = new File(
-                    getExternalFilesDir(Environment.DIRECTORY_MOVIES), APP_TAG);
-
-            // Create the storage directory if it does not exist
-            if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
-                Log.d(APP_TAG, "failed to create directory");
-            }
-
-            // Return the file target for the photo based on filename
-            return Uri.fromFile(new File(mediaStorageDir.getPath() + File.separator + fileName));
-        }
-        return null;
     }
 
     // Returns true if external storage for photos is available

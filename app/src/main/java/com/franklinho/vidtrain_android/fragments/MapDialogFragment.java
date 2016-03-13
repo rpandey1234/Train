@@ -13,7 +13,6 @@ import android.view.Window;
 import android.widget.TextView;
 
 import com.franklinho.vidtrain_android.R;
-import com.franklinho.vidtrain_android.adapters.VidTrainArrayAdapter;
 import com.franklinho.vidtrain_android.models.DynamicHeightVideoPlayerManagerView;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
@@ -87,8 +86,7 @@ public class MapDialogFragment extends DialogFragment {
                         @Override
                         public void done(byte[] data, ParseException e) {
                             try {
-                                File videoFile = VidTrainArrayAdapter.getOutputMediaFile(
-                                        vidTrain.getObjectId().toString());
+                                File videoFile = VidtrainApplication.getOutputMediaFile(vidTrain.getObjectId());
                                 FileOutputStream out;
 
                                 out = new FileOutputStream(videoFile);
@@ -102,12 +100,8 @@ public class MapDialogFragment extends DialogFragment {
                                 });
                                 VidtrainApplication
                                         .getVideoPlayerInstance()
-                                        .playNewVideo(null, vvPreview,
-                                                VidTrainArrayAdapter.getOutputMediaFile(
-                                                        vidTrain.getObjectId().toString())
-                                                        .getPath());
+                                        .playNewVideo(null, vvPreview, videoFile.getPath());
                             } catch (FileNotFoundException e1) {
-                                // TODO Auto-generated catch block
                                 e1.printStackTrace();
                                 Log.d("TAG", "Error: " + e1.toString());
                             } catch (IOException ioe) {
