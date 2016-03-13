@@ -12,7 +12,7 @@ import android.view.Window;
 import android.widget.TextView;
 
 import com.franklinho.vidtrain_android.R;
-import com.franklinho.vidtrain_android.models.DynamicHeightVideoPlayerManagerView;
+import com.franklinho.vidtrain_android.models.DynamicVideoPlayerView;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.Utility;
@@ -35,7 +35,7 @@ import butterknife.ButterKnife;
  */
 public class MapDialogFragment extends DialogFragment {
 
-    @Bind(R.id.vvPreview) DynamicHeightVideoPlayerManagerView vvPreview;
+    @Bind(R.id.vvPreview) DynamicVideoPlayerView vvPreview;
     @Bind(R.id.tvTitle) TextView titleTv;
     @Bind(R.id.tvVideoCount) TextView tvVideoCount;
     @Bind(R.id.tvTime) TextView tvTime;

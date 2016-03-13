@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.adapters.holders.VidTrainViewHolder;
-import com.franklinho.vidtrain_android.models.DynamicHeightVideoPlayerManagerView;
+import com.franklinho.vidtrain_android.models.DynamicVideoPlayerView;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
@@ -66,9 +66,8 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
             }
         });
 
-        final DynamicHeightVideoPlayerManagerView vvPreview = holder.vvPreview;
-        vvPreview.setHeightRatio(1);
-        vvPreview.setVisibility(View.VISIBLE);
+        holder.vvPreview.setHeightRatio(1);
+        holder.vvPreview.setVisibility(View.VISIBLE);
 
         final File videoFile = Utility.getOutputMediaFile(vidTrain.getObjectId());
         if (videoFile == null) {
@@ -82,10 +81,10 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
                     return;
                 }
                 Utility.writeToFile(data, videoFile);
-                vvPreview.setOnClickListener(new OnClickListener() {
+                holder.vvPreview.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        VidtrainApplication.getVideoPlayer().playNewVideo(null, vvPreview,
+                        VidtrainApplication.getVideoPlayer().playNewVideo(null, holder.vvPreview,
                                 videoFile.getPath());
                     }
                 });

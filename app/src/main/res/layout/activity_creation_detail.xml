@@ -9,7 +9,7 @@
     android:layout_height="match_parent"
     tools:context="com.franklinho.vidtrain_android.activities.CreationDetailActivity">
 
-    <com.franklinho.vidtrain_android.models.DynamicHeightVideoPlayerManagerView
+    <com.franklinho.vidtrain_android.models.DynamicVideoPlayerView
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:id="@+id/vvPreview"

@@ -17,7 +17,7 @@ import com.google.common.io.Files;
 
 import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
-import com.franklinho.vidtrain_android.models.DynamicHeightVideoPlayerManagerView;
+import com.franklinho.vidtrain_android.models.DynamicVideoPlayerView;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
@@ -35,14 +35,14 @@ import com.volokh.danylo.video_player_manager.ui.SimpleMainThreadMediaPlayerList
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class VidTrainDetailActivity extends AppCompatActivity {
     @Bind(R.id.ivCollaborators) ImageView ivCollaborators;
-    @Bind(R.id.vvPreview) DynamicHeightVideoPlayerManagerView vvPreview;
+    @Bind(R.id.vvPreview) DynamicVideoPlayerView vvPreview;
     @Bind(R.id.ibtnLike) ImageButton ibtnLike;
     @Bind(R.id.tvLikeCount) TextView tvLikeCount;
     @Bind(R.id.tvVideoCount) TextView tvVideoCount;
@@ -86,7 +86,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                     }
                 });
 
-                ArrayList<Video> videos = vidTrain.getVideos();
+                List<Video> videos = vidTrain.getVideos();
                 // TODO: sequential loading
                 for (Video video : videos) {
                     try {

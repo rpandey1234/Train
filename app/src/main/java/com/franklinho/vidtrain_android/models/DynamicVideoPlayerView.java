@@ -8,16 +8,16 @@ import com.volokh.danylo.video_player_manager.ui.VideoPlayerView;
 /**
  * An {@link android.widget.ImageView} layout that maintains a consistent width to height aspect ratio.
  */
-public class DynamicHeightVideoPlayerManagerView extends VideoPlayerView {
+public class DynamicVideoPlayerView extends VideoPlayerView {
 
 
     private double mHeightRatio;
 
-    public DynamicHeightVideoPlayerManagerView(Context context, AttributeSet attrs) {
+    public DynamicVideoPlayerView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public DynamicHeightVideoPlayerManagerView(Context context) {
+    public DynamicVideoPlayerView(Context context) {
         super(context);
     }
 

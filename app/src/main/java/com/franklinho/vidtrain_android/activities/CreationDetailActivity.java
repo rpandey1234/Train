@@ -23,7 +23,7 @@ import com.google.common.io.Files;
 
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.adapters.UsersAdapter;
-import com.franklinho.vidtrain_android.models.DynamicHeightVideoPlayerManagerView;
+import com.franklinho.vidtrain_android.models.DynamicVideoPlayerView;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
@@ -46,7 +46,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class CreationDetailActivity extends AppCompatActivity {
-    @Bind(R.id.vvPreview) DynamicHeightVideoPlayerManagerView vvPreview;
+    @Bind(R.id.vvPreview) DynamicVideoPlayerView vvPreview;
     @Bind(R.id.btnSubmit) Button btnSubmit;
     @Bind(R.id.etTitle) EditText etTitle;
     @Bind(R.id.toggleBtn) Switch toggleBtn;

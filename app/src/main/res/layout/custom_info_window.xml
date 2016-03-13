@@ -38,7 +38,7 @@
         android:textSize="14sp"
         />
 
-    <com.franklinho.vidtrain_android.models.DynamicHeightVideoPlayerManagerView
+    <com.franklinho.vidtrain_android.models.DynamicVideoPlayerView
         android:layout_width="280dp"
         android:layout_height="240dp"
         android:id="@+id/vvPreview"

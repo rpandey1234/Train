@@ -59,19 +59,19 @@ public class VidTrain extends ParseObject implements Serializable {
         put(DESCRIPTION_KEY, description);
     }
 
-    public void setVideos(ArrayList<Video> videos) {
+    public void setVideos(List<Video> videos) {
         put(VIDEOS_KEY, videos);
     }
 
-    public ArrayList<Video> getVideos() {
-        return (ArrayList<Video>) get(VIDEOS_KEY);
+    public List<Video> getVideos() {
+        return getList(VIDEOS_KEY);
     }
 
     public int getVideosCount() {
         return getVideos().size();
     }
 
-    public void setComments(ArrayList<Comment> comments) {
+    public void setComments(List<Comment> comments) {
         put(COMMENTS_KEY, comments);
     }
     public void setReadPrivacy(Boolean readPrivacy) {
@@ -113,11 +113,11 @@ public class VidTrain extends ParseObject implements Serializable {
     }
 
     public List<ParseUser> getCollaborators() {
-        return (List<ParseUser>) get(COLLABORATORS);
+        return getList(COLLABORATORS);
     }
 
-    public ArrayList<Video> maybeInitAndAdd(Video video) {
-        ArrayList<Video> videos = (ArrayList<Video>) get(VIDEOS_KEY);
+    public List<Video> maybeInitAndAdd(Video video) {
+        List<Video> videos = getList(VIDEOS_KEY);
         if (videos == null) {
             videos = new ArrayList<>();
         }

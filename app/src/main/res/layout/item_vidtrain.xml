@@ -42,7 +42,7 @@
         android:layout_toRightOf="@id/tvTitle"
         android:layout_marginLeft="10dp"/>
 
-    <com.franklinho.vidtrain_android.models.DynamicHeightVideoPlayerManagerView
+    <com.franklinho.vidtrain_android.models.DynamicVideoPlayerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/vvPreview"
