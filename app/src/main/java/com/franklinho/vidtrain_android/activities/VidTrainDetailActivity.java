@@ -22,7 +22,7 @@ import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
-import com.parse.FindCallback;
+import com.franklinho.vidtrain_android.utilities.Utility;
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
@@ -38,7 +38,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -49,6 +48,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     @Bind(R.id.ibtnLike) ImageButton ibtnLike;
     @Bind(R.id.tvLikeCount) TextView tvLikeCount;
     @Bind(R.id.tvVideoCount) TextView tvVideoCount;
+    @Bind(R.id.tvTime) TextView tvTime;
     @Bind(R.id.toolbar) Toolbar toolbar;
 
     public VidTrain vidTrain;
@@ -71,15 +71,14 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                     vidTrain = object;
                     final String title = vidTrain.getTitle();
                     toolbar.setTitle(title);
-                    String countString = String.format(getString(R.string.video_count),
-                            vidTrain.getVideosCount());
+                    String countString = String.format(getString(R.string.video_count), vidTrain.getVideosCount());
                     tvVideoCount.setText(countString);
+                    tvTime.setText(Utility.getRelativeTime(vidTrain.getUpdatedAt().getTime()));
                     vidTrain.getUser().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
                         @Override
                         public void done(ParseObject object, ParseException e) {
                             String profileImageUrl = User.getProfileImageUrl(vidTrain.getUser());
-                            Glide.with(getBaseContext()).load(profileImageUrl).into(
-                                    ivCollaborators);
+                            Glide.with(getBaseContext()).load(profileImageUrl).into(ivCollaborators);
                         }
                     });
 

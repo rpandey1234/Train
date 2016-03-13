@@ -39,7 +39,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:gravity="center_vertical|end"
-        android:textSize="12sp"
+        android:textSize="16sp"
         android:layout_toRightOf="@id/tvTitle"
         android:layout_marginLeft="10dp"/>
 
@@ -63,7 +63,8 @@
         android:padding="5dp"
         android:gravity="center_vertical"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="10dp"
+        />
 
     <TextView
         android:layout_width="wrap_content"
@@ -74,7 +75,21 @@
         android:layout_alignBottom="@id/ibtnLike"
         android:gravity="center_vertical"
         android:textSize="16sp"
-        android:id="@+id/tvLikeCount"/>
+        android:id="@+id/tvLikeCount"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/ibtnLike"
+        android:layout_alignBottom="@+id/ibtnLike"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="10dp"
+        android:gravity="center_vertical"
+        android:textSize="16sp"
+        android:id="@+id/tvTime"
+        />
 
     <View style="@style/section_item_divider"
         android:layout_below="@+id/ibtnLike"

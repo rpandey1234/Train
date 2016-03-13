@@ -21,6 +21,7 @@ import com.franklinho.vidtrain_android.models.DynamicHeightVideoPlayerManagerVie
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
+import com.franklinho.vidtrain_android.utilities.Utility;
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
@@ -68,12 +69,15 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
         TextView tvLikeCount = holder.tvLikeCount;
         TextView tvTitle = holder.tvTitle;
         TextView tvVideoCount = holder.tvVideoCount;
+        TextView tvTime = holder.tvTime;
 
         tvTitle.setText(vidTrain.getTitle());
         int videoCount = vidTrain.getVideosCount();
         String totalVideos = context.getResources().getQuantityString(R.plurals.videos_count,
                 videoCount, videoCount);
         tvVideoCount.setText(totalVideos);
+        tvTime.setText(Utility.getRelativeTime(vidTrain.getUpdatedAt().getTime()));
+
         ivCollaborators.setImageResource(0);
 
         final ParseUser user = vidTrain.getUser();

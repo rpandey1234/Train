@@ -55,7 +55,7 @@
             android:layout_alignBottom="@id/ivCollaborators"
             android:layout_alignParentEnd="true"
             android:gravity="center_vertical|end"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:layout_toRightOf="@id/ivCollaborators"
             android:layout_marginLeft="10dp"/>
 
@@ -89,6 +89,19 @@
             android:gravity="center_vertical"
             android:textSize="16sp"
             android:id="@+id/tvLikeCount"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/ibtnLike"
+            android:layout_alignBottom="@+id/ibtnLike"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="10dp"
+            android:gravity="center_vertical"
+            android:textSize="16sp"
+            android:id="@+id/tvTime"
+            />
 
         <EditText
             android:layout_width="wrap_content"
