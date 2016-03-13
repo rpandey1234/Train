@@ -53,6 +53,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
 
     public VidTrain vidTrain;
     private static final int VIDEO_CAPTURE = 101;
+    public static final String VIDTRAIN_KEY = "vidTrain";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +61,10 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_vid_train_detail);
         ButterKnife.bind(this);
         vvPreview.setHeightRatio(1);
-        final String vidTrainObjectID = getIntent().getExtras().getString("vidTrain");
+        final String vidTrainId = getIntent().getExtras().getString(VIDTRAIN_KEY);
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
         query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
-        query.whereEqualTo("objectId", vidTrainObjectID);;
+        query.whereEqualTo("objectId", vidTrainId);;
         query.getFirstInBackground(new GetCallback<VidTrain>() {
             @Override
             public void done(VidTrain object, ParseException e) {
@@ -71,14 +72,16 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                     vidTrain = object;
                     final String title = vidTrain.getTitle();
                     toolbar.setTitle(title);
-                    String countString = String.format(getString(R.string.video_count), vidTrain.getVideosCount());
+                    String countString = String.format(getString(R.string.video_count),
+                            vidTrain.getVideosCount());
                     tvVideoCount.setText(countString);
                     tvTime.setText(Utility.getRelativeTime(vidTrain.getUpdatedAt().getTime()));
                     vidTrain.getUser().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
                         @Override
                         public void done(ParseObject object, ParseException e) {
                             String profileImageUrl = User.getProfileImageUrl(vidTrain.getUser());
-                            Glide.with(getBaseContext()).load(profileImageUrl).into(ivCollaborators);
+                            Glide.with(getBaseContext()).load(profileImageUrl).into(
+                                    ivCollaborators);
                         }
                     });
 
@@ -116,12 +119,11 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                                                 vvPreview.start();
                                             }
                                         });
-                                VidtrainApplication
-                                        .getVideoPlayerInstance()
-                                        .playNewVideo(null, vvPreview, videoFile.getPath());
+                                VidtrainApplication.getVideoPlayer().playNewVideo(null, vvPreview,
+                                        videoFile.getPath());
                             } catch (FileNotFoundException e1) {
                                 e1.printStackTrace();
-                                Log.d("TAG", "Error: " + e1.toString());
+                                Log.d(VidtrainApplication.TAG, "Error: " + e1.toString());
                             } catch (IOException ioe) {
                                 ioe.printStackTrace();
                             }
@@ -177,27 +179,26 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                         video.setUser(currentUser);
                         video.setVideoFile(parseFile);
                         video.setVidTrain(vidTrain);
+                        final SaveCallback vidTrainSaved = new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                currentUser.put("vidtrains", User.maybeInitAndAdd(currentUser, vidTrain));
+                                currentUser.put("videos", User.maybeInitAndAdd(currentUser, video));
+                                currentUser.saveInBackground(
+                                        new SaveCallback() {
+                                            @Override
+                                            public void done(ParseException e) {
+                                                Toast.makeText(getBaseContext(), "Successfully added video", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            }
+                        };
                         video.saveInBackground(new SaveCallback() {
                             @Override
                             public void done(ParseException e) {
                                 vidTrain.setThumbnailFile(parseFile);
                                 vidTrain.setVideos(vidTrain.maybeInitAndAdd(video));
-                                vidTrain.saveInBackground(new SaveCallback() {
-                                    @Override
-                                    public void done(ParseException e) {
-                                        currentUser.put("vidtrains", User.maybeInitAndAdd(
-                                                currentUser, vidTrain));
-                                        currentUser.put("videos", User.maybeInitAndAdd(
-                                                currentUser, video));
-                                        currentUser.saveInBackground(
-                                                new SaveCallback() {
-                                                    @Override
-                                                    public void done(ParseException e) {
-                                                        successfullyAddedVideo();
-                                                    }
-                                                });
-                                    }
-                                });
+                                vidTrain.saveInBackground(vidTrainSaved);
                             }
                         });
                     }
@@ -210,9 +211,5 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Failed to record video", Toast.LENGTH_LONG).show();
         }
-    }
-
-    public void successfullyAddedVideo() {
-        Toast.makeText(getBaseContext(), "Successfully added video", Toast.LENGTH_SHORT).show();
     }
 }

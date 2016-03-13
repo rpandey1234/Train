@@ -43,9 +43,8 @@ public class VidTrainViewHolder extends  RecyclerView.ViewHolder implements View
 
     @Override
     public void onClick(View v) {
-        int position = getLayoutPosition();
         Intent i = new Intent(context, VidTrainDetailActivity.class);
-        i.putExtra("vidTrain", vidTrain.getObjectId());
+        i.putExtra(VidTrainDetailActivity.VIDTRAIN_KEY, vidTrain.getObjectId());
         context.startActivity(i);
     }
 

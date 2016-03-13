@@ -120,7 +120,7 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
                         @Override
                         public void onClick(View v) {
                             VidtrainApplication
-                                    .getVideoPlayerInstance()
+                                    .getVideoPlayer()
                                     .playNewVideo(null,
                                             vvPreview,
                                             videoFile.getPath());

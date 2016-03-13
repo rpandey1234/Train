@@ -95,7 +95,7 @@ public class MapDialogFragment extends DialogFragment {
                                 }
                             });
                             VidtrainApplication
-                                    .getVideoPlayerInstance()
+                                    .getVideoPlayer()
                                     .playNewVideo(null, vvPreview, videoFile.getPath());
                         } catch (FileNotFoundException e1) {
                             e1.printStackTrace();

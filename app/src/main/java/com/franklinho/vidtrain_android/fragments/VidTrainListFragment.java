@@ -138,6 +138,6 @@ public class VidTrainListFragment extends Fragment {
     public void onStop() {
         super.onStop();
         // we have to stop any playback in onStop
-        VidtrainApplication.getVideoPlayerInstance().resetMediaPlayer();
+        VidtrainApplication.getVideoPlayer().resetMediaPlayer();
     }
 }

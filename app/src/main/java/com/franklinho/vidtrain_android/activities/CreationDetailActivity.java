@@ -85,7 +85,7 @@ public class CreationDetailActivity extends AppCompatActivity {
                     vvPreview.start();
                 }
             });
-            VidtrainApplication.getVideoPlayerInstance().playNewVideo(null, vvPreview, videoPath);
+            VidtrainApplication.getVideoPlayer().playNewVideo(null, vvPreview, videoPath);
         }
 
         etCollaborators.addTextChangedListener(new TextWatcher() {

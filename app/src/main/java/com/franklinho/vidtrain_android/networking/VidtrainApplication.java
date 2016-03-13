@@ -53,7 +53,7 @@ public class VidtrainApplication extends Application {
         });
     }
 
-    public static VideoPlayerManager<MetaData> getVideoPlayerInstance() {
+    public static VideoPlayerManager<MetaData> getVideoPlayer() {
         return videoPlayerManager;
     }
 }
