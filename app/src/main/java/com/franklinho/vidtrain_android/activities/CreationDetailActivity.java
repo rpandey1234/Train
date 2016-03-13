@@ -28,6 +28,7 @@ import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
+import com.franklinho.vidtrain_android.utilities.Utility;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -141,25 +142,24 @@ public class CreationDetailActivity extends AppCompatActivity {
     }
 
     public void submitVidTrain(View view) {
-        File file = new File(videoPath);
         final Video video = new Video();
         final VidTrain vidTrain = new VidTrain();
 
-        byte[] data;
-        try {
-            data = Files.toByteArray(file);
-            final ParseFile parseFile = new ParseFile("video.mp4", data);
-
-            parseFile.saveInBackground(new SaveCallback() {
+        final ParseFile parseFile = Utility.createParseFile(videoPath);
+        if (parseFile == null) {
+            return;
+        }
+        parseFile.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
-                    video.setUser(ParseUser.getCurrentUser());
+                    final ParseUser user = ParseUser.getCurrentUser();
+                    video.setUser(user);
                     video.setVideoFile(parseFile);
                     video.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
                             vidTrain.setTitle(etTitle.getText().toString());
-                            vidTrain.setUser(ParseUser.getCurrentUser());
+                            vidTrain.setUser(user);
                             ArrayList<Video> videos = new ArrayList<>();
                             videos.add(video);
                             vidTrain.setVideos(videos);
@@ -169,59 +169,29 @@ public class CreationDetailActivity extends AppCompatActivity {
                             }
                             vidTrain.setReadPrivacy(false);
                             vidTrain.setLatestVideo(parseFile);
-
                             LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                            double longitude = location.getLongitude();
-                            double latitude = location.getLatitude();
-
-                            vidTrain.setLL(new ParseGeoPoint(latitude, longitude));
-
-
+                            Location loc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                            vidTrain.setLL(new ParseGeoPoint(loc.getLongitude(), loc.getLatitude()));
                             vidTrain.saveInBackground(new SaveCallback() {
                                 @Override
                                 public void done(ParseException e) {
                                     video.setVidTrain(vidTrain);
                                     video.saveInBackground();
-
-                                    ArrayList<VidTrain> vidTrains;
-                                    if (ParseUser.getCurrentUser().get("vidtrains") == null) {
-                                        vidTrains = new ArrayList<>();
-
-                                    } else {
-                                        vidTrains = (ArrayList<VidTrain>) ParseUser.getCurrentUser().get("vidtrains");
-                                    }
-                                    vidTrains.add(vidTrain);
-                                    ParseUser.getCurrentUser().put("vidtrains", vidTrains);
-
-
-                                    ArrayList<Video> videos;
-                                    if (ParseUser.getCurrentUser().get("videos") == null) {
-                                        videos = new ArrayList<>();
-                                    } else {
-                                        videos = (ArrayList<Video>) ParseUser.getCurrentUser().get("vidtrains");
-                                    }
-                                    videos.add(video);
-                                    ParseUser.getCurrentUser().put("videos", vidTrains);
-
-                                    ParseUser.getCurrentUser().saveInBackground(new SaveCallback() {
+                                    user.put("vidtrains", User.maybeInitAndAdd(user, vidTrain));
+                                    user.put("videos", User.maybeInitAndAdd(user, video));
+                                    user.saveInBackground(new SaveCallback() {
                                         @Override
                                         public void done(ParseException e) {
                                             successfullySavedVidTrain();
                                         }
                                     });
-
-
                                 }
                             });
 
                         }
                     });
                 }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        });
     }
 
     public void successfullySavedVidTrain() {

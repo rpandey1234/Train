@@ -144,47 +144,49 @@ public class VidTrainDetailActivity extends AppCompatActivity {
             return;
         }
         if (resultCode == RESULT_OK) {
-            Toast.makeText(this, "Video saved to:\n" + data.getData(), Toast.LENGTH_SHORT).show();
+            // data.getData().toString() is the following:
+            // "file:///storage/emulated/0/Movies/VidTrainApp/VID_CAPTURED.mp4"
+            // below is where data is stored:
+            // "/storage/emulated/0/Movies/VidTrainApp/VID_CAPTURED.mp4"
+            String videoPath = Utility.getOutputMediaFile().getPath();
             final Video video = new Video();
-            File file = Utility.getOutputMediaFile();
-            byte[] videoFileData;
-            try {
-                videoFileData = Files.toByteArray(file);
-                final ParseUser currentUser = ParseUser.getCurrentUser();
-                final ParseFile parseFile = new ParseFile("video.mp4", videoFileData);
-                parseFile.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        video.setUser(currentUser);
-                        video.setVideoFile(parseFile);
-                        video.setVidTrain(vidTrain);
-                        final SaveCallback vidTrainSaved = new SaveCallback() {
-                            @Override
-                            public void done(ParseException e) {
-                                currentUser.put("vidtrains", User.maybeInitAndAdd(currentUser, vidTrain));
-                                currentUser.put("videos", User.maybeInitAndAdd(currentUser, video));
-                                currentUser.saveInBackground(
-                                        new SaveCallback() {
-                                            @Override
-                                            public void done(ParseException e) {
-                                                Toast.makeText(getBaseContext(), "Successfully added video", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                            }
-                        };
-                        video.saveInBackground(new SaveCallback() {
-                            @Override
-                            public void done(ParseException e) {
-                                vidTrain.setLatestVideo(parseFile);
-                                vidTrain.setVideos(vidTrain.maybeInitAndAdd(video));
-                                vidTrain.saveInBackground(vidTrainSaved);
-                            }
-                        });
-                    }
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
+            final ParseUser user = ParseUser.getCurrentUser();
+            final ParseFile parseFile = Utility.createParseFile(videoPath);
+            if (parseFile == null) {
+                return;
             }
+            parseFile.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    video.setUser(user);
+                    video.setVideoFile(parseFile);
+                    video.setVidTrain(vidTrain);
+                    final SaveCallback vidTrainSaved = new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            user.put("vidtrains", User.maybeInitAndAdd(user, vidTrain));
+                            user.put("videos", User.maybeInitAndAdd(user, video));
+                            user.saveInBackground(
+                                    new SaveCallback() {
+                                        @Override
+                                        public void done(ParseException e) {
+                                            Toast.makeText(getBaseContext(),
+                                                    "Successfully added video",
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        }
+                    };
+                    video.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            vidTrain.setLatestVideo(parseFile);
+                            vidTrain.setVideos(vidTrain.maybeInitAndAdd(video));
+                            vidTrain.saveInBackground(vidTrainSaved);
+                        }
+                    });
+                }
+            });
         } else if (resultCode == RESULT_CANCELED) {
             Toast.makeText(this, "Video recording cancelled.", Toast.LENGTH_LONG).show();
         } else {

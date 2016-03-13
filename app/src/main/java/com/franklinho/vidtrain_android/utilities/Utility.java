@@ -7,7 +7,10 @@ import android.provider.MediaStore;
 import android.text.format.DateUtils;
 import android.util.Log;
 
+import com.google.common.io.Files;
+
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
+import com.parse.ParseFile;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,6 +21,8 @@ import java.io.IOException;
  * Created by rahul on 3/12/16.
  */
 public class Utility {
+
+    public static final String FILENAME = "video.mp4";
 
     /**
      * Gets the relative time from now for the time passed in
@@ -32,9 +37,8 @@ public class Utility {
     {
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_MOVIES), "VidTrainApp");
-
-        if (! mediaStorageDir.exists()){
-            if (! mediaStorageDir.mkdirs()){
+        if (!mediaStorageDir.exists()){
+            if (!mediaStorageDir.mkdirs()){
                 Log.d(VidtrainApplication.TAG, "failed to create directory");
                 return null;
             }
@@ -70,5 +74,15 @@ public class Utility {
         intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, getOutputMediaFileUri());
         return intent;
+    }
+
+    public static ParseFile createParseFile(String path) {
+        try {
+            byte[] videoFileData = Files.toByteArray(new File(path));
+            return new ParseFile(FILENAME, videoFileData);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

@@ -41,7 +41,7 @@ public class LogInActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
-            if (currentUser.get("name") == null) {
+            if (User.getName(currentUser) == null) {
                 updateUserInfo(currentUser);
             }
             sendToHomeActivity();

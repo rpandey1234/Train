@@ -24,6 +24,7 @@
         android:singleLine="true"
         android:hint="@string/title_prompt"
         android:layout_margin="10dp"
+        android:inputType="textCapSentences"
         />
 
     <TextView

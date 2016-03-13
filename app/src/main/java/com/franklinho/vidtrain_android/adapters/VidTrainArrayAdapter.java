@@ -85,6 +85,7 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
                     return;
                 }
                 Utility.writeToFile(data, videoFile);
+//                mPlayer.playNewVideo(null, holder.vvPreview, videoFile.getPath());
                 holder.vvPreview.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
