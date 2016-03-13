@@ -53,27 +53,19 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.miProfile) {
-            profileView();
+            Intent intent = new Intent(this, ProfileActivity.class);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void profileView() {
-        Intent intent = new Intent(this, ProfileActivity.class);
-        startActivity(intent);
-    }
-
     public void showCreateFlow(View view) {
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
-            startCameraActivity();
+            startActivityForResult(Utility.getVideoIntent(), VIDEO_CAPTURE);
         } else {
             Toast.makeText(this, "No camera on device", Toast.LENGTH_LONG).show();
         }
-    }
-
-    public void startCameraActivity() {;
-        startActivityForResult(Utility.getVideoIntent(), VIDEO_CAPTURE);
     }
 
     @Override

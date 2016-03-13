@@ -9,10 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.google.common.io.Files;
 
 import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
@@ -34,7 +32,6 @@ import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
 import com.volokh.danylo.video_player_manager.ui.SimpleMainThreadMediaPlayerListener;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import butterknife.Bind;
@@ -74,7 +71,8 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                 vidTrain = object;
                 final String title = vidTrain.getTitle();
                 toolbar.setTitle(title);
-                String countString = String.format(getString(R.string.video_count), vidTrain.getVideosCount());
+                String countString = String.format(getString(R.string.video_count),
+                        vidTrain.getVideosCount());
                 tvVideoCount.setText(countString);
                 tvTime.setText(Utility.getRelativeTime(vidTrain.getUpdatedAt().getTime()));
                 vidTrain.getUser().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
@@ -109,7 +107,8 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                                 new SimpleMainThreadMediaPlayerListener() {
                                     @Override
                                     public void onVideoCompletionMainThread() {
-                                        Toast.makeText(getBaseContext(), title, Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getBaseContext(), title, Toast.LENGTH_SHORT)
+                                                .show();
                                         vvPreview.start();
                                     }
                                 });
@@ -127,14 +126,10 @@ public class VidTrainDetailActivity extends AppCompatActivity {
 
     public void showCreateFlow(View view) {
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
-            startCameraActivity();
+            startActivityForResult(Utility.getVideoIntent(), VIDEO_CAPTURE);
         } else {
             Toast.makeText(this, "No camera on device", Toast.LENGTH_LONG).show();
         }
-    }
-
-    public void startCameraActivity() {
-        startActivityForResult(Utility.getVideoIntent(), VIDEO_CAPTURE);
     }
 
     @Override
@@ -166,15 +161,13 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                         public void done(ParseException e) {
                             user.put("vidtrains", User.maybeInitAndAdd(user, vidTrain));
                             user.put("videos", User.maybeInitAndAdd(user, video));
-                            user.saveInBackground(
-                                    new SaveCallback() {
-                                        @Override
-                                        public void done(ParseException e) {
-                                            Toast.makeText(getBaseContext(),
-                                                    "Successfully added video",
-                                                    Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
+                            user.saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    Toast.makeText(getBaseContext(), "Successfully added video",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
                     };
                     video.saveInBackground(new SaveCallback() {
