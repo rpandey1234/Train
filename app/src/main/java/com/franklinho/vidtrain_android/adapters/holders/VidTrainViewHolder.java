@@ -25,6 +25,7 @@ import butterknife.OnClick;
 public class VidTrainViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener {
     @Bind(R.id.ivCollaborators) public ImageView ivCollaborators;
     @Bind(R.id.vvPreview) public DynamicVideoPlayerView vvPreview;
+    @Bind(R.id.vvThumbnail) public ImageView vvThumbnail;
     @Bind(R.id.ibtnLike) public ImageButton ibtnLike;
     @Bind(R.id.tvLikeCount) public TextView tvLikeCount;
     @Bind(R.id.tvTitle) public TextView tvTitle;

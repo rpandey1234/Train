@@ -1,9 +1,12 @@
 package com.franklinho.vidtrain_android.utilities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Video.Thumbnails;
 import android.text.format.DateUtils;
 import android.util.Log;
 
@@ -84,5 +87,9 @@ public class Utility {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static Bitmap getImageBitmap(String filePath) {
+        return ThumbnailUtils.createVideoThumbnail(filePath, Thumbnails.MINI_KIND);
     }
 }

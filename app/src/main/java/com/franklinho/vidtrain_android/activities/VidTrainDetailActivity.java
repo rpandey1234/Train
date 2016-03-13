@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -40,6 +41,7 @@ import butterknife.ButterKnife;
 public class VidTrainDetailActivity extends AppCompatActivity {
     @Bind(R.id.ivCollaborators) ImageView ivCollaborators;
     @Bind(R.id.vvPreview) DynamicVideoPlayerView vvPreview;
+    @Bind(R.id.vvThumbnail) ImageView vvThumbnail;
     @Bind(R.id.ibtnLike) ImageButton ibtnLike;
     @Bind(R.id.tvLikeCount) TextView tvLikeCount;
     @Bind(R.id.tvVideoCount) TextView tvVideoCount;
@@ -49,13 +51,14 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     public VidTrain vidTrain;
     private static final int VIDEO_CAPTURE = 101;
     public static final String VIDTRAIN_KEY = "vidTrain";
+    private SingleVideoPlayerManager player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vid_train_detail);
         ButterKnife.bind(this);
-        final SingleVideoPlayerManager player = VidtrainApplication.getVideoPlayer();
+        player = VidtrainApplication.getVideoPlayer();
         vvPreview.setHeightRatio(1);
         String vidTrainId = getIntent().getExtras().getString(VIDTRAIN_KEY);
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
@@ -79,22 +82,20 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                     @Override
                     public void done(ParseObject object, ParseException e) {
                         String profileImageUrl = User.getProfileImageUrl(vidTrain.getUser());
-                        Glide.with(getBaseContext()).load(profileImageUrl).into(
-                                ivCollaborators);
+                        Glide.with(getBaseContext()).load(profileImageUrl).into(ivCollaborators);
                     }
                 });
 
-                List<Video> videos = vidTrain.getVideos();
+//                List<Video> videos = vidTrain.getVideos();
                 // TODO: sequential loading
-                for (Video video : videos) {
-                    try {
-                        video.fetchIfNeeded();
-                    } catch (ParseException parseException) {
-                        Log.d(VidtrainApplication.TAG, parseException.toString());
-                    }
-                }
+//                for (Video video : videos) {
+//                    try {
+//                        video.fetchIfNeeded();
+//                    } catch (ParseException parseException) {
+//                        Log.d(VidtrainApplication.TAG, parseException.toString());
+//                    }
+//                }
                 vvPreview.setHeightRatio(1);
-                vvPreview.setVisibility(View.VISIBLE);
                 final File videoFile = Utility.getOutputMediaFile(vidTrain.getObjectId());
                 if (videoFile == null) {
                     return;
@@ -102,17 +103,19 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                 vidTrain.getLatestVideo().getDataInBackground(new GetDataCallback() {
                     @Override
                     public void done(byte[] data, ParseException e) {
+                        if (e != null) {
+                            Log.d(VidtrainApplication.TAG, e.toString());
+                            return;
+                        }
                         Utility.writeToFile(data, videoFile);
-                        vvPreview.addMediaPlayerListener(
-                                new SimpleMainThreadMediaPlayerListener() {
-                                    @Override
-                                    public void onVideoCompletionMainThread() {
-                                        Toast.makeText(getBaseContext(), title, Toast.LENGTH_SHORT)
-                                                .show();
-                                        vvPreview.start();
-                                    }
-                                });
-                        player.playNewVideo(null, vvPreview, videoFile.getPath());
+                        vvThumbnail.setImageBitmap(Utility.getImageBitmap(videoFile.getPath()));
+                        vvThumbnail.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                vvThumbnail.setVisibility(View.GONE);
+                                player.playNewVideo(null, vvPreview, videoFile.getPath());
+                            }
+                        });
                     }
                 });
             }

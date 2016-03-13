@@ -20,6 +20,7 @@ import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.volokh.danylo.video_player_manager.PlayerMessageState;
 import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
 
 import java.io.File;
@@ -71,8 +72,6 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
         });
 
         holder.vvPreview.setHeightRatio(1);
-        holder.vvPreview.setVisibility(View.VISIBLE);
-
         final File videoFile = Utility.getOutputMediaFile(vidTrain.getObjectId());
         if (videoFile == null) {
             return;
@@ -85,7 +84,16 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
                     return;
                 }
                 Utility.writeToFile(data, videoFile);
-//                mPlayer.playNewVideo(null, holder.vvPreview, videoFile.getPath());
+                holder.vvThumbnail.setImageBitmap(Utility.getImageBitmap(videoFile.getPath()));
+                holder.vvThumbnail.setOnClickListener(
+                        new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                holder.vvThumbnail.setVisibility(View.GONE);
+                                mPlayer.playNewVideo(null, holder.vvPreview, videoFile.getPath());
+                            }
+                        }
+                );
                 holder.vvPreview.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -93,6 +101,7 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
                             case STARTED:
                                 mPlayer.stopAnyPlayback();
                                 break;
+                            case PAUSED:
                             default:
                                 mPlayer.playNewVideo(null, holder.vvPreview, videoFile.getPath());
                         }

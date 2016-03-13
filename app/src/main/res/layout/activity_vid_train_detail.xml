@@ -45,7 +45,8 @@
             app:riv_corner_radius="25dp"
             app:riv_border_color="@android:color/white"
             app:riv_border_width="2dp"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="10dp"
+            />
 
         <TextView
             android:layout_width="wrap_content"
@@ -57,19 +58,38 @@
             android:gravity="center_vertical|end"
             android:textSize="16sp"
             android:layout_toRightOf="@id/ivCollaborators"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginLeft="10dp"
+            />
 
-        <com.franklinho.vidtrain_android.models.DynamicVideoPlayerView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:layout_below="@id/ivCollaborators"
-            android:id="@+id/vvPreview"/>
+            android:layout_below="@+id/ivCollaborators"
+            android:orientation="vertical"
+            android:id="@+id/videoContainer">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:id="@+id/vvThumbnail"
+                android:background="@color/bluePrimary"
+                android:scaleType="centerCrop"
+                android:contentDescription="@string/video_thumbnail"
+                />
+
+            <com.franklinho.vidtrain_android.models.DynamicVideoPlayerView
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:id="@+id/vvPreview"
+                />
+
+        </LinearLayout>
 
         <ImageButton
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:src="@drawable/heart_icon"
-            android:layout_below="@id/vvPreview"
+            android:layout_below="@id/videoContainer"
             android:layout_marginTop="10dp"
             android:scaleType="centerInside"
             android:background="@android:color/transparent"
@@ -77,7 +97,8 @@
             android:padding="5dp"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="10dp"
-            android:contentDescription="@string/heart"/>
+            android:contentDescription="@string/heart"
+            />
 
         <TextView
             android:layout_width="wrap_content"
@@ -88,7 +109,8 @@
             android:layout_alignBottom="@id/ibtnLike"
             android:gravity="center_vertical"
             android:textSize="16sp"
-            android:id="@+id/tvLikeCount"/>
+            android:id="@+id/tvLikeCount"
+            />
 
         <TextView
             android:layout_width="wrap_content"
