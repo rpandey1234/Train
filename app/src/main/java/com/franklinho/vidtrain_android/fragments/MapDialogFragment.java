@@ -37,7 +37,9 @@ import butterknife.ButterKnife;
 public class MapDialogFragment extends DialogFragment {
 
     @Bind(R.id.vvPreview) DynamicHeightVideoPlayerManagerView vvPreview;
-    @Bind(R.id.tv_info_window_title) TextView titleTv;
+    @Bind(R.id.tvTitle) TextView titleTv;
+    @Bind(R.id.tvVideoCount) TextView tvVideoCount;
+    @Bind(R.id.tvTime) TextView tvTime;
 
     VidTrain vidTrain;
 
@@ -75,10 +77,10 @@ public class MapDialogFragment extends DialogFragment {
                 if (e == null) {
                     vidTrain = objects.get(0);
                     titleTv.setText(vidTrain.getTitle());
-                    String countString = String.format(getString(R.string.video_count),
-                            vidTrain.getVideosCount());
-//                    tvVideoCount.setText(countString);
-
+                    int videoCount = vidTrain.getVideosCount();
+                    String totalVideos = getResources().getQuantityString(R.plurals.videos_count,
+                            videoCount, videoCount);
+                    tvVideoCount.setText(totalVideos);
                     vvPreview.setHeightRatio(1);
                     vvPreview.setVisibility(View.VISIBLE);
                     final ParseFile parseFile = ((ParseFile) vidTrain.get("thumbnail"));
@@ -87,9 +89,7 @@ public class MapDialogFragment extends DialogFragment {
                         public void done(byte[] data, ParseException e) {
                             try {
                                 File videoFile = VidtrainApplication.getOutputMediaFile(vidTrain.getObjectId());
-                                FileOutputStream out;
-
-                                out = new FileOutputStream(videoFile);
+                                FileOutputStream out = new FileOutputStream(videoFile);
                                 out.write(data);
                                 out.close();
                                 vvPreview.setOnClickListener(new OnClickListener() {

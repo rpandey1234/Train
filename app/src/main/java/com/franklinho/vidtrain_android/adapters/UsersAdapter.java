@@ -14,7 +14,6 @@ import com.franklinho.vidtrain_android.models.User;
 import com.parse.ParseUser;
 
 import java.util.List;
-import java.util.zip.Inflater;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
