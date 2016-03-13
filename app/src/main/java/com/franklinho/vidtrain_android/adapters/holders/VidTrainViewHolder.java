@@ -9,12 +9,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.franklinho.vidtrain_android.R;
+import com.franklinho.vidtrain_android.activities.ProfileActivity;
 import com.franklinho.vidtrain_android.activities.VidTrainDetailActivity;
 import com.franklinho.vidtrain_android.models.DynamicHeightVideoPlayerManagerView;
 import com.franklinho.vidtrain_android.models.VidTrain;
+import com.parse.ParseUser;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by franklinho on 3/10/16.
@@ -44,5 +47,14 @@ public class VidTrainViewHolder extends  RecyclerView.ViewHolder implements View
         Intent i = new Intent(context, VidTrainDetailActivity.class);
         i.putExtra("vidTrain", vidTrain.getObjectId());
         context.startActivity(i);
+    }
+
+    @SuppressWarnings("unused")
+    @OnClick(R.id.ivCollaborators)
+    public void onCollaboratorClicked(View view) {
+        ParseUser user = vidTrain.getUser();
+        Intent intent = new Intent(context, ProfileActivity.class);
+        intent.putExtra(ProfileActivity.USER_ID, user.getObjectId());
+        context.startActivity(intent);
     }
 }

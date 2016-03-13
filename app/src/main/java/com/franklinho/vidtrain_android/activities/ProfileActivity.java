@@ -1,5 +1,6 @@
 package com.franklinho.vidtrain_android.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -7,10 +8,13 @@ import android.support.v7.app.AppCompatActivity;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.fragments.PopularFragment;
 import com.franklinho.vidtrain_android.fragments.UserInfoFragment;
+import com.parse.ParseUser;
 
 import butterknife.ButterKnife;
 
 public class ProfileActivity extends AppCompatActivity {
+
+    public static final String USER_ID = "userId";
     PopularFragment userProfileFragment;
 
     @Override
@@ -18,10 +22,20 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         ButterKnife.bind(this);
+        String userId = getIntent().getStringExtra(USER_ID);
+        if (userId == null) {
+            ParseUser currentUser = ParseUser.getCurrentUser();
+            if (currentUser == null) {
+                Intent intent = new Intent(this, LogInActivity.class);
+                startActivity(intent);
+                return;
+            }
+            userId = currentUser.getObjectId();
+        }
         if (savedInstanceState == null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
-            UserInfoFragment userInfoFragment = UserInfoFragment.newInstance();
+            UserInfoFragment userInfoFragment = UserInfoFragment.newInstance(userId);
             ft.replace(R.id.flUserInfo, userInfoFragment);
 
             // TODO: update this to be user's vidtrains

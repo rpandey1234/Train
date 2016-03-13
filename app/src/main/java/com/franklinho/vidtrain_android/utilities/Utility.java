@@ -5,6 +5,8 @@ import android.os.Environment;
 import android.text.format.DateUtils;
 import android.util.Log;
 
+import com.franklinho.vidtrain_android.networking.VidtrainApplication;
+
 import java.io.File;
 
 /**
@@ -28,7 +30,7 @@ public class Utility {
 
         if (! mediaStorageDir.exists()){
             if (! mediaStorageDir.mkdirs()){
-                Log.d("VidTrainApp", "failed to create directory");
+                Log.d(VidtrainApplication.TAG, "failed to create directory");
                 return null;
             }
         }
