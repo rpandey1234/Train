@@ -9,7 +9,7 @@
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppBaseTheme">
+        android:theme="@style/AppBaseLightTheme">
 
         <!-- Toolbar is the actual app bar with text an
         d the action items -->
@@ -29,8 +29,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-
-
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
@@ -45,10 +43,11 @@
         android:layout_height="wrap_content"
         app:fabSize= "normal"
         android:src="@android:drawable/ic_menu_add"
+        android:tint="@android:color/black"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        app:backgroundTint="@color/colorPrimaryDark"
+        app:backgroundTint="#00BCD4"
         app:layout_anchor="@+id/viewpager"
         app:layout_anchorGravity="bottom|right|end"
         android:layout_margin="16dp"

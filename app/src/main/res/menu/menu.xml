@@ -1,25 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/miCompose"
-        android:icon="@drawable/compose_icon"
-        android:tint="@android:color/white"
-        android:title="@string/compose"
-        app:showAsAction="ifRoom"></item>
 
     <item
         android:id="@+id/miProfile"
         android:icon="@drawable/profile_icon"
         android:title="@string/profile"
         app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/action_search"
-        app:actionViewClass="android.support.v7.widget.SearchView"
-        app:showAsAction="ifRoom|collapseActionView"
-        android:icon="@android:drawable/ic_menu_search"
-        android:orderInCategory="5"
-        android:title="Search" />
 
 </menu>

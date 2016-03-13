@@ -55,6 +55,7 @@ import permissions.dispatcher.RuntimePermissions;
 public class MapFragment extends Fragment implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
+        LocationListener,
         OnMarkerClickListener {
 
     /*
@@ -166,7 +167,7 @@ public class MapFragment extends Fragment implements
         query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
         query.addDescendingOrder("createdAt");
         query.setSkip(currentSize);
-        query.setLimit(5);
+        query.setLimit(2);
         final BitmapDescriptor defaultMarker = BitmapDescriptorFactory.defaultMarker(
                 BitmapDescriptorFactory.HUE_GREEN);
         query.findInBackground(new FindCallback<VidTrain>() {
@@ -229,15 +230,11 @@ public class MapFragment extends Fragment implements
 	 */
     @Override
     public void onConnected(Bundle bundle) {
-        // Display the connection status
         Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (location != null) {
-            Toast.makeText(getContext(), "GPS location was found!", Toast.LENGTH_SHORT).show();
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
-            map.animateCamera(cameraUpdate);
-        } else {
-            Toast.makeText(getContext(), "Current location was null, enable GPS on emulator!", Toast.LENGTH_SHORT).show();
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
+            map.moveCamera(cameraUpdate);
         }
         startLocationUpdates();
     }
@@ -299,6 +296,11 @@ public class MapFragment extends Fragment implements
         mapDialogFragment.setArguments(bundle);
         mapDialogFragment.show(fm, "custom_info_window");
         return true;
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        // do nothing
     }
 
     // Define a DialogFragment that displays the error dialog
