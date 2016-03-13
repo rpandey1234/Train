@@ -58,17 +58,7 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
     }
 
     @Override
-    public void onBindViewHolder(VidTrainViewHolder holder, int position) {
-        VidTrainViewHolder vidTrainViewHolder = (VidTrainViewHolder) holder;
-        configureVidTrainViewHolder(vidTrainViewHolder, position);
-    }
-
-    @Override
-    public int getItemCount() {
-        return mVidTrains.size();
-    }
-
-    private void configureVidTrainViewHolder(final VidTrainViewHolder holder, int position) {
+    public void onBindViewHolder(final VidTrainViewHolder holder, int position) {
         final VidTrain vidTrain = mVidTrains.get(position);
         holder.vidTrain = vidTrain;
 
@@ -76,7 +66,14 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
         final DynamicHeightVideoPlayerManagerView vvPreview = holder.vvPreview;
         ImageButton ibtnLike = holder.ibtnLike;
         TextView tvLikeCount = holder.tvLikeCount;
+        TextView tvTitle = holder.tvTitle;
+        TextView tvVideoCount = holder.tvVideoCount;
 
+        tvTitle.setText(vidTrain.getTitle());
+        int videoCount = vidTrain.getVideosCount();
+        String totalVideos = context.getResources().getQuantityString(R.plurals.videos_count,
+                videoCount, videoCount);
+        tvVideoCount.setText(totalVideos);
         ivCollaborators.setImageResource(0);
 
         final ParseUser user = vidTrain.getUser();
@@ -137,6 +134,10 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
                 }
             }
         });
+    }
 
+    @Override
+    public int getItemCount() {
+        return mVidTrains.size();
     }
 }

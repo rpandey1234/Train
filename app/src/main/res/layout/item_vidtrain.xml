@@ -17,6 +17,32 @@
         android:layout_marginBottom="10dp"
         />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvTitle"
+        android:layout_alignTop="@id/ivCollaborators"
+        android:layout_alignBottom="@id/ivCollaborators"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:layout_toRightOf="@id/ivCollaborators"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvVideoCount"
+        android:layout_alignTop="@id/ivCollaborators"
+        android:layout_alignBottom="@id/ivCollaborators"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:gravity="center_vertical|end"
+        android:textSize="12sp"
+        android:layout_toRightOf="@id/tvTitle"
+        android:layout_marginLeft="10dp"/>
+
     <com.franklinho.vidtrain_android.models.DynamicHeightVideoPlayerManagerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
