@@ -1,6 +1,5 @@
 package com.franklinho.vidtrain_android.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -14,13 +13,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.google.common.io.Files;
 
 import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.models.DynamicHeightVideoPlayerManagerView;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
-import com.google.common.io.Files;
+import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
@@ -30,10 +30,6 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import com.volokh.danylo.video_player_manager.manager.PlayerItemChangeListener;
-import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
-import com.volokh.danylo.video_player_manager.manager.VideoPlayerManager;
-import com.volokh.danylo.video_player_manager.meta.MetaData;
 import com.volokh.danylo.video_player_manager.ui.SimpleMainThreadMediaPlayerListener;
 
 import java.io.File;
@@ -48,8 +44,7 @@ import butterknife.ButterKnife;
 
 public class VidTrainDetailActivity extends AppCompatActivity {
     @Bind(R.id.ivCollaborators) ImageView ivCollaborators;
-    @Bind(R.id.vvPreview)
-    DynamicHeightVideoPlayerManagerView vvPreview;
+    @Bind(R.id.vvPreview) DynamicHeightVideoPlayerManagerView vvPreview;
     @Bind(R.id.ibtnLike) ImageButton ibtnLike;
     @Bind(R.id.tvLikeCount) TextView tvLikeCount;
     @Bind(R.id.tvCommentCount) TextView tvCommentCount;
@@ -59,13 +54,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     public VidTrain vidTrain;
     ArrayList<Video> videos;
     private static final int VIDEO_CAPTURE = 101;
-
-    private VideoPlayerManager<MetaData> mVideoPlayerManager = new SingleVideoPlayerManager(new PlayerItemChangeListener() {
-        @Override
-        public void onPlayerItemChanged(MetaData metaData) {
-
-        }
-    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,8 +81,10 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                     vidTrain.getUser().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
                         @Override
                         public void done(ParseObject object, ParseException e) {
-                            String profileImageUrl = ((ParseUser) vidTrain.getUser()).getString("profileImageUrl");
-                            Glide.with(getBaseContext()).load(profileImageUrl).into(ivCollaborators);
+                            String profileImageUrl = ((ParseUser) vidTrain.getUser()).getString(
+                                    "profileImageUrl");
+                            Glide.with(getBaseContext()).load(profileImageUrl).into(
+                                    ivCollaborators);
                         }
                     });
 
@@ -107,7 +97,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                         }
                     }
 
-
                     vvPreview.setHeightRatio(1);
 
                     vvPreview.setVisibility(View.VISIBLE);
@@ -118,7 +107,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
 //                        }
 //                    });
 
-
                     final ParseFile parseFile = ((ParseFile) vidTrain.get("thumbnail"));
 
                     parseFile.getDataInBackground(new GetDataCallback() {
@@ -127,23 +115,35 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                             try {
 //                                FileUtils.writeByteArrayToFile(getOutputMediaFile(vidTrain.getObjectId().toString()), data);
 
-                                File videoFile = getOutputMediaFile(vidTrain.getObjectId().toString());
+                                File videoFile = getOutputMediaFile(
+                                        vidTrain.getObjectId().toString());
                                 FileOutputStream out;
 
                                 out = new FileOutputStream(videoFile);
                                 out.write(data);
                                 out.close();
 
-                                vvPreview.addMediaPlayerListener(new SimpleMainThreadMediaPlayerListener() {
-                                    @Override
-                                    public void onVideoCompletionMainThread() {
-                                        Toast.makeText(getBaseContext(), "Video has been prepared from:\n" + parseFile.getUrl().toString() + "Video has been saved to :\n" + getOutputMediaFile(vidTrain.getObjectId().toString()), Toast.LENGTH_LONG).show();
-                                        vvPreview.start();
-                                    }
-                                });
-                                mVideoPlayerManager.playNewVideo(null, vvPreview, getOutputMediaFile(vidTrain.getObjectId().toString()).getPath());
+                                vvPreview.addMediaPlayerListener(
+                                        new SimpleMainThreadMediaPlayerListener() {
+                                            @Override
+                                            public void onVideoCompletionMainThread() {
+                                                Toast.makeText(getBaseContext(),
+                                                        "Video has been prepared from:\n"
+                                                                + parseFile.getUrl().toString()
+                                                                + "Video has been saved to :\n"
+                                                                + getOutputMediaFile(
+                                                                vidTrain.getObjectId().toString()),
+                                                        Toast.LENGTH_LONG).show();
+                                                vvPreview.start();
+                                            }
+                                        });
+                                VidtrainApplication
+                                        .getVideoPlayerInstance()
+                                        .playNewVideo(null, vvPreview,
+                                                getOutputMediaFile(
+                                                        vidTrain.getObjectId().toString())
+                                                        .getPath());
                             } catch (FileNotFoundException e1) {
-                                // TODO Auto-generated catch block
                                 e1.printStackTrace();
                                 Log.d("TAG", "Error: " + e1.toString());
                             } catch (IOException ioe) {
@@ -161,27 +161,8 @@ public class VidTrainDetailActivity extends AppCompatActivity {
 //                                    }
 //                                });
 
-
                         }
                     });
-
-//                    ((ParseFile) vidTrain.get("thumbnail")).getDataInBackground(new GetDataCallback() {
-//                        @Override
-//                        public void done(byte[] data, ParseException e) {
-//                            File file = getOutputMediaFile();
-//                            try {
-//                                FileInputStream fis = new FileInputStream(file);
-//                                fis.read(data);
-//                                fis.close();
-//                                mVideoPlayerManager.playNewVideo(null, vvPreview,getAssets().openFd(getOutputMediaFile()).getFileDescriptor());
-//                            } catch (FileNotFoundException fnfe){
-//                                // do stuff here..
-//
-//                            } catch (IOException ioe){
-//
-//                            }
-//                        }
-//                    });
                 } else {
                     invalidVidTrain();
                 }
@@ -196,8 +177,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     }
 
     public void showCreateFlow(View view) {
-//        Toast.makeText(this, "Should navigate to creation flow", Toast.LENGTH_SHORT).show();
-
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
             startCameraActivity();
         } else {
@@ -302,19 +281,12 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                 Toast.makeText(this, "Failed to record video",  Toast.LENGTH_LONG).show();
             }
         }
-
     }
 
     public void successfullyAddedVideo() {
         Toast.makeText(getBaseContext(), "Successfully added video",
                 Toast.LENGTH_SHORT).show();
 
-    }
-
-    public File getVideoFile(Context context) {
-//        return new File(context.getExternalFilesDir(null), APP_TAG+"/"+videoFileName);
-        return new File(
-                Environment.getExternalStorageDirectory().getAbsolutePath() + "/myvidtrainvideo.mp4");
     }
 
     /** Create a file Uri for saving an image or video */
@@ -329,11 +301,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         return getOutputMediaFile("");
     }
 
-    /** Create a file Uri for saving an image or video */
-    private static Uri getOutputMediaFileUri(String objectId)
-    {
-        return Uri.fromFile(getOutputMediaFile(objectId));
-    }
     /** Create a File for saving an image or video */
     private static File getOutputMediaFile(String objectId)
     {

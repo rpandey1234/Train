@@ -1,14 +1,7 @@
 package com.franklinho.vidtrain_android.models;
 
-import android.os.Bundle;
-
-import com.facebook.AccessToken;
-import com.facebook.GraphRequest;
-import com.facebook.GraphRequest.GraphJSONObjectCallback;
 import com.facebook.GraphResponse;
-import com.parse.Parse;
 import com.parse.ParseClassName;
-import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 

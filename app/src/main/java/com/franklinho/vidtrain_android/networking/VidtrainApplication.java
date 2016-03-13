@@ -10,11 +10,17 @@ import com.franklinho.vidtrain_android.models.Video;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseObject;
+import com.volokh.danylo.video_player_manager.manager.PlayerItemChangeListener;
+import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
+import com.volokh.danylo.video_player_manager.manager.VideoPlayerManager;
+import com.volokh.danylo.video_player_manager.meta.MetaData;
 
 /**
  * Created by franklinho on 3/1/16.
  */
 public class VidtrainApplication extends Application {
+
+    private static VideoPlayerManager<MetaData> videoPlayerManager;
 
     @Override
     public void onCreate() {
@@ -35,9 +41,19 @@ public class VidtrainApplication extends Application {
 
         //Normal Parse Configuration
         FacebookSdk.sdkInitialize(getApplicationContext());
-        Parse.initialize(this, "0y0WMVmGrDXEfgMgVNzA32ryMuM2gdanfMhH0NMY", "MnKZ0GQhxkAblowrw4xVzftapFBT27yeEt4RKd7b");
+        Parse.initialize(this, "0y0WMVmGrDXEfgMgVNzA32ryMuM2gdanfMhH0NMY",
+                "MnKZ0GQhxkAblowrw4xVzftapFBT27yeEt4RKd7b");
         ParseFacebookUtils.initialize(getApplicationContext());
+        videoPlayerManager = new SingleVideoPlayerManager(new PlayerItemChangeListener() {
+            @Override
+            public void onPlayerItemChanged(MetaData metaData) {
 
+            }
+        });
+    }
+
+    public static VideoPlayerManager<MetaData> getVideoPlayerInstance() {
+        return videoPlayerManager;
     }
 
 }

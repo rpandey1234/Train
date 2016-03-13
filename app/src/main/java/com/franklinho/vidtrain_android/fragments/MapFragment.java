@@ -55,7 +55,6 @@ import permissions.dispatcher.RuntimePermissions;
 public class MapFragment extends Fragment implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener,
         OnMarkerClickListener {
 
     /*
@@ -263,15 +262,6 @@ public class MapFragment extends Fragment implements
         } else if (i == CAUSE_NETWORK_LOST) {
             Toast.makeText(getContext(), "Network lost. Please re-connect.", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        // Report to the UI that the location was updated
-        String msg = "Updated Location: " +
-                Double.toString(location.getLatitude()) + "," +
-                Double.toString(location.getLongitude());
-//        Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

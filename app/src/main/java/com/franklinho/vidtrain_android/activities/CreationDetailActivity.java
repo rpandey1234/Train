@@ -27,6 +27,7 @@ import com.franklinho.vidtrain_android.models.DynamicHeightVideoPlayerManagerVie
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
+import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -34,10 +35,6 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import com.volokh.danylo.video_player_manager.manager.PlayerItemChangeListener;
-import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
-import com.volokh.danylo.video_player_manager.manager.VideoPlayerManager;
-import com.volokh.danylo.video_player_manager.meta.MetaData;
 import com.volokh.danylo.video_player_manager.ui.SimpleMainThreadMediaPlayerListener;
 
 import java.io.File;
@@ -59,13 +56,6 @@ public class CreationDetailActivity extends AppCompatActivity {
     String videoPath;
     List<ParseUser> collaborators;
     List<ParseUser> usersFromAutocomplete;
-
-    private VideoPlayerManager<MetaData> mVideoPlayerManager = new SingleVideoPlayerManager(new PlayerItemChangeListener() {
-        @Override
-        public void onPlayerItemChanged(MetaData metaData) {
-
-        }
-    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +85,7 @@ public class CreationDetailActivity extends AppCompatActivity {
                     vvPreview.start();
                 }
             });
-            mVideoPlayerManager.playNewVideo(null, vvPreview, videoPath);
+            VidtrainApplication.getVideoPlayerInstance().playNewVideo(null, vvPreview, videoPath);
         }
 
         etCollaborators.addTextChangedListener(new TextWatcher() {

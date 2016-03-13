@@ -18,17 +18,15 @@ import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.adapters.holders.VidTrainViewHolder;
 import com.franklinho.vidtrain_android.models.DynamicHeightVideoPlayerManagerView;
+import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
+import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
-import com.volokh.danylo.video_player_manager.manager.PlayerItemChangeListener;
-import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
-import com.volokh.danylo.video_player_manager.manager.VideoPlayerManager;
-import com.volokh.danylo.video_player_manager.meta.MetaData;
 import com.volokh.danylo.video_player_manager.ui.SimpleMainThreadMediaPlayerListener;
 
 import java.io.File;
@@ -45,19 +43,10 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
     private Context context;
 
 
-
     public VidTrainArrayAdapter( List<VidTrain> vidTrains, Context context) {
         mVidTrains = vidTrains;
         this.context = context;
     }
-
-
-    private VideoPlayerManager<MetaData> mVideoPlayerManager = new SingleVideoPlayerManager(new PlayerItemChangeListener() {
-        @Override
-        public void onPlayerItemChanged(MetaData metaData) {
-
-        }
-    });
 
     @Override
     public VidTrainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -79,7 +68,6 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
     @Override
     public int getItemCount() {
         return mVidTrains.size();
-//        return 5;
     }
 
     private void configureVidTrainViewHolder(final VidTrainViewHolder holder, int position) {
@@ -94,33 +82,22 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
 
         ivCollaborators.setImageResource(0);
 
-        vidTrain.getUser().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+        final ParseUser user = vidTrain.getUser();
+        user.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
             @Override
             public void done(ParseObject object, ParseException e) {
-                String profileImageUrl = ((ParseUser) vidTrain.getUser()).getString("profileImageUrl");
+                if (object == null) {
+                    return;
+                }
+                String profileImageUrl = User.getProfileImageUrl((ParseUser) object);
                 Glide.with(holder.context).load(profileImageUrl).into(ivCollaborators);
             }
         });
 
-
         vvPreview.setHeightRatio(1);
-
         vvPreview.setVisibility(View.VISIBLE);
-//        vvPreview.addMediaPlayerListener(new SimpleMainThreadMediaPlayerListener() {
-//            @Override
-//            public void onVideoCompletionMainThread() {
-//                vvPreview.start();
-//            }
-//        });
-////
-//        holder.vidTrain.mVideoPlayerManager = mVideoPlayerManager;
-//        holder.vidTrain.mDirectUrl = ((ParseFile) vidTrain.get("thumbnail")).getUrl();
 
         final ParseFile parseFile = ((ParseFile) vidTrain.get("thumbnail"));
-//        if (parseFile != null) {
-//            mVideoPlayerManager.playNewVideo(null, vvPreview, parseFile.getUrl());
-//        }
-
 
         parseFile.getDataInBackground(new GetDataCallback() {
             @Override
@@ -150,7 +127,10 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
                     vvPreview.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mVideoPlayerManager.playNewVideo(null, vvPreview, getOutputMediaFile(vidTrain.getObjectId().toString()).getPath());
+                            VidtrainApplication
+                                    .getVideoPlayerInstance()
+                                    .playNewVideo(null, vvPreview, getOutputMediaFile(
+                                            vidTrain.getObjectId().toString()).getPath());
                         }
                     });
 
