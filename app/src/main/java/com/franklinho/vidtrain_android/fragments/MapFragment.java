@@ -1,10 +1,8 @@
 package com.franklinho.vidtrain_android.fragments;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.IntentSender;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -39,10 +37,6 @@ import com.franklinho.vidtrain_android.models.VidTrain;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
-import com.volokh.danylo.video_player_manager.manager.PlayerItemChangeListener;
-import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
-import com.volokh.danylo.video_player_manager.manager.VideoPlayerManager;
-import com.volokh.danylo.video_player_manager.meta.MetaData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,10 +48,6 @@ import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link MapFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
  * Use the {@link MapFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
@@ -68,10 +58,14 @@ public class MapFragment extends Fragment implements
         LocationListener,
         OnMarkerClickListener {
 
+    /*
+	 * Define a request code to send to Google Play services This code is
+	 * returned in Activity.onActivityResult
+	 */
+    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private long UPDATE_INTERVAL = 10 * 60000;  /* 10 * 60 secs */
     private long FASTEST_INTERVAL = 10 * 5000; /* 5 secs */
     private SupportMapFragment mapFragment;
-    private OnFragmentInteractionListener mListener;
     private GoogleMap map;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
@@ -79,19 +73,6 @@ public class MapFragment extends Fragment implements
     private Map<String, VidTrain> vidTrainsMap;
 
     List<Marker> markers;
-
-    /*
-	 * Define a request code to send to Google Play services This code is
-	 * returned in Activity.onActivityResult
-	 */
-    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-    private LayoutInflater mInflater;
-    private VideoPlayerManager<MetaData> mVideoPlayerManager = new SingleVideoPlayerManager(new PlayerItemChangeListener() {
-        @Override
-        public void onPlayerItemChanged(MetaData metaData) {
-
-        }
-    });
 
     public MapFragment() {
         // Required empty public constructor
@@ -110,7 +91,6 @@ public class MapFragment extends Fragment implements
         vidTrains = new ArrayList<>();
         markers = new ArrayList<>();
         vidTrainsMap = new HashMap<>();
-//        if (getArguments() != null) {}
     }
 
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
@@ -136,7 +116,6 @@ public class MapFragment extends Fragment implements
     private boolean isGooglePlayServicesAvailable() {
         // Check that Google Play services is available
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getContext());
-        // If Google Play services is available
         if (ConnectionResult.SUCCESS == resultCode) {
             // In debug mode, log the status
             Log.d("Location Updates", "Google Play services is available.");
@@ -153,7 +132,6 @@ public class MapFragment extends Fragment implements
                 errorFragment.setDialog(errorDialog);
                 errorFragment.show(getFragmentManager(), "Location Updates");
             }
-
             return false;
         }
     }
@@ -161,7 +139,6 @@ public class MapFragment extends Fragment implements
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        mInflater = inflater;
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         ButterKnife.bind(view);
         return view;
@@ -200,9 +177,6 @@ public class MapFragment extends Fragment implements
                     for (VidTrain vidTrain : objects) {
                         vidTrainsMap.put(vidTrain.getObjectId(), vidTrain);
                         Log.d("Vidtrain", vidTrain.getTitle());
-                        Log.d("Vidtrain", vidTrain.getLatLong().toString());
-
-//                        vidTrain.getVideos().get(0)
 
                         Marker marker = map.addMarker(new MarkerOptions()
                                 .position(vidTrain.getLatLong())
@@ -233,37 +207,10 @@ public class MapFragment extends Fragment implements
         map = googleMap;
         if (map != null) {
             map.setOnMarkerClickListener(this);
-            // Map is ready
-//            map.setOnMapLongClickListener(this);
             MapFragmentPermissionsDispatcher.getMyLocationWithCheck(this);
         } else {
             Toast.makeText(getContext(), "Error - Map was null!!", Toast.LENGTH_SHORT).show();
         }
-    }
-
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
     }
 
     protected void setUpMapIfNeeded() {
@@ -274,7 +221,6 @@ public class MapFragment extends Fragment implements
                 requestVidTrains(true);
             }
         });
-
     }
 
     /*
@@ -363,22 +309,6 @@ public class MapFragment extends Fragment implements
         mapDialogFragment.setArguments(bundle);
         mapDialogFragment.show(fm, "custom_info_window");
         return true;
-    }
-
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 
     // Define a DialogFragment that displays the error dialog
