@@ -2,9 +2,7 @@ package com.franklinho.vidtrain_android.activities;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -74,13 +72,8 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    public void startCameraActivity() {
-        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 5);
-        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
-        Uri videoUri = Utility.getOutputMediaFileUri();
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri); ;
-        startActivityForResult(intent, VIDEO_CAPTURE);
+    public void startCameraActivity() {;
+        startActivityForResult(Utility.getVideoIntent(), VIDEO_CAPTURE);
     }
 
     @Override

@@ -73,7 +73,6 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".activities.DiscoveryActivity" />
         <activity android:name=".activities.ProfileActivity" />
         <activity android:name=".activities.HomeActivity" />
         <activity android:name=".activities.VidTrainDetailActivity" />

@@ -1,7 +1,9 @@
 package com.franklinho.vidtrain_android.utilities;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.format.DateUtils;
 import android.util.Log;
 
@@ -60,6 +62,13 @@ public class Utility {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    public static Intent getVideoIntent() {
+        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 5);
+        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, getOutputMediaFileUri());
+        return intent;
     }
 }

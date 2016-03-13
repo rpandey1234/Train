@@ -45,7 +45,6 @@ public class LogInActivity extends AppCompatActivity {
                 updateUserInfo(currentUser);
             }
             sendToHomeActivity();
-//            sendToDiscoveryActivity();
         }
     }
 
@@ -85,15 +84,8 @@ public class LogInActivity extends AppCompatActivity {
                             updateUserInfo(user);
                             sendToHomeActivity();
                         }
-
                     }
                 });
-    }
-
-    public void sendToDiscoveryActivity() {
-        Intent i = new Intent(getBaseContext(), DiscoveryActivity.class);
-        startActivity(i);
-        Log.d(VidtrainApplication.TAG, "Logged in with Facebook");
     }
 
     public void sendToHomeActivity() {

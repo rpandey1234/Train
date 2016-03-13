@@ -2,15 +2,14 @@ package com.franklinho.vidtrain_android.activities;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.common.io.Files;
@@ -135,12 +134,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     }
 
     public void startCameraActivity() {
-        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 5);
-        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
-        Uri videoUri = Utility.getOutputMediaFileUri();
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri); ;
-        startActivityForResult(intent, VIDEO_CAPTURE);
+        startActivityForResult(Utility.getVideoIntent(), VIDEO_CAPTURE);
     }
 
     @Override
