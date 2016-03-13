@@ -4,13 +4,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,19 +16,12 @@ import android.widget.Toast;
 
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.fragments.FragmentPagerAdapter;
-
-import junit.framework.Test;
-
-import java.io.File;
+import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity {
-    private static final int REQUEST_CAMERA = 0;
-    private static final int REQUEST_CAMERA_PERMISSION = 1;
-    public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
-
     private static final int VIDEO_CAPTURE = 101;
 
     @Bind(R.id.viewpager) ViewPager viewPager;
@@ -86,11 +77,8 @@ public class HomeActivity extends AppCompatActivity {
     public void startCameraActivity() {
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 5);
-
-
         intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
-//        videoUri = getVideoFile(this).getAbsolutePath();
-        Uri videoUri = getOutputMediaFileUri();  // create a file to save the video
+        Uri videoUri = VidtrainApplication.getOutputMediaFileUri();
         intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri); ;
         startActivityForResult(intent, VIDEO_CAPTURE);
     }
@@ -101,7 +89,7 @@ public class HomeActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 Toast.makeText(this, "Video has been saved to:\n" + data.getData(), Toast.LENGTH_LONG).show();
                 Intent i = new Intent(this, CreationDetailActivity.class);
-                i.putExtra("videoPath", getOutputMediaFile().getPath());
+                i.putExtra("videoPath", VidtrainApplication.getOutputMediaFile().getPath());
                 startActivity(i);
             } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, "Video recording cancelled.",  Toast.LENGTH_LONG).show();
@@ -110,29 +98,4 @@ public class HomeActivity extends AppCompatActivity {
             }
         }
     }
-
-    /** Create a file Uri for saving an image or video */
-    private static Uri getOutputMediaFileUri()
-    {
-        return Uri.fromFile(getOutputMediaFile());
-    }
-
-    /** Create a File for saving an image or video */
-    private static File getOutputMediaFile()
-    {
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_MOVIES), "VidTrainApp");
-
-        if (! mediaStorageDir.exists()){
-            if (! mediaStorageDir.mkdirs()){
-                Log.d("VidTrainApp", "failed to create directory");
-                return null;
-            }
-        }
-        File mediaFile;
-        mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                "VID_CAPTURED" + ".mp4");
-        return mediaFile;
-    }
-
 }

@@ -45,10 +45,7 @@ public class VidTrain extends ParseObject implements Serializable {
     public static final String THUMBNAIL_KEY = "thumbnail";
     public static final String COLLABORATORS = "collaborators";
 
-    public VidTrain() {
-
-    }
-
+    public VidTrain() {}
 
     public void setUser(ParseUser user) {
         put(USER_KEY, user);
@@ -114,5 +111,14 @@ public class VidTrain extends ParseObject implements Serializable {
 
     public List<ParseUser> getCollaborators() {
         return (List<ParseUser>) get(COLLABORATORS);
+    }
+
+    public ArrayList<Video> maybeInitAndAdd(Video video) {
+        ArrayList<Video> videos = (ArrayList<Video>) get(VIDEOS_KEY);
+        if (videos == null) {
+            videos = new ArrayList<>();
+        }
+        videos.add(video);
+        return videos;
     }
 }

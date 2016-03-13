@@ -80,11 +80,9 @@ public class LogInActivity extends AppCompatActivity {
                     @Override
                     public void done(ParseUser user, ParseException e) {
                         if (user == null) {
-                            Log.d(VidtrainApplication.TAG, "Uh oh. The user cancelled the Facebook login.");
+                            Log.d(VidtrainApplication.TAG, "User cancelled the Facebook login.");
                         } else {
                             updateUserInfo(user);
-//                            System.out.println("user found!!!");
-//                            sendToDiscoveryActivity();
                             sendToHomeActivity();
                         }
 

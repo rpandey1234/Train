@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,11 +40,7 @@ public class User extends ParseObject implements Serializable {
     public static final String EMAIL = "email";
     public static final String FBID = "fbid";
 
-
-    public User(){
-
-    }
-
+    public User(){}
 
     public String getName() {
         return name;
@@ -60,7 +57,6 @@ public class User extends ParseObject implements Serializable {
     public void setFbid(String fbid) {
         put(FBID, fbid);
     }
-
 
     public static void updateFacebookData(ParseUser user, GraphResponse response) {
         if (user == null) {
@@ -93,5 +89,28 @@ public class User extends ParseObject implements Serializable {
 
     public static String getProfileImageUrl(ParseUser user) {
         return user.getString("profileImageUrl");
+    }
+
+    public static ArrayList<VidTrain> maybeInitAndAdd(ParseUser user, VidTrain vidTrain) {
+        ArrayList<VidTrain> vidTrains = (ArrayList<VidTrain>) user.get("vidtrains");
+        if (vidTrains == null) {
+            vidTrains = new ArrayList<>();
+        }
+        if (!vidTrains.contains(vidTrain)) {
+            vidTrains.add(vidTrain);
+        }
+        return vidTrains;
+    }
+
+
+    public static ArrayList<Video> maybeInitAndAdd(ParseUser user, Video video) {
+        ArrayList<Video> videos = (ArrayList<Video>) user.get("videos");
+        if (videos == null) {
+            videos = new ArrayList<>();
+        }
+        if (!videos.contains(video)) {
+            videos.add(video);
+        }
+        return videos;
     }
 }

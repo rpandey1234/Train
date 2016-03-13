@@ -24,9 +24,6 @@ public class DiscoveryActivity extends AppCompatActivity {
     public static final String VIDEO_FILENAME = "myvideo.mp4";
 
     @Bind(R.id.vvPreview) VideoView vvPreview;
-    private static final int REQUEST_CAMERA = 0;
-    private static final int REQUEST_CAMERA_PERMISSION = 1;
-    public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
 
     private static final int VIDEO_CAPTURE = 101;
 

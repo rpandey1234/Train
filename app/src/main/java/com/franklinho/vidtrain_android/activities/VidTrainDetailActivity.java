@@ -17,6 +17,7 @@ import com.google.common.io.Files;
 import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.models.DynamicHeightVideoPlayerManagerView;
+import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
@@ -49,9 +50,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     @Bind(R.id.tvCommentCount) TextView tvCommentCount;
     @Bind(R.id.tvVideoCount) TextView tvVideoCount;
 
-    Uri videoUri;
     public VidTrain vidTrain;
-    ArrayList<Video> videos;
     private static final int VIDEO_CAPTURE = 101;
 
     @Override
@@ -73,19 +72,18 @@ public class VidTrainDetailActivity extends AppCompatActivity {
             public void done(List<VidTrain> objects, ParseException e) {
                 if (e == null) {
                     vidTrain = objects.get(0);
-                    String countString = String.format(getString(R.string.video_count),
-                            vidTrain.getVideosCount());
+                    String countString = String.format(getString(R.string.video_count), vidTrain.getVideosCount());
                     tvVideoCount.setText(countString);
-
                     vidTrain.getUser().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
                         @Override
                         public void done(ParseObject object, ParseException e) {
-                            String profileImageUrl = vidTrain.getUser().getString("profileImageUrl");
+                            String profileImageUrl = User.getProfileImageUrl(vidTrain.getUser());
                             Glide.with(getBaseContext()).load(profileImageUrl).into(ivCollaborators);
                         }
                     });
 
-                    videos = vidTrain.getVideos();
+                    ArrayList<Video> videos = vidTrain.getVideos();
+                    // TODO: sequential loading
                     for (Video video : videos) {
                         try {
                             video.fetchIfNeeded();
@@ -136,8 +134,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     }
 
     public void invalidVidTrain() {
-        Toast.makeText(getBaseContext(), "This VidTrain is invalid",
-                Toast.LENGTH_SHORT).show();
+        Toast.makeText(getBaseContext(), "This VidTrain is invalid", Toast.LENGTH_SHORT).show();
         this.finish();
     }
 
@@ -153,7 +150,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 5);
         intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
-        videoUri = VidtrainApplication.getOutputMediaFileUri();
+        Uri videoUri = VidtrainApplication.getOutputMediaFileUri();
         intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri); ;
         startActivityForResult(intent, VIDEO_CAPTURE);
     }
@@ -161,81 +158,56 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == VIDEO_CAPTURE) {
-            if (resultCode == RESULT_OK) {
-                Toast.makeText(this, "Video has been saved to:\n" + data.getData(), Toast.LENGTH_SHORT).show();
-                final Video video = new Video();
-                File file = VidtrainApplication.getOutputMediaFile();
-                byte[] videoFileData;
-                try {
-                    videoFileData = Files.toByteArray(file);
-                    final ParseFile parseFile = new ParseFile("video.mp4", videoFileData);
-                    parseFile.saveInBackground(new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            video.setUser(ParseUser.getCurrentUser());
-                            video.setVideoFile(parseFile);
-                            video.setVidTrain(vidTrain);
-                            video.saveInBackground(new SaveCallback() {
-                                @Override
-                                public void done(ParseException e) {
-                                    ArrayList<Video> videos;
-                                    vidTrain.setThumbnailFile(parseFile);
-
-                                    if (vidTrain.get("videos") == null) {
-                                        videos = new ArrayList<>();
-                                    } else {
-                                        videos = (ArrayList<Video>) vidTrain.get("videos");
+        if (requestCode != VIDEO_CAPTURE) {
+            return;
+        }
+        if (resultCode == RESULT_OK) {
+            Toast.makeText(this, "Video saved to:\n" + data.getData(), Toast.LENGTH_SHORT).show();
+            final Video video = new Video();
+            File file = VidtrainApplication.getOutputMediaFile();
+            byte[] videoFileData;
+            try {
+                videoFileData = Files.toByteArray(file);
+                final ParseUser currentUser = ParseUser.getCurrentUser();
+                final ParseFile parseFile = new ParseFile("video.mp4", videoFileData);
+                parseFile.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        video.setUser(currentUser);
+                        video.setVideoFile(parseFile);
+                        video.setVidTrain(vidTrain);
+                        video.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                vidTrain.setThumbnailFile(parseFile);
+                                vidTrain.setVideos(vidTrain.maybeInitAndAdd(video));
+                                vidTrain.saveInBackground(new SaveCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        currentUser.put("vidtrains", User.maybeInitAndAdd(
+                                                currentUser, vidTrain));
+                                        currentUser.put("videos", User.maybeInitAndAdd(
+                                                currentUser, video));
+                                        currentUser.saveInBackground(
+                                                new SaveCallback() {
+                                                    @Override
+                                                    public void done(ParseException e) {
+                                                        successfullyAddedVideo();
+                                                    }
+                                                });
                                     }
-                                    videos.add(video);
-                                    vidTrain.setVideos(videos);
-                                    vidTrain.saveInBackground(new SaveCallback() {
-                                        @Override
-                                        public void done(ParseException e) {
-
-                                            ArrayList<VidTrain> vidTrains;
-                                            if (ParseUser.getCurrentUser().get("vidtrains") == null) {
-                                                vidTrains = new ArrayList<>();
-
-                                            } else {
-                                                vidTrains = (ArrayList<VidTrain>) ParseUser.getCurrentUser().get("vidtrains");
-                                            }
-                                            if (!vidTrains.contains(vidTrain)) {
-                                                vidTrains.add(vidTrain);
-                                            }
-                                            ParseUser.getCurrentUser().put("vidtrains", vidTrains);
-
-
-                                            ArrayList<Video> videos;
-                                            if (ParseUser.getCurrentUser().get("videos") == null) {
-                                                videos = new ArrayList<>();
-                                            } else {
-                                                videos = (ArrayList<Video>) ParseUser.getCurrentUser().get("vidtrains");
-                                            }
-                                            videos.add(video);
-                                            ParseUser.getCurrentUser().put("videos", vidTrains);
-
-                                            ParseUser.getCurrentUser().saveInBackground(new SaveCallback() {
-                                                @Override
-                                                public void done(ParseException e) {
-                                                    successfullyAddedVideo();
-                                                }
-                                            });
-                                        }
-                                    });
-
-                                }
-                            });
-                        }
-                    });
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(this, "Video recording cancelled.",  Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(this, "Failed to record video",  Toast.LENGTH_LONG).show();
+                                });
+                            }
+                        });
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+        } else if (resultCode == RESULT_CANCELED) {
+            Toast.makeText(this, "Video recording cancelled.", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "Failed to record video", Toast.LENGTH_LONG).show();
         }
     }
 
