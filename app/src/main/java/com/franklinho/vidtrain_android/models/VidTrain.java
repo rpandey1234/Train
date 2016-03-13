@@ -85,8 +85,12 @@ public class VidTrain extends ParseObject implements Serializable {
         put(LL_KEY, geoPoint);
     }
 
-    public void setThumbnailFile(ParseFile file) {
+    public void setLatestVideo(ParseFile file) {
         put(THUMBNAIL_KEY, file);
+    }
+
+    public ParseFile getLatestVideo() {
+        return getParseFile(THUMBNAIL_KEY);
     }
 
     public ParseUser getUser() {
@@ -98,7 +102,6 @@ public class VidTrain extends ParseObject implements Serializable {
         double latitude = parseGeoPoint.getLatitude();
         double longitude = parseGeoPoint.getLongitude();
         return new LatLng(latitude, longitude);
-
     }
 
     public String getTitle() {

@@ -8,6 +8,9 @@ import android.util.Log;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * Created by rahul on 3/12/16.
@@ -47,5 +50,16 @@ public class Utility {
     public static File getOutputMediaFile()
     {
         return getOutputMediaFile("");
+    }
+
+    public static void writeToFile(byte[] data, File file) {
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            out.write(data);
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

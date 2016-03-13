@@ -168,7 +168,7 @@ public class CreationDetailActivity extends AppCompatActivity {
                                 vidTrain.setCollaborators(collaborators);
                             }
                             vidTrain.setReadPrivacy(false);
-                            vidTrain.setThumbnailFile(parseFile);
+                            vidTrain.setLatestVideo(parseFile);
 
                             LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                             Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);

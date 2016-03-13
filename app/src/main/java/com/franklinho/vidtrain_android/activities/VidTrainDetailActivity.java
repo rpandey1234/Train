@@ -34,8 +34,6 @@ import com.parse.SaveCallback;
 import com.volokh.danylo.video_player_manager.ui.SimpleMainThreadMediaPlayerListener;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -68,76 +66,64 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         query.getFirstInBackground(new GetCallback<VidTrain>() {
             @Override
             public void done(VidTrain object, ParseException e) {
-                if (e == null) {
-                    vidTrain = object;
-                    final String title = vidTrain.getTitle();
-                    toolbar.setTitle(title);
-                    String countString = String.format(getString(R.string.video_count),
-                            vidTrain.getVideosCount());
-                    tvVideoCount.setText(countString);
-                    tvTime.setText(Utility.getRelativeTime(vidTrain.getUpdatedAt().getTime()));
-                    vidTrain.getUser().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
-                        @Override
-                        public void done(ParseObject object, ParseException e) {
-                            String profileImageUrl = User.getProfileImageUrl(vidTrain.getUser());
-                            Glide.with(getBaseContext()).load(profileImageUrl).into(
-                                    ivCollaborators);
-                        }
-                    });
-
-                    ArrayList<Video> videos = vidTrain.getVideos();
-                    // TODO: sequential loading
-                    for (Video video : videos) {
-                        try {
-                            video.fetchIfNeeded();
-                        } catch (ParseException parseException) {
-                            Log.d(VidtrainApplication.TAG, parseException.toString());
-                        }
-                    }
-                    vvPreview.setHeightRatio(1);
-                    vvPreview.setVisibility(View.VISIBLE);
-                    final ParseFile parseFile = ((ParseFile) vidTrain.get("thumbnail"));
-                    parseFile.getDataInBackground(new GetDataCallback() {
-                        @Override
-                        public void done(byte[] data, ParseException e) {
-                            try {
-                                File videoFile = Utility.getOutputMediaFile(
-                                        vidTrain.getObjectId());
-                                FileOutputStream out;
-
-                                out = new FileOutputStream(videoFile);
-                                out.write(data);
-                                out.close();
-
-                                vvPreview.addMediaPlayerListener(
-                                        new SimpleMainThreadMediaPlayerListener() {
-                                            @Override
-                                            public void onVideoCompletionMainThread() {
-                                                Toast.makeText(getBaseContext(),
-                                                        "Video ready for: " + title,
-                                                        Toast.LENGTH_SHORT).show();
-                                                vvPreview.start();
-                                            }
-                                        });
-                                VidtrainApplication.getVideoPlayer().playNewVideo(null, vvPreview,
-                                        videoFile.getPath());
-                            } catch (FileNotFoundException e1) {
-                                e1.printStackTrace();
-                                Log.d(VidtrainApplication.TAG, "Error: " + e1.toString());
-                            } catch (IOException ioe) {
-                                ioe.printStackTrace();
-                            }
-                        }
-                    });
-                } else {
+                if (e != null) {
                     invalidVidTrain();
+                    return;
                 }
+                vidTrain = object;
+                final String title = vidTrain.getTitle();
+                toolbar.setTitle(title);
+                String countString = String.format(getString(R.string.video_count),
+                        vidTrain.getVideosCount());
+                tvVideoCount.setText(countString);
+                tvTime.setText(Utility.getRelativeTime(vidTrain.getUpdatedAt().getTime()));
+                vidTrain.getUser().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject object, ParseException e) {
+                        String profileImageUrl = User.getProfileImageUrl(vidTrain.getUser());
+                        Glide.with(getBaseContext()).load(profileImageUrl).into(
+                                ivCollaborators);
+                    }
+                });
+
+                ArrayList<Video> videos = vidTrain.getVideos();
+                // TODO: sequential loading
+                for (Video video : videos) {
+                    try {
+                        video.fetchIfNeeded();
+                    } catch (ParseException parseException) {
+                        Log.d(VidtrainApplication.TAG, parseException.toString());
+                    }
+                }
+                vvPreview.setHeightRatio(1);
+                vvPreview.setVisibility(View.VISIBLE);
+                final File videoFile = Utility.getOutputMediaFile(vidTrain.getObjectId());
+                if (videoFile == null) {
+                    return;
+                }
+                vidTrain.getLatestVideo().getDataInBackground(new GetDataCallback() {
+                    @Override
+                    public void done(byte[] data, ParseException e) {
+                        Utility.writeToFile(data, videoFile);
+                        vvPreview.addMediaPlayerListener(
+                                new SimpleMainThreadMediaPlayerListener() {
+                                    @Override
+                                    public void onVideoCompletionMainThread() {
+                                        Toast.makeText(getBaseContext(),
+                                                "Video ready for: " + title, Toast.LENGTH_SHORT)
+                                                .show();
+                                        vvPreview.start();
+                                    }
+                                });
+                        VidtrainApplication.getVideoPlayer().playNewVideo(null, vvPreview, videoFile.getPath());
+                    }
+                });
             }
         });
     }
 
     public void invalidVidTrain() {
-        Toast.makeText(getBaseContext(), "This VidTrain is invalid", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "This VidTrain is invalid", Toast.LENGTH_SHORT).show();
         this.finish();
     }
 
@@ -196,7 +182,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                         video.saveInBackground(new SaveCallback() {
                             @Override
                             public void done(ParseException e) {
-                                vidTrain.setThumbnailFile(parseFile);
+                                vidTrain.setLatestVideo(parseFile);
                                 vidTrain.setVideos(vidTrain.maybeInitAndAdd(video));
                                 vidTrain.saveInBackground(vidTrainSaved);
                             }
