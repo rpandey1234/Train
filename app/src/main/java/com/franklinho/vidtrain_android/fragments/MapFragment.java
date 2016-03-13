@@ -168,7 +168,7 @@ public class MapFragment extends Fragment implements
         query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
         query.addDescendingOrder("createdAt");
         query.setSkip(currentSize);
-        query.setLimit(2);
+        query.setLimit(5);
         final BitmapDescriptor defaultMarker = BitmapDescriptorFactory.defaultMarker(
                 BitmapDescriptorFactory.HUE_AZURE);
         query.findInBackground(new FindCallback<VidTrain>() {

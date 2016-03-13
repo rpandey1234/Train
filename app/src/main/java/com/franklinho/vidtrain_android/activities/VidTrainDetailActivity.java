@@ -31,6 +31,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
 import com.volokh.danylo.video_player_manager.ui.SimpleMainThreadMediaPlayerListener;
 
 import java.io.File;
@@ -58,8 +59,9 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vid_train_detail);
         ButterKnife.bind(this);
+        final SingleVideoPlayerManager player = VidtrainApplication.getVideoPlayer();
         vvPreview.setHeightRatio(1);
-        final String vidTrainId = getIntent().getExtras().getString(VIDTRAIN_KEY);
+        String vidTrainId = getIntent().getExtras().getString(VIDTRAIN_KEY);
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
         query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
         query.whereEqualTo("objectId", vidTrainId);;
@@ -67,14 +69,13 @@ public class VidTrainDetailActivity extends AppCompatActivity {
             @Override
             public void done(VidTrain object, ParseException e) {
                 if (e != null) {
-                    invalidVidTrain();
+                    invalidVidtrain();
                     return;
                 }
                 vidTrain = object;
                 final String title = vidTrain.getTitle();
                 toolbar.setTitle(title);
-                String countString = String.format(getString(R.string.video_count),
-                        vidTrain.getVideosCount());
+                String countString = String.format(getString(R.string.video_count), vidTrain.getVideosCount());
                 tvVideoCount.setText(countString);
                 tvTime.setText(Utility.getRelativeTime(vidTrain.getUpdatedAt().getTime()));
                 vidTrain.getUser().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
@@ -109,20 +110,18 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                                 new SimpleMainThreadMediaPlayerListener() {
                                     @Override
                                     public void onVideoCompletionMainThread() {
-                                        Toast.makeText(getBaseContext(),
-                                                "Video ready for: " + title, Toast.LENGTH_SHORT)
-                                                .show();
+                                        Toast.makeText(getBaseContext(), title, Toast.LENGTH_SHORT).show();
                                         vvPreview.start();
                                     }
                                 });
-                        VidtrainApplication.getVideoPlayer().playNewVideo(null, vvPreview, videoFile.getPath());
+                        player.playNewVideo(null, vvPreview, videoFile.getPath());
                     }
                 });
             }
         });
     }
 
-    public void invalidVidTrain() {
+    public void invalidVidtrain() {
         Toast.makeText(this, "This VidTrain is invalid", Toast.LENGTH_SHORT).show();
         this.finish();
     }

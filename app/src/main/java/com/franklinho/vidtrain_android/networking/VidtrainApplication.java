@@ -21,7 +21,7 @@ import com.volokh.danylo.video_player_manager.meta.MetaData;
 public class VidtrainApplication extends Application {
 
     public static final String TAG = "Vidtrain";
-    private static VideoPlayerManager<MetaData> videoPlayerManager;
+    private static SingleVideoPlayerManager videoPlayerManager;
 
     @Override
     public void onCreate() {
@@ -53,7 +53,7 @@ public class VidtrainApplication extends Application {
         });
     }
 
-    public static VideoPlayerManager<MetaData> getVideoPlayer() {
+    public static SingleVideoPlayerManager getVideoPlayer() {
         return videoPlayerManager;
     }
 }

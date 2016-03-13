@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.adapters.holders.VidTrainViewHolder;
-import com.franklinho.vidtrain_android.models.DynamicVideoPlayerView;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
@@ -21,6 +20,7 @@ import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
 
 import java.io.File;
 import java.util.List;
@@ -29,12 +29,16 @@ import java.util.List;
  * Created by franklinho on 3/7/16.
  */
 public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolder> {
+
+    private final SingleVideoPlayerManager mPlayer;
     private List<VidTrain> mVidTrains;
     private Context mContext;
+
 
     public VidTrainArrayAdapter( List<VidTrain> vidTrains, Context context) {
         mVidTrains = vidTrains;
         mContext = context;
+        mPlayer = VidtrainApplication.getVideoPlayer();
     }
 
     @Override
@@ -45,7 +49,7 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
 
     @Override
     public void onBindViewHolder(final VidTrainViewHolder holder, int position) {
-        final VidTrain vidTrain = mVidTrains.get(position);
+        VidTrain vidTrain = mVidTrains.get(position);
         holder.vidTrain = vidTrain;
         holder.tvTitle.setText(vidTrain.getTitle());
         int videoCount = vidTrain.getVideosCount();
@@ -84,8 +88,13 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
                 holder.vvPreview.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        VidtrainApplication.getVideoPlayer().playNewVideo(null, holder.vvPreview,
-                                videoFile.getPath());
+                        switch (mPlayer.getCurrentPlayerState()) {
+                            case STARTED:
+                                mPlayer.stopAnyPlayback();
+                                break;
+                            default:
+                                mPlayer.playNewVideo(null, holder.vvPreview, videoFile.getPath());
+                        }
                     }
                 });
             }
