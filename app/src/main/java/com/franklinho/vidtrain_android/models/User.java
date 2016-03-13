@@ -5,6 +5,7 @@ import android.util.Log;
 import com.facebook.GraphResponse;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.parse.GetCallback;
+import com.parse.Parse;
 import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -15,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.net.PasswordAuthentication;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,8 +99,16 @@ public class User extends ParseObject implements Serializable {
         return user.getString("profileImageUrl");
     }
 
-    public static ArrayList<VidTrain> maybeInitAndAdd(ParseUser user, VidTrain vidTrain) {
-        ArrayList<VidTrain> vidTrains = (ArrayList<VidTrain>) user.get("vidtrains");
+    public static List<Video> getVideos(ParseUser user) {
+        return user.getList("videos");
+    }
+
+    public static List<VidTrain> getVidTrains(ParseUser user) {
+        return user.getList("vidtrains");
+    }
+
+    public static List<VidTrain> maybeInitAndAdd(ParseUser user, VidTrain vidTrain) {
+        List<VidTrain> vidTrains = getVidTrains(user);
         if (vidTrains == null) {
             vidTrains = new ArrayList<>();
         }
@@ -109,8 +119,8 @@ public class User extends ParseObject implements Serializable {
     }
 
 
-    public static ArrayList<Video> maybeInitAndAdd(ParseUser user, Video video) {
-        ArrayList<Video> videos = (ArrayList<Video>) user.get("videos");
+    public static List<Video> maybeInitAndAdd(ParseUser user, Video video) {
+        List<Video> videos = getVideos(user);
         if (videos == null) {
             videos = new ArrayList<>();
         }
@@ -120,12 +130,8 @@ public class User extends ParseObject implements Serializable {
         return videos;
     }
 
-    public static ArrayList<Video> getVideos(ParseUser user) {
-        return (ArrayList<Video>) user.get("videos");
-    }
-
     public static int getVideoCount(ParseUser user) {
-        ArrayList<Video> videos = getVideos(user);
+        List<Video> videos = getVideos(user);
         if (videos == null) {
             return 0;
         }

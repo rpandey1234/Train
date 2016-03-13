@@ -14,7 +14,6 @@
         app:riv_border_color="@android:color/white"
         app:riv_border_width="2dp"
         android:src="@drawable/user_icon"
-        android:background="@android:color/darker_gray"
         android:layout_marginBottom="10dp"
         />
 
@@ -36,6 +35,7 @@
         android:background="@android:color/transparent"
         android:id="@+id/ibtnLike"
         android:padding="5dp"
+        android:gravity="center_vertical"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"/>
 
@@ -47,21 +47,11 @@
         android:layout_alignTop="@id/ibtnLike"
         android:layout_alignBottom="@id/ibtnLike"
         android:gravity="center_vertical"
-        android:textSize="22dp"
+        android:textSize="16sp"
         android:id="@+id/tvLikeCount"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/tvLikeCount"
-        android:layout_alignParentRight="true"
-        android:id="@+id/tvCommentCount"
-        android:text="@string/comments"
-        android:layout_alignTop="@id/ibtnLike"
-        android:layout_alignBottom="@id/ibtnLike"
-        android:gravity="center_vertical|right"
-        android:textSize="22dp" />
-
-    <View style="@style/section_item_divider" />
+    <View style="@style/section_item_divider"
+        android:layout_below="@+id/ibtnLike"
+        />
 
 </RelativeLayout>

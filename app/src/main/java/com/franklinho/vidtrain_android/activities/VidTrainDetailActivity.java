@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -47,8 +48,8 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     @Bind(R.id.vvPreview) DynamicHeightVideoPlayerManagerView vvPreview;
     @Bind(R.id.ibtnLike) ImageButton ibtnLike;
     @Bind(R.id.tvLikeCount) TextView tvLikeCount;
-    @Bind(R.id.tvCommentCount) TextView tvCommentCount;
     @Bind(R.id.tvVideoCount) TextView tvVideoCount;
+    @Bind(R.id.toolbar) Toolbar toolbar;
 
     public VidTrain vidTrain;
     private static final int VIDEO_CAPTURE = 101;
@@ -58,28 +59,27 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vid_train_detail);
         ButterKnife.bind(this);
-
         vvPreview.setHeightRatio(1);
-
         final String vidTrainObjectID = getIntent().getExtras().getString("vidTrain");
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
         query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
         query.whereEqualTo("objectId", vidTrainObjectID);;
-
-        query.setLimit(1);
-        // TODO: use query.getFirstInBackground(new GetCallback<ParseObject>() {
-        query.findInBackground(new FindCallback<VidTrain>() {
+        query.getFirstInBackground(new GetCallback<VidTrain>() {
             @Override
-            public void done(List<VidTrain> objects, ParseException e) {
+            public void done(VidTrain object, ParseException e) {
                 if (e == null) {
-                    vidTrain = objects.get(0);
-                    String countString = String.format(getString(R.string.video_count), vidTrain.getVideosCount());
+                    vidTrain = object;
+                    final String title = vidTrain.getTitle();
+                    toolbar.setTitle(title);
+                    String countString = String.format(getString(R.string.video_count),
+                            vidTrain.getVideosCount());
                     tvVideoCount.setText(countString);
                     vidTrain.getUser().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
                         @Override
                         public void done(ParseObject object, ParseException e) {
                             String profileImageUrl = User.getProfileImageUrl(vidTrain.getUser());
-                            Glide.with(getBaseContext()).load(profileImageUrl).into(ivCollaborators);
+                            Glide.with(getBaseContext()).load(profileImageUrl).into(
+                                    ivCollaborators);
                         }
                     });
 
@@ -99,7 +99,8 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                         @Override
                         public void done(byte[] data, ParseException e) {
                             try {
-                                File videoFile = VidtrainApplication.getOutputMediaFile(vidTrain.getObjectId());
+                                File videoFile = VidtrainApplication.getOutputMediaFile(
+                                        vidTrain.getObjectId());
                                 FileOutputStream out;
 
                                 out = new FileOutputStream(videoFile);
@@ -111,7 +112,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                                             @Override
                                             public void onVideoCompletionMainThread() {
                                                 Toast.makeText(getBaseContext(),
-                                                        "Video ready for: " + vidTrain.getTitle(),
+                                                        "Video ready for: " + title,
                                                         Toast.LENGTH_SHORT).show();
                                                 vvPreview.start();
                                             }

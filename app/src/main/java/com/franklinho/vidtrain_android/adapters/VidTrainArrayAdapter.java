@@ -76,7 +76,6 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
         final DynamicHeightVideoPlayerManagerView vvPreview = holder.vvPreview;
         ImageButton ibtnLike = holder.ibtnLike;
         TextView tvLikeCount = holder.tvLikeCount;
-        TextView tvCommentCount = holder.tvCommentCount;
 
         ivCollaborators.setImageResource(0);
 

@@ -20,19 +20,13 @@ import butterknife.ButterKnife;
  * Created by franklinho on 3/10/16.
  */
 public class VidTrainViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener {
-    public VidTrain vidTrain;
-    @Bind(R.id.ivCollaborators)
-    public ImageView ivCollaborators;
-    @Bind(R.id.vvPreview)
-    public DynamicHeightVideoPlayerManagerView vvPreview;
-    @Bind(R.id.ibtnLike)
-    public ImageButton ibtnLike;
-    @Bind(R.id.tvLikeCount)
-    public TextView tvLikeCount;
-    @Bind(R.id.tvCommentCount)
-    public TextView tvCommentCount;
+    @Bind(R.id.ivCollaborators) public ImageView ivCollaborators;
+    @Bind(R.id.vvPreview) public DynamicHeightVideoPlayerManagerView vvPreview;
+    @Bind(R.id.ibtnLike) public ImageButton ibtnLike;
+    @Bind(R.id.tvLikeCount) public TextView tvLikeCount;
 
-    public  Context context;
+    public Context context;
+    public VidTrain vidTrain;
 
     public VidTrainViewHolder(View itemView) {
         super(itemView);
@@ -48,6 +42,4 @@ public class VidTrainViewHolder extends  RecyclerView.ViewHolder implements View
         i.putExtra("vidTrain", vidTrain.getObjectId());
         context.startActivity(i);
     }
-
-
 }

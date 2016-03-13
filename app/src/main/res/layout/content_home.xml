@@ -47,7 +47,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        app:backgroundTint="#00BCD4"
+        app:backgroundTint="@color/bluePrimary"
         app:layout_anchor="@+id/viewpager"
         app:layout_anchorGravity="bottom|right|end"
         android:layout_margin="16dp"

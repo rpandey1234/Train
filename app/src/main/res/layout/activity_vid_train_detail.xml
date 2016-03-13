@@ -8,20 +8,15 @@
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppBaseTheme">
-
-        <!-- Toolbar is the actual app bar with text an
-        d the action items -->
+        android:theme="@style/AppBaseLightTheme">
 
         <include
             layout="@layout/toolbar_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|enterAlways"/>
-
-
-
     </android.support.design.widget.AppBarLayout>
+
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -47,20 +42,20 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
             android:src="@drawable/profile_icon"
-            android:background="@android:color/darker_gray"
             app:riv_corner_radius="25dp"
+            app:riv_border_color="@android:color/white"
+            app:riv_border_width="2dp"
             android:layout_marginBottom="10dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2 VIDEOS"
             android:id="@+id/tvVideoCount"
             android:layout_alignTop="@id/ivCollaborators"
             android:layout_alignBottom="@id/ivCollaborators"
             android:layout_alignParentEnd="true"
             android:gravity="center_vertical|right"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:layout_toRightOf="@id/ivCollaborators"
             android:layout_marginLeft="10dp"/>
 
@@ -91,23 +86,8 @@
             android:layout_alignTop="@id/ibtnLike"
             android:layout_alignBottom="@id/ibtnLike"
             android:gravity="center_vertical"
-            android:textSize="22dp"
+            android:textSize="16sp"
             android:id="@+id/tvLikeCount"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/tvLikeCount"
-            android:layout_alignParentRight="true"
-            android:id="@+id/tvCommentCount"
-            android:text="@string/comments"
-            android:layout_alignTop="@id/ibtnLike"
-            android:layout_alignBottom="@id/ibtnLike"
-            android:gravity="center_vertical|right"
-            android:textSize="22dp"
-            android:focusable="true"
-            android:focusableInTouchMode="true"/>
-
 
         <EditText
             android:layout_width="wrap_content"
@@ -128,8 +108,6 @@
             tools:layout="@layout/fragment_comments" />
 
     </RelativeLayout>
-
-
 </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
@@ -137,15 +115,15 @@
         android:layout_height="wrap_content"
         app:fabSize= "normal"
         android:src="@android:drawable/ic_menu_add"
+        android:tint="@android:color/black"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        app:backgroundTint="@color/colorPrimaryDark"
+        app:backgroundTint="@color/bluePrimary"
         app:layout_anchor="@+id/nsvContent"
         app:layout_anchorGravity="bottom|right|end"
         android:layout_margin="16dp"
         android:onClick="showCreateFlow"
         app:layout_behavior="com.franklinho.vidtrain_android.utilities.ScrollAwareFABBehavior"/>
-
 
 </android.support.design.widget.CoordinatorLayout>
