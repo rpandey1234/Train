@@ -2,7 +2,6 @@ package com.franklinho.vidtrain_android.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,10 +12,8 @@ import android.view.ViewGroup;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.adapters.VidTrainArrayAdapter;
 import com.franklinho.vidtrain_android.models.VidTrain;
-
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.EndlessRecyclerViewScrollListener;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,17 +42,9 @@ public class VidTrainListFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static VidTrainListFragment newInstance() {
-        VidTrainListFragment fragment = new VidTrainListFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Create arraylist datasource
         vidTrains = new ArrayList<>();
         //Construct the adapter
         aVidTrains = new VidTrainArrayAdapter(vidTrains, getContext());
@@ -96,8 +85,6 @@ public class VidTrainListFragment extends Fragment {
 //            }
 //
 //        });
-
-
 
         swipeContainer.setColorSchemeResources(R.color.colorPrimaryDark);
         rvVidTrains.setLayoutManager(linearLayoutManager);

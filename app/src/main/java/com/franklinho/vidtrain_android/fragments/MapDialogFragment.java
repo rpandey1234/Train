@@ -1,10 +1,8 @@
 package com.franklinho.vidtrain_android.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +16,6 @@ import com.franklinho.vidtrain_android.models.DynamicHeightVideoPlayerManagerVie
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.Utility;
-import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
@@ -29,7 +26,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -87,7 +83,7 @@ public class MapDialogFragment extends DialogFragment {
                     @Override
                     public void done(byte[] data, ParseException e) {
                         try {
-                            File videoFile = VidtrainApplication.getOutputMediaFile(
+                            File videoFile = Utility.getOutputMediaFile(
                                     vidTrain.getObjectId());
                             FileOutputStream out = new FileOutputStream(videoFile);
                             out.write(data);

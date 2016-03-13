@@ -1,8 +1,6 @@
 package com.franklinho.vidtrain_android.adapters;
 
 import android.content.Context;
-import android.net.Uri;
-import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -101,7 +99,7 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
             @Override
             public void done(byte[] data, ParseException e) {
                 try {
-                    final File videoFile = VidtrainApplication.getOutputMediaFile(vidTrain.getObjectId());
+                    final File videoFile = Utility.getOutputMediaFile(vidTrain.getObjectId());
                     FileOutputStream out;
 
                     out = new FileOutputStream(videoFile);

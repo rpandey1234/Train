@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.fragments.FragmentPagerAdapter;
-import com.franklinho.vidtrain_android.networking.VidtrainApplication;
+import com.franklinho.vidtrain_android.utilities.Utility;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -78,7 +78,7 @@ public class HomeActivity extends AppCompatActivity {
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 5);
         intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
-        Uri videoUri = VidtrainApplication.getOutputMediaFileUri();
+        Uri videoUri = Utility.getOutputMediaFileUri();
         intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri); ;
         startActivityForResult(intent, VIDEO_CAPTURE);
     }
@@ -89,7 +89,7 @@ public class HomeActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 Toast.makeText(this, "Video has been saved to:\n" + data.getData(), Toast.LENGTH_LONG).show();
                 Intent i = new Intent(this, CreationDetailActivity.class);
-                i.putExtra("videoPath", VidtrainApplication.getOutputMediaFile().getPath());
+                i.putExtra("videoPath", Utility.getOutputMediaFile().getPath());
                 startActivity(i);
             } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, "Video recording cancelled.",  Toast.LENGTH_LONG).show();

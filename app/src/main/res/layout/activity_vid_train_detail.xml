@@ -103,23 +103,14 @@
             android:id="@+id/tvTime"
             />
 
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/etCommentField"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="10dp"
-            android:layout_alignParentEnd="true"
-            android:hint="@string/leave_a_comment"
-            android:layout_below="@id/ibtnLike"/>
-
         <fragment
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/etCommentField"
+            android:layout_below="@id/ibtnLike"
             android:id="@+id/commentsFragment"
             android:name="com.franklinho.vidtrain_android.fragments.CommentFragment"
-            tools:layout="@layout/fragment_comments" />
+            tools:layout="@layout/fragment_comments"
+            />
 
     </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>

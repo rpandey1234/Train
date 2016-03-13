@@ -7,7 +7,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     tools:context="com.franklinho.vidtrain_android.activities.CreationDetailActivity">
 
     <com.franklinho.vidtrain_android.models.DynamicHeightVideoPlayerManagerView
@@ -22,15 +21,15 @@
         android:layout_height="wrap_content"
         android:id="@+id/etTitle"
         android:layout_below="@id/vvPreview"
-        android:hint="Enter title"
+        android:singleLine="true"
+        android:hint="@string/title_prompt"
         android:layout_margin="10dp"
         />
-
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Collaborators"
+        android:text="@string/collabs"
         android:layout_below="@id/etTitle"
         android:layout_marginLeft="10dp"
         android:id="@+id/tvCollaborators"
@@ -57,7 +56,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/etCollaborators"
         android:layout_below="@id/tvCollaborators"
-        android:hint="Type for autocomplete of friends"
+        android:hint="@string/autocomplete_hint"
         android:visibility="gone"
         android:layout_margin="10dp"
         />
@@ -75,12 +74,16 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Submit"
+        android:text="@string/submit"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/tvCollaboratorsAdded"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginBottom="10dp"
         android:onClick="submitVidTrain"
-        android:id="@+id/btnSubmit"/>
+        android:id="@+id/btnSubmit"
+        />
 
 </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>

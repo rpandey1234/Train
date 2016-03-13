@@ -24,6 +24,10 @@
     <string name="stop">Stop</string>
     <string name="video_count">Videos: %d</string>
     <string name="heart">heart</string>
+    <string name="title_prompt">Enter title</string>
+    <string name="collabs">Collaborators</string>
+    <string name="submit">Submit</string>
+    <string name="autocomplete_hint">Type for autocomplete of friends</string>
 
     <string-array name="privacy_states">
         <item>Public</item>

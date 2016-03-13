@@ -18,8 +18,7 @@ import java.util.List;
 public class PopularFragment extends VidTrainListFragment {
 
     public static PopularFragment newInstance() {
-        PopularFragment popularFragment = new PopularFragment();
-        return popularFragment;
+        return new PopularFragment();
     }
 
     @Override

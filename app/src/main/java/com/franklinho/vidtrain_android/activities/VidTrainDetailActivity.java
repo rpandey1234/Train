@@ -98,7 +98,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                         @Override
                         public void done(byte[] data, ParseException e) {
                             try {
-                                File videoFile = VidtrainApplication.getOutputMediaFile(
+                                File videoFile = Utility.getOutputMediaFile(
                                         vidTrain.getObjectId());
                                 FileOutputStream out;
 
@@ -151,7 +151,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 5);
         intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
-        Uri videoUri = VidtrainApplication.getOutputMediaFileUri();
+        Uri videoUri = Utility.getOutputMediaFileUri();
         intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri); ;
         startActivityForResult(intent, VIDEO_CAPTURE);
     }
@@ -165,7 +165,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             Toast.makeText(this, "Video saved to:\n" + data.getData(), Toast.LENGTH_SHORT).show();
             final Video video = new Video();
-            File file = VidtrainApplication.getOutputMediaFile();
+            File file = Utility.getOutputMediaFile();
             byte[] videoFileData;
             try {
                 videoFileData = Files.toByteArray(file);
