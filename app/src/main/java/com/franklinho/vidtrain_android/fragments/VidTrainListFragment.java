@@ -41,9 +41,6 @@ public class VidTrainListFragment extends Fragment {
 //    private ItemsPositionGetter mItemsPositionGetter;
 //    private int mScrollState = AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 
-
-
-
     public VidTrainListFragment() {
         // Required empty public constructor
     }

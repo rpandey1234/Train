@@ -67,6 +67,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         query.whereEqualTo("objectId", vidTrainObjectID);;
 
         query.setLimit(1);
+        // TODO: use query.getFirstInBackground(new GetCallback<ParseObject>() {
         query.findInBackground(new FindCallback<VidTrain>() {
             @Override
             public void done(List<VidTrain> objects, ParseException e) {

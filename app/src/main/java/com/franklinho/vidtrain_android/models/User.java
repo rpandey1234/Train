@@ -1,8 +1,14 @@
 package com.franklinho.vidtrain_android.models;
 
+import android.util.Log;
+
 import com.facebook.GraphResponse;
+import com.franklinho.vidtrain_android.networking.VidtrainApplication;
+import com.parse.GetCallback;
 import com.parse.ParseClassName;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import org.json.JSONException;
@@ -112,5 +118,17 @@ public class User extends ParseObject implements Serializable {
             videos.add(video);
         }
         return videos;
+    }
+
+    public static ArrayList<Video> getVideos(ParseUser user) {
+        return (ArrayList<Video>) user.get("videos");
+    }
+
+    public static int getVideoCount(ParseUser user) {
+        ArrayList<Video> videos = getVideos(user);
+        if (videos == null) {
+            return 0;
+        }
+        return videos.size();
     }
 }
