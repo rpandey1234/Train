@@ -87,7 +87,7 @@ public class VidTrainListFragment extends Fragment {
 //
 //        });
 
-        swipeContainer.setColorSchemeResources(R.color.colorPrimaryDark);
+        swipeContainer.setColorSchemeResources(R.color.bluePrimary);
         rvVidTrains.setLayoutManager(linearLayoutManager);
 
 
