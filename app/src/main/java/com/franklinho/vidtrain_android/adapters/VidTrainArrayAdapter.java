@@ -58,7 +58,7 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
         holder.ivCollaborators.setImageResource(0);
         holder.liked = false;
         holder.ibtnLike.setImageResource(R.drawable.heart_icon);
-        if (User.getLikeForVidTrainObjectId(ParseUser.getCurrentUser(), vidTrain.getObjectId().toString())){
+        if (User.hasLikedVidtrain(ParseUser.getCurrentUser(), vidTrain.getObjectId().toString())){
             holder.liked = true;
             holder.ibtnLike.setImageResource(R.drawable.heart_icon_red);
         }

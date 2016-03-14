@@ -70,6 +70,10 @@ public class CreationDetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         videoPath = getIntent().getExtras().getString("videoPath");
         collaborators = new ArrayList<>();
+        final ParseUser currentUser = ParseUser.getCurrentUser();
+        if (currentUser != null) {
+            collaborators.add(currentUser);
+        }
         toggleBtn.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

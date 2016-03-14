@@ -113,7 +113,6 @@ public class User extends ParseObject implements Serializable {
         return vidTrains;
     }
 
-
     public static List<Video> maybeInitAndAdd(ParseUser user, Video video) {
         List<Video> videos = getVideos(user);
         if (videos == null) {
@@ -125,23 +124,14 @@ public class User extends ParseObject implements Serializable {
         return videos;
     }
 
-    public static int getVideoCount(ParseUser user) {
-        List<Video> videos = getVideos(user);
-        if (videos == null) {
-            return 0;
-        }
-        return videos.size();
-    }
-
     public static Map<String,Boolean> getLikes(ParseUser user) {
-        return (Map<String,Boolean>) user.get(LIKES);
+        return user.getMap(LIKES);
     }
 
     public static Map<String,Boolean> postLike(ParseUser user, String objectId) {
-        Map<String,Boolean> userLikes = getLikes(user);
+        Map<String, Boolean> userLikes = getLikes(user);
         if (userLikes == null) {
             userLikes = new HashMap<>();
-
         }
         userLikes.put(objectId, true);
         user.put(LIKES, userLikes);
@@ -154,29 +144,16 @@ public class User extends ParseObject implements Serializable {
         Map<String,Boolean> userLikes = getLikes(user);
         if (userLikes == null) {
             userLikes = new HashMap<>();
-
         }
         userLikes.put(objectId, false);
         user.put(LIKES, userLikes);
         user.saveInBackground();
-
         return userLikes;
     }
 
-    public static Boolean getLikeForVidTrainObjectId(ParseUser user, String objectId) {
-        Map<String,Boolean> userLikes = getLikes(user);
-        if (userLikes == null) {
-            userLikes = new HashMap<>();
-            return false;
-        } else {
-            if (userLikes.get(objectId) == null) {
-                return false;
-            } else if (userLikes.get(objectId) == true){
-                return true;
-            } else {
-                return false;
-            }
-        }
+    public static Boolean hasLikedVidtrain(ParseUser user, String vidtrainId) {
+        Map<String, Boolean> userLikes = getLikes(user);
+        return userLikes != null && Boolean.TRUE.equals(userLikes.get(vidtrainId));
     }
 
 

@@ -83,7 +83,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                     btnAddvidTrain.setVisibility(View.VISIBLE);
                 }
 
-                if (User.getLikeForVidTrainObjectId(ParseUser.getCurrentUser(), vidTrain.getObjectId().toString())){
+                if (User.hasLikedVidtrain(ParseUser.getCurrentUser(), vidTrain.getObjectId())){
                     liked = true;
                     ibtnLike.setImageResource(R.drawable.heart_icon_red);
                 }
@@ -147,8 +147,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         VideoPlayer.playVideo(vvPreview, localFiles.get(0).getPath());
-
-
                     }
                 });
                 setProfileImageUrlAtIndex(nextIndex);
@@ -269,9 +267,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
             User.postLike(ParseUser.getCurrentUser(), vidTrain.getObjectId().toString());
             liked = true;
             ibtnLike.setImageResource(R.drawable.heart_icon_red);
-            int currentLikeCount = vidTrain.getLikes();
-            vidTrain.setLikes( currentLikeCount + 1);
-
+            vidTrain.setLikes(vidTrain.getLikes() + 1);
         }
         view.startAnimation(animScale);
         tvLikeCount.setText(vidTrain.getLikes() + " likes");

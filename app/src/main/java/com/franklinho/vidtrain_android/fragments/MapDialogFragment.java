@@ -83,7 +83,9 @@ public class MapDialogFragment extends DialogFragment {
         LocationManager lm = (LocationManager) getContext().getSystemService(
                 Context.LOCATION_SERVICE);
         Location lc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        query.whereNear("ll",new ParseGeoPoint(lc.getLatitude(), lc.getLongitude()));
+        if (lc != null) {
+            query.whereNear("ll",new ParseGeoPoint(lc.getLatitude(), lc.getLongitude()));
+        }
         query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
         query.whereEqualTo("objectId", vidTrainId);
         query.getFirstInBackground(new GetCallback<VidTrain>() {
@@ -103,7 +105,7 @@ public class MapDialogFragment extends DialogFragment {
                     }
                 });
 
-                if (User.getLikeForVidTrainObjectId(ParseUser.getCurrentUser(), vidTrain.getObjectId().toString())){
+                if (User.hasLikedVidtrain(ParseUser.getCurrentUser(), vidTrain.getObjectId())){
                     liked = true;
                     ibtnLike.setImageResource(R.drawable.heart_icon_red);
                 }
