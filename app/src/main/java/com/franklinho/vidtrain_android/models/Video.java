@@ -28,6 +28,10 @@ public class Video extends ParseObject {
         put(VIDEO_FILE_KEY, file);
     }
 
+    public ParseFile getVideoFile() {
+        return getParseFile(VIDEO_FILE_KEY);
+    }
+
     public void setVidTrain(ParseObject vidTrain) {
         put(VIDTRAIN_KEY, vidTrain);
     }

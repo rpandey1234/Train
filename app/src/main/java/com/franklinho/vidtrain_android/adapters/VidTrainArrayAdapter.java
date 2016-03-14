@@ -2,7 +2,6 @@ package com.franklinho.vidtrain_android.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,12 +14,12 @@ import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.Utility;
+import com.franklinho.vidtrain_android.utilities.VideoPlayer;
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
-import com.volokh.danylo.video_player_manager.PlayerMessageState;
 import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
 
 import java.io.File;
@@ -39,7 +38,7 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
     public VidTrainArrayAdapter( List<VidTrain> vidTrains, Context context) {
         mVidTrains = vidTrains;
         mContext = context;
-        mPlayer = VidtrainApplication.getVideoPlayer();
+        mPlayer = VideoPlayer.getVideoPlayer();
     }
 
     @Override
@@ -79,10 +78,6 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
         vidTrain.getLatestVideo().getDataInBackground(new GetDataCallback() {
             @Override
             public void done(byte[] data, ParseException e) {
-                if (e != null) {
-                    Log.d(VidtrainApplication.TAG, e.toString());
-                    return;
-                }
                 Utility.writeToFile(data, videoFile);
                 holder.vvThumbnail.setImageBitmap(Utility.getImageBitmap(videoFile.getPath()));
                 holder.vvThumbnail.setOnClickListener(

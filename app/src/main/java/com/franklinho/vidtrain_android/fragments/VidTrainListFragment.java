@@ -14,6 +14,7 @@ import com.franklinho.vidtrain_android.adapters.VidTrainArrayAdapter;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.EndlessRecyclerViewScrollListener;
+import com.franklinho.vidtrain_android.utilities.VideoPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -138,6 +139,6 @@ public class VidTrainListFragment extends Fragment {
     public void onStop() {
         super.onStop();
         // we have to stop any playback in onStop
-        VidtrainApplication.getVideoPlayer().resetMediaPlayer();
+        VideoPlayer.getVideoPlayer().resetMediaPlayer();
     }
 }

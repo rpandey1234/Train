@@ -4,9 +4,11 @@ import android.app.Application;
 
 import com.facebook.FacebookSdk;
 import com.franklinho.vidtrain_android.models.Comment;
+import com.franklinho.vidtrain_android.models.DynamicVideoPlayerView;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
+import com.franklinho.vidtrain_android.utilities.VideoPlayer;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseObject;
@@ -21,7 +23,7 @@ import com.volokh.danylo.video_player_manager.meta.MetaData;
 public class VidtrainApplication extends Application {
 
     public static final String TAG = "Vidtrain";
-    private static SingleVideoPlayerManager videoPlayerManager;
+    public static VideoPlayer sVideoPlayer;
 
     @Override
     public void onCreate() {
@@ -45,15 +47,6 @@ public class VidtrainApplication extends Application {
         Parse.initialize(this, "0y0WMVmGrDXEfgMgVNzA32ryMuM2gdanfMhH0NMY",
                 "MnKZ0GQhxkAblowrw4xVzftapFBT27yeEt4RKd7b");
         ParseFacebookUtils.initialize(getApplicationContext());
-        videoPlayerManager = new SingleVideoPlayerManager(new PlayerItemChangeListener() {
-            @Override
-            public void onPlayerItemChanged(MetaData metaData) {
-
-            }
-        });
-    }
-
-    public static SingleVideoPlayerManager getVideoPlayer() {
-        return videoPlayerManager;
+        sVideoPlayer = new VideoPlayer();
     }
 }

@@ -16,6 +16,7 @@ import com.franklinho.vidtrain_android.models.DynamicVideoPlayerView;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.Utility;
+import com.franklinho.vidtrain_android.utilities.VideoPlayer;
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
@@ -94,9 +95,7 @@ public class MapDialogFragment extends DialogFragment {
 
                                 }
                             });
-                            VidtrainApplication
-                                    .getVideoPlayer()
-                                    .playNewVideo(null, vvPreview, videoFile.getPath());
+                            VideoPlayer.getVideoPlayer().playNewVideo(null, vvPreview, videoFile.getPath());
                         } catch (FileNotFoundException e1) {
                             e1.printStackTrace();
                             Log.d("TAG", "Error: " + e1.toString());

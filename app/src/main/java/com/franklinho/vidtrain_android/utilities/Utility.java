@@ -9,14 +9,12 @@ import android.provider.MediaStore;
 import android.provider.MediaStore.Video.Thumbnails;
 import android.text.format.DateUtils;
 import android.util.Log;
-
 import com.google.common.io.Files;
 
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.parse.ParseFile;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 

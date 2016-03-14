@@ -21,8 +21,8 @@ import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.Utility;
+import com.franklinho.vidtrain_android.utilities.VideoPlayer;
 import com.parse.GetCallback;
-import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -30,7 +30,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
-import com.volokh.danylo.video_player_manager.ui.SimpleMainThreadMediaPlayerListener;
+import com.volokh.danylo.video_player_manager.ui.MediaPlayerWrapper.MainThreadMediaPlayerListener;
 
 import java.io.File;
 import java.util.List;
@@ -52,13 +52,15 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     private static final int VIDEO_CAPTURE = 101;
     public static final String VIDTRAIN_KEY = "vidTrain";
     private SingleVideoPlayerManager player;
+    private int nextIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vid_train_detail);
         ButterKnife.bind(this);
-        player = VidtrainApplication.getVideoPlayer();
+        player = VideoPlayer.getVideoPlayer();
+        nextIndex = 0;
         vvPreview.setHeightRatio(1);
         String vidTrainId = getIntent().getExtras().getString(VIDTRAIN_KEY);
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
@@ -72,11 +74,11 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                     return;
                 }
                 vidTrain = object;
-                final String title = vidTrain.getTitle();
-                toolbar.setTitle(title);
-                String countString = String.format(getString(R.string.video_count),
-                        vidTrain.getVideosCount());
-                tvVideoCount.setText(countString);
+                toolbar.setTitle(vidTrain.getTitle());
+                int videosCount = vidTrain.getVideosCount();
+                String totalVideos = getResources().getQuantityString(R.plurals.videos_count,
+                        videosCount, videosCount);
+                tvVideoCount.setText(totalVideos);
                 tvTime.setText(Utility.getRelativeTime(vidTrain.getUpdatedAt().getTime()));
                 vidTrain.getUser().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
                     @Override
@@ -86,36 +88,51 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                     }
                 });
 
-//                List<Video> videos = vidTrain.getVideos();
-                // TODO: sequential loading
-//                for (Video video : videos) {
-//                    try {
-//                        video.fetchIfNeeded();
-//                    } catch (ParseException parseException) {
-//                        Log.d(VidtrainApplication.TAG, parseException.toString());
-//                    }
-//                }
                 vvPreview.setHeightRatio(1);
-                final File videoFile = Utility.getOutputMediaFile(vidTrain.getObjectId());
-                if (videoFile == null) {
-                    return;
-                }
-                vidTrain.getLatestVideo().getDataInBackground(new GetDataCallback() {
+                final List<File> localFiles = vidTrain.getVideoFiles();
+                vvPreview.addMediaPlayerListener(new MainThreadMediaPlayerListener() {
                     @Override
-                    public void done(byte[] data, ParseException e) {
-                        if (e != null) {
-                            Log.d(VidtrainApplication.TAG, e.toString());
+                    public void onVideoSizeChangedMainThread(int width, int height) {}
+
+                    @Override
+                    public void onVideoPreparedMainThread() {}
+
+                    @Override
+                    public void onVideoCompletionMainThread() {
+                        Log.d(VidtrainApplication.TAG,
+                                String.format("Finished playing video %s of %s", nextIndex + 1,
+                                        localFiles.size()));
+                        nextIndex += 1;
+                        if (nextIndex >= localFiles.size()) {
+                            Log.d(VidtrainApplication.TAG, "Finished playing all videos!");
                             return;
                         }
-                        Utility.writeToFile(data, videoFile);
-                        vvThumbnail.setImageBitmap(Utility.getImageBitmap(videoFile.getPath()));
-                        vvThumbnail.setOnClickListener(new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                vvThumbnail.setVisibility(View.GONE);
-                                player.playNewVideo(null, vvPreview, videoFile.getPath());
-                            }
-                        });
+                        player.playNewVideo(null, vvPreview, localFiles.get(nextIndex).getPath());
+                    }
+
+                    @Override
+                    public void onErrorMainThread(int what, int extra) {}
+
+                    @Override
+                    public void onBufferingUpdateMainThread(int percent) {}
+
+                    @Override
+                    public void onVideoStoppedMainThread() {}
+                });
+
+                vvThumbnail.setImageBitmap(Utility.getImageBitmap(localFiles.get(nextIndex)
+                        .getPath()));
+                vvThumbnail.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        vvThumbnail.setVisibility(View.GONE);
+                        player.playNewVideo(null, vvPreview, localFiles.get(nextIndex).getPath());
+                    }
+                });
+                vvPreview.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        player.playNewVideo(null, vvPreview, localFiles.get(0).getPath());
                     }
                 });
             }

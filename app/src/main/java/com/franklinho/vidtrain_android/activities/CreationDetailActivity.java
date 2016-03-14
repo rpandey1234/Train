@@ -28,6 +28,7 @@ import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.Utility;
+import com.franklinho.vidtrain_android.utilities.VideoPlayer;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -83,7 +84,7 @@ public class CreationDetailActivity extends AppCompatActivity {
                     vvPreview.start();
                 }
             });
-            VidtrainApplication.getVideoPlayer().playNewVideo(null, vvPreview, videoPath);
+            VideoPlayer.getVideoPlayer().playNewVideo(null, vvPreview, videoPath);
         }
 
         etCollaborators.addTextChangedListener(new TextWatcher() {

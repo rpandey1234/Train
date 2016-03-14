@@ -1,15 +1,20 @@
 package com.franklinho.vidtrain_android.models;
 
 import android.graphics.Rect;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import com.franklinho.vidtrain_android.networking.VidtrainApplication;
+import com.franklinho.vidtrain_android.utilities.Utility;
 import com.parse.ParseClassName;
+import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -123,5 +128,26 @@ public class VidTrain extends ParseObject implements Serializable {
         }
         videos.add(video);
         return videos;
+    }
+
+    /**
+     * Get a list of locally stored Files from this vidtrain. This should be called from
+     * a background thread.
+     */
+    public List<File> getVideoFiles() {
+        List<Video> videos = getVideos();
+        List<File> localVideoFiles = new ArrayList<>();
+        for (Video video : videos) {
+            try {
+                video.fetchIfNeeded();
+                final byte[] data = video.getVideoFile().getData();
+                File localVideoFile = Utility.getOutputMediaFile(video.getObjectId());
+                Utility.writeToFile(data, localVideoFile);
+                localVideoFiles.add(localVideoFile);
+            } catch (ParseException parseException) {
+                Log.d(VidtrainApplication.TAG, parseException.toString());
+            }
+        }
+        return localVideoFiles;
     }
 }
