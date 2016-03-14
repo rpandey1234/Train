@@ -96,6 +96,7 @@ public class MapDialogFragment extends DialogFragment {
                     public void onClick(View v) {
                         Intent i = new Intent(getContext(), VidTrainDetailActivity.class);
                         i.putExtra(VidTrainDetailActivity.VIDTRAIN_KEY, vidTrain.getObjectId());
+                        vvPreview.pause();
                         getContext().startActivity(i);
                     }
                 });
@@ -181,6 +182,7 @@ public class MapDialogFragment extends DialogFragment {
     @Override
     public void onPause() {
         super.onPause();
-        vvPreview.stop();
+
+
     }
 }

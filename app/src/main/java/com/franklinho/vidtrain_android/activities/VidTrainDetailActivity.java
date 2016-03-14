@@ -25,6 +25,7 @@ import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
+import com.franklinho.vidtrain_android.utilities.OnSwipeTouchListener;
 import com.franklinho.vidtrain_android.utilities.Utility;
 import com.franklinho.vidtrain_android.utilities.VideoPlayer;
 import com.parse.GetCallback;
@@ -87,7 +88,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                     btnAddvidTrain.setVisibility(View.VISIBLE);
                 }
 
-                if (User.hasLikedVidtrain(ParseUser.getCurrentUser(), vidTrain.getObjectId())){
+                if (User.hasLikedVidtrain(ParseUser.getCurrentUser(), vidTrain.getObjectId())) {
                     liked = true;
                     ibtnLike.setImageResource(R.drawable.heart_icon_red);
                 }
@@ -246,25 +247,9 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         vvPreview.addMediaPlayerListener(new SimpleMainThreadMediaPlayerListener() {
             @Override
             public void onVideoCompletionMainThread() {
-                nextIndex += 1;
-                if (nextIndex >= localFiles.size()) {
-                    Log.d(VidtrainApplication.TAG, "Finished playing all videos!");
-                    tvVideoCount.setText(totalVideos);
-                    nextIndex = 0;
-                    setProfileImageUrlAtIndex(0);
-                    ivThumbnail.setImageBitmap(Utility.getImageBitmap(localFiles.get(0)
-                            .getPath()));
-                    ivThumbnail.setVisibility(View.VISIBLE);
 
-                    return;
-                }
-                Log.d(VidtrainApplication.TAG,
-                        String.format("Finished playing video %s of %s",
-                                nextIndex + 1, localFiles.size()));
-                VideoPlayer.playVideo(vvPreview, localFiles.get(nextIndex).getPath());
-                int videoLabelIndex = nextIndex + 1;
-                tvVideoCount.setText("Playing "+ videoLabelIndex + " of " + totalVideos);
-                setProfileImageUrlAtIndex(nextIndex);
+                nextIndex += 1;
+                playNextVideo(localFiles);
             }
         });
         ivThumbnail.setImageBitmap(Utility.getImageBitmap(localFiles.get(nextIndex)
@@ -272,22 +257,85 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         ivThumbnail.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+            playNextVideo(localFiles);
 
-                VideoPlayer.playVideo(vvPreview, localFiles.get(nextIndex).getPath());
-                ivThumbnail.setVisibility(View.GONE);
-                int videoLabelIndex = nextIndex + 1;
-                tvVideoCount.setText("Playing " + videoLabelIndex + " of " + totalVideos);
-                setProfileImageUrlAtIndex(nextIndex);
             }
         });
         vvPreview.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                VideoPlayer.playVideo(vvPreview, localFiles.get(0).getPath());
+                nextIndex += 1;
+                playNextVideo(localFiles);
+            }
+        });
+
+        vvPreview.setOnTouchListener(new OnSwipeTouchListener(this){
+            @Override
+            public void onSwipeRight() {
+                super.onSwipeRight();
+                playPreviousVideo(localFiles);
+            }
+
+            @Override
+            public void onSwipeLeft() {
+                super.onSwipeLeft();
+                nextIndex += 1;
+                playNextVideo(localFiles);
             }
         });
         setProfileImageUrlAtIndex(nextIndex);
         hideProgressBar();
+    }
+
+    public void playNextVideo(final List<File> localFiles) {
+
+        if (nextIndex >= localFiles.size()) {
+            Log.d(VidtrainApplication.TAG, "Finished playing all videos!");
+            tvVideoCount.setText(totalVideos);
+//            vvPreview.pause();
+            nextIndex = 0;
+            setProfileImageUrlAtIndex(0);
+            ivThumbnail.setImageBitmap(Utility.getImageBitmap(localFiles.get(0)
+                    .getPath()));
+//            ivThumbnail.setVisibility(View.VISIBLE);
+
+//            return;
+        }
+        Log.d(VidtrainApplication.TAG,
+                String.format("Finished playing video %s of %s",
+                        nextIndex + 1, localFiles.size()));
+        VideoPlayer.playVideo(vvPreview, localFiles.get(nextIndex).getPath());
+        ivThumbnail.setVisibility(View.GONE);
+        int videoLabelIndex = nextIndex + 1;
+        tvVideoCount.setText("Playing " + videoLabelIndex + " of " + totalVideos);
+        setProfileImageUrlAtIndex(nextIndex);
+
+    }
+
+    public void playPreviousVideo(final List<File> localFiles) {
+        nextIndex-=1;
+
+        if (nextIndex < 0) {
+            Log.d(VidtrainApplication.TAG, "Finished playing all videos!");
+            tvVideoCount.setText(totalVideos);
+            vvPreview.pause();
+            nextIndex = 0;
+            setProfileImageUrlAtIndex(0);
+            ivThumbnail.setImageBitmap(Utility.getImageBitmap(localFiles.get(0)
+                    .getPath()));
+//            ivThumbnail.setVisibility(View.VISIBLE);
+
+            return;
+        }
+        Log.d(VidtrainApplication.TAG,
+                String.format("Finished playing video %s of %s",
+                        nextIndex + 1, localFiles.size()));
+        VideoPlayer.playVideo(vvPreview, localFiles.get(nextIndex).getPath());
+        ivThumbnail.setVisibility(View.GONE);
+        int videoLabelIndex = nextIndex + 1;
+        tvVideoCount.setText("Playing " + videoLabelIndex + " of " + totalVideos);
+        setProfileImageUrlAtIndex(nextIndex);
+
     }
 
     private class VideoDownloadTask extends AsyncTask<VidTrain, Void, List<File>> {
