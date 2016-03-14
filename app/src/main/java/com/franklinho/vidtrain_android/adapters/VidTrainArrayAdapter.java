@@ -12,7 +12,6 @@ import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.adapters.holders.VidTrainViewHolder;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
-import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.Utility;
 import com.franklinho.vidtrain_android.utilities.VideoPlayer;
 import com.parse.GetCallback;
@@ -20,7 +19,6 @@ import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
-import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
 
 import java.io.File;
 import java.util.List;
@@ -30,15 +28,12 @@ import java.util.List;
  */
 public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolder> {
 
-    private final SingleVideoPlayerManager mPlayer;
     private List<VidTrain> mVidTrains;
     private Context mContext;
-
 
     public VidTrainArrayAdapter( List<VidTrain> vidTrains, Context context) {
         mVidTrains = vidTrains;
         mContext = context;
-        mPlayer = VideoPlayer.getVideoPlayer();
     }
 
     @Override
@@ -85,20 +80,20 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
                             @Override
                             public void onClick(View v) {
                                 holder.vvThumbnail.setVisibility(View.GONE);
-                                mPlayer.playNewVideo(null, holder.vvPreview, videoFile.getPath());
+                                VideoPlayer.playVideo(holder.vvPreview, videoFile.getPath());
                             }
                         }
                 );
                 holder.vvPreview.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        switch (mPlayer.getCurrentPlayerState()) {
+                        switch (VideoPlayer.getState()) {
                             case STARTED:
-                                mPlayer.stopAnyPlayback();
+                                VideoPlayer.stop();
                                 break;
                             case PAUSED:
                             default:
-                                mPlayer.playNewVideo(null, holder.vvPreview, videoFile.getPath());
+                                VideoPlayer.playVideo(holder.vvPreview, videoFile.getPath());
                         }
                     }
                 });

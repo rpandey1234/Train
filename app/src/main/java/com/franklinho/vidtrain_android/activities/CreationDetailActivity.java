@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -26,7 +27,6 @@ import com.franklinho.vidtrain_android.models.DynamicVideoPlayerView;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
-import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.Utility;
 import com.franklinho.vidtrain_android.utilities.VideoPlayer;
 import com.parse.FindCallback;
@@ -84,7 +84,13 @@ public class CreationDetailActivity extends AppCompatActivity {
                     vvPreview.start();
                 }
             });
-            VideoPlayer.getVideoPlayer().playNewVideo(null, vvPreview, videoPath);
+            vvPreview.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    VideoPlayer.playVideo(vvPreview, videoPath);
+                }
+            });
+
         }
 
         etCollaborators.addTextChangedListener(new TextWatcher() {
@@ -140,6 +146,7 @@ public class CreationDetailActivity extends AppCompatActivity {
     }
 
     public void submitVidTrain(View view) {
+        // TODO: show loading screen immediately
         final Video video = new Video();
         final VidTrain vidTrain = new VidTrain();
 
@@ -168,8 +175,8 @@ public class CreationDetailActivity extends AppCompatActivity {
                             vidTrain.setReadPrivacy(false);
                             vidTrain.setLatestVideo(parseFile);
                             LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                            Location loc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                            vidTrain.setLL(new ParseGeoPoint(loc.getLongitude(), loc.getLatitude()));
+                            Location lc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                            vidTrain.setLL(new ParseGeoPoint(lc.getLatitude(), lc.getLongitude()));
                             vidTrain.saveInBackground(new SaveCallback() {
                                 @Override
                                 public void done(ParseException e) {
