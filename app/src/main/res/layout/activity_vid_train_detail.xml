@@ -116,7 +116,8 @@
                 android:layout_alignTop="@+id/ibtnLike"
                 android:layout_marginRight="10dp"
                 android:gravity="center_vertical"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                />
 
             <Button
                 android:id="@+id/btnAddvidTrain"
@@ -126,11 +127,13 @@
                 android:layout_centerVertical="true"
                 android:background="@color/bluePrimary"
                 android:padding="5dp"
-                android:text="Add to vid train"
-                android:textColor="@android:color/white"
+                android:text="@string/add_to_vidtrain"
+                android:textColor="@android:color/black"
                 android:onClick="showCreateFlow"
+                android:visibility="gone"
+                android:layout_marginTop="10dp"
                 android:layout_below="@id/tvTime"
-                android:visibility="gone" />
+                />
 
             <fragment
                 android:id="@+id/commentsFragment"
@@ -138,7 +141,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/ibtnLike"
-                tools:layout="@layout/fragment_comments" />
+                tools:layout="@layout/fragment_comments"
+                />
 
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>

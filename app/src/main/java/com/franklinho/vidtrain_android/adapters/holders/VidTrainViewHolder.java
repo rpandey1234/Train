@@ -37,7 +37,7 @@ public class VidTrainViewHolder extends  RecyclerView.ViewHolder implements View
 
     public Context context;
     public VidTrain vidTrain;
-    public Boolean liked;
+    public boolean liked = false;
 
     public VidTrainViewHolder(View itemView) {
         super(itemView);

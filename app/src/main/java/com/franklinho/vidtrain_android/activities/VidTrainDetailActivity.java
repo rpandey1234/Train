@@ -57,7 +57,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     private static final int VIDEO_CAPTURE = 101;
     public static final String VIDTRAIN_KEY = "vidTrain";
     private int nextIndex;
-    public Boolean liked;
+    public boolean liked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +105,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
 //                        Glide.with(getBaseContext()).load(profileImageUrl).into(ivCollaborators);
 //                    }
 //                });
-                
+
                 vvPreview.setHeightRatio(1);
                 final List<File> localFiles = vidTrain.getVideoFiles();
                 vvPreview.addMediaPlayerListener(new SimpleMainThreadMediaPlayerListener() {
