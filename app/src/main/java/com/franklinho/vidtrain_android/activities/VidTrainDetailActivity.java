@@ -64,7 +64,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         vvPreview.setHeightRatio(1);
         String vidTrainId = getIntent().getExtras().getString(VIDTRAIN_KEY);
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
-        query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
+        query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
         query.whereEqualTo("objectId", vidTrainId);;
         query.getFirstInBackground(new GetCallback<VidTrain>() {
             @Override
@@ -118,7 +118,11 @@ public class VidTrainDetailActivity extends AppCompatActivity {
 
                     @Override
                     public void onVideoStoppedMainThread() {}
+
+
                 });
+
+
 
                 vvThumbnail.setImageBitmap(Utility.getImageBitmap(localFiles.get(nextIndex)
                         .getPath()));
