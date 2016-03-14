@@ -2,7 +2,6 @@ package com.franklinho.vidtrain_android.fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -30,7 +29,6 @@ import com.parse.GetCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -54,6 +52,7 @@ public class MapDialogFragment extends DialogFragment {
     @Bind(R.id.tvTime) TextView tvTime;
     @Bind(R.id.tvLikeCount) TextView tvLikeCount;
     @Bind(R.id.ibtnLike) ImageButton ibtnLike;
+    File videoFile;
 
     boolean liked = false;
     VidTrain vidTrain;
@@ -82,11 +81,7 @@ public class MapDialogFragment extends DialogFragment {
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
         LocationManager lm = (LocationManager) getContext().getSystemService(
                 Context.LOCATION_SERVICE);
-        Location lc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if (lc != null) {
-            query.whereNear("ll",new ParseGeoPoint(lc.getLatitude(), lc.getLongitude()));
-        }
-        query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
+        query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
         query.whereEqualTo("objectId", vidTrainId);
         query.getFirstInBackground(new GetCallback<VidTrain>() {
             @Override
@@ -105,7 +100,7 @@ public class MapDialogFragment extends DialogFragment {
                     }
                 });
 
-                if (User.hasLikedVidtrain(ParseUser.getCurrentUser(), vidTrain.getObjectId())){
+                if (User.hasLikedVidtrain(ParseUser.getCurrentUser(), vidTrain.getObjectId())) {
                     liked = true;
                     ibtnLike.setImageResource(R.drawable.heart_icon_red);
                 }
@@ -126,7 +121,7 @@ public class MapDialogFragment extends DialogFragment {
                     @Override
                     public void done(byte[] data, ParseException e) {
                         try {
-                            File videoFile = Utility.getOutputMediaFile(vidTrain.getObjectId());
+                            videoFile = Utility.getOutputMediaFile(vidTrain.getObjectId());
                             FileOutputStream out = new FileOutputStream(videoFile);
                             out.write(data);
                             out.close();
@@ -173,5 +168,19 @@ public class MapDialogFragment extends DialogFragment {
         view.startAnimation(animScale);
         tvLikeCount.setText(getResources().getQuantityString(R.plurals.likes_count,
                 vidTrain.getLikes(), vidTrain.getLikes()));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (videoFile != null) {
+            VideoPlayer.playVideo(vvPreview, videoFile.getPath());
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        vvPreview.stop();
     }
 }

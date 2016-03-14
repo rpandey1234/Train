@@ -62,6 +62,7 @@ public class VidTrainViewHolder extends  RecyclerView.ViewHolder implements View
         context.startActivity(intent);
     }
 
+
     @SuppressWarnings("unused")
     @OnClick(R.id.ibtnLike)
     public void onVidTrainLiked(View view) {

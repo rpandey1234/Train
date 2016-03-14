@@ -64,4 +64,9 @@ public class PopularFragment extends VidTrainListFragment {
     }
 
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        aVidTrains.notifyItemRangeChanged(0, vidTrains.size());
+    }
 }
