@@ -73,7 +73,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                 vidTrain = object;
                 toolbar.setTitle(vidTrain.getTitle());
                 int videosCount = vidTrain.getVideosCount();
-                String totalVideos = getResources().getQuantityString(R.plurals.videos_count,
+                final String totalVideos = getResources().getQuantityString(R.plurals.videos_count,
                         videosCount, videosCount);
                 tvVideoCount.setText(totalVideos);
                 tvTime.setText(Utility.getRelativeTime(vidTrain.getUpdatedAt().getTime()));
@@ -102,12 +102,20 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                         nextIndex += 1;
                         if (nextIndex >= localFiles.size()) {
                             Log.d(VidtrainApplication.TAG, "Finished playing all videos!");
+                            nextIndex = 0;
+                            setProfileImageUrlAtIndex(0);
+                            ivThumbnail.setImageBitmap(Utility.getImageBitmap(localFiles.get(0)
+                                    .getPath()));
+                            ivThumbnail.setVisibility(View.VISIBLE);
+
                             return;
                         }
                         Log.d(VidtrainApplication.TAG,
                                 String.format("Finished playing video %s of %s",
                                         nextIndex + 1, localFiles.size()));
                         VideoPlayer.playVideo(vvPreview, localFiles.get(nextIndex).getPath());
+                        int videoLabelIndex = nextIndex + 1;
+                        tvVideoCount.setText("Playing "+ videoLabelIndex + " of " + totalVideos);
                         setProfileImageUrlAtIndex(nextIndex);
                     }
 
@@ -133,17 +141,23 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                 ivThumbnail.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ivThumbnail.setVisibility(View.GONE);
+
                         VideoPlayer.playVideo(vvPreview, localFiles.get(nextIndex).getPath());
+                        ivThumbnail.setVisibility(View.GONE);
+                        int videoLabelIndex = nextIndex + 1;
+                        tvVideoCount.setText("Playing "+ videoLabelIndex + " of " + totalVideos);
+                        setProfileImageUrlAtIndex(nextIndex);
                     }
                 });
                 vvPreview.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         VideoPlayer.playVideo(vvPreview, localFiles.get(0).getPath());
+
+
                     }
                 });
-                setProfileImageUrlAtIndex(0);
+                setProfileImageUrlAtIndex(nextIndex);
             }
         });
     }
