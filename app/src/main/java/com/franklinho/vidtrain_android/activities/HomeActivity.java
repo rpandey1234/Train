@@ -62,9 +62,9 @@ public class HomeActivity extends AppCompatActivity {
 
     public void showCreateFlow(View view) {
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
-            //startActivityForResult(Utility.getVideoIntent(), VIDEO_CAPTURE);
-            Intent in = new Intent(this, VideoCaptureActivity.class);
-            startActivityForResult(in,1);
+            startActivityForResult(Utility.getVideoIntent(), VIDEO_CAPTURE);
+            //Intent in = new Intent(this, VideoCaptureActivity.class);
+            //startActivityForResult(in,1);
         } else {
             Toast.makeText(this, "No camera on device", Toast.LENGTH_LONG).show();
         }
