@@ -151,10 +151,8 @@ public class User extends ParseObject implements Serializable {
         return userLikes;
     }
 
-    public static Boolean hasLikedVidtrain(ParseUser user, String vidtrainId) {
+    public static boolean hasLikedVidtrain(ParseUser user, String vidtrainId) {
         Map<String, Boolean> userLikes = getLikes(user);
         return userLikes != null && Boolean.TRUE.equals(userLikes.get(vidtrainId));
     }
-
-
 }

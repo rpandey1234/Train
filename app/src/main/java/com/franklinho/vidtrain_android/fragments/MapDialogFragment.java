@@ -118,7 +118,7 @@ public class MapDialogFragment extends DialogFragment {
                 String totalVideos = getResources().getQuantityString(R.plurals.videos_count,
                         videoCount, videoCount);
                 tvVideoCount.setText(totalVideos);
-                tvTime.setText(Utility.getRelativeTime(vidTrain.getUpdatedAt().getTime()));
+                tvTime.setText(Utility.getRelativeTime(vidTrain.getCreatedAt().getTime()));
                 vvPreview.setHeightRatio(1);
                 vvPreview.setVisibility(View.VISIBLE);
                 final ParseFile parseFile = ((ParseFile) vidTrain.get("thumbnail"));

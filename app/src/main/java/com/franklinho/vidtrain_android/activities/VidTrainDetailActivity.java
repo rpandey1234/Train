@@ -96,7 +96,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                 final String totalVideos = getResources().getQuantityString(R.plurals.videos_count,
                         videosCount, videosCount);
                 tvVideoCount.setText(totalVideos);
-                tvTime.setText(Utility.getRelativeTime(vidTrain.getUpdatedAt().getTime()));
+                tvTime.setText(Utility.getRelativeTime(vidTrain.getCreatedAt().getTime()));
 //                vidTrain.getUser().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
 //                    @Override
 //                    public void done(ParseObject object, ParseException e) {
