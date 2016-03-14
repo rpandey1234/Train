@@ -6,13 +6,21 @@
     android:layout_height="match_parent"
     tools:context="com.franklinho.vidtrain_android.activities.ProfileActivity">
 
-
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
         android:theme="@style/AppBaseLightTheme">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:popupTheme="@style/AppBaseLightTheme"
+            style="@style/Widget.Toolbar"
+            app:layout_scrollFlags="scroll|enterAlways"
+            />
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
@@ -28,9 +36,8 @@
                 android:id="@+id/flUserInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_scrollFlags="scroll|enterAlways"
-                app:layout_collapseMode="parallax"/>
-
+                app:layout_collapseMode="parallax"
+                app:layout_scrollFlags="scroll|enterAlways" />
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
@@ -41,18 +48,20 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/appbar"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
         <com.astuetz.PagerSlidingTabStrip
             android:id="@+id/tabs"
-            app:pstsShouldExpand="true"
-            app:pstsTextAllCaps="true"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:background="@android:color/white"
+            android:fillViewport="false"
             android:textColor="@android:color/black"
             app:pstsIndicatorColor="@android:color/black"
-            android:fillViewport="false" />
+            app:pstsShouldExpand="true"
+            app:pstsTextAllCaps="true" />
+
         <FrameLayout
             android:id="@+id/flUserContent"
             android:layout_width="match_parent"

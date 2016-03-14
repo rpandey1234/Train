@@ -27,8 +27,10 @@
     <string name="title_prompt">Enter title</string>
     <string name="collabs">Collaborators</string>
     <string name="submit">Submit</string>
-    <string name="autocomplete_hint">Type for autocomplete of friends</string>
+    <string name="autocomplete_hint">Add friends here</string>
     <string name="video_thumbnail">video thumbnail</string>
+    <string name="publicCollaborator">Public</string>
+    <string name="friends">Friends</string>
 
     <string-array name="privacy_states">
         <item>Public</item>

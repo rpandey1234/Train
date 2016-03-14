@@ -34,4 +34,8 @@ public class VideoPlayer {
     public static void stop() {
         videoPlayerManager.stopAnyPlayback();
     }
+
+    public static void start(DynamicVideoPlayerView videoPlayerView) {
+        videoPlayerView.start();
+    }
 }

@@ -72,7 +72,6 @@ public class HomeActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == VIDEO_CAPTURE) {
             if (resultCode == RESULT_OK) {
-                Toast.makeText(this, "Video has been saved to:\n" + data.getData(), Toast.LENGTH_LONG).show();
                 Intent i = new Intent(this, CreationDetailActivity.class);
                 i.putExtra("videoPath", Utility.getOutputMediaFile().getPath());
                 startActivity(i);
