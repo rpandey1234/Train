@@ -9,18 +9,33 @@
     android:layout_height="match_parent"
     tools:context="com.franklinho.vidtrain_android.activities.CreationDetailActivity">
 
-    <com.franklinho.vidtrain_android.models.DynamicVideoPlayerView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:id="@+id/vvPreview"
-        android:background="@android:color/black"
-        />
+        android:orientation="vertical"
+        android:id="@+id/videoContainer">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:id="@+id/vvThumbnail"
+            android:background="@color/bluePrimary"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/video_thumbnail"
+            />
+
+        <com.franklinho.vidtrain_android.models.DynamicVideoPlayerView
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:id="@+id/vvPreview"
+            />
+    </LinearLayout>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/etTitle"
-        android:layout_below="@id/vvPreview"
+        android:layout_below="@id/videoContainer"
         android:singleLine="true"
         android:hint="@string/title_prompt"
         android:layout_margin="10dp"
@@ -47,9 +62,11 @@
         android:layout_toRightOf="@+id/tvCollaborators"
         android:layout_below="@+id/etTitle"
         android:layout_marginLeft="10dp"
-        android:textOff="Public"
-        android:textOn="Friends"
+        android:textOff="@string/publicCollaborator"
+        android:textOn="@string/friends"
         android:showText="true"
+        android:thumbTextPadding="10dp"
+        android:track="@drawable/shape_thumb"
         />
 
     <AutoCompleteTextView
@@ -59,31 +76,34 @@
         android:layout_below="@id/tvCollaborators"
         android:hint="@string/autocomplete_hint"
         android:visibility="gone"
-        android:layout_margin="10dp"
+        android:singleLine="true"
+        android:layout_marginLeft="10dp"
         />
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tvCollaboratorsAdded"
+        android:orientation="horizontal"
+        android:id="@+id/containerCollab"
         android:visibility="gone"
         android:layout_below="@+id/etCollaborators"
-        android:layout_marginBottom="50dp"
-        android:layout_margin="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
         />
 
     <Button
+        android:id="@+id/btnSubmit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/submit"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/tvCollaboratorsAdded"
+        android:layout_below="@id/etCollaborators"
         android:layout_marginRight="10dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="30dp"
         android:onClick="submitVidTrain"
-        android:id="@+id/btnSubmit"
+        android:background="@color/bluePrimary"
         />
 
 </RelativeLayout>
