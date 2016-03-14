@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.adapters.VidTrainArrayAdapter;
 import com.franklinho.vidtrain_android.models.VidTrain;
-import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.EndlessRecyclerViewScrollListener;
 import com.franklinho.vidtrain_android.utilities.VideoPlayer;
 
@@ -29,6 +28,7 @@ public class VidTrainListFragment extends Fragment {
 
     @Bind(R.id.rvVidTrains) public RecyclerView rvVidTrains;
     @Bind(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
+    @Bind(R.id.pbProgessAction) View pbProgessAction;
 
     List<VidTrain> vidTrains;
     VidTrainArrayAdapter aVidTrains;
@@ -140,5 +140,15 @@ public class VidTrainListFragment extends Fragment {
         super.onStop();
         // we have to stop any playback in onStop
         VideoPlayer.getVideoPlayer().resetMediaPlayer();
+    }
+
+    public void showProgressBar() {
+        // Show progress item
+        pbProgessAction.setVisibility(View.VISIBLE);
+    }
+
+    public void hideProgressBar() {
+        // Hide progress item
+        pbProgessAction.setVisibility(View.GONE);
     }
 }

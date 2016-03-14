@@ -30,6 +30,9 @@ public class PopularFragment extends VidTrainListFragment {
 
     @Override
     public void requestVidTrains(final boolean newTimeline) {
+        if (newTimeline) {
+            showProgressBar();
+        }
         super.requestVidTrains(newTimeline);
         final int currentSize;
         if (newTimeline) {
@@ -56,7 +59,10 @@ public class PopularFragment extends VidTrainListFragment {
                         aVidTrains.notifyItemRangeInserted(currentSize, vidTrains.size() - 1);
                     }
                 }
+                hideProgressBar();
             }
         });
     }
+
+
 }
