@@ -86,6 +86,10 @@ public class VidTrain extends ParseObject implements Serializable {
         put(WRITE_PRIVACY_KEY, writePrivacy);
     }
 
+    public boolean getWritePrivacy() {
+        return getBoolean(WRITE_PRIVACY_KEY);
+    }
+
     public void setLL(ParseGeoPoint geoPoint) {
         put(LL_KEY, geoPoint);
     }

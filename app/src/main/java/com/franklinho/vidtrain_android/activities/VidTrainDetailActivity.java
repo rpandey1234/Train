@@ -77,10 +77,9 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                     invalidVidtrain();
                     return;
                 }
-
-
                 vidTrain = object;
-                if (Utility.contains(vidTrain.getCollaborators(), ParseUser.getCurrentUser())) {
+                if (!vidTrain.getWritePrivacy() ||
+                        Utility.contains(vidTrain.getCollaborators(), ParseUser.getCurrentUser())) {
                     btnAddvidTrain.setVisibility(View.VISIBLE);
                 }
 
