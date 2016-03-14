@@ -32,6 +32,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.volokh.danylo.video_player_manager.ui.MediaPlayerWrapper.MainThreadMediaPlayerListener;
+import com.volokh.danylo.video_player_manager.ui.SimpleMainThreadMediaPlayerListener;
 
 import java.io.File;
 import java.util.List;
@@ -88,19 +89,10 @@ public class VidTrainDetailActivity extends AppCompatActivity {
 //                        Glide.with(getBaseContext()).load(profileImageUrl).into(ivCollaborators);
 //                    }
 //                });
-
-
+                
                 vvPreview.setHeightRatio(1);
                 final List<File> localFiles = vidTrain.getVideoFiles();
-                vvPreview.addMediaPlayerListener(new MainThreadMediaPlayerListener() {
-                    @Override
-                    public void onVideoSizeChangedMainThread(int width, int height) {
-                    }
-
-                    @Override
-                    public void onVideoPreparedMainThread() {
-                    }
-
+                vvPreview.addMediaPlayerListener(new SimpleMainThreadMediaPlayerListener() {
                     @Override
                     public void onVideoCompletionMainThread() {
                         nextIndex += 1;
@@ -122,24 +114,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                         tvVideoCount.setText("Playing "+ videoLabelIndex + " of " + totalVideos);
                         setProfileImageUrlAtIndex(nextIndex);
                     }
-
-                    @Override
-                    public void onErrorMainThread(int what, int extra) {
-                    }
-
-                    @Override
-                    public void onBufferingUpdateMainThread(int percent) {
-                    }
-
-                    @Override
-                    public void onVideoStoppedMainThread() {
-                    }
-
-
                 });
-
-
-
                 ivThumbnail.setImageBitmap(Utility.getImageBitmap(localFiles.get(nextIndex)
                         .getPath()));
                 ivThumbnail.setOnClickListener(new OnClickListener() {
