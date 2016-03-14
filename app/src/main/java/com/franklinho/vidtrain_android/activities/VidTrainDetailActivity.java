@@ -51,7 +51,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     public VidTrain vidTrain;
     private static final int VIDEO_CAPTURE = 101;
     public static final String VIDTRAIN_KEY = "vidTrain";
-    private SingleVideoPlayerManager player;
     private int nextIndex;
 
     @Override
@@ -59,7 +58,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vid_train_detail);
         ButterKnife.bind(this);
-        player = VideoPlayer.getVideoPlayer();
         nextIndex = 0;
         vvPreview.setHeightRatio(1);
         String vidTrainId = getIntent().getExtras().getString(VIDTRAIN_KEY);
@@ -99,15 +97,15 @@ public class VidTrainDetailActivity extends AppCompatActivity {
 
                     @Override
                     public void onVideoCompletionMainThread() {
-                        Log.d(VidtrainApplication.TAG,
-                                String.format("Finished playing video %s of %s", nextIndex + 1,
-                                        localFiles.size()));
                         nextIndex += 1;
                         if (nextIndex >= localFiles.size()) {
                             Log.d(VidtrainApplication.TAG, "Finished playing all videos!");
                             return;
                         }
-                        player.playNewVideo(null, vvPreview, localFiles.get(nextIndex).getPath());
+                        Log.d(VidtrainApplication.TAG,
+                                String.format("Finished playing video %s of %s",
+                                        nextIndex + 1, localFiles.size()));
+                        VideoPlayer.playVideo(vvPreview, localFiles.get(nextIndex).getPath());
                     }
 
                     @Override
@@ -130,13 +128,13 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         vvThumbnail.setVisibility(View.GONE);
-                        player.playNewVideo(null, vvPreview, localFiles.get(nextIndex).getPath());
+                        VideoPlayer.playVideo(vvPreview, localFiles.get(nextIndex).getPath());
                     }
                 });
                 vvPreview.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        player.playNewVideo(null, vvPreview, localFiles.get(0).getPath());
+                        VideoPlayer.playVideo(vvPreview, localFiles.get(0).getPath());
                     }
                 });
             }
