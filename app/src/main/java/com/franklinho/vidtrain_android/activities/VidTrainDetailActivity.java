@@ -1,5 +1,6 @@
 package com.franklinho.vidtrain_android.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -53,9 +54,10 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     @Bind(R.id.btnAddvidTrain)
     Button btnAddvidTrain;
 
-    public VidTrain vidTrain;
-    private static final int VIDEO_CAPTURE = 101;
     public static final String VIDTRAIN_KEY = "vidTrain";
+    private ProgressDialog progress;
+    private VidTrain vidTrain;
+    private static final int VIDEO_CAPTURE = 101;
     private int nextIndex;
     public boolean liked = false;
 
@@ -77,14 +79,13 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                     invalidVidtrain();
                     return;
                 }
-
-
                 vidTrain = object;
-                if (Utility.contains(vidTrain.getCollaborators(), ParseUser.getCurrentUser())) {
+                if (!vidTrain.getWritePrivacy() ||
+                        Utility.contains(vidTrain.getCollaborators(), ParseUser.getCurrentUser())) {
                     btnAddvidTrain.setVisibility(View.VISIBLE);
                 }
 
-                if (User.getLikeForVidTrainObjectId(ParseUser.getCurrentUser(), vidTrain.getObjectId().toString())){
+                if (User.hasLikedVidtrain(ParseUser.getCurrentUser(), vidTrain.getObjectId())){
                     liked = true;
                     ibtnLike.setImageResource(R.drawable.heart_icon_red);
                 }
@@ -97,7 +98,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                 final String totalVideos = getResources().getQuantityString(R.plurals.videos_count,
                         videosCount, videosCount);
                 tvVideoCount.setText(totalVideos);
-                tvTime.setText(Utility.getRelativeTime(vidTrain.getUpdatedAt().getTime()));
+                tvTime.setText(Utility.getRelativeTime(vidTrain.getCreatedAt().getTime()));
 //                vidTrain.getUser().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
 //                    @Override
 //                    public void done(ParseObject object, ParseException e) {
@@ -148,8 +149,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         VideoPlayer.playVideo(vvPreview, localFiles.get(0).getPath());
-
-
                     }
                 });
                 setProfileImageUrlAtIndex(nextIndex);
@@ -177,6 +176,8 @@ public class VidTrainDetailActivity extends AppCompatActivity {
             return;
         }
         if (resultCode == RESULT_OK) {
+            progress = ProgressDialog.show(this, "Adding your video", "Just a moment please!",
+                    true);
             // data.getData().toString() is the following:
             // "file:///storage/emulated/0/Movies/VidTrainApp/VID_CAPTURED.mp4"
             // below is where data is stored:
@@ -202,6 +203,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                             user.saveInBackground(new SaveCallback() {
                                 @Override
                                 public void done(ParseException e) {
+                                    progress.dismiss();
                                     Toast.makeText(getBaseContext(), "Successfully added video",
                                             Toast.LENGTH_SHORT).show();
                                 }
@@ -270,9 +272,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
             User.postLike(ParseUser.getCurrentUser(), vidTrain.getObjectId().toString());
             liked = true;
             ibtnLike.setImageResource(R.drawable.heart_icon_red);
-            int currentLikeCount = vidTrain.getLikes();
-            vidTrain.setLikes( currentLikeCount + 1);
-
+            vidTrain.setLikes(vidTrain.getLikes() + 1);
         }
         view.startAnimation(animScale);
         tvLikeCount.setText(vidTrain.getLikes() + " likes");

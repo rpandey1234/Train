@@ -95,6 +95,9 @@ public class Utility {
 
     // Equality check on ParseUser fails, so we need this helper method :(
     public static boolean contains(List<ParseUser> users, ParseUser user) {
+        if (users == null || user == null) {
+            return false;
+        }
         for (ParseUser pUser : users) {
             if (user.getObjectId().equals(pUser.getObjectId())) {
                 return true;

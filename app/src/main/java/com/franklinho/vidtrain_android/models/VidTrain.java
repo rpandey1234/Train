@@ -34,10 +34,6 @@ public class VidTrain extends ParseObject implements Serializable {
     Enum writePrivacy;
     ParseGeoPoint ll;
 
-    public String mDirectUrl;
-    private final Rect mCurrentViewRect = new Rect();
-
-
     public static final String USER_KEY = "user";
     public static final String TITLE_KEY = "title";
     public static final String DESCRIPTION_KEY = "description";
@@ -84,6 +80,10 @@ public class VidTrain extends ParseObject implements Serializable {
     }
     public void setWritePrivacy(Boolean writePrivacy) {
         put(WRITE_PRIVACY_KEY, writePrivacy);
+    }
+
+    public boolean getWritePrivacy() {
+        return getBoolean(WRITE_PRIVACY_KEY);
     }
 
     public void setLL(ParseGeoPoint geoPoint) {
@@ -186,8 +186,4 @@ public class VidTrain extends ParseObject implements Serializable {
 //        }
 //        return localVideoFiles;
 //    }
-
-
-
-
 }

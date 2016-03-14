@@ -53,9 +53,9 @@ public class MapDialogFragment extends DialogFragment {
     @Bind(R.id.tvVideoCount) TextView tvVideoCount;
     @Bind(R.id.tvTime) TextView tvTime;
     @Bind(R.id.tvLikeCount) TextView tvLikeCount;
-    @Bind(R.id.ibtnLike)
-    ImageButton ibtnLike;
-    public boolean liked = false;
+    @Bind(R.id.ibtnLike) ImageButton ibtnLike;
+
+    boolean liked = false;
     VidTrain vidTrain;
 
     public static final String VIDTRAIN_ID = "vidTrainId";
@@ -63,11 +63,11 @@ public class MapDialogFragment extends DialogFragment {
     public MapDialogFragment() {}
 
     public static MapDialogFragment newInstance(String vidTrainId) {
-        MapDialogFragment frag = new MapDialogFragment();
+        MapDialogFragment fragment = new MapDialogFragment();
         Bundle args = new Bundle();
         args.putString(VIDTRAIN_ID, vidTrainId);
-        frag.setArguments(args);
-        return frag;
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Nullable
@@ -83,7 +83,9 @@ public class MapDialogFragment extends DialogFragment {
         LocationManager lm = (LocationManager) getContext().getSystemService(
                 Context.LOCATION_SERVICE);
         Location lc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        query.whereNear("ll",new ParseGeoPoint(lc.getLatitude(), lc.getLongitude()));
+        if (lc != null) {
+            query.whereNear("ll",new ParseGeoPoint(lc.getLatitude(), lc.getLongitude()));
+        }
         query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
         query.whereEqualTo("objectId", vidTrainId);
         query.getFirstInBackground(new GetCallback<VidTrain>() {
@@ -103,7 +105,7 @@ public class MapDialogFragment extends DialogFragment {
                     }
                 });
 
-                if (User.getLikeForVidTrainObjectId(ParseUser.getCurrentUser(), vidTrain.getObjectId().toString())){
+                if (User.hasLikedVidtrain(ParseUser.getCurrentUser(), vidTrain.getObjectId())){
                     liked = true;
                     ibtnLike.setImageResource(R.drawable.heart_icon_red);
                 }
@@ -116,7 +118,7 @@ public class MapDialogFragment extends DialogFragment {
                 String totalVideos = getResources().getQuantityString(R.plurals.videos_count,
                         videoCount, videoCount);
                 tvVideoCount.setText(totalVideos);
-                tvTime.setText(Utility.getRelativeTime(vidTrain.getUpdatedAt().getTime()));
+                tvTime.setText(Utility.getRelativeTime(vidTrain.getCreatedAt().getTime()));
                 vvPreview.setHeightRatio(1);
                 vvPreview.setVisibility(View.VISIBLE);
                 final ParseFile parseFile = ((ParseFile) vidTrain.get("thumbnail"));
@@ -124,8 +126,7 @@ public class MapDialogFragment extends DialogFragment {
                     @Override
                     public void done(byte[] data, ParseException e) {
                         try {
-                            File videoFile = Utility.getOutputMediaFile(
-                                    vidTrain.getObjectId());
+                            File videoFile = Utility.getOutputMediaFile(vidTrain.getObjectId());
                             FileOutputStream out = new FileOutputStream(videoFile);
                             out.write(data);
                             out.close();
@@ -154,7 +155,7 @@ public class MapDialogFragment extends DialogFragment {
     public void onVidTrainLiked(View view) {
         final Animation animScale = AnimationUtils.loadAnimation(getContext(), R.anim.anim_scale);
         if (liked) {
-            User.postUnlike(ParseUser.getCurrentUser(), vidTrain.getObjectId().toString());
+            User.postUnlike(ParseUser.getCurrentUser(), vidTrain.getObjectId());
             liked = false;
             ibtnLike.setImageResource(R.drawable.heart_icon);
             int currentLikeCount = vidTrain.getLikes();
@@ -164,14 +165,13 @@ public class MapDialogFragment extends DialogFragment {
                 vidTrain.setLikes(0);
             }
         } else {
-            User.postLike(ParseUser.getCurrentUser(), vidTrain.getObjectId().toString());
+            User.postLike(ParseUser.getCurrentUser(), vidTrain.getObjectId());
             liked = true;
             ibtnLike.setImageResource(R.drawable.heart_icon_red);
-            int currentLikeCount = vidTrain.getLikes();
-            vidTrain.setLikes( currentLikeCount + 1);
-
+            vidTrain.setLikes(vidTrain.getLikes() + 1);
         }
         view.startAnimation(animScale);
-        tvLikeCount.setText(vidTrain.getLikes() + " likes");
+        tvLikeCount.setText(getResources().getQuantityString(R.plurals.likes_count,
+                vidTrain.getLikes(), vidTrain.getLikes()));
     }
 }

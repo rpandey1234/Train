@@ -54,11 +54,11 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
         String totalVideos = mContext.getResources().getQuantityString(R.plurals.videos_count,
                 videoCount, videoCount);
         holder.tvVideoCount.setText(totalVideos);
-        holder.tvTime.setText(Utility.getRelativeTime(vidTrain.getUpdatedAt().getTime()));
+        holder.tvTime.setText(Utility.getRelativeTime(vidTrain.getCreatedAt().getTime()));
         holder.ivCollaborators.setImageResource(0);
         holder.liked = false;
         holder.ibtnLike.setImageResource(R.drawable.heart_icon);
-        if (User.getLikeForVidTrainObjectId(ParseUser.getCurrentUser(), vidTrain.getObjectId().toString())){
+        if (User.hasLikedVidtrain(ParseUser.getCurrentUser(), vidTrain.getObjectId())){
             holder.liked = true;
             holder.ibtnLike.setImageResource(R.drawable.heart_icon_red);
         }
