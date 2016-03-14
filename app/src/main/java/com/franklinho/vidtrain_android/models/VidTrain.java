@@ -48,6 +48,7 @@ public class VidTrain extends ParseObject implements Serializable {
     public static final String LL_KEY = "ll";
     public static final String THUMBNAIL_KEY = "thumbnail";
     public static final String COLLABORATORS = "collaborators";
+    public static final String LIKES_KEY = "likeCount";
 
     public VidTrain() {}
 
@@ -148,6 +149,15 @@ public class VidTrain extends ParseObject implements Serializable {
             }
         }
         return localVideoFiles;
+    }
+
+    public void setLikes(int likeCount) {
+        put(LIKES_KEY, likeCount);
+        saveInBackground();
+    }
+
+    public int getLikes() {
+        return getInt(LIKES_KEY);
     }
 
 //    public List<File> getVideoFiles() {

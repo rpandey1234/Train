@@ -22,6 +22,7 @@ import com.parse.ParseUser;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by franklinho on 3/7/16.
@@ -30,10 +31,12 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
 
     private List<VidTrain> mVidTrains;
     private Context mContext;
+    private Map<String, Boolean> likesMap;
 
     public VidTrainArrayAdapter( List<VidTrain> vidTrains, Context context) {
         mVidTrains = vidTrains;
         mContext = context;
+        likesMap = User.getLikes(ParseUser.getCurrentUser());
     }
 
     @Override
@@ -53,6 +56,14 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
         holder.tvVideoCount.setText(totalVideos);
         holder.tvTime.setText(Utility.getRelativeTime(vidTrain.getUpdatedAt().getTime()));
         holder.ivCollaborators.setImageResource(0);
+        holder.liked = false;
+        holder.ibtnLike.setImageResource(R.drawable.heart_icon);
+        if (User.getLikeForVidTrainObjectId(ParseUser.getCurrentUser(), vidTrain.getObjectId().toString())){
+            holder.liked = true;
+            holder.ibtnLike.setImageResource(R.drawable.heart_icon_red);
+        }
+
+        holder.tvLikeCount.setText(vidTrain.getLikes() + " likes");
         final ParseUser user = vidTrain.getUser();
         user.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
             @Override
@@ -73,30 +84,34 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
         vidTrain.getLatestVideo().getDataInBackground(new GetDataCallback() {
             @Override
             public void done(byte[] data, ParseException e) {
-                Utility.writeToFile(data, videoFile);
-                holder.vvThumbnail.setImageBitmap(Utility.getImageBitmap(videoFile.getPath()));
-                holder.vvThumbnail.setOnClickListener(
-                        new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                holder.vvThumbnail.setVisibility(View.GONE);
-                                VideoPlayer.playVideo(holder.vvPreview, videoFile.getPath());
+                if (e == null) {
+                    Utility.writeToFile(data, videoFile);
+                    holder.vvThumbnail.setImageBitmap(Utility.getImageBitmap(videoFile.getPath()));
+                    holder.vvThumbnail.setOnClickListener(
+                            new OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    holder.vvThumbnail.setVisibility(View.GONE);
+                                    VideoPlayer.playVideo(holder.vvPreview, videoFile.getPath());
+                                }
+                            }
+                    );
+                    holder.vvPreview.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            switch (VideoPlayer.getState()) {
+                                case STARTED:
+                                    VideoPlayer.stop();
+                                    break;
+                                case PAUSED:
+                                default:
+                                    VideoPlayer.playVideo(holder.vvPreview, videoFile.getPath());
                             }
                         }
-                );
-                holder.vvPreview.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        switch (VideoPlayer.getState()) {
-                            case STARTED:
-                                VideoPlayer.stop();
-                                break;
-                            case PAUSED:
-                            default:
-                                VideoPlayer.playVideo(holder.vvPreview, videoFile.getPath());
-                        }
-                    }
-                });
+                    });
+                } else {
+                    e.printStackTrace();
+                }
             }
         });
     }

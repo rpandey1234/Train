@@ -8,6 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,6 +38,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class VidTrainDetailActivity extends AppCompatActivity {
     @Bind(R.id.ivCollaborators) ImageView ivCollaborators;
@@ -51,6 +54,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     private static final int VIDEO_CAPTURE = 101;
     public static final String VIDTRAIN_KEY = "vidTrain";
     private int nextIndex;
+    public Boolean liked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -246,5 +250,40 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    @SuppressWarnings("unused")
+    @OnClick(R.id.ivCollaborators)
+    public void onCollaboratorClicked(View view) {
+        ParseUser user = vidTrain.getUser();
+        Intent intent = new Intent(this, ProfileActivity.class);
+        intent.putExtra(ProfileActivity.USER_ID, user.getObjectId());
+        this.startActivity(intent);
+    }
+
+    @SuppressWarnings("unused")
+    @OnClick(R.id.ibtnLike)
+    public void onVidTrainLiked(View view) {
+        final Animation animScale = AnimationUtils.loadAnimation(this, R.anim.anim_scale);
+        if (liked) {
+            User.postUnlike(ParseUser.getCurrentUser(), vidTrain.getObjectId().toString());
+            liked = false;
+            ibtnLike.setImageResource(R.drawable.heart_icon);
+            int currentLikeCount = vidTrain.getLikes();
+            if (currentLikeCount > 0) {
+                vidTrain.setLikes(currentLikeCount - 1);
+            } else {
+                vidTrain.setLikes(0);
+            }
+        } else {
+            User.postLike(ParseUser.getCurrentUser(), vidTrain.getObjectId().toString());
+            liked = true;
+            ibtnLike.setImageResource(R.drawable.heart_icon_red);
+            int currentLikeCount = vidTrain.getLikes();
+            vidTrain.setLikes( currentLikeCount + 1);
+
+        }
+        view.startAnimation(animScale);
+        tvLikeCount.setText(vidTrain.getLikes() + " likes");
     }
 }

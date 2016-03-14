@@ -1,24 +1,18 @@
 package com.franklinho.vidtrain_android.models;
 
-import android.util.Log;
-
 import com.facebook.GraphResponse;
-import com.franklinho.vidtrain_android.networking.VidtrainApplication;
-import com.parse.GetCallback;
-import com.parse.Parse;
 import com.parse.ParseClassName;
-import com.parse.ParseException;
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.net.PasswordAuthentication;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by franklinho on 3/1/16.
@@ -47,6 +41,7 @@ public class User extends ParseObject implements Serializable {
     public static final String PASSWORD = "password";
     public static final String EMAIL = "email";
     public static final String FBID = "fbid";
+    public static final String LIKES = "likes";
 
     public User(){}
 
@@ -137,4 +132,52 @@ public class User extends ParseObject implements Serializable {
         }
         return videos.size();
     }
+
+    public static Map<String,Boolean> getLikes(ParseUser user) {
+        return (Map<String,Boolean>) user.get(LIKES);
+    }
+
+    public static Map<String,Boolean> postLike(ParseUser user, String objectId) {
+        Map<String,Boolean> userLikes = getLikes(user);
+        if (userLikes == null) {
+            userLikes = new HashMap<>();
+
+        }
+        userLikes.put(objectId, true);
+        user.put(LIKES, userLikes);
+        user.saveInBackground();
+
+        return userLikes;
+    }
+
+    public static Map<String,Boolean> postUnlike(ParseUser user, String objectId) {
+        Map<String,Boolean> userLikes = getLikes(user);
+        if (userLikes == null) {
+            userLikes = new HashMap<>();
+
+        }
+        userLikes.put(objectId, false);
+        user.put(LIKES, userLikes);
+        user.saveInBackground();
+
+        return userLikes;
+    }
+
+    public static Boolean getLikeForVidTrainObjectId(ParseUser user, String objectId) {
+        Map<String,Boolean> userLikes = getLikes(user);
+        if (userLikes == null) {
+            userLikes = new HashMap<>();
+            return false;
+        } else {
+            if (userLikes.get(objectId) == null) {
+                return false;
+            } else if (userLikes.get(objectId) == true){
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+
 }

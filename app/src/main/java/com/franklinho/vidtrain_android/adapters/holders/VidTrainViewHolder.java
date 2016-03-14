@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,6 +14,7 @@ import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.activities.ProfileActivity;
 import com.franklinho.vidtrain_android.activities.VidTrainDetailActivity;
 import com.franklinho.vidtrain_android.models.DynamicVideoPlayerView;
+import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.parse.ParseUser;
 
@@ -34,6 +37,7 @@ public class VidTrainViewHolder extends  RecyclerView.ViewHolder implements View
 
     public Context context;
     public VidTrain vidTrain;
+    public Boolean liked;
 
     public VidTrainViewHolder(View itemView) {
         super(itemView);
@@ -56,5 +60,31 @@ public class VidTrainViewHolder extends  RecyclerView.ViewHolder implements View
         Intent intent = new Intent(context, ProfileActivity.class);
         intent.putExtra(ProfileActivity.USER_ID, user.getObjectId());
         context.startActivity(intent);
+    }
+
+    @SuppressWarnings("unused")
+    @OnClick(R.id.ibtnLike)
+    public void onVidTrainLiked(View view) {
+        final Animation animScale = AnimationUtils.loadAnimation(context, R.anim.anim_scale);
+        if (liked) {
+            User.postUnlike(ParseUser.getCurrentUser(), vidTrain.getObjectId().toString());
+            liked = false;
+            ibtnLike.setImageResource(R.drawable.heart_icon);
+            int currentLikeCount = vidTrain.getLikes();
+            if (currentLikeCount > 0) {
+                vidTrain.setLikes(currentLikeCount - 1);
+            } else {
+                vidTrain.setLikes(0);
+            }
+        } else {
+            User.postLike(ParseUser.getCurrentUser(), vidTrain.getObjectId().toString());
+            liked = true;
+            ibtnLike.setImageResource(R.drawable.heart_icon_red);
+            int currentLikeCount = vidTrain.getLikes();
+            vidTrain.setLikes( currentLikeCount + 1);
+
+        }
+        view.startAnimation(animScale);
+        tvLikeCount.setText(vidTrain.getLikes()+ " likes");
     }
 }
