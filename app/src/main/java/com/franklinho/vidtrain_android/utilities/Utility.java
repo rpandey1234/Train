@@ -13,10 +13,12 @@ import com.google.common.io.Files;
 
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.parse.ParseFile;
+import com.parse.ParseUser;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by rahul on 3/12/16.
@@ -89,5 +91,15 @@ public class Utility {
 
     public static Bitmap getImageBitmap(String filePath) {
         return ThumbnailUtils.createVideoThumbnail(filePath, Thumbnails.MINI_KIND);
+    }
+
+    // Equality check on ParseUser fails, so we need this helper method :(
+    public static boolean contains(List<ParseUser> users, ParseUser user) {
+        for (ParseUser pUser : users) {
+            if (user.getObjectId().equals(pUser.getObjectId())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -129,7 +129,8 @@
                 android:text="Add to vid train"
                 android:textColor="@android:color/white"
                 android:onClick="showCreateFlow"
-                android:layout_below="@id/tvTime"/>
+                android:layout_below="@id/tvTime"
+                android:visibility="gone" />
 
             <fragment
                 android:id="@+id/commentsFragment"
