@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -49,6 +50,8 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     @Bind(R.id.tvVideoCount) TextView tvVideoCount;
     @Bind(R.id.tvTime) TextView tvTime;
     @Bind(R.id.toolbar) Toolbar toolbar;
+    @Bind(R.id.btnAddvidTrain)
+    Button btnAddvidTrain;
 
     public VidTrain vidTrain;
     private static final int VIDEO_CAPTURE = 101;
@@ -77,6 +80,9 @@ public class VidTrainDetailActivity extends AppCompatActivity {
 
 
                 vidTrain = object;
+                if (Utility.contains(vidTrain.getCollaborators(), ParseUser.getCurrentUser())) {
+                    btnAddvidTrain.setVisibility(View.VISIBLE);
+                }
 
                 if (User.getLikeForVidTrainObjectId(ParseUser.getCurrentUser(), vidTrain.getObjectId().toString())){
                     liked = true;

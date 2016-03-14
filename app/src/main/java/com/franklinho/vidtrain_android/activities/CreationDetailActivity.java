@@ -139,7 +139,7 @@ public class CreationDetailActivity extends AppCompatActivity {
                 // Clear the text field
                 etCollaborators.clearListSelection();
                 etCollaborators.setText("");
-                if (contains(collaborators, user)) {
+                if (Utility.contains(collaborators, user)) {
                     Toast.makeText(getApplicationContext(), "You already added this user!",
                             Toast.LENGTH_SHORT).show();
                     return;
@@ -159,15 +159,7 @@ public class CreationDetailActivity extends AppCompatActivity {
         });
     }
 
-    // Equality check on ParseUser fails, so we need this helper method :(
-    private boolean contains(List<ParseUser> users, ParseUser user) {
-        for (ParseUser pUser : users) {
-            if (user.getObjectId().equals(pUser.getObjectId())) {
-                return true;
-            }
-        }
-        return false;
-    }
+
     public void submitVidTrain(View view) {
         if (etTitle.getText().toString().trim().length() == 0) {
             Toast.makeText(this, "Please enter a title", Toast.LENGTH_SHORT).show();
