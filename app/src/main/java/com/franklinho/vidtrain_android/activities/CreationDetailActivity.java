@@ -163,7 +163,6 @@ public class CreationDetailActivity extends AppCompatActivity {
         });
     }
 
-
     public void submitVidTrain(View view) {
         if (etTitle.getText().toString().trim().length() == 0) {
             Toast.makeText(this, "Please enter a title", Toast.LENGTH_SHORT).show();
@@ -218,7 +217,6 @@ public class CreationDetailActivity extends AppCompatActivity {
                                 });
                             }
                         });
-
                     }
                 });
             }

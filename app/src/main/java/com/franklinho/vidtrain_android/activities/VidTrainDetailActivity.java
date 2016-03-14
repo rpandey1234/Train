@@ -1,5 +1,6 @@
 package com.franklinho.vidtrain_android.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -53,9 +54,10 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     @Bind(R.id.btnAddvidTrain)
     Button btnAddvidTrain;
 
-    public VidTrain vidTrain;
-    private static final int VIDEO_CAPTURE = 101;
     public static final String VIDTRAIN_KEY = "vidTrain";
+    private ProgressDialog progress;
+    private VidTrain vidTrain;
+    private static final int VIDEO_CAPTURE = 101;
     private int nextIndex;
     public boolean liked = false;
 
@@ -174,6 +176,8 @@ public class VidTrainDetailActivity extends AppCompatActivity {
             return;
         }
         if (resultCode == RESULT_OK) {
+            progress = ProgressDialog.show(this, "Adding your video", "Just a moment please!",
+                    true);
             // data.getData().toString() is the following:
             // "file:///storage/emulated/0/Movies/VidTrainApp/VID_CAPTURED.mp4"
             // below is where data is stored:
@@ -199,6 +203,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                             user.saveInBackground(new SaveCallback() {
                                 @Override
                                 public void done(ParseException e) {
+                                    progress.dismiss();
                                     Toast.makeText(getBaseContext(), "Successfully added video",
                                             Toast.LENGTH_SHORT).show();
                                 }
