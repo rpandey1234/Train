@@ -11,6 +11,7 @@ import android.view.View;
 
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.fragments.PopularFragment;
+import com.franklinho.vidtrain_android.fragments.UserCreationsFragment;
 import com.franklinho.vidtrain_android.fragments.UserInfoFragment;
 import com.parse.ParseUser;
 
@@ -20,7 +21,7 @@ import butterknife.ButterKnife;
 public class ProfileActivity extends AppCompatActivity {
 
     public static final String USER_ID = "userId";
-    PopularFragment userProfileFragment;
+    UserCreationsFragment userProfileFragment;
     @Bind(R.id.toolbar) Toolbar toolbar;
 
     @Override
@@ -30,14 +31,12 @@ public class ProfileActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
-
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-
 
         String userId = getIntent().getStringExtra(USER_ID);
         if (userId == null) {
@@ -55,8 +54,7 @@ public class ProfileActivity extends AppCompatActivity {
             UserInfoFragment userInfoFragment = UserInfoFragment.newInstance(userId);
             ft.replace(R.id.flUserInfo, userInfoFragment);
 
-            // TODO: update this to be user's vidtrains
-            userProfileFragment = PopularFragment.newInstance();
+            userProfileFragment = UserCreationsFragment.newInstance(userId);
             ft.replace(R.id.flUserContent, userProfileFragment);
 
             ft.commit();

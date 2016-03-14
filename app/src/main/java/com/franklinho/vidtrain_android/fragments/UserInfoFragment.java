@@ -15,8 +15,10 @@ import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.activities.ProfileActivity;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
+import com.parse.CountCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -30,6 +32,7 @@ public class UserInfoFragment extends Fragment {
 
     @Bind(R.id.ivProfileImage) ImageView ivProfileImage;
     @Bind(R.id.tvName) TextView tvName;
+    @Bind(R.id.tvVidtrains) TextView tvVidtrains;
     @Bind(R.id.tvVideos) TextView tvVideos;
 
     @Override
@@ -45,23 +48,39 @@ public class UserInfoFragment extends Fragment {
         String userId = getArguments().getString(ProfileActivity.USER_ID);
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereEqualTo("objectId", userId);
-        query.include("videos");
         query.getFirstInBackground(new GetCallback<ParseUser>() {
             @Override
             public void done(ParseUser user, ParseException e) {
-                if (e != null) {
-                    Log.d(VidtrainApplication.TAG, e.toString());
-                    return;
-                }
                 tvName.setText(User.getName(user));
                 Glide.with(getContext()).load(User.getProfileImageUrl(user)).into(ivProfileImage);
-                int videoCount = User.getVideoCount(user);
-                String videosCreated = getResources().getQuantityString(R.plurals.videos_count,
-                        videoCount, videoCount);
-                tvVideos.setText(videosCreated);
+                queryUserCounts(user);
             }
         });
         return view;
+    }
+
+    private void queryUserCounts(ParseUser user) {
+        ParseQuery<ParseObject> vidTrainQuery = ParseQuery.getQuery("VidTrain");
+        vidTrainQuery.whereEqualTo("user", user);
+        vidTrainQuery.countInBackground(new CountCallback() {
+            @Override
+            public void done(int count, ParseException e) {
+                String vidtrainsCreated = getResources().getQuantityString(
+                        R.plurals.vidtrains_count, count, count);
+                tvVidtrains.setText(vidtrainsCreated);
+            }
+        });
+
+        ParseQuery<ParseObject> videoQuery = ParseQuery.getQuery("Video");
+        videoQuery.whereEqualTo("user", user);
+        videoQuery.countInBackground(new CountCallback() {
+            @Override
+            public void done(int count, ParseException e) {
+                String videosCreated = getResources().getQuantityString(
+                        R.plurals.profile_videos_count, count, count);
+                tvVideos.setText(videosCreated);
+            }
+        });
     }
 
     public static UserInfoFragment newInstance(String userId) {

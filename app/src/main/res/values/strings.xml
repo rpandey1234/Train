@@ -16,6 +16,14 @@
         <item quantity="one">%d like</item>
         <item quantity="other">%d likes</item>
     </plurals>
+    <plurals name="profile_videos_count">
+        <item quantity="one">Made %d video</item>
+        <item quantity="other">Made %d videos</item>
+    </plurals>
+    <plurals name="vidtrains_count">
+        <item quantity="one">Started %d Vidtrains</item>
+        <item quantity="other">Started %d Vidtrains</item>
+    </plurals>
     <string name="name">Name</string>
     <string name="profile_image">Profile Image</string>
     <string name="fb_login">Log In With Facebook</string>

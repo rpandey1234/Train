@@ -5,25 +5,36 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.franklinho.vidtrain_android.activities.ProfileActivity;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.List;
 
 /**
- * Created by rahul on 3/5/16.
+ * Created by rahul on 3/13/16.
  */
-public class PopularFragment extends VidTrainListFragment {
+public class UserCreationsFragment extends VidTrainListFragment {
 
-    public static PopularFragment newInstance() {
-        return new PopularFragment();
+    String userId;
+
+    public static UserCreationsFragment newInstance(String userId) {
+        UserCreationsFragment userCreationsFragment = new UserCreationsFragment();
+        Bundle args = new Bundle();
+        args.putString(ProfileActivity.USER_ID, userId);
+        userCreationsFragment.setArguments(args);
+        return userCreationsFragment;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
+        userId = getArguments().getString(ProfileActivity.USER_ID);
         requestVidTrains(true);
         return v;
     }
@@ -36,13 +47,26 @@ public class PopularFragment extends VidTrainListFragment {
             vidTrains.clear();
             currentSize = 0;
         } else {
-            currentSize  = vidTrains.size();
+            currentSize = vidTrains.size();
         }
 
+        ParseQuery<ParseUser> query = ParseUser.getQuery();
+        query.whereEqualTo("objectId", userId);
+        query.getFirstInBackground(new GetCallback<ParseUser>() {
+            @Override
+            public void done(ParseUser user, ParseException e) {
+                queryUserVidtrains(newTimeline, currentSize, user);
+            }
+        });
+    }
+
+    private void queryUserVidtrains(
+            final boolean newTimeline, final int currentSize, ParseUser user) {
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
         query.setCachePolicy(ParseQuery.CachePolicy.CACHE_THEN_NETWORK);
         query.addDescendingOrder("createdAt");
         query.setSkip(currentSize);
+        query.whereEqualTo("user", user);
         query.setLimit(5);
         query.findInBackground(new FindCallback<VidTrain>() {
             @Override
