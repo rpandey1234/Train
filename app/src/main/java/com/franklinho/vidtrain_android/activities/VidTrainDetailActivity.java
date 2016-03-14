@@ -74,7 +74,18 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                     invalidVidtrain();
                     return;
                 }
+
+
                 vidTrain = object;
+
+                if (User.getLikeForVidTrainObjectId(ParseUser.getCurrentUser(), vidTrain.getObjectId().toString())){
+                    liked = true;
+                    ibtnLike.setImageResource(R.drawable.heart_icon_red);
+                }
+
+                tvLikeCount.setText(getResources().getQuantityString(R.plurals.likes_count,
+                        vidTrain.getLikes(), vidTrain.getLikes()));
+
                 toolbar.setTitle(vidTrain.getTitle());
                 int videosCount = vidTrain.getVideosCount();
                 final String totalVideos = getResources().getQuantityString(R.plurals.videos_count,

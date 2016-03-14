@@ -1,4 +1,4 @@
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -21,6 +21,7 @@
         android:id="@+id/tvVideoCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
         android:singleLine="true"
         android:paddingStart="10dp"
         android:paddingLeft="10dp"
@@ -31,6 +32,7 @@
         android:id="@+id/tvTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/tvTitle"
         android:singleLine="true"
         android:paddingStart="10dp"
         android:paddingLeft="10dp"
@@ -39,11 +41,39 @@
         />
 
     <com.franklinho.vidtrain_android.models.DynamicVideoPlayerView
-        android:layout_width="280dp"
-        android:layout_height="240dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvTime"
         android:id="@+id/vvPreview"
         android:background="@android:color/black"
         android:onClick=""
         />
 
-</LinearLayout>
+    <ImageButton
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:src="@drawable/heart_icon"
+        android:layout_below="@+id/vvPreview"
+        android:layout_marginTop="10dp"
+        android:scaleType="centerInside"
+        android:background="@android:color/transparent"
+        android:id="@+id/ibtnLike"
+        android:padding="5dp"
+        android:gravity="center_vertical"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/ibtnLike"
+        android:text="@string/likes"
+        android:layout_alignTop="@id/ibtnLike"
+        android:layout_alignBottom="@id/ibtnLike"
+        android:gravity="center_vertical"
+        android:textSize="16sp"
+        android:id="@+id/tvLikeCount"
+        />
+
+</RelativeLayout>

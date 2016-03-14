@@ -44,4 +44,5 @@ public class DynamicVideoPlayerView extends VideoPlayerView {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
     }
+
 }
