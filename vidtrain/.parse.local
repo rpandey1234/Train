@@ -1,0 +1,10 @@
+{
+  "applications": {
+    "_default": {
+      "link": "vidtrain"
+    },
+    "vidtrain": {
+      "applicationId": "0y0WMVmGrDXEfgMgVNzA32ryMuM2gdanfMhH0NMY"
+    }
+  }
+}

@@ -25,14 +25,12 @@ public class PopularFragment extends VidTrainListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
         requestVidTrains(true);
+        showProgressBar();
         return v;
     }
 
     @Override
     public void requestVidTrains(final boolean newTimeline) {
-        if (newTimeline) {
-            showProgressBar();
-        }
         super.requestVidTrains(newTimeline);
         final int currentSize;
         if (newTimeline) {
@@ -44,6 +42,7 @@ public class PopularFragment extends VidTrainListFragment {
 
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
         query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        query.orderByDescending("rankingValue");
         query.addDescendingOrder("createdAt");
         query.setSkip(currentSize);
         query.setLimit(5);
