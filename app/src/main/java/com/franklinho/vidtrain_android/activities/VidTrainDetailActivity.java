@@ -3,6 +3,7 @@ package com.franklinho.vidtrain_android.activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -51,8 +52,8 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     @Bind(R.id.tvVideoCount) TextView tvVideoCount;
     @Bind(R.id.tvTime) TextView tvTime;
     @Bind(R.id.toolbar) Toolbar toolbar;
-    @Bind(R.id.btnAddvidTrain)
-    Button btnAddvidTrain;
+    @Bind(R.id.btnAddvidTrain) Button btnAddvidTrain;
+    @Bind(R.id.pbProgressAction) View pbProgessAction;
 
     public static final String VIDTRAIN_KEY = "vidTrain";
     private ProgressDialog progress;
@@ -60,6 +61,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     private static final int VIDEO_CAPTURE = 101;
     private int nextIndex;
     public boolean liked = false;
+    String totalVideos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +72,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         vvPreview.setHeightRatio(1);
         String vidTrainId = getIntent().getExtras().getString(VIDTRAIN_KEY);
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
-        query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
+        query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
         query.whereEqualTo("objectId", vidTrainId);;
         query.getFirstInBackground(new GetCallback<VidTrain>() {
             @Override
@@ -95,7 +97,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
 
                 toolbar.setTitle(vidTrain.getTitle());
                 int videosCount = vidTrain.getVideosCount();
-                final String totalVideos = getResources().getQuantityString(R.plurals.videos_count,
+                totalVideos = getResources().getQuantityString(R.plurals.videos_count,
                         videosCount, videosCount);
                 tvVideoCount.setText(totalVideos);
                 tvTime.setText(Utility.getRelativeTime(vidTrain.getCreatedAt().getTime()));
@@ -108,50 +110,12 @@ public class VidTrainDetailActivity extends AppCompatActivity {
 //                });
 
                 vvPreview.setHeightRatio(1);
-                final List<File> localFiles = vidTrain.getVideoFiles();
-                vvPreview.addMediaPlayerListener(new SimpleMainThreadMediaPlayerListener() {
-                    @Override
-                    public void onVideoCompletionMainThread() {
-                        nextIndex += 1;
-                        if (nextIndex >= localFiles.size()) {
-                            Log.d(VidtrainApplication.TAG, "Finished playing all videos!");
-                            nextIndex = 0;
-                            setProfileImageUrlAtIndex(0);
-                            ivThumbnail.setImageBitmap(Utility.getImageBitmap(localFiles.get(0)
-                                    .getPath()));
-                            ivThumbnail.setVisibility(View.VISIBLE);
 
-                            return;
-                        }
-                        Log.d(VidtrainApplication.TAG,
-                                String.format("Finished playing video %s of %s",
-                                        nextIndex + 1, localFiles.size()));
-                        VideoPlayer.playVideo(vvPreview, localFiles.get(nextIndex).getPath());
-                        int videoLabelIndex = nextIndex + 1;
-                        tvVideoCount.setText("Playing "+ videoLabelIndex + " of " + totalVideos);
-                        setProfileImageUrlAtIndex(nextIndex);
-                    }
-                });
-                ivThumbnail.setImageBitmap(Utility.getImageBitmap(localFiles.get(nextIndex)
-                        .getPath()));
-                ivThumbnail.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                //Insert async here
 
-                        VideoPlayer.playVideo(vvPreview, localFiles.get(nextIndex).getPath());
-                        ivThumbnail.setVisibility(View.GONE);
-                        int videoLabelIndex = nextIndex + 1;
-                        tvVideoCount.setText("Playing "+ videoLabelIndex + " of " + totalVideos);
-                        setProfileImageUrlAtIndex(nextIndex);
-                    }
-                });
-                vvPreview.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        VideoPlayer.playVideo(vvPreview, localFiles.get(0).getPath());
-                    }
-                });
-                setProfileImageUrlAtIndex(nextIndex);
+
+                new VideoDownloadTask(vvPreview).execute(vidTrain);
+
             }
         });
     }
@@ -277,4 +241,88 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         view.startAnimation(animScale);
         tvLikeCount.setText(vidTrain.getLikes() + " likes");
     }
+
+    public void configureVideoPlayer(final List<File> localFiles) {
+        vvPreview.addMediaPlayerListener(new SimpleMainThreadMediaPlayerListener() {
+            @Override
+            public void onVideoCompletionMainThread() {
+                nextIndex += 1;
+                if (nextIndex >= localFiles.size()) {
+                    Log.d(VidtrainApplication.TAG, "Finished playing all videos!");
+                    tvVideoCount.setText(totalVideos);
+                    nextIndex = 0;
+                    setProfileImageUrlAtIndex(0);
+                    ivThumbnail.setImageBitmap(Utility.getImageBitmap(localFiles.get(0)
+                            .getPath()));
+                    ivThumbnail.setVisibility(View.VISIBLE);
+
+                    return;
+                }
+                Log.d(VidtrainApplication.TAG,
+                        String.format("Finished playing video %s of %s",
+                                nextIndex + 1, localFiles.size()));
+                VideoPlayer.playVideo(vvPreview, localFiles.get(nextIndex).getPath());
+                int videoLabelIndex = nextIndex + 1;
+                tvVideoCount.setText("Playing "+ videoLabelIndex + " of " + totalVideos);
+                setProfileImageUrlAtIndex(nextIndex);
+            }
+        });
+        ivThumbnail.setImageBitmap(Utility.getImageBitmap(localFiles.get(nextIndex)
+                .getPath()));
+        ivThumbnail.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                VideoPlayer.playVideo(vvPreview, localFiles.get(nextIndex).getPath());
+                ivThumbnail.setVisibility(View.GONE);
+                int videoLabelIndex = nextIndex + 1;
+                tvVideoCount.setText("Playing " + videoLabelIndex + " of " + totalVideos);
+                setProfileImageUrlAtIndex(nextIndex);
+            }
+        });
+        vvPreview.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                VideoPlayer.playVideo(vvPreview, localFiles.get(0).getPath());
+            }
+        });
+        setProfileImageUrlAtIndex(nextIndex);
+        hideProgressBar();
+    }
+
+    private class VideoDownloadTask extends AsyncTask<VidTrain, Void, List<File>> {
+        DynamicVideoPlayerView videoPlayerView;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressBar();
+        }
+
+        public VideoDownloadTask(DynamicVideoPlayerView videoPlayerView) {
+            this.videoPlayerView = videoPlayerView;
+        }
+
+        @Override
+        protected List<File> doInBackground(VidTrain... params) {
+            return vidTrain.getVideoFiles();
+        }
+
+        @Override
+        protected void onPostExecute(List<File> localFiles) {
+
+            configureVideoPlayer(localFiles);
+        }
+    }
+
+    public void showProgressBar() {
+        // Show progress item
+        pbProgessAction.setVisibility(View.VISIBLE);
+    }
+
+    public void hideProgressBar() {
+        // Hide progress item
+        pbProgessAction.setVisibility(View.GONE);
+    }
+
 }
