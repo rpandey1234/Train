@@ -85,6 +85,8 @@ public class VidTrainViewHolder extends  RecyclerView.ViewHolder implements View
 
         }
         view.startAnimation(animScale);
-        tvLikeCount.setText(vidTrain.getLikes()+ " likes");
+        tvLikeCount.setText(context.getResources().getQuantityString(R.plurals.likes_count,
+                vidTrain.getLikes(), vidTrain.getLikes()));
+
     }
 }

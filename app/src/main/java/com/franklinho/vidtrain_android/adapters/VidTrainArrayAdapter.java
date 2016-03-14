@@ -63,7 +63,8 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
             holder.ibtnLike.setImageResource(R.drawable.heart_icon_red);
         }
 
-        holder.tvLikeCount.setText(vidTrain.getLikes() + " likes");
+        holder.tvLikeCount.setText(mContext.getResources().getQuantityString(R.plurals.likes_count,
+                vidTrain.getLikes(), vidTrain.getLikes()));
         final ParseUser user = vidTrain.getUser();
         user.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
             @Override
