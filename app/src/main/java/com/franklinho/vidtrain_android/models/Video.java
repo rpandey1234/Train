@@ -23,6 +23,9 @@ public class Video extends ParseObject {
     public void setUser(ParseUser user) {
         put(USER_KEY, user);
     }
+    public ParseUser getUser() {
+        return getParseUser(USER_KEY);
+    }
 
     public void setVideoFile(ParseFile file) {
         put(VIDEO_FILE_KEY, file);

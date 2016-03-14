@@ -29,7 +29,6 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
 import com.volokh.danylo.video_player_manager.ui.MediaPlayerWrapper.MainThreadMediaPlayerListener;
 
 import java.io.File;
@@ -41,7 +40,7 @@ import butterknife.ButterKnife;
 public class VidTrainDetailActivity extends AppCompatActivity {
     @Bind(R.id.ivCollaborators) ImageView ivCollaborators;
     @Bind(R.id.vvPreview) DynamicVideoPlayerView vvPreview;
-    @Bind(R.id.vvThumbnail) ImageView vvThumbnail;
+    @Bind(R.id.ivThumbnail) ImageView ivThumbnail;
     @Bind(R.id.ibtnLike) ImageButton ibtnLike;
     @Bind(R.id.tvLikeCount) TextView tvLikeCount;
     @Bind(R.id.tvVideoCount) TextView tvVideoCount;
@@ -62,7 +61,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         vvPreview.setHeightRatio(1);
         String vidTrainId = getIntent().getExtras().getString(VIDTRAIN_KEY);
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
-        query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
         query.whereEqualTo("objectId", vidTrainId);;
         query.getFirstInBackground(new GetCallback<VidTrain>() {
             @Override
@@ -78,22 +77,25 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                         videosCount, videosCount);
                 tvVideoCount.setText(totalVideos);
                 tvTime.setText(Utility.getRelativeTime(vidTrain.getUpdatedAt().getTime()));
-                vidTrain.getUser().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
-                    @Override
-                    public void done(ParseObject object, ParseException e) {
-                        String profileImageUrl = User.getProfileImageUrl(vidTrain.getUser());
-                        Glide.with(getBaseContext()).load(profileImageUrl).into(ivCollaborators);
-                    }
-                });
+//                vidTrain.getUser().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+//                    @Override
+//                    public void done(ParseObject object, ParseException e) {
+//                        String profileImageUrl = User.getProfileImageUrl(vidTrain.getUser());
+//                        Glide.with(getBaseContext()).load(profileImageUrl).into(ivCollaborators);
+//                    }
+//                });
+
 
                 vvPreview.setHeightRatio(1);
                 final List<File> localFiles = vidTrain.getVideoFiles();
                 vvPreview.addMediaPlayerListener(new MainThreadMediaPlayerListener() {
                     @Override
-                    public void onVideoSizeChangedMainThread(int width, int height) {}
+                    public void onVideoSizeChangedMainThread(int width, int height) {
+                    }
 
                     @Override
-                    public void onVideoPreparedMainThread() {}
+                    public void onVideoPreparedMainThread() {
+                    }
 
                     @Override
                     public void onVideoCompletionMainThread() {
@@ -106,28 +108,32 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                                 String.format("Finished playing video %s of %s",
                                         nextIndex + 1, localFiles.size()));
                         VideoPlayer.playVideo(vvPreview, localFiles.get(nextIndex).getPath());
+                        setProfileImageUrlAtIndex(nextIndex);
                     }
 
                     @Override
-                    public void onErrorMainThread(int what, int extra) {}
+                    public void onErrorMainThread(int what, int extra) {
+                    }
 
                     @Override
-                    public void onBufferingUpdateMainThread(int percent) {}
+                    public void onBufferingUpdateMainThread(int percent) {
+                    }
 
                     @Override
-                    public void onVideoStoppedMainThread() {}
+                    public void onVideoStoppedMainThread() {
+                    }
 
 
                 });
 
 
 
-                vvThumbnail.setImageBitmap(Utility.getImageBitmap(localFiles.get(nextIndex)
+                ivThumbnail.setImageBitmap(Utility.getImageBitmap(localFiles.get(nextIndex)
                         .getPath()));
-                vvThumbnail.setOnClickListener(new OnClickListener() {
+                ivThumbnail.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        vvThumbnail.setVisibility(View.GONE);
+                        ivThumbnail.setVisibility(View.GONE);
                         VideoPlayer.playVideo(vvPreview, localFiles.get(nextIndex).getPath());
                     }
                 });
@@ -137,6 +143,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                         VideoPlayer.playVideo(vvPreview, localFiles.get(0).getPath());
                     }
                 });
+                setProfileImageUrlAtIndex(0);
             }
         });
     }
@@ -207,5 +214,23 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Failed to record video", Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void setProfileImageUrlAtIndex(int index) {
+        List<Video> videos = vidTrain.getVideos();
+        final Video video = videos.get(index);
+        video.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                ParseUser user = video.getUser();
+                user.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject object, ParseException e) {
+                        String profileImageUrl = User.getProfileImageUrl(video.getUser());
+                        Glide.with(getBaseContext()).load(profileImageUrl).into(ivCollaborators);
+                    }
+                });
+            }
+        });
     }
 }
