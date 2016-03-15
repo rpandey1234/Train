@@ -143,7 +143,7 @@ public class ImagePreviewDialogFragment extends DialogFragment {
 
 
 
-                final int PROGRESS_INTERVAL = 300;
+                final int PROGRESS_INTERVAL = 1000;
                 final Handler mHandler = new Handler();
 
                 Runnable mImageProgressRunnable = new Runnable() {
