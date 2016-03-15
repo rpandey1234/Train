@@ -69,17 +69,17 @@
 
 
 
-                <com.franklinho.vidtrain_android.models.DynamicVideoPlayerView
-                    android:id="@+id/vvPreview"
-                    android:layout_width="match_parent"
-                    android:layout_height="300dp" />
-                <ImageView
-                    android:id="@+id/ivThumbnail"
-                    android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:background="@android:color/darker_gray"
-                    android:contentDescription="@string/video_thumbnail"
-                    android:scaleType="centerCrop" />
+                <!--<com.franklinho.vidtrain_android.models.DynamicVideoPlayerView-->
+                    <!--android:id="@+id/vvPreview"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="300dp" />-->
+                <!--<ImageView-->
+                    <!--android:id="@+id/ivThumbnail"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="300dp"-->
+                    <!--android:background="@android:color/darker_gray"-->
+                    <!--android:contentDescription="@string/video_thumbnail"-->
+                    <!--android:scaleType="centerCrop" />-->
                 <ProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
                     style="?android:attr/progressBarStyleLarge"
                     android:layout_width="wrap_content"
@@ -88,6 +88,20 @@
                     android:layout_centerHorizontal="true"
                     android:visibility="gone"
                     android:id="@+id/pbProgressAction" />
+                <android.support.v4.view.ViewPager
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/vpPreview"
+                    android:background="@android:color/black"
+                    android:onClick=""
+                    />
+                <com.viewpagerindicator.CirclePageIndicator
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/vpPreview"
+                    android:id="@+id/cpIndicator"
+                    android:layout_marginBottom="10dp"
+                    />
 
 
 

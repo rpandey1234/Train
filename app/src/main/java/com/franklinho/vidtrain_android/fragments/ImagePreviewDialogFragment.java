@@ -157,6 +157,7 @@ public class ImagePreviewDialogFragment extends DialogFragment {
                 };
 
                 mHandler.postDelayed(mImageProgressRunnable, PROGRESS_INTERVAL);
+
             }
         });
         return v;
