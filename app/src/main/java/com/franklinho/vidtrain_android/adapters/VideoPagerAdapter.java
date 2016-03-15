@@ -1,6 +1,7 @@
 package com.franklinho.vidtrain_android.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.models.DynamicVideoPlayerView;
 import com.franklinho.vidtrain_android.utilities.Utility;
+import com.franklinho.vidtrain_android.utilities.VideoIconPagerAdapter;
 import com.franklinho.vidtrain_android.utilities.VideoPlayer;
 
 import java.io.File;
@@ -19,7 +21,7 @@ import java.util.List;
 /**
  * Created by franklinho on 3/15/16.
  */
-public class VideoPagerAdapter extends PagerAdapter {
+public class VideoPagerAdapter extends PagerAdapter implements VideoIconPagerAdapter{
 
     Context mContext;
     LayoutInflater mLayoutInflater;
@@ -30,6 +32,7 @@ public class VideoPagerAdapter extends PagerAdapter {
         mContext = context;
         mLayoutInflater = LayoutInflater.from(mContext);
         this.videoFiles = videoFiles;
+
     }
 
     // Returns the number of pages to be displayed in the ViewPager.
@@ -63,6 +66,7 @@ public class VideoPagerAdapter extends PagerAdapter {
                 ivThumbnail.setVisibility(View.GONE);
                 VideoPlayer.playVideo(vvPreview, videoFile.getPath());
 
+
             }
         });
 
@@ -77,4 +81,30 @@ public class VideoPagerAdapter extends PagerAdapter {
         container.removeView((View) object);
     }
 
+    @Override
+    public Bitmap getIconBitMap(int index) {
+        Bitmap srcBmp =  Utility.getImageBitmap(videoFiles.get(index).getPath());
+        Bitmap dstBmp;
+        if (srcBmp.getWidth() >= srcBmp.getHeight()){
+
+            dstBmp = Bitmap.createBitmap(
+                    srcBmp,
+                    srcBmp.getWidth()/2 - srcBmp.getHeight()/2,
+                    0,
+                    srcBmp.getHeight(),
+                    srcBmp.getHeight()
+            );
+
+        }else{
+
+            dstBmp = Bitmap.createBitmap(
+                    srcBmp,
+                    0,
+                    srcBmp.getHeight()/2 - srcBmp.getWidth()/2,
+                    srcBmp.getWidth(),
+                    srcBmp.getWidth()
+            );
+        }
+        return dstBmp;
+    }
 }

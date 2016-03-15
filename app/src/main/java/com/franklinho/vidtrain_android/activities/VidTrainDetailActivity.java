@@ -28,6 +28,7 @@ import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
 import com.franklinho.vidtrain_android.utilities.Utility;
+import com.franklinho.vidtrain_android.utilities.VideoPageIndicator;
 import com.franklinho.vidtrain_android.utilities.VideoPlayer;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -36,7 +37,6 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import com.viewpagerindicator.CirclePageIndicator;
 import com.volokh.danylo.video_player_manager.ui.SimpleMainThreadMediaPlayerListener;
 
 import java.io.File;
@@ -60,7 +60,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     @Bind(R.id.vpPreview)
     ViewPager vpPreview;
     @Bind(R.id.cpIndicator)
-    CirclePageIndicator cpIndicator;
+    VideoPageIndicator cpIndicator;
 
     public static final String VIDTRAIN_KEY = "vidTrain";
     private ProgressDialog progress;
