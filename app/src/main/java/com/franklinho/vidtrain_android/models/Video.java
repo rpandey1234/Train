@@ -14,6 +14,7 @@ public class Video extends ParseObject {
     public static final String LIKES_KEY = "likeCount";
     public static final String VIDEO_FILE_KEY = "videoFile";
     public static final String VIDTRAIN_KEY = "vidTrain";
+    public static final String THUMBNAIL_KEY = "thumbnail";
 
     User user;
     long likes;
@@ -33,6 +34,10 @@ public class Video extends ParseObject {
 
     public ParseFile getVideoFile() {
         return getParseFile(VIDEO_FILE_KEY);
+    }
+
+    public ParseFile getThumbnailFile() {
+        return getParseFile(THUMBNAIL_KEY);
     }
 
     public void setVidTrain(ParseObject vidTrain) {
