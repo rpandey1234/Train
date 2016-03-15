@@ -62,7 +62,7 @@ public class VideoPageIndicator extends HorizontalScrollView implements PageIndi
             View opacityView
                     = mIconsLayout.getChildAt(i);
             if (i != mSelectedIndex) {
-                opacityView.setAlpha(0.5f);
+                opacityView.setAlpha(0.35f);
             } else {
                 opacityView.setAlpha(1.0f);
             }
@@ -145,7 +145,7 @@ public class VideoPageIndicator extends HorizontalScrollView implements PageIndi
         for (int i = 0; i < count; i++) {
             ImageView view = new ImageView(getContext(), null, com.viewpagerindicator.R.attr.vpiIconPageIndicatorStyle);
             if (i != mSelectedIndex) {
-                view.setAlpha(0.5f);
+                view.setAlpha(0.35f);
             }
             view.setImageBitmap(iconAdapter.getIconBitMap(i));
             mIconsLayout.addView(view);

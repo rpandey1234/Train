@@ -2,6 +2,7 @@ package com.franklinho.vidtrain_android.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,28 +84,14 @@ public class VideoPagerAdapter extends PagerAdapter implements VideoIconPagerAda
 
     @Override
     public Bitmap getIconBitMap(int index) {
-        Bitmap srcBmp =  Utility.getImageBitmap(videoFiles.get(index).getPath());
-        Bitmap dstBmp;
-        if (srcBmp.getWidth() >= srcBmp.getHeight()){
+        Bitmap bitmap =  Utility.getImageBitmap(videoFiles.get(index).getPath());
+        int dimension = getSquareCropDimensionForBitmap(bitmap);
+        return ThumbnailUtils.extractThumbnail(bitmap, dimension, dimension);
+    }
 
-            dstBmp = Bitmap.createBitmap(
-                    srcBmp,
-                    srcBmp.getWidth()/2 - srcBmp.getHeight()/2,
-                    0,
-                    srcBmp.getHeight(),
-                    srcBmp.getHeight()
-            );
-
-        }else{
-
-            dstBmp = Bitmap.createBitmap(
-                    srcBmp,
-                    0,
-                    srcBmp.getHeight()/2 - srcBmp.getWidth()/2,
-                    srcBmp.getWidth(),
-                    srcBmp.getWidth()
-            );
-        }
-        return dstBmp;
+    public int getSquareCropDimensionForBitmap(Bitmap bitmap)
+    {
+        //use the smallest dimension of the image to crop to
+        return Math.min(bitmap.getWidth(), bitmap.getHeight());
     }
 }
