@@ -3,6 +3,7 @@ package com.franklinho.vidtrain_android.activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -154,12 +155,15 @@ public class VidTrainDetailActivity extends AppCompatActivity {
             if (parseFile == null) {
                 return;
             }
+            Bitmap thumbnailBitmap = Utility.getImageBitmap(videoPath);
+            final ParseFile parseThumbnail = Utility.createParseFileFromBitmap(thumbnailBitmap);
             parseFile.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
                     video.setUser(user);
                     video.setVideoFile(parseFile);
                     video.setVidTrain(vidTrain);
+                    video.setThumbnail(parseThumbnail);
                     final SaveCallback vidTrainSaved = new SaveCallback() {
                         @Override
                         public void done(ParseException e) {

@@ -62,6 +62,7 @@ public class UserInfoFragment extends Fragment {
     private void queryUserCounts(ParseUser user) {
         ParseQuery<ParseObject> vidTrainQuery = ParseQuery.getQuery("VidTrain");
         vidTrainQuery.whereEqualTo("user", user);
+        // TODO(rahul): handle case when user quickly taps on profile, then away --> could crash
         vidTrainQuery.countInBackground(new CountCallback() {
             @Override
             public void done(int count, ParseException e) {

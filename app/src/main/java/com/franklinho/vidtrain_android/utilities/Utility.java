@@ -15,6 +15,7 @@ import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -87,6 +88,13 @@ public class Utility {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static ParseFile createParseFileFromBitmap(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        return new ParseFile("thumbnail.bmp", byteArray);
     }
 
     public static Bitmap getImageBitmap(String filePath) {
