@@ -1,6 +1,5 @@
 package com.franklinho.vidtrain_android.models;
 
-import android.graphics.Rect;
 import android.util.Log;
 
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
@@ -150,6 +149,8 @@ public class VidTrain extends ParseObject implements Serializable {
         }
         return localVideoFiles;
     }
+
+
 
     public void setLikes(int likeCount) {
         put(LIKES_KEY, likeCount);

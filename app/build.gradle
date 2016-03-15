@@ -53,6 +53,7 @@ dependencies {
     compile 'com.github.danylovolokh:video-player-manager:0.2.0'
     compile 'com.github.danylovolokh:list-visibility-utils:0.2.0'
     compile 'com.google.android.gms:play-services:8.4.0'
+    compile 'fr.avianey.com.viewpagerindicator:library:2.4.1.1@aar'
 
 
 }

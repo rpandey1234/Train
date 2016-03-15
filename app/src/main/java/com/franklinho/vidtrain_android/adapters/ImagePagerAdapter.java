@@ -10,19 +10,23 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.models.Video;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by franklinho on 3/15/16.
  */
-class ImagePagerAdapter extends PagerAdapter {
+public class ImagePagerAdapter extends PagerAdapter {
 
     Context mContext;
     LayoutInflater mLayoutInflater;
-    ArrayList<Video> videos = new ArrayList<>();
+    List<Video> videos = new ArrayList<>();
 
-    public ImagePagerAdapter(Context context, ArrayList<Video> videos) {
+    public ImagePagerAdapter(Context context, List<Video> videos) {
         mContext = context;
         mLayoutInflater = LayoutInflater.from(mContext);
         this.videos = videos;
@@ -46,12 +50,18 @@ class ImagePagerAdapter extends PagerAdapter {
         // Inflate the layout for the page
         View itemView = mLayoutInflater.inflate(R.layout.pager_item, container, false);
         // Find and populate data into the page (i.e set the image)
-        ImageView imageView = (ImageView) itemView.findViewById(R.id.ivPagerImage);
+        final ImageView imageView = (ImageView) itemView.findViewById(R.id.ivPagerImage);
         // ...
         // Add the page to the container
         container.addView(itemView);
-        Video video = videos.get(position).get
-        Glide.with(mContext).load(profileImageUrl).into(ivCollaborators);
+        final Video video = videos.get(position);
+        video.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                Glide.with(mContext).load(video.getThumbnail().getUrl()).into(imageView);
+            }
+        });
+
         // Return the page
         return itemView;
     }

@@ -21,6 +21,7 @@ public class Video extends ParseObject {
     VidTrain vidTrain;
     ParseFile videoFile;
 
+
     public void setUser(ParseUser user) {
         put(USER_KEY, user);
     }
@@ -36,14 +37,20 @@ public class Video extends ParseObject {
         return getParseFile(VIDEO_FILE_KEY);
     }
 
-    public ParseFile getThumbnailFile() {
-        return getParseFile(THUMBNAIL_KEY);
-    }
 
     public void setVidTrain(ParseObject vidTrain) {
         put(VIDTRAIN_KEY, vidTrain);
     }
+
     public void setLikes(int likeCount) {
         put(LIKES_KEY, likeCount);
+    }
+
+    public void setThumbnail(ParseFile thumbnail) {
+        put(THUMBNAIL_KEY, thumbnail);
+    }
+
+    public ParseFile getThumbnail() {
+        return getParseFile(THUMBNAIL_KEY);
     }
 }
