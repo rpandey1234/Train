@@ -12,11 +12,11 @@
     <permission
         android:name="android.permission.ACCESS_COARSE_LOCATION"
         android:protectionLevel="dangerous" />
+
     <uses-permission
         android:name="android.permission.FLASHLIGHT"
         android:permissionGroup="android.permission-group.HARDWARE_CONTROLS"
         android:protectionLevel="normal" />
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -82,13 +82,22 @@
 
         <activity android:name=".activities.ProfileActivity" />
         <activity android:name=".activities.HomeActivity" />
-        <activity android:name=".activities.VidTrainDetailActivity" />
+        <activity android:name=".activities.VidTrainDetailActivity"></activity>
         <activity android:name=".activities.CreationDetailActivity" />
         <activity
             android:name=".activities.VideoCaptureActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait">
-
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".activities.DeepLinkListenerActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.View"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="host"
+                    android:pathPattern="some regex"
+                    android:scheme="scheme" />
+            </intent-filter>
         </activity>
     </application>
 
