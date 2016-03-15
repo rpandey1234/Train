@@ -2,8 +2,11 @@ package com.franklinho.vidtrain_android.adapters.holders;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
@@ -13,10 +16,10 @@ import android.widget.TextView;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.activities.ProfileActivity;
 import com.franklinho.vidtrain_android.activities.VidTrainDetailActivity;
-import com.franklinho.vidtrain_android.models.DynamicVideoPlayerView;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.parse.ParseUser;
+import com.viewpagerindicator.CirclePageIndicator;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -27,22 +30,42 @@ import butterknife.OnClick;
  */
 public class VidTrainViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener {
     @Bind(R.id.ivCollaborators) public ImageView ivCollaborators;
-    @Bind(R.id.vvPreview) public DynamicVideoPlayerView vvPreview;
-    @Bind(R.id.vvThumbnail) public ImageView vvThumbnail;
+//    @Bind(R.id.vvPreview) public DynamicVideoPlayerView vvPreview;
+//    @Bind(R.id.vvThumbnail) public ImageView vvThumbnail;
     @Bind(R.id.ibtnLike) public ImageButton ibtnLike;
     @Bind(R.id.tvLikeCount) public TextView tvLikeCount;
     @Bind(R.id.tvTitle) public TextView tvTitle;
     @Bind(R.id.tvVideoCount) public TextView tvVideoCount;
     @Bind(R.id.tvTime) public TextView tvTime;
+    @Bind(R.id.vpPreview) public ViewPager vpPreview;
+    @Bind(R.id.cpIndicator) public CirclePageIndicator cpIndicator;
+    public int currentPage = 0;
 
     public Context context;
     public VidTrain vidTrain;
     public boolean liked = false;
 
-    public VidTrainViewHolder(View itemView) {
+    public VidTrainViewHolder(final View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
         context = itemView.getContext();
+
+        itemView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                vpPreview.post(new Runnable() {
+                    public void run() {
+                        int width = itemView.getWidth();
+//                        int height = width;
+//                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(width, height);
+//                        vpPreview.setLayoutParams(lp);
+                        ViewGroup.LayoutParams lp = vpPreview.getLayoutParams();
+                        lp.height = width;
+                        vpPreview.setLayoutParams(lp);
+                    }
+                });
+            }
+        });
         itemView.setOnClickListener(this);
     }
 

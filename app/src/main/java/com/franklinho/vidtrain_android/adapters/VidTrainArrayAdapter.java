@@ -1,10 +1,10 @@
 package com.franklinho.vidtrain_android.adapters;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
@@ -12,15 +12,13 @@ import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.adapters.holders.VidTrainViewHolder;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
+import com.franklinho.vidtrain_android.models.Video;
 import com.franklinho.vidtrain_android.utilities.Utility;
-import com.franklinho.vidtrain_android.utilities.VideoPlayer;
 import com.parse.GetCallback;
-import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
-import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +39,7 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
 
     @Override
     public VidTrainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_vidtrain, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_vidtrain_image_preview, parent, false);
         return new VidTrainViewHolder(view);
     }
 
@@ -77,44 +75,63 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
             }
         });
 
-        holder.vvPreview.setHeightRatio(1);
-        final File videoFile = Utility.getOutputMediaFile(vidTrain.getObjectId());
-        if (videoFile == null) {
-            return;
-        }
-        vidTrain.getLatestVideo().getDataInBackground(new GetDataCallback() {
+        final List<Video> videos = vidTrain.getVideos();
+        holder.vpPreview.setAdapter(new ImagePagerAdapter(holder.context, videos));
+        holder.cpIndicator.setViewPager(holder.vpPreview);
+
+        final int PROGRESS_INTERVAL = 1000;
+        final Handler mHandler = new Handler();
+
+        Runnable mImageProgressRunnable = new Runnable() {
             @Override
-            public void done(byte[] data, ParseException e) {
-                if (e == null) {
-                    Utility.writeToFile(data, videoFile);
-                    holder.vvThumbnail.setImageBitmap(Utility.getImageBitmap(videoFile.getPath()));
-                    holder.vvThumbnail.setOnClickListener(
-                            new OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    holder.vvThumbnail.setVisibility(View.GONE);
-                                    VideoPlayer.playVideo(holder.vvPreview, videoFile.getPath());
-                                }
-                            }
-                    );
-                    holder.vvPreview.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            switch (VideoPlayer.getState()) {
-                                case STARTED:
-                                    VideoPlayer.stop();
-                                    break;
-                                case PAUSED:
-                                default:
-                                    VideoPlayer.playVideo(holder.vvPreview, videoFile.getPath());
-                            }
-                        }
-                    });
-                } else {
-                    e.printStackTrace();
+            public void run() {
+                if (holder.currentPage < videos.size()) {
+                    holder.vpPreview.setCurrentItem(holder.currentPage++, true);
                 }
+                mHandler.postDelayed(this, PROGRESS_INTERVAL);
             }
-        });
+        };
+
+//        mHandler.postDelayed(mImageProgressRunnable, PROGRESS_INTERVAL);
+
+//        holder.vvPreview.setHeightRatio(1);
+//        final File videoFile = Utility.getOutputMediaFile(vidTrain.getObjectId());
+//        if (videoFile == null) {
+//            return;
+//        }
+//        vidTrain.getLatestVideo().getDataInBackground(new GetDataCallback() {
+//            @Override
+//            public void done(byte[] data, ParseException e) {
+//                if (e == null) {
+//                    Utility.writeToFile(data, videoFile);
+//                    holder.vvThumbnail.setImageBitmap(Utility.getImageBitmap(videoFile.getPath()));
+//                    holder.vvThumbnail.setOnClickListener(
+//                            new OnClickListener() {
+//                                @Override
+//                                public void onClick(View v) {
+//                                    holder.vvThumbnail.setVisibility(View.GONE);
+//                                    VideoPlayer.playVideo(holder.vvPreview, videoFile.getPath());
+//                                }
+//                            }
+//                    );
+//                    holder.vvPreview.setOnClickListener(new OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            switch (VideoPlayer.getState()) {
+//                                case STARTED:
+//                                    VideoPlayer.stop();
+//                                    break;
+//                                case PAUSED:
+//                                default:
+//                                    VideoPlayer.playVideo(holder.vvPreview, videoFile.getPath());
+//                            }
+//                        }
+//                    });
+//                } else {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
     }
 
     @Override

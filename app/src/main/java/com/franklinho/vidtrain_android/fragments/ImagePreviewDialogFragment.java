@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +21,6 @@ import android.widget.TextView;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.activities.VidTrainDetailActivity;
 import com.franklinho.vidtrain_android.adapters.ImagePagerAdapter;
-import com.franklinho.vidtrain_android.models.DynamicHeightViewPager;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
@@ -45,7 +45,7 @@ import butterknife.OnClick;
 public class ImagePreviewDialogFragment extends DialogFragment {
 
     @Bind(R.id.vpPreview)
-    DynamicHeightViewPager vpPreview;
+    ViewPager vpPreview;
     @Bind(R.id.cpIndicator)
     CirclePageIndicator cpIndicator;
     @Bind(R.id.tvTitle) TextView titleTv;
