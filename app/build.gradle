@@ -45,7 +45,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:8.4.0'
     compile 'com.github.hotchemi:permissionsdispatcher:2.0.7'
     apt 'com.github.hotchemi:permissionsdispatcher-processor:2.0.7'
-    compile 'com.android.support:percent:23.1.0'
+    compile 'com.android.support:percent:23.1.1'
     compile "com.android.support:support-v13:23.1.0"
     compile 'com.google.guava:guava:19.0'
     compile 'com.yqritc:android-scalablevideoview:1.0.3'

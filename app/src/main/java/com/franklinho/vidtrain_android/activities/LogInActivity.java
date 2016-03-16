@@ -1,8 +1,10 @@
 package com.franklinho.vidtrain_android.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -32,6 +34,9 @@ public class LogInActivity extends AppCompatActivity {
     CallbackManager callbackManager;
 
     @Bind(R.id.login_button) Button loginButton;
+//    @Bind(R.id.vvLogin)
+//    DynamicVideoPlayerView vvLogin;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +51,17 @@ public class LogInActivity extends AppCompatActivity {
             }
             sendToHomeActivity();
         }
+
+//        VideoPlayer.playVideo(vvLogin, "android.resource://" + getPackageName() + "/" + R.raw.loginvideo);
+    }
+
+    @Override
+    public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
+        View view = super.onCreateView(parent, name, context, attrs);
+
+
+        return view;
+
     }
 
     private void updateUserInfo(final ParseUser user) {
@@ -92,5 +108,11 @@ public class LogInActivity extends AppCompatActivity {
         Intent i = new Intent(getBaseContext(), HomeActivity.class);
         startActivity(i);
         Log.d(VidtrainApplication.TAG, "Logged in with Facebook");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        VideoPlayer.playVideo(vvLogin, "android.resource://" + getPackageName() + "/" + R.raw.loginvideo);
     }
 }
