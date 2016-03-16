@@ -47,6 +47,8 @@
         android:theme="@style/AppTheme"
         tools:replace="android:theme">
         <activity
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"
             android:name=".activities.LogInActivity"
             android:noHistory="true">
             <intent-filter>
@@ -81,14 +83,31 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".activities.ProfileActivity" />
-        <activity android:name=".activities.HomeActivity" />
-        <activity android:name=".activities.VidTrainDetailActivity"></activity>
-        <activity android:name=".activities.CreationDetailActivity" />
+        <activity
+            android:name=".activities.ProfileActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"
+            />
+        <activity
+            android:name=".activities.HomeActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"
+            />
+        <activity
+            android:name=".activities.VidTrainDetailActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"
+            />
+        <activity
+            android:name=".activities.CreationDetailActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"
+            />
         <activity
             android:name=".activities.VideoCaptureActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"
+            />
         <activity android:name=".activities.DeepLinkListenerActivity">
             <intent-filter>
                 <action android:name="android.intent.action.View"/>
