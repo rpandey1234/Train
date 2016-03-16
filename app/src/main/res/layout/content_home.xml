@@ -50,11 +50,20 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
 
+        android:id="@+id/fabCreate"
         app:backgroundTint="@color/bluePrimary"
         app:layout_anchor="@+id/viewpager"
         app:layout_anchorGravity="bottom|right|end"
         android:layout_margin="16dp"
         android:onClick="showCreateFlow"
         app:layout_behavior="com.franklinho.vidtrain_android.utilities.ScrollAwareFABBehavior"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/viewReveal"
+        android:background="@color/bluePrimaryDark"
+        android:visibility="gone"
+        />
 
 </android.support.design.widget.CoordinatorLayout>

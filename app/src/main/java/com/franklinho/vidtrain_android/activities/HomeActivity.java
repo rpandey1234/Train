@@ -1,8 +1,10 @@
 package com.franklinho.vidtrain_android.activities;
 
+import android.animation.Animator;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -10,11 +12,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.widget.Toast;
 
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.fragments.FragmentPagerAdapter;
-import com.franklinho.vidtrain_android.utilities.Utility;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -25,6 +27,8 @@ public class HomeActivity extends AppCompatActivity {
     @Bind(R.id.viewpager) ViewPager viewPager;
     @Bind(R.id.sliding_tabs) TabLayout tabLayout;
     @Bind(R.id.toolbar) Toolbar toolbar;
+    @Bind(R.id.viewReveal) View viewReveal;
+    @Bind(R.id.fabCreate) FloatingActionButton fabCreate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +67,18 @@ public class HomeActivity extends AppCompatActivity {
     public void showCreateFlow(View view) {
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
             //startActivityForResult(Utility.getVideoIntent(), VIDEO_CAPTURE);
-            Intent in = new Intent(this, VideoCaptureActivity.class);
-            startActivityForResult(in,1);
+            int cx = (int) fabCreate.getX() + fabCreate.getWidth()/2;
+            int cy = (int) fabCreate.getY() + fabCreate.getHeight()/2;
+
+            float finalRadius = (float) Math.hypot(cx, cy);
+            Animator anim = ViewAnimationUtils.createCircularReveal(viewReveal, cx, cy, 0, finalRadius);
+            viewReveal.setVisibility(View.VISIBLE);
+            anim.start();
+            Intent in = new Intent(getBaseContext(), VideoCaptureActivity.class);
+            startActivityForResult(in, 1);
+
+
+
         } else {
             Toast.makeText(this, "No camera on device", Toast.LENGTH_LONG).show();
         }
@@ -84,5 +98,11 @@ public class HomeActivity extends AppCompatActivity {
 //                Toast.makeText(this, "Failed to record video",  Toast.LENGTH_LONG).show();
 //            }
 //        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        viewReveal.setVisibility(View.GONE);
     }
 }
