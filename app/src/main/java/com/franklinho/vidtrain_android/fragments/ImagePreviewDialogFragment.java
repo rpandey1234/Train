@@ -44,10 +44,8 @@ import butterknife.OnClick;
  */
 public class ImagePreviewDialogFragment extends DialogFragment {
 
-    @Bind(R.id.vpPreview)
-    ViewPager vpPreview;
-    @Bind(R.id.cpIndicator)
-    CirclePageIndicator cpIndicator;
+    @Bind(R.id.vpPreview) ViewPager vpPreview;
+    @Bind(R.id.cpIndicator) CirclePageIndicator cpIndicator;
     @Bind(R.id.tvTitle) TextView titleTv;
     @Bind(R.id.tvVideoCount) TextView tvVideoCount;
     @Bind(R.id.tvTime) TextView tvTime;
@@ -187,8 +185,4 @@ public class ImagePreviewDialogFragment extends DialogFragment {
         tvLikeCount.setText(getResources().getQuantityString(R.plurals.likes_count,
                 vidTrain.getLikes(), vidTrain.getLikes()));
     }
-
-
-
-
 }
