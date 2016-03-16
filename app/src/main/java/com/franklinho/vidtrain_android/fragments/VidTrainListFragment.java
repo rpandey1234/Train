@@ -34,11 +34,6 @@ public class VidTrainListFragment extends Fragment {
     VidTrainArrayAdapter aVidTrains;
     LinearLayoutManager linearLayoutManager;
 
-//    private final ListItemsVisibilityCalculator mVideoVisibilityCalculator =
-//            new SingleListViewItemActiveCalculator(new DefaultSingleItemCalculatorCallback(), vidTrains);
-//    private ItemsPositionGetter mItemsPositionGetter;
-//    private int mScrollState = AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
-
     public VidTrainListFragment() {
         // Required empty public constructor
     }
@@ -60,33 +55,6 @@ public class VidTrainListFragment extends Fragment {
 
         linearLayoutManager = new LinearLayoutManager(getContext());
         rvVidTrains.setAdapter(aVidTrains);
-//        mItemsPositionGetter = new RecyclerViewItemPositionGetter(linearLayoutManager, rvVidTrains);
-//        rvVidTrains.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(RecyclerView recyclerView, int scrollState) {
-//                mScrollState = scrollState;
-//                if (scrollState == RecyclerView.SCROLL_STATE_IDLE && !vidTrains.isEmpty()) {
-//
-//                    mVideoVisibilityCalculator.onScrollStateIdle(
-//                            mItemsPositionGetter,
-//                            linearLayoutManager.findFirstVisibleItemPosition(),
-//                            linearLayoutManager.findLastVisibleItemPosition());
-//                }
-//            }
-//
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                if (!vidTrains.isEmpty()) {
-//                    mVideoVisibilityCalculator.onScroll(
-//                            mItemsPositionGetter,
-//                            linearLayoutManager.findFirstVisibleItemPosition(),
-//                            linearLayoutManager.findLastVisibleItemPosition() - linearLayoutManager.findFirstVisibleItemPosition() + 1,
-//                            mScrollState);
-//                }
-//            }
-//
-//        });
-
         swipeContainer.setColorSchemeResources(R.color.bluePrimary);
         rvVidTrains.setLayoutManager(linearLayoutManager);
 
@@ -111,28 +79,11 @@ public class VidTrainListFragment extends Fragment {
         return v;
     }
 
-    public void requestVidTrains(final boolean newTimeline) {
-
-    }
+    public void requestVidTrains(final boolean newTimeline) {}
 
     @Override
     public void onResume() {
         super.onResume();
-//        if(!vidTrains.isEmpty()){
-//            // need to call this method from list view handler in order to have filled list
-//
-//            rvVidTrains.post(new Runnable() {
-//                @Override
-//                public void run() {
-//
-//                    mVideoVisibilityCalculator.onScrollStateIdle(
-//                            mItemsPositionGetter,
-//                            linearLayoutManager.findFirstVisibleItemPosition(),
-//                            linearLayoutManager.findLastVisibleItemPosition());
-//
-//                }
-//            });
-//        }
     }
 
     @Override

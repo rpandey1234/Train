@@ -52,10 +52,10 @@ public class MapDialogFragment extends DialogFragment {
     @Bind(R.id.tvTime) TextView tvTime;
     @Bind(R.id.tvLikeCount) TextView tvLikeCount;
     @Bind(R.id.ibtnLike) ImageButton ibtnLike;
-    File videoFile;
 
     boolean liked = false;
     VidTrain vidTrain;
+    File videoFile;
 
     public static final String VIDTRAIN_ID = "vidTrainId";
 
@@ -181,7 +181,5 @@ public class MapDialogFragment extends DialogFragment {
     @Override
     public void onPause() {
         super.onPause();
-
-
     }
 }

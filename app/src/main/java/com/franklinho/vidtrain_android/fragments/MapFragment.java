@@ -64,16 +64,12 @@ public class MapFragment extends Fragment implements
 	 * returned in Activity.onActivityResult
 	 */
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-    private long UPDATE_INTERVAL = 10 * 60000;  /* 10 * 60 secs */
-    private long FASTEST_INTERVAL = 10 * 5000; /* 5 secs */
     private SupportMapFragment mapFragment;
     private GoogleMap map;
     private GoogleApiClient mGoogleApiClient;
-    private LocationRequest mLocationRequest;
     private List<VidTrain> vidTrains;
     private Map<String, VidTrain> vidTrainsMap;
-
-    List<Marker> markers;
+    private List<Marker> markers;
 
     public MapFragment() {
         // Required empty public constructor

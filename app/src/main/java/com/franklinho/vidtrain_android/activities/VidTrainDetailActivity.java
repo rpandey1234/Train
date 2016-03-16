@@ -9,7 +9,9 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
@@ -37,6 +39,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.volokh.danylo.video_player_manager.PlayerMessageState;
 import com.volokh.danylo.video_player_manager.ui.SimpleMainThreadMediaPlayerListener;
 
 import java.io.File;
@@ -57,10 +60,8 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.btnAddvidTrain) Button btnAddvidTrain;
     @Bind(R.id.pbProgressAction) View pbProgessAction;
-    @Bind(R.id.vpPreview)
-    ViewPager vpPreview;
-    @Bind(R.id.cpIndicator)
-    VideoPageIndicator cpIndicator;
+    @Bind(R.id.vpPreview) ViewPager vpPreview;
+    @Bind(R.id.cpIndicator) VideoPageIndicator cpIndicator;
 
     public static final String VIDTRAIN_KEY = "vidTrain";
     private ProgressDialog progress;
@@ -137,16 +138,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                         Glide.with(getBaseContext()).load(profileImageUrl).into(ivCollaborators);
                     }
                 });
-
-//                vvPreview.setHeightRatio(1);
-
-                //Insert async here
-
-
-//                new VideoDownloadTask(vvPreview).execute(vidTrain);
                 new VideoDownloadTask(vpPreview).execute(vidTrain);
-
-
             }
         });
     }
@@ -257,7 +249,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     public void onVidTrainLiked(View view) {
         final Animation animScale = AnimationUtils.loadAnimation(this, R.anim.anim_scale);
         if (liked) {
-            User.postUnlike(ParseUser.getCurrentUser(), vidTrain.getObjectId().toString());
+            User.postUnlike(ParseUser.getCurrentUser(), vidTrain.getObjectId());
             liked = false;
             ibtnLike.setImageResource(R.drawable.heart_icon);
             int currentLikeCount = vidTrain.getLikes();
@@ -267,109 +259,15 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                 vidTrain.setLikes(0);
             }
         } else {
-            User.postLike(ParseUser.getCurrentUser(), vidTrain.getObjectId().toString());
+            User.postLike(ParseUser.getCurrentUser(), vidTrain.getObjectId());
             liked = true;
             ibtnLike.setImageResource(R.drawable.heart_icon_red);
             vidTrain.setLikes(vidTrain.getLikes() + 1);
         }
         view.startAnimation(animScale);
-        tvLikeCount.setText(vidTrain.getLikes() + " likes");
+        tvLikeCount.setText(getResources().getQuantityString(R.plurals.likes_count,
+                vidTrain.getLikes(), vidTrain.getLikes()));
     }
-
-//    public void configureVideoPlayer(final List<File> localFiles) {
-//        vvPreview.addMediaPlayerListener(new SimpleMainThreadMediaPlayerListener() {
-//            @Override
-//            public void onVideoCompletionMainThread() {
-//
-//                nextIndex += 1;
-//                playNextVideo(localFiles);
-//            }
-//        });
-//        ivThumbnail.setImageBitmap(Utility.getImageBitmap(localFiles.get(nextIndex)
-//                .getPath()));
-//        ivThumbnail.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//            playNextVideo(localFiles);
-//
-//            }
-//        });
-//        vvPreview.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                nextIndex += 1;
-//                playNextVideo(localFiles);
-//            }
-//        });
-//
-//        vvPreview.setOnTouchListener(new OnSwipeTouchListener(this){
-//            @Override
-//            public void onSwipeRight() {
-//                super.onSwipeRight();
-//                playPreviousVideo(localFiles);
-//            }
-//
-//            @Override
-//            public void onSwipeLeft() {
-//                super.onSwipeLeft();
-//                nextIndex += 1;
-//                playNextVideo(localFiles);
-//            }
-//        });
-//        setProfileImageUrlAtIndex(nextIndex);
-//        hideProgressBar();
-//    }
-
-//    public void playNextVideo(final List<File> localFiles) {
-//
-//        if (nextIndex >= localFiles.size()) {
-//            Log.d(VidtrainApplication.TAG, "Finished playing all videos!");
-//            tvVideoCount.setText(totalVideos);
-////            vvPreview.pause();
-//            nextIndex = 0;
-//            setProfileImageUrlAtIndex(0);
-//            ivThumbnail.setImageBitmap(Utility.getImageBitmap(localFiles.get(0)
-//                    .getPath()));
-////            ivThumbnail.setVisibility(View.VISIBLE);
-//
-////            return;
-//        }
-//        Log.d(VidtrainApplication.TAG,
-//                String.format("Finished playing video %s of %s",
-//                        nextIndex + 1, localFiles.size()));
-//        VideoPlayer.playVideo(vvPreview, localFiles.get(nextIndex).getPath());
-//        ivThumbnail.setVisibility(View.GONE);
-//        int videoLabelIndex = nextIndex + 1;
-//        tvVideoCount.setText("Playing " + videoLabelIndex + " of " + totalVideos);
-//        setProfileImageUrlAtIndex(nextIndex);
-//
-//    }
-//
-//    public void playPreviousVideo(final List<File> localFiles) {
-//        nextIndex-=1;
-//
-//        if (nextIndex < 0) {
-//            Log.d(VidtrainApplication.TAG, "Finished playing all videos!");
-//            tvVideoCount.setText(totalVideos);
-//            vvPreview.pause();
-//            nextIndex = 0;
-//            setProfileImageUrlAtIndex(0);
-//            ivThumbnail.setImageBitmap(Utility.getImageBitmap(localFiles.get(0)
-//                    .getPath()));
-////            ivThumbnail.setVisibility(View.VISIBLE);
-//
-//            return;
-//        }
-//        Log.d(VidtrainApplication.TAG,
-//                String.format("Finished playing video %s of %s",
-//                        nextIndex + 1, localFiles.size()));
-//        VideoPlayer.playVideo(vvPreview, localFiles.get(nextIndex).getPath());
-//        ivThumbnail.setVisibility(View.GONE);
-//        int videoLabelIndex = nextIndex + 1;
-//        tvVideoCount.setText("Playing " + videoLabelIndex + " of " + totalVideos);
-//        setProfileImageUrlAtIndex(nextIndex);
-//
-//    }
 
     private class VideoDownloadTask extends AsyncTask<VidTrain, Void, List<File>> {
         ViewPager viewPager;
@@ -392,53 +290,44 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(final List<File> localFiles) {
             filesList = localFiles;
-            setProfileImageUrlAtIndex(0);
             videoPagerAdapter =  new VideoPagerAdapter(getBaseContext(), filesList);
             viewPager.setAdapter(videoPagerAdapter);
             cpIndicator.setViewPager(viewPager);
-            View pagerView = videoPagerAdapter.pagerViews.get(viewPager.getCurrentItem());
+            playVideoAtPosition(0);
+
+            viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+                @Override
+                public void onPageSelected(final int position) {
+                    playVideoAtPosition(position);
+                }
+            });
+        }
+
+        private void playVideoAtPosition(final int position) {
+            setProfileImageUrlAtIndex(position);
+            View pagerView = videoPagerAdapter.positionMap.get(position);
             final DynamicVideoPlayerView vvPreview = (DynamicVideoPlayerView) pagerView.findViewById(R.id.vvPreview);
             final ImageView ivThumbnail = (ImageView) pagerView.findViewById(R.id.ivThumbnail);
             ivThumbnail.setVisibility(View.GONE);
             vvPreview.addMediaPlayerListener(new SimpleMainThreadMediaPlayerListener() {
                 @Override
                 public void onVideoCompletionMainThread() {
-                    vpPreview.setCurrentItem(viewPager.getCurrentItem() + 1, true);
+                    if (position < filesList.size()) {
+                        ivThumbnail.setVisibility(View.VISIBLE);
+                        vpPreview.setCurrentItem(viewPager.getCurrentItem() + 1, true);
+                    }
                 }
             });
-            VideoPlayer.playVideo(vvPreview, filesList.get(viewPager.getCurrentItem()).getPath());
-
-
-            viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-                }
-
-                @Override
-                public void onPageSelected(final int position) {
-                    setProfileImageUrlAtIndex(position);
-                    View pagerView = videoPagerAdapter.pagerViews.get(position);
-                    final DynamicVideoPlayerView pagerViewVvPreview = (DynamicVideoPlayerView) pagerView.findViewById(R.id.vvPreview);
-                    final ImageView pagerViewIvThumbnail = (ImageView) pagerView.findViewById(R.id.ivThumbnail);
-                    pagerViewIvThumbnail.setVisibility(View.GONE);
-                    pagerViewVvPreview.addMediaPlayerListener(new SimpleMainThreadMediaPlayerListener() {
-                        @Override
-                        public void onVideoCompletionMainThread() {
-                            if (position < filesList.size()) {
-                                vpPreview.setCurrentItem(viewPager.getCurrentItem() + 1, true);
-                            }
-                        }
-                    });
-                    VideoPlayer.playVideo(pagerViewVvPreview, filesList.get(position).getPath());
-
-                }
-
-                @Override
-                public void onPageScrollStateChanged(int state) {
-
-                }
-            });
+            if (position == videoPagerAdapter.getCount() - 1) {
+                // restart from beginning on click
+                ivThumbnail.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        vpPreview.setCurrentItem(0, true);
+                    }
+                });
+            }
+            VideoPlayer.playVideo(vvPreview, filesList.get(position).getPath());
         }
     }
 
@@ -451,7 +340,5 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         // Hide progress item
         pbProgessAction.setVisibility(View.GONE);
     }
-
-
 
 }
