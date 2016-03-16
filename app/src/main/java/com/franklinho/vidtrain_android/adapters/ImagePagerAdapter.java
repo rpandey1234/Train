@@ -58,7 +58,10 @@ public class ImagePagerAdapter extends PagerAdapter {
         video.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
             @Override
             public void done(ParseObject object, ParseException e) {
-                Glide.with(mContext).load(video.getThumbnail().getUrl()).into(imageView);
+                if (video.getThumbnail() != null) {
+                    Glide.with(mContext).load(video.getThumbnail().getUrl()).into(imageView);
+                }
+
             }
         });
 

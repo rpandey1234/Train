@@ -74,12 +74,12 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
 
         holder.vpPreview.setAdapter(new ImagePagerAdapter(holder.context, vidTrain.getVideos()));
         holder.cpIndicator.setViewPager(holder.vpPreview);
-        int dpHeight = (int) mContext.getResources().getDisplayMetrics().density * 15;
-        holder.cpIndicator.setStrokeWidth(dpHeight);
-        int dpWidth = (int) mContext.getResources().getDisplayMetrics().density * 30;
-        holder.cpIndicator.setLineWidth(dpWidth);
-        int dpGapWidth = (int) mContext.getResources().getDisplayMetrics().density * 5;
-        holder.cpIndicator.setGapWidth(dpGapWidth);
+        int dpRadius = (int) holder.context.getResources().getDisplayMetrics().density * 15;
+        holder.cpIndicator.setRadius(dpRadius);
+        int dpWidth = (int) holder.context.getResources().getDisplayMetrics().density * 2;
+        holder.cpIndicator.setStrokeWidth(dpWidth);
+        holder.cpIndicator.invalidate();
+        holder.cpIndicator.requestLayout();
     }
 
     @Override

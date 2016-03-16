@@ -15,19 +15,23 @@ import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
+import com.franklinho.vidtrain_android.activities.ProfileActivity;
 import com.franklinho.vidtrain_android.activities.VidTrainDetailActivity;
 import com.franklinho.vidtrain_android.adapters.ImagePagerAdapter;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
-import com.franklinho.vidtrain_android.utilities.Utility;
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.viewpagerindicator.CirclePageIndicator;
@@ -47,10 +51,14 @@ public class ImagePreviewDialogFragment extends DialogFragment {
     @Bind(R.id.vpPreview) ViewPager vpPreview;
     @Bind(R.id.cpIndicator) CirclePageIndicator cpIndicator;
     @Bind(R.id.tvTitle) TextView titleTv;
-    @Bind(R.id.tvVideoCount) TextView tvVideoCount;
-    @Bind(R.id.tvTime) TextView tvTime;
+//    @Bind(R.id.tvVideoCount) TextView tvVideoCount;
+//    @Bind(R.id.tvTime) TextView tvTime;
     @Bind(R.id.tvLikeCount) TextView tvLikeCount;
     @Bind(R.id.ibtnLike) ImageButton ibtnLike;
+    @Bind(R.id.btnWatchVideos)
+    Button btnWatchVideos;
+    @Bind(R.id.ivCollaborators)
+    RoundedImageView ivCollaborators;
     File videoFile;
 
     boolean liked = false;
@@ -121,15 +129,27 @@ public class ImagePreviewDialogFragment extends DialogFragment {
                     ibtnLike.setImageResource(R.drawable.heart_icon_red);
                 }
 
-                tvLikeCount.setText(getContext().getResources().getQuantityString(R.plurals.likes_count,
-                        vidTrain.getLikes(), vidTrain.getLikes()));
+                tvLikeCount.setText(String.valueOf(vidTrain.getLikes()));
 
                 titleTv.setText(vidTrain.getTitle());
                 int videoCount = vidTrain.getVideosCount();
                 String totalVideos = getResources().getQuantityString(R.plurals.videos_count,
                         videoCount, videoCount);
-                tvVideoCount.setText(totalVideos);
-                tvTime.setText(Utility.getRelativeTime(vidTrain.getCreatedAt().getTime()));
+                btnWatchVideos.setText(String.format("View %s", totalVideos));
+//                tvTime.setText(Utility.getRelativeTime(vidTrain.getCreatedAt().getTime()));
+
+                final ParseUser user = vidTrain.getUser();
+                user.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject object, ParseException e) {
+                        if (object == null) {
+                            return;
+                        }
+                        String profileImageUrl = User.getProfileImageUrl((ParseUser) object);
+                        Glide.with(getContext()).load(profileImageUrl).into(ivCollaborators);
+                    }
+                });
+
 
                 final List<Video> videos = vidTrain.getVideos();
                 vpPreview.setAdapter(new ImagePagerAdapter(getContext(), videos));
@@ -138,6 +158,8 @@ public class ImagePreviewDialogFragment extends DialogFragment {
                 cpIndicator.setRadius(dpRadius);
                 int dpWidth = (int) getResources().getDisplayMetrics().density * 2;
                 cpIndicator.setStrokeWidth(dpWidth);
+                cpIndicator.invalidate();
+                cpIndicator.requestLayout();
 
                 final int PROGRESS_INTERVAL = 750;
                 final Handler mHandler = new Handler();
@@ -180,7 +202,27 @@ public class ImagePreviewDialogFragment extends DialogFragment {
             vidTrain.setLikes(vidTrain.getLikes() + 1);
         }
         view.startAnimation(animScale);
-        tvLikeCount.setText(getResources().getQuantityString(R.plurals.likes_count,
-                vidTrain.getLikes(), vidTrain.getLikes()));
+        tvLikeCount.setText(String.valueOf(vidTrain.getLikes()));
+    }
+
+    @SuppressWarnings("unused")
+    @OnClick(R.id.btnWatchVideos)
+    public void onWatchVideosButtonClicked(View v) {
+        if (vidTrain != null) {
+            Intent i = new Intent(getContext(), VidTrainDetailActivity.class);
+            i.putExtra(VidTrainDetailActivity.VIDTRAIN_KEY, vidTrain.getObjectId());
+            getContext().startActivity(i);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @OnClick(R.id.ivCollaborators)
+    public void onCollaboratorClicked(View view) {
+        if (vidTrain != null) {
+            ParseUser user = vidTrain.getUser();
+            Intent intent = new Intent(getContext(), ProfileActivity.class);
+            intent.putExtra(ProfileActivity.USER_ID, user.getObjectId());
+            getContext().startActivity(intent);
+        }
     }
 }

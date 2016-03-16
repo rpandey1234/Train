@@ -87,6 +87,9 @@ public class LogInActivity extends AppCompatActivity {
     }
 
     public void logInWithFaceBook(View view) {
+        if (ParseUser.getCurrentUser() != null) {
+            Log.d("Vidtrain", ParseUser.getCurrentUser().toString());
+        }
         ParseFacebookUtils.logInWithReadPermissionsInBackground(this,
                 Arrays.asList("user_friends", "email", "public_profile"),
                 new LogInCallback() {
@@ -94,6 +97,10 @@ public class LogInActivity extends AppCompatActivity {
                     public void done(ParseUser user, ParseException e) {
                         if (user == null) {
                             Log.d(VidtrainApplication.TAG, "User cancelled the Facebook login.");
+                        } else if (user.isNew()) {
+                            Log.d("MyApp", "User signed up and logged in through Facebook!");
+                            updateUserInfo(user);
+                            sendToHomeActivity();
                         } else {
                             updateUserInfo(user);
                             sendToHomeActivity();

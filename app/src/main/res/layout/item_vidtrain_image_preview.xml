@@ -48,7 +48,7 @@
             android:background="@android:color/black"
             android:onClick=""
             />
-        <com.viewpagerindicator.LinePageIndicator
+        <com.viewpagerindicator.CirclePageIndicator
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/vpPreview"
