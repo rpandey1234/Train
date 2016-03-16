@@ -161,15 +161,6 @@
                 android:layout_below="@id/tvTime"
                 />
 
-            <fragment
-                android:id="@+id/commentsFragment"
-                android:name="com.franklinho.vidtrain_android.fragments.CommentFragment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/ibtnLike"
-                tools:layout="@layout/fragment_comments"
-                />
-
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>
 
