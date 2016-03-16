@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +15,13 @@ import com.franklinho.vidtrain_android.models.DynamicVideoPlayerView;
 import com.franklinho.vidtrain_android.utilities.Utility;
 import com.franklinho.vidtrain_android.utilities.VideoIconPagerAdapter;
 import com.franklinho.vidtrain_android.utilities.VideoPlayer;
+import com.volokh.danylo.video_player_manager.PlayerMessageState;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by franklinho on 3/15/16.
@@ -27,7 +31,7 @@ public class VideoPagerAdapter extends PagerAdapter implements VideoIconPagerAda
     Context mContext;
     LayoutInflater mLayoutInflater;
     List<File> videoFiles = new ArrayList<>();
-    public List<View> pagerViews = new ArrayList<>();
+    public Map<Integer, View> positionMap = new HashMap<>();
 
     public VideoPagerAdapter(Context context, List<File> videoFiles) {
         mContext = context;
@@ -54,25 +58,13 @@ public class VideoPagerAdapter extends PagerAdapter implements VideoIconPagerAda
         // Inflate the layout for the page
         View itemView = mLayoutInflater.inflate(R.layout.pager_item_video, container, false);
         // Find and populate data into the page (i.e set the image)
-        final ImageView ivThumbnail = (ImageView) itemView.findViewById(R.id.ivThumbnail);
-        final DynamicVideoPlayerView vvPreview = (DynamicVideoPlayerView) itemView.findViewById(R.id.vvPreview);
-        // ...
+        ImageView ivThumbnail = (ImageView) itemView.findViewById(R.id.ivThumbnail);
         // Add the page to the container
         container.addView(itemView);
         final File videoFile = videoFiles.get(position);
         ivThumbnail.setImageBitmap(Utility.getImageBitmap(videoFile.getPath()));
-        ivThumbnail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ivThumbnail.setVisibility(View.GONE);
-                VideoPlayer.playVideo(vvPreview, videoFile.getPath());
-
-
-            }
-        });
-
+        positionMap.put(position, itemView);
         // Return the page
-        pagerViews.add(itemView);
         return itemView;
     }
 
