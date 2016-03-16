@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.Surface;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -30,6 +31,7 @@ public class VideoCaptureActivity extends Activity {
     private boolean isRecording = false;
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
+    public static int orientation;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,7 @@ public class VideoCaptureActivity extends Activity {
                             if (prepareVideoRecorder()) {
                                 // Camera is available and unlocked, MediaRecorder is prepared,
                                 // now you can start recording
+                                //mCamera.setDisplayOrientation(90);
                                 mMediaRecorder.start();
 
                                 Log.i("Hi","Hello");
@@ -120,11 +123,13 @@ public class VideoCaptureActivity extends Activity {
             e.printStackTrace();
         }
 
+        setCameraDisplayOrientation(this,0,mCamera);
         //mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
         mMediaRecorder = new MediaRecorder();
 
         // Step 1: Unlock and set camera to MediaRecorder
         mCamera.unlock();
+        //mCamera.setDisplayOrientation(90);
         mMediaRecorder.setCamera(mCamera);
 
         // Step 2: Set sources
@@ -139,6 +144,7 @@ public class VideoCaptureActivity extends Activity {
 
         // Step 5: Set the preview output
         mMediaRecorder.setPreviewDisplay(mPreview.getHolder().getSurface());
+        mMediaRecorder.setOrientationHint(VideoCaptureActivity.orientation);
 
         // Step 6: Prepare configured MediaRecorder
         try {
@@ -190,7 +196,7 @@ public class VideoCaptureActivity extends Activity {
         // using Environment.getExternalStorageState() before doing this.
 
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), "MyCameraApp");
+                Environment.DIRECTORY_PICTURES), "VidTrain");
         // This location works best if you want the created images to be shared
         // between applications and persist after your app has been uninstalled.
 
@@ -226,4 +232,34 @@ public class VideoCaptureActivity extends Activity {
         }
     }
 
+    public static void setCameraDisplayOrientation(Activity activity,
+                                                   int cameraId, android.hardware.Camera camera) {
+
+        android.hardware.Camera.CameraInfo info =
+                new android.hardware.Camera.CameraInfo();
+
+        android.hardware.Camera.getCameraInfo(cameraId, info);
+
+        int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+        int degrees = 0;
+
+        switch (rotation) {
+            case Surface.ROTATION_0: degrees = 0; break;
+            case Surface.ROTATION_90: degrees = 90; break;
+            case Surface.ROTATION_180: degrees = 180; break;
+            case Surface.ROTATION_270: degrees = 270; break;
+        }
+
+        int result;
+        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            result = (info.orientation + degrees) % 360;
+            result = (360 - result) % 360;  // compensate the mirror
+        } else {  // back-facing
+            result = (info.orientation - degrees + 360) % 360;
+        }
+        VideoCaptureActivity.orientation=result;
+        camera.setDisplayOrientation(result);
+    }
+
 }
+
