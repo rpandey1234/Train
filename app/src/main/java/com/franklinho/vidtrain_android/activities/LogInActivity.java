@@ -51,8 +51,6 @@ public class LogInActivity extends AppCompatActivity {
             }
             sendToHomeActivity();
         }
-
-//        VideoPlayer.playVideo(vvLogin, "android.resource://" + getPackageName() + "/" + R.raw.loginvideo);
     }
 
     @Override
@@ -113,6 +111,5 @@ public class LogInActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-//        VideoPlayer.playVideo(vvLogin, "android.resource://" + getPackageName() + "/" + R.raw.loginvideo);
     }
 }

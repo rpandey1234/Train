@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,15 +31,13 @@ import butterknife.OnClick;
  */
 public class VidTrainViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener {
     @Bind(R.id.ivCollaborators) public ImageView ivCollaborators;
-//    @Bind(R.id.vvPreview) public DynamicVideoPlayerView vvPreview;
-//    @Bind(R.id.vvThumbnail) public ImageView vvThumbnail;
     @Bind(R.id.ibtnLike) public ImageButton ibtnLike;
     @Bind(R.id.tvLikeCount) public TextView tvLikeCount;
     @Bind(R.id.tvTitle) public TextView tvTitle;
-    @Bind(R.id.tvVideoCount) public TextView tvVideoCount;
     @Bind(R.id.tvTime) public TextView tvTime;
     @Bind(R.id.vpPreview) public ViewPager vpPreview;
     @Bind(R.id.cpIndicator) public LinePageIndicator cpIndicator;
+    @Bind(R.id.btnWatchVideos) public Button btnWatchVideos;
     public int currentPage = 0;
 
     public Context context;
@@ -69,8 +68,17 @@ public class VidTrainViewHolder extends  RecyclerView.ViewHolder implements View
         itemView.setOnClickListener(this);
     }
 
+
     @Override
     public void onClick(View v) {
+        Intent i = new Intent(context, VidTrainDetailActivity.class);
+        i.putExtra(VidTrainDetailActivity.VIDTRAIN_KEY, vidTrain.getObjectId());
+        context.startActivity(i);
+    }
+
+    @SuppressWarnings("unused")
+    @OnClick(R.id.btnWatchVideos)
+    public void onWatchVideosButtonClicked(View v) {
         Intent i = new Intent(context, VidTrainDetailActivity.class);
         i.putExtra(VidTrainDetailActivity.VIDTRAIN_KEY, vidTrain.getObjectId());
         context.startActivity(i);
@@ -109,8 +117,7 @@ public class VidTrainViewHolder extends  RecyclerView.ViewHolder implements View
 
         }
         view.startAnimation(animScale);
-        tvLikeCount.setText(context.getResources().getQuantityString(R.plurals.likes_count,
-                vidTrain.getLikes(), vidTrain.getLikes()));
+        tvLikeCount.setText(String.valueOf(vidTrain.getLikes()));
 
     }
 }

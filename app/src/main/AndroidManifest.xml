@@ -108,17 +108,6 @@
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"
             />
-        <activity android:name=".activities.DeepLinkListenerActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.View"/>
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:host="host"
-                    android:pathPattern="some regex"
-                    android:scheme="scheme" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>

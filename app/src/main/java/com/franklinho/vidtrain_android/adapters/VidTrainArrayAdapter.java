@@ -13,7 +13,6 @@ import com.franklinho.vidtrain_android.adapters.holders.VidTrainViewHolder;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
-import com.franklinho.vidtrain_android.utilities.Utility;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -51,8 +50,10 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
         int videoCount = vidTrain.getVideosCount();
         String totalVideos = mContext.getResources().getQuantityString(R.plurals.videos_count,
                 videoCount, videoCount);
-        holder.tvVideoCount.setText(totalVideos);
-        holder.tvTime.setText(Utility.getRelativeTime(vidTrain.getCreatedAt().getTime()));
+//        holder.tvVideoCount.setText(totalVideos);
+
+        holder.btnWatchVideos.setText(String.format("View %s", totalVideos));
+//        holder.tvTime.setText(Utility.getRelativeTime(vidTrain.getCreatedAt().getTime()));
         holder.ivCollaborators.setImageResource(0);
         holder.liked = false;
         holder.ibtnLike.setImageResource(R.drawable.heart_icon);
@@ -61,8 +62,9 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
             holder.ibtnLike.setImageResource(R.drawable.heart_icon_red);
         }
 
-        holder.tvLikeCount.setText(mContext.getResources().getQuantityString(R.plurals.likes_count,
-                vidTrain.getLikes(), vidTrain.getLikes()));
+//        holder.tvLikeCount.setText(mContext.getResources().getQuantityString(R.plurals.likes_count,
+//                vidTrain.getLikes(), vidTrain.getLikes()));
+        holder.tvLikeCount.setText(String.valueOf(vidTrain.getLikes()));
         final ParseUser user = vidTrain.getUser();
         user.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
             @Override
