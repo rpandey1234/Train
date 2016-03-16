@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.franklinho.vidtrain_android.activities.ProfileActivity">
+    tools:context="com.franklinho.vidtrain_android.activities.ProfileActivity"
+    android:background="@android:color/white">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -17,8 +18,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:theme="@style/ToolbarTheme"
             app:popupTheme="@style/AppBaseLightTheme"
-            style="@style/Widget.Toolbar"
             app:layout_scrollFlags="scroll|enterAlways"
             />
 

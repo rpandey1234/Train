@@ -25,6 +25,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tabMode="fixed"
+            style="@style/CustomTabLayout"
+            android:background="@android:color/white"
             />
 
     </android.support.design.widget.AppBarLayout>
@@ -42,11 +44,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:fabSize= "normal"
-        android:src="@android:drawable/ic_menu_add"
-        android:tint="@android:color/black"
+        android:src="@drawable/icon_plus"
+        android:tint="@android:color/white"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+
         app:backgroundTint="@color/bluePrimary"
         app:layout_anchor="@+id/viewpager"
         app:layout_anchorGravity="bottom|right|end"

@@ -170,7 +170,7 @@ public class MapFragment extends Fragment implements
         query.setSkip(currentSize);
         query.setLimit(5);
         final BitmapDescriptor defaultMarker = BitmapDescriptorFactory.defaultMarker(
-                BitmapDescriptorFactory.HUE_AZURE);
+                BitmapDescriptorFactory.HUE_GREEN);
         query.findInBackground(new FindCallback<VidTrain>() {
             @Override
             public void done(List<VidTrain> objects, ParseException e) {
@@ -280,11 +280,12 @@ public class MapFragment extends Fragment implements
     @Override
     public boolean onMarkerClick(Marker marker) {
         FragmentManager fm = getFragmentManager();
-        MapDialogFragment mapDialogFragment = MapDialogFragment.newInstance(marker.getSnippet());
+//        MapDialogFragment mapDialogFragment = MapDialogFragment.newInstance(marker.getSnippet());
+        ImagePreviewDialogFragment imagePreviewDialogFragment =  ImagePreviewDialogFragment.newInstance(marker.getSnippet());
         Bundle bundle = new Bundle();
         bundle.putString("vidTrainId", marker.getSnippet());
-        mapDialogFragment.setArguments(bundle);
-        mapDialogFragment.show(fm, "custom_info_window");
+        imagePreviewDialogFragment.setArguments(bundle);
+        imagePreviewDialogFragment.show(fm, "fragment_image_preview");
         return true;
     }
 

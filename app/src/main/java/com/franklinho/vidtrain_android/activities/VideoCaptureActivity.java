@@ -38,7 +38,6 @@ public class VideoCaptureActivity extends Activity {
 
         // Create an instance of Camera
         mCamera = getCameraInstance();
-        mCamera.setDisplayOrientation(90);
 
         // Create our Preview view and set it as the content of our activity.
         mPreview = new CameraPreview(this, mCamera);
@@ -126,7 +125,6 @@ public class VideoCaptureActivity extends Activity {
 
         // Step 1: Unlock and set camera to MediaRecorder
         mCamera.unlock();
-
         mMediaRecorder.setCamera(mCamera);
 
         // Step 2: Set sources
@@ -221,7 +219,7 @@ public class VideoCaptureActivity extends Activity {
     }
 
     private void releaseCameraAndPreview() {
-        mPreview.setCamera(null);
+        //mPreview.setCamera(null);
         if (mCamera != null) {
             mCamera.release();
             mCamera = null;

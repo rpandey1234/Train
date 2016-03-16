@@ -9,7 +9,8 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:theme="@style/ToolbarTheme"
         app:popupTheme="@style/AppBaseLightTheme"
-        style="@style/Widget.Toolbar"
+        style="@style/Toolbar.TitleText"
         />
 </LinearLayout>

@@ -2,6 +2,7 @@ package com.franklinho.vidtrain_android.activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -176,12 +177,15 @@ public class CreationDetailActivity extends AppCompatActivity {
         if (parseFile == null) {
             return;
         }
+        Bitmap thumbnailBitmap = Utility.getImageBitmap(videoPath);
+        final ParseFile parseThumbnail = Utility.createParseFileFromBitmap(thumbnailBitmap);
         parseFile.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 final ParseUser user = ParseUser.getCurrentUser();
                 video.setUser(user);
                 video.setVideoFile(parseFile);
+                video.setThumbnail(parseThumbnail);
                 video.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
