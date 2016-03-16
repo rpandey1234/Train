@@ -4,18 +4,14 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.franklinho.vidtrain_android.R;
-import com.franklinho.vidtrain_android.models.DynamicVideoPlayerView;
 import com.franklinho.vidtrain_android.utilities.Utility;
 import com.franklinho.vidtrain_android.utilities.VideoIconPagerAdapter;
-import com.franklinho.vidtrain_android.utilities.VideoPlayer;
-import com.volokh.danylo.video_player_manager.PlayerMessageState;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -30,20 +26,23 @@ public class VideoPagerAdapter extends PagerAdapter implements VideoIconPagerAda
 
     Context mContext;
     LayoutInflater mLayoutInflater;
-    List<File> videoFiles = new ArrayList<>();
-    public Map<Integer, View> positionMap = new HashMap<>();
+    List<File> mVideoFiles = new ArrayList<>();
+    Map<Integer, View> positionMap = new HashMap<>();
 
     public VideoPagerAdapter(Context context, List<File> videoFiles) {
         mContext = context;
         mLayoutInflater = LayoutInflater.from(mContext);
-        this.videoFiles = videoFiles;
+        mVideoFiles = videoFiles;
+    }
 
+    public View getView(int position) {
+        return positionMap.get(position);
     }
 
     // Returns the number of pages to be displayed in the ViewPager.
     @Override
     public int getCount() {
-        return videoFiles.size();
+        return mVideoFiles.size();
     }
 
     // Returns true if a particular object (page) is from a particular page
@@ -57,11 +56,22 @@ public class VideoPagerAdapter extends PagerAdapter implements VideoIconPagerAda
     public Object instantiateItem(ViewGroup container, int position) {
         // Inflate the layout for the page
         View itemView = mLayoutInflater.inflate(R.layout.pager_item_video, container, false);
+        if (position == 0) {
+            // no left padding
+            // TODO(rahul): set margin instead of 0 padding so we show the background
+            itemView.setPadding(0, itemView.getPaddingTop(), itemView.getPaddingRight(),
+                    itemView.getPaddingBottom());
+        }
+        if (position == getCount() - 1) {
+            // no right padding
+            itemView.setPadding(itemView.getPaddingLeft(), itemView.getPaddingTop(), 0,
+                    itemView.getPaddingBottom());
+        }
         // Find and populate data into the page (i.e set the image)
         ImageView ivThumbnail = (ImageView) itemView.findViewById(R.id.ivThumbnail);
         // Add the page to the container
         container.addView(itemView);
-        final File videoFile = videoFiles.get(position);
+        final File videoFile = mVideoFiles.get(position);
         ivThumbnail.setImageBitmap(Utility.getImageBitmap(videoFile.getPath()));
         positionMap.put(position, itemView);
         // Return the page
@@ -76,7 +86,7 @@ public class VideoPagerAdapter extends PagerAdapter implements VideoIconPagerAda
 
     @Override
     public Bitmap getIconBitMap(int index) {
-        Bitmap bitmap =  Utility.getImageBitmap(videoFiles.get(index).getPath());
+        Bitmap bitmap =  Utility.getImageBitmap(mVideoFiles.get(index).getPath());
         int dimension = getSquareCropDimensionForBitmap(bitmap);
         return ThumbnailUtils.extractThumbnail(bitmap, dimension, dimension);
     }

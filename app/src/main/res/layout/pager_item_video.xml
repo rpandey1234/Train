@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    >
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="300dp"
@@ -9,11 +15,13 @@
         android:background="@color/bluePrimary"
         android:scaleType="centerCrop"
         android:contentDescription="@string/video_thumbnail"
+
         />
 
     <com.franklinho.vidtrain_android.models.DynamicVideoPlayerView
         android:layout_width="match_parent"
         android:layout_height="300dp"
+        android:background="@color/bluePrimary"
         android:id="@+id/vvPreview"
         />
 

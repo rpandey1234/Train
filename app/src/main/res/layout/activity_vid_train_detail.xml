@@ -24,8 +24,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context="com.franklinho.vidtrain_android.activities.VidTrainDetailActivity">
@@ -42,6 +40,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginBottom="10dp"
+                android:layout_marginLeft="15dp"
                 android:src="@drawable/profile_icon"
                 app:riv_border_color="@android:color/white"
                 app:riv_border_width="2dp"
@@ -55,6 +54,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignTop="@id/ivCollaborators"
                 android:layout_marginLeft="10dp"
+                android:layout_marginRight="15dp"
                 android:layout_toRightOf="@id/ivCollaborators"
                 android:gravity="center_vertical|end"
                 android:textSize="16sp" />
@@ -65,9 +65,6 @@
                 android:layout_height="300dp"
                 android:layout_below="@+id/ivCollaborators"
                 android:orientation="vertical">
-
-
-
 
                 <!--<com.franklinho.vidtrain_android.models.DynamicVideoPlayerView-->
                     <!--android:id="@+id/vvPreview"-->
@@ -102,9 +99,6 @@
                     android:id="@+id/cpIndicator"
                     android:layout_marginBottom="10dp"
                     />
-
-
-
             </RelativeLayout>
 
             <ImageButton
@@ -112,6 +106,7 @@
                 android:layout_width="44dp"
                 android:layout_height="44dp"
                 android:layout_below="@id/videoContainer"
+                android:layout_marginLeft="15dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
@@ -140,24 +135,22 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignTop="@+id/ibtnLike"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="15dp"
                 android:gravity="center_vertical"
                 android:textSize="16sp"
                 />
 
             <Button
                 android:id="@+id/btnAddvidTrain"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:background="@color/bluePrimary"
-                android:padding="5dp"
+                android:background="@color/blueAccent"
                 android:text="@string/add_to_vidtrain"
                 android:textColor="@android:color/white"
                 android:onClick="showCreateFlow"
                 android:visibility="gone"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:layout_below="@id/tvTime"
                 />
 

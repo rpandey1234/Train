@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -67,7 +68,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     private ProgressDialog progress;
     private VidTrain vidTrain;
     private static final int VIDEO_CAPTURE = 101;
-    private int nextIndex;
     public boolean liked = false;
     String totalVideos;
     VideoPagerAdapter videoPagerAdapter;
@@ -78,27 +78,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vid_train_detail);
         ButterKnife.bind(this);
-        nextIndex = 0;
-//        vvPreview.setHeightRatio(1);
-        final View view = getWindow().getDecorView();
-        view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                vpPreview.post(new Runnable() {
-                    public void run() {
-                        int width = view.getWidth();
-//                        int height = width;
-//                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(width, height);
-//                        vpPreview.setLayoutParams(lp);
-                        ViewGroup.LayoutParams lp = vpPreview.getLayoutParams();
-                        lp.height = width;
-                        vpPreview.setLayoutParams(lp);
-                    }
-                });
-            }
-        });
-
-
         String vidTrainId = getIntent().getExtras().getString(VIDTRAIN_KEY);
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
         query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
@@ -292,6 +271,10 @@ public class VidTrainDetailActivity extends AppCompatActivity {
             filesList = localFiles;
             videoPagerAdapter =  new VideoPagerAdapter(getBaseContext(), filesList);
             viewPager.setAdapter(videoPagerAdapter);
+            viewPager.setClipChildren(false);
+            int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20 * 2,
+                    getResources().getDisplayMetrics());
+            viewPager.setPageMargin(-margin);
             cpIndicator.setViewPager(viewPager);
             playVideoAtPosition(0);
 
@@ -305,7 +288,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
 
         private void playVideoAtPosition(final int position) {
             setProfileImageUrlAtIndex(position);
-            View pagerView = videoPagerAdapter.positionMap.get(position);
+            View pagerView = videoPagerAdapter.getView(position);
             final DynamicVideoPlayerView vvPreview = (DynamicVideoPlayerView) pagerView.findViewById(R.id.vvPreview);
             final ImageView ivThumbnail = (ImageView) pagerView.findViewById(R.id.ivThumbnail);
             ivThumbnail.setVisibility(View.GONE);

@@ -76,10 +76,6 @@ public class ImagePreviewDialogFragment extends DialogFragment {
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         final View v = inflater.inflate(R.layout.fragment_image_preview, container);
         ButterKnife.bind(this, v);
-
-
-
-
         v.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -138,10 +134,12 @@ public class ImagePreviewDialogFragment extends DialogFragment {
                 final List<Video> videos = vidTrain.getVideos();
                 vpPreview.setAdapter(new ImagePagerAdapter(getContext(), videos));
                 cpIndicator.setViewPager(vpPreview);
+                int dpRadius = (int) getResources().getDisplayMetrics().density * 15;
+                cpIndicator.setRadius(dpRadius);
+                int dpWidth = (int) getResources().getDisplayMetrics().density * 2;
+                cpIndicator.setStrokeWidth(dpWidth);
 
-
-
-                final int PROGRESS_INTERVAL = 1000;
+                final int PROGRESS_INTERVAL = 750;
                 final Handler mHandler = new Handler();
 
                 Runnable mImageProgressRunnable = new Runnable() {

@@ -85,7 +85,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0"
+        android:text="@string/zero"
         android:layout_alignTop="@id/ivCollaborators"
         android:layout_alignBottom="@id/ivCollaborators"
         android:layout_alignParentRight="true"
@@ -112,7 +112,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="View x Videos"
+        android:text="@string/view_x_videos"
         android:layout_below="@id/videoContainer"
         android:id="@+id/btnWatchVideos"
         android:textColor="@android:color/white"

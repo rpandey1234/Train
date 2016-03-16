@@ -28,6 +28,8 @@ import android.widget.ImageView;
 
 import com.viewpagerindicator.PageIndicator;
 
+import java.util.ResourceBundle;
+
 import static android.view.ViewGroup.LayoutParams.FILL_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
@@ -62,7 +64,7 @@ public class VideoPageIndicator extends HorizontalScrollView implements PageIndi
             View opacityView
                     = mIconsLayout.getChildAt(i);
             if (i != mSelectedIndex) {
-                opacityView.setAlpha(0.35f);
+                opacityView.setAlpha(0.50f);
             } else {
                 opacityView.setAlpha(1.0f);
             }
@@ -144,8 +146,12 @@ public class VideoPageIndicator extends HorizontalScrollView implements PageIndi
         int count = iconAdapter.getCount();
         for (int i = 0; i < count; i++) {
             ImageView view = new ImageView(getContext(), null, com.viewpagerindicator.R.attr.vpiIconPageIndicatorStyle);
+            int dpOfImage = (int) getResources().getDisplayMetrics().density * 40;
+            view.setAdjustViewBounds(true);
+            view.setMaxHeight(dpOfImage);
+            view.setMaxWidth(dpOfImage);
             if (i != mSelectedIndex) {
-                view.setAlpha(0.35f);
+                view.setAlpha(0.50f);
             }
             view.setImageBitmap(iconAdapter.getIconBitMap(i));
             mIconsLayout.addView(view);
