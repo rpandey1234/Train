@@ -38,6 +38,7 @@ public class VideoCaptureActivity extends Activity {
 
         // Create an instance of Camera
         mCamera = getCameraInstance();
+        mCamera.setDisplayOrientation(90);
 
         // Create our Preview view and set it as the content of our activity.
         mPreview = new CameraPreview(this, mCamera);
@@ -65,6 +66,7 @@ public class VideoCaptureActivity extends Activity {
                                 // now you can start recording
                                 mMediaRecorder.start();
 
+                                Log.i("Hi","Hello");
                                 // inform the user that recording has started
                                 //setCaptureButtonText("Stop");
                                 isRecording = true;
@@ -105,11 +107,26 @@ public class VideoCaptureActivity extends Activity {
 
     private boolean prepareVideoRecorder() {
 
-        mCamera = Camera.open();
+
+        try {
+            releaseCameraAndPreview();
+//            if (camId == 0) {
+//                mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
+//            }
+//            else {
+            mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
+//            }
+        } catch (Exception e) {
+            Log.e(getString(R.string.app_name), "failed to open Camera");
+            e.printStackTrace();
+        }
+
+        //mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
         mMediaRecorder = new MediaRecorder();
 
         // Step 1: Unlock and set camera to MediaRecorder
         mCamera.unlock();
+
         mMediaRecorder.setCamera(mCamera);
 
         // Step 2: Set sources
@@ -129,11 +146,11 @@ public class VideoCaptureActivity extends Activity {
         try {
             mMediaRecorder.prepare();
         } catch (IllegalStateException e) {
-            //Log.d(TAG, "IllegalStateException preparing MediaRecorder: " + e.getMessage());
+            Log.d("Issue", "IllegalStateException preparing MediaRecorder: " + e.getMessage());
             releaseMediaRecorder();
             return false;
         } catch (IOException e) {
-            //Log.d(TAG, "IOException preparing MediaRecorder: " + e.getMessage());
+            Log.d("Issue 2", "IOException preparing MediaRecorder: " + e.getMessage());
             releaseMediaRecorder();
             return false;
         }
@@ -201,6 +218,14 @@ public class VideoCaptureActivity extends Activity {
         }
 
         return mediaFile;
+    }
+
+    private void releaseCameraAndPreview() {
+        mPreview.setCamera(null);
+        if (mCamera != null) {
+            mCamera.release();
+            mCamera = null;
+        }
     }
 
 }
