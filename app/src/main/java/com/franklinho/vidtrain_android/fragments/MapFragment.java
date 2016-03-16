@@ -170,7 +170,7 @@ public class MapFragment extends Fragment implements
         query.setSkip(currentSize);
         query.setLimit(5);
         final BitmapDescriptor defaultMarker = BitmapDescriptorFactory.defaultMarker(
-                BitmapDescriptorFactory.HUE_AZURE);
+                BitmapDescriptorFactory.HUE_GREEN);
         query.findInBackground(new FindCallback<VidTrain>() {
             @Override
             public void done(List<VidTrain> objects, ParseException e) {

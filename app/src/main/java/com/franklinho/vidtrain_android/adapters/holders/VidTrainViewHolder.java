@@ -19,7 +19,7 @@ import com.franklinho.vidtrain_android.activities.VidTrainDetailActivity;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.parse.ParseUser;
-import com.viewpagerindicator.CirclePageIndicator;
+import com.viewpagerindicator.LinePageIndicator;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -38,7 +38,7 @@ public class VidTrainViewHolder extends  RecyclerView.ViewHolder implements View
     @Bind(R.id.tvVideoCount) public TextView tvVideoCount;
     @Bind(R.id.tvTime) public TextView tvTime;
     @Bind(R.id.vpPreview) public ViewPager vpPreview;
-    @Bind(R.id.cpIndicator) public CirclePageIndicator cpIndicator;
+    @Bind(R.id.cpIndicator) public LinePageIndicator cpIndicator;
     public int currentPage = 0;
 
     public Context context;
