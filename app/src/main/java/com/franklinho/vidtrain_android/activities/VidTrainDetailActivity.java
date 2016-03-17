@@ -290,6 +290,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     }
 
     void requestVidTrain(Boolean newView) {
+        VideoPlayer.resetMediaPlayer();
         String vidTrainId = getIntent().getExtras().getString(VIDTRAIN_KEY);
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
         query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);

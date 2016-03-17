@@ -27,6 +27,10 @@ public class VideoPlayer {
         videoPlayerManager.playNewVideo(null, videoPlayer, videoUrl);
     }
 
+    public static void resetMediaPlayer() {
+        videoPlayerManager.resetMediaPlayer();
+    }
+
     public static PlayerMessageState getState() {
         return videoPlayerManager.getCurrentPlayerState();
     }
