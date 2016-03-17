@@ -42,38 +42,72 @@
         android:inputType="textCapSentences"
         />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/collabs"
-        android:layout_below="@id/etTitle"
-        android:layout_marginLeft="10dp"
-        android:id="@+id/tvCollaborators"
-        android:textSize="25dp"
-        android:layout_alignParentLeft="true"
-        android:gravity="bottom"
-        android:layout_marginRight="10dp"
-        />
+    <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="@string/collabs"-->
+        <!--android:layout_below="@id/etTitle"-->
+        <!--android:layout_marginLeft="10dp"-->
+        <!--android:id="@+id/tvCollaborators"-->
+        <!--android:textSize="20dp"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:gravity="bottom"-->
+        <!--android:layout_marginRight="10dp"-->
+        <!--/>-->
 
-    <Switch
+    <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/publicCollaborator"
+    android:layout_below="@id/etTitle"
+    android:layout_alignLeft="@id/etTitle"
+    android:id="@+id/tvPublic"
+    android:textSize="20dp"
+    android:gravity="bottom"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="3dp"
+    />
+
+
+    <android.support.v7.widget.SwitchCompat
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/toggleBtn"
-        android:layout_toRightOf="@+id/tvCollaborators"
         android:layout_below="@+id/etTitle"
+        android:layout_toRightOf="@+id/tvPublic"
         android:layout_marginLeft="10dp"
         android:textOff="@string/publicCollaborator"
         android:textOn="@string/friends"
         android:showText="true"
+        android:gravity="center"
         android:thumbTextPadding="10dp"
         android:track="@drawable/shape_thumb"
+        android:layout_alignTop="@id/tvPublic"
+        android:layout_alignBottom="@id/tvPublic"
+        android:buttonTint="@color/bluePrimary"
+
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/friends"
+        android:layout_below="@id/etTitle"
+        android:layout_toRightOf="@id/toggleBtn"
+        android:layout_marginLeft="10dp"
+        android:id="@+id/tvCollaborator"
+        android:textSize="20dp"
+        android:gravity="bottom"
+        android:layout_alignTop="@id/tvPublic"
+        android:layout_alignBottom="@id/tvPublic"
+        android:textColor="@android:color/black"
         />
 
     <AutoCompleteTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/etCollaborators"
-        android:layout_below="@id/tvCollaborators"
+        android:layout_below="@id/toggleBtn"
         android:hint="@string/autocomplete_hint"
         android:visibility="gone"
         android:singleLine="true"
@@ -93,17 +127,14 @@
 
     <Button
         android:id="@+id/btnSubmit"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/submit"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/etCollaborators"
-        android:layout_marginRight="10dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="30dp"
         android:onClick="submitVidTrain"
         android:background="@color/bluePrimary"
+        android:layout_marginTop="10dp"
         />
 
 </RelativeLayout>

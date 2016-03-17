@@ -12,7 +12,7 @@
     <style name="AppBaseLightTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/bluePrimary</item>
         <item name="colorPrimaryDark">@color/bluePrimaryDark</item>
-        <item name="colorAccent">@android:color/black</item>
+        <item name="colorAccent">@color/blueAccent</item>
         <item name="android:textColor">@android:color/white</item>
         <!--<item name="colorAccent">@color/blueAccent</item>-->
         <item name="android:windowContentTransitions">true</item>

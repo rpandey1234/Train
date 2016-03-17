@@ -7,6 +7,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -22,7 +23,6 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -54,7 +54,8 @@ public class CreationDetailActivity extends AppCompatActivity {
     @Bind(R.id.vvThumbnail) ImageView vvThumbnail;
     @Bind(R.id.btnSubmit) Button btnSubmit;
     @Bind(R.id.etTitle) EditText etTitle;
-    @Bind(R.id.toggleBtn) Switch toggleBtn;
+    @Bind(R.id.toggleBtn)
+    SwitchCompat toggleBtn;
     @Bind(R.id.etCollaborators) AutoCompleteTextView etCollaborators;
     @Bind(R.id.containerCollab) LinearLayout containerCollab;
 

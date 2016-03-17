@@ -5,12 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.models.User;
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.parse.ParseUser;
 
 import java.util.List;
@@ -55,7 +55,8 @@ public class UsersAdapter extends ArrayAdapter<ParseUser> {
     // View lookup cache
     static class ViewHolder {
         @Bind(R.id.tvName) TextView tvName;
-        @Bind(R.id.ivProfileImage) ImageView ivProfileImage;
+        @Bind(R.id.ivProfileImage)
+        RoundedImageView ivProfileImage;
 
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);

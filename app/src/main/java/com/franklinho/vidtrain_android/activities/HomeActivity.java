@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.fragments.FragmentPagerAdapter;
+import com.franklinho.vidtrain_android.utilities.Utility;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -135,7 +136,7 @@ public class HomeActivity extends AppCompatActivity {
 
     public void showCreateFlow(View view) {
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
-            //startActivityForResult(Utility.getVideoIntent(), VIDEO_CAPTURE);
+
             int cx = (int) fabCreate.getX() + fabCreate.getWidth()/2;
             int cy = (int) fabCreate.getY() + fabCreate.getHeight()/2;
 
@@ -151,6 +152,7 @@ public class HomeActivity extends AppCompatActivity {
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
                     startActivityForResult(in, 1);
+//                    startActivityForResult(Utility.getVideoIntent(), VIDEO_CAPTURE);
                 }
             });
 
@@ -164,17 +166,17 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Toast.makeText(this, "Success",  Toast.LENGTH_LONG).show();
-//        if (requestCode == VIDEO_CAPTURE) {
-//            if (resultCode == RESULT_OK) {
-//                Intent i = new Intent(this, CreationDetailActivity.class);
-//                i.putExtra("videoPath", Utility.getOutputMediaFile().getPath());
-//                startActivity(i);
-//            } else if (resultCode == RESULT_CANCELED) {
-//                Toast.makeText(this, "Video recording cancelled.",  Toast.LENGTH_LONG).show();
-//            } else {
-//                Toast.makeText(this, "Failed to record video",  Toast.LENGTH_LONG).show();
-//            }
-//        }
+        if (requestCode == VIDEO_CAPTURE) {
+            if (resultCode == RESULT_OK) {
+                Intent i = new Intent(this, CreationDetailActivity.class);
+                i.putExtra("videoPath", Utility.getOutputMediaFile().getPath());
+                startActivity(i);
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(this, "Video recording cancelled.",  Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Failed to record video",  Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     @Override
