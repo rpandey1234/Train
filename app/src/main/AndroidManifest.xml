@@ -87,6 +87,7 @@
             android:name=".activities.ProfileActivity"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"
+            android:parentActivityName=".activities.HomeActivity"
             />
         <activity
             android:name=".activities.HomeActivity"
@@ -97,6 +98,7 @@
             android:name=".activities.VidTrainDetailActivity"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"
+            android:parentActivityName=".activities.HomeActivity"
             />
         <activity
             android:name=".activities.CreationDetailActivity"

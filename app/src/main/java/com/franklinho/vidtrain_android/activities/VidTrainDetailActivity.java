@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
@@ -77,6 +78,14 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vid_train_detail);
         ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setDefaultDisplayHomeAsUpEnabled(true);
+//        actionBar.setHomeAsUpIndicator(actionBar.DISPLAY_HOME_AS_UP);
+        actionBar.setDisplayHomeAsUpEnabled(true);
         requestVidTrain(true);
 
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

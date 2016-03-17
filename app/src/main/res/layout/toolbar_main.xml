@@ -11,6 +11,6 @@
         android:layout_height="?attr/actionBarSize"
         android:theme="@style/ToolbarTheme"
         app:popupTheme="@style/AppBaseLightTheme"
-        style="@style/Toolbar.TitleText"
+        style="@style/Widget.Toolbar"
         />
 </LinearLayout>

@@ -46,9 +46,10 @@
         <item name="actionMenuTextColor">@android:color/white</item>
     </style>
 
-    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+    <style name="Widget.Toolbar" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:titleTextColor">#FFffffff</item>
+        <!--<item name="contentInsetStart">0dp</item>-->
     </style>
 
     <style name="CustomTabLayout" parent="Widget.Design.TabLayout">

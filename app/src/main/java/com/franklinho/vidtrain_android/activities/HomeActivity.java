@@ -2,19 +2,23 @@ package com.franklinho.vidtrain_android.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
+import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.BounceInterpolator;
 import android.widget.Toast;
@@ -33,7 +37,8 @@ public class HomeActivity extends AppCompatActivity {
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.viewReveal) View viewReveal;
     @Bind(R.id.fabCreate) FloatingActionButton fabCreate;
-    Transition.TransitionListener transitionListener;
+    private Transition.TransitionListener transitionListener;
+    boolean revealStarted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +47,15 @@ public class HomeActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+
+//        actionBar.setLogo(R.layout.space_between_icon);
+//        actionBar.setDisplayUseLogoEnabled(true);
+//        actionBar.setDisplayShowHomeEnabled(true);
+//        actionBar.setDefaultDisplayHomeAsUpEnabled(false);
+//        actionBar.setHomeAsUpIndicator(0);
+//        actionBar.setDisplayHomeAsUpEnabled(false);
+//        actionBar.setDisplayShowTitleEnabled(false);
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager(),
@@ -49,7 +63,19 @@ public class HomeActivity extends AppCompatActivity {
 
         // Give the TabLayout the ViewPager
         tabLayout.setupWithViewPager(viewPager);
-//        fabCreate.setVisibility(View.INVISIBLE);
+        fabCreate.setVisibility(View.INVISIBLE);
+
+
+        fabCreate.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                fabCreate.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                enterReveal();
+            }
+        });
+
+
+
 
 //        transitionListener = new Transition.TransitionListener() {
 //            @Override
@@ -60,7 +86,6 @@ public class HomeActivity extends AppCompatActivity {
 //            @Override
 //            public void onTransitionEnd(Transition transition) {
 //                enterReveal();
-//
 //            }
 //
 //            @Override
@@ -78,6 +103,16 @@ public class HomeActivity extends AppCompatActivity {
 //
 //            }
 //        };
+//
+//        getWindow().getEnterTransition().addListener(transitionListener);
+//
+
+    }
+
+    @Override
+    public View onCreateView(String name, Context context, AttributeSet attrs) {
+        View v = super.onCreateView(name, context, attrs);
+        return v;
     }
 
     @Override
@@ -145,47 +180,74 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        viewReveal.setVisibility(View.GONE);
+        fabCreate.setVisibility(View.INVISIBLE);
+
+
+        fabCreate.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                fabCreate.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                enterReveal();
+            }
+        });
+
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        fabCreate.setVisibility(View.INVISIBLE);
+        exitReveal();
     }
 
     void enterReveal() {
-        View myView = fabCreate;
 
-        int cx = myView.getMeasuredWidth() / 2;
-        int cy = myView.getMeasuredHeight() / 2;
+        int cx = fabCreate.getMeasuredWidth() / 2;
+        int cy = fabCreate.getMeasuredHeight() / 2;
 
-        int finalRadius = Math.max(myView.getWidth(), myView.getHeight()) / 2;
-
-
-        Animator anim = ViewAnimationUtils.createCircularReveal(myView, cx, cy, 0, finalRadius);
+        int finalRadius = Math.max(fabCreate.getWidth(), fabCreate.getHeight()) / 2;
 
 
-        myView.setVisibility(View.VISIBLE);
+        Animator anim = ViewAnimationUtils.createCircularReveal(fabCreate, cx, cy, 0, finalRadius);
+
+
+        fabCreate.setVisibility(View.VISIBLE);
         anim.setInterpolator(new BounceInterpolator());
-        anim.start();
-
-
-        anim.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
+        anim.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 getWindow().getEnterTransition().removeListener(transitionListener);
-
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
             }
         });
+
+        anim.start();
+
+
+
+    }
+
+    void exitReveal() {
+
+
+        int cx = fabCreate.getMeasuredWidth() / 2;
+        int cy = fabCreate.getMeasuredHeight() / 2;
+
+        int initialRadius = Math.max(fabCreate.getWidth(), fabCreate.getHeight()) / 2;
+
+
+        Animator anim = ViewAnimationUtils.createCircularReveal(fabCreate, cx, cy, initialRadius, 0);
+
+
+        anim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                fabCreate.setVisibility(View.INVISIBLE);
+            }
+        });
+
+
+        anim.start();
     }
 }
