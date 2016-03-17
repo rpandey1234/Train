@@ -180,6 +180,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        viewReveal.setVisibility(View.GONE);
         fabCreate.setVisibility(View.INVISIBLE);
 
 
