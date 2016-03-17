@@ -111,7 +111,9 @@ public class LogInActivity extends AppCompatActivity {
 
     public void sendToHomeActivity() {
         Intent i = new Intent(getBaseContext(), HomeActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
+        finish();
         Log.d(VidtrainApplication.TAG, "Logged in with Facebook");
     }
 

@@ -49,35 +49,35 @@ public class HomeActivity extends AppCompatActivity {
 
         // Give the TabLayout the ViewPager
         tabLayout.setupWithViewPager(viewPager);
-        fabCreate.setVisibility(View.INVISIBLE);
+//        fabCreate.setVisibility(View.INVISIBLE);
 
-        transitionListener = new Transition.TransitionListener() {
-            @Override
-            public void onTransitionStart(Transition transition) {
-
-            }
-
-            @Override
-            public void onTransitionEnd(Transition transition) {
-                enterReveal();
-
-            }
-
-            @Override
-            public void onTransitionCancel(Transition transition) {
-
-            }
-
-            @Override
-            public void onTransitionPause(Transition transition) {
-
-            }
-
-            @Override
-            public void onTransitionResume(Transition transition) {
-
-            }
-        };
+//        transitionListener = new Transition.TransitionListener() {
+//            @Override
+//            public void onTransitionStart(Transition transition) {
+//
+//            }
+//
+//            @Override
+//            public void onTransitionEnd(Transition transition) {
+//                enterReveal();
+//
+//            }
+//
+//            @Override
+//            public void onTransitionCancel(Transition transition) {
+//
+//            }
+//
+//            @Override
+//            public void onTransitionPause(Transition transition) {
+//
+//            }
+//
+//            @Override
+//            public void onTransitionResume(Transition transition) {
+//
+//            }
+//        };
     }
 
     @Override
