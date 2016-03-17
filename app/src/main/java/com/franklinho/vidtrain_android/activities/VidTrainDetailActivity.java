@@ -7,14 +7,12 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -40,7 +38,6 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import com.volokh.danylo.video_player_manager.PlayerMessageState;
 import com.volokh.danylo.video_player_manager.ui.SimpleMainThreadMediaPlayerListener;
 
 import java.io.File;
@@ -63,6 +60,8 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     @Bind(R.id.pbProgressAction) View pbProgessAction;
     @Bind(R.id.vpPreview) ViewPager vpPreview;
     @Bind(R.id.cpIndicator) VideoPageIndicator cpIndicator;
+    @Bind(R.id.swipeContainer)
+    SwipeRefreshLayout swipeContainer;
 
     public static final String VIDTRAIN_KEY = "vidTrain";
     private ProgressDialog progress;
@@ -78,46 +77,12 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vid_train_detail);
         ButterKnife.bind(this);
-        String vidTrainId = getIntent().getExtras().getString(VIDTRAIN_KEY);
-        ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
-        query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
-        query.whereEqualTo("objectId", vidTrainId);
-        query.include("user");
-        query.getFirstInBackground(new GetCallback<VidTrain>() {
+        requestVidTrain(true);
+
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void done(VidTrain object, ParseException e) {
-                if (e != null) {
-                    invalidVidtrain();
-                    return;
-                }
-                vidTrain = object;
-                if (!vidTrain.getWritePrivacy() ||
-                        Utility.contains(vidTrain.getCollaborators(), ParseUser.getCurrentUser())) {
-                    btnAddvidTrain.setVisibility(View.VISIBLE);
-                }
-
-                if (User.hasLikedVidtrain(ParseUser.getCurrentUser(), vidTrain.getObjectId())) {
-                    liked = true;
-                    ibtnLike.setImageResource(R.drawable.heart_icon_red);
-                }
-
-                tvLikeCount.setText(getResources().getQuantityString(R.plurals.likes_count,
-                        vidTrain.getLikes(), vidTrain.getLikes()));
-
-                toolbar.setTitle(vidTrain.getTitle());
-                int videosCount = vidTrain.getVideosCount();
-                totalVideos = getResources().getQuantityString(R.plurals.videos_count,
-                        videosCount, videosCount);
-                tvVideoCount.setText(totalVideos);
-                tvTime.setText(Utility.getRelativeTime(vidTrain.getCreatedAt().getTime()));
-                vidTrain.getUser().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
-                    @Override
-                    public void done(ParseObject object, ParseException e) {
-                        String profileImageUrl = User.getProfileImageUrl(vidTrain.getUser());
-                        Glide.with(getBaseContext()).load(profileImageUrl).into(ivCollaborators);
-                    }
-                });
-                new VideoDownloadTask(vpPreview).execute(vidTrain);
+            public void onRefresh() {
+                requestVidTrain(false);
             }
         });
     }
@@ -322,6 +287,52 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     public void hideProgressBar() {
         // Hide progress item
         pbProgessAction.setVisibility(View.GONE);
+    }
+
+    void requestVidTrain(Boolean newView) {
+        String vidTrainId = getIntent().getExtras().getString(VIDTRAIN_KEY);
+        ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
+        query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        query.whereEqualTo("objectId", vidTrainId);
+        query.include("user");
+        query.getFirstInBackground(new GetCallback<VidTrain>() {
+            @Override
+            public void done(VidTrain object, ParseException e) {
+                swipeContainer.setRefreshing(false);
+                if (e != null) {
+                    invalidVidtrain();
+                    return;
+                }
+                vidTrain = object;
+                if (!vidTrain.getWritePrivacy() ||
+                        Utility.contains(vidTrain.getCollaborators(), ParseUser.getCurrentUser())) {
+                    btnAddvidTrain.setVisibility(View.VISIBLE);
+                }
+
+                if (User.hasLikedVidtrain(ParseUser.getCurrentUser(), vidTrain.getObjectId())) {
+                    liked = true;
+                    ibtnLike.setImageResource(R.drawable.heart_icon_red);
+                }
+
+                tvLikeCount.setText(getResources().getQuantityString(R.plurals.likes_count,
+                        vidTrain.getLikes(), vidTrain.getLikes()));
+
+                toolbar.setTitle(vidTrain.getTitle());
+                int videosCount = vidTrain.getVideosCount();
+                totalVideos = getResources().getQuantityString(R.plurals.videos_count,
+                        videosCount, videosCount);
+                tvVideoCount.setText(totalVideos);
+                tvTime.setText(Utility.getRelativeTime(vidTrain.getCreatedAt().getTime()));
+                vidTrain.getUser().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject object, ParseException e) {
+                        String profileImageUrl = User.getProfileImageUrl(vidTrain.getUser());
+                        Glide.with(getBaseContext()).load(profileImageUrl).into(ivCollaborators);
+                    }
+                });
+                new VideoDownloadTask(vpPreview).execute(vidTrain);
+            }
+        });
     }
 
 }
