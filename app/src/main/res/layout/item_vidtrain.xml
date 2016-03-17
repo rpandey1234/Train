@@ -15,6 +15,7 @@
         app:riv_border_width="2dp"
         android:src="@drawable/user_icon"
         android:layout_margin="10dp"
+        android:transitionName="collaboratorImage"
         />
 
     <TextView
@@ -29,6 +30,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_toLeftOf="@id/ibtnLike"
+        android:transitionName="title"
         />
 
     <!--<TextView-->
@@ -66,6 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:id="@+id/vvPreview"
+            android:transitionName="viewer"
             />
     </LinearLayout>
 

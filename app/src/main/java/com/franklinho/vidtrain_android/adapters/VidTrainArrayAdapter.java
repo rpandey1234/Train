@@ -1,5 +1,6 @@
 package com.franklinho.vidtrain_android.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -25,16 +26,18 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
 
     private List<VidTrain> mVidTrains;
     private Context mContext;
+    private Activity activity;
 
-    public VidTrainArrayAdapter( List<VidTrain> vidTrains, Context context) {
+    public VidTrainArrayAdapter( List<VidTrain> vidTrains, Context context, Activity activity) {
         mVidTrains = vidTrains;
         mContext = context;
+        this.activity = activity;
     }
 
     @Override
     public VidTrainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_vidtrain_image_preview, parent, false);
-        return new VidTrainViewHolder(view);
+        return new VidTrainViewHolder(view, activity);
     }
 
     @Override

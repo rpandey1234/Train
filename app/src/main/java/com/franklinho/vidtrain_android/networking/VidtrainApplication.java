@@ -4,7 +4,6 @@ import android.app.Application;
 
 import com.facebook.FacebookSdk;
 import com.franklinho.vidtrain_android.models.Comment;
-import com.franklinho.vidtrain_android.models.DynamicVideoPlayerView;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
@@ -12,10 +11,6 @@ import com.franklinho.vidtrain_android.utilities.VideoPlayer;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseObject;
-import com.volokh.danylo.video_player_manager.manager.PlayerItemChangeListener;
-import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
-import com.volokh.danylo.video_player_manager.manager.VideoPlayerManager;
-import com.volokh.danylo.video_player_manager.meta.MetaData;
 
 /**
  * Created by franklinho on 3/1/16.

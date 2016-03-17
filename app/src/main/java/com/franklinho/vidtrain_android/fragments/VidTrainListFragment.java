@@ -43,7 +43,7 @@ public class VidTrainListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         vidTrains = new ArrayList<>();
         //Construct the adapter
-        aVidTrains = new VidTrainArrayAdapter(vidTrains, getContext());
+        aVidTrains = new VidTrainArrayAdapter(vidTrains, getContext(), getActivity());
     }
 
     @Override

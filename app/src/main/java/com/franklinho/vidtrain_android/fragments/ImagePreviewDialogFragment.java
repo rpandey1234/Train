@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -118,9 +119,7 @@ public class ImagePreviewDialogFragment extends DialogFragment {
                 v.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i = new Intent(getContext(), VidTrainDetailActivity.class);
-                        i.putExtra(VidTrainDetailActivity.VIDTRAIN_KEY, vidTrain.getObjectId());
-                        getContext().startActivity(i);
+                        showDetailActivity();
                     }
                 });
 
@@ -208,10 +207,17 @@ public class ImagePreviewDialogFragment extends DialogFragment {
     @SuppressWarnings("unused")
     @OnClick(R.id.btnWatchVideos)
     public void onWatchVideosButtonClicked(View v) {
+        showDetailActivity();
+    }
+
+    public void showDetailActivity() {
         if (vidTrain != null) {
             Intent i = new Intent(getContext(), VidTrainDetailActivity.class);
             i.putExtra(VidTrainDetailActivity.VIDTRAIN_KEY, vidTrain.getObjectId());
-            getContext().startActivity(i);
+            android.support.v4.util.Pair<View, String> p1 = android.support.v4.util.Pair.create((View) ivCollaborators, "collaboratorImage");
+            android.support.v4.util.Pair<View, String> p2 = android.support.v4.util.Pair.create((View) vpPreview, "viewer");
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity() ,p1 , p2);
+            getContext().startActivity(i, options.toBundle());
         }
     }
 
@@ -222,7 +228,9 @@ public class ImagePreviewDialogFragment extends DialogFragment {
             ParseUser user = vidTrain.getUser();
             Intent intent = new Intent(getContext(), ProfileActivity.class);
             intent.putExtra(ProfileActivity.USER_ID, user.getObjectId());
-            getContext().startActivity(intent);
+            android.support.v4.util.Pair<View, String> p1 = android.support.v4.util.Pair.create((View) ivCollaborators, "collaboratorImage");
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), p1);
+            getContext().startActivity(intent, options.toBundle());
         }
     }
 }

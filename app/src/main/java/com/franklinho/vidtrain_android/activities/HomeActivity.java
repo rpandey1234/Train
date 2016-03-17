@@ -1,6 +1,7 @@
 package com.franklinho.vidtrain_android.activities;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -9,10 +10,13 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.transition.Transition;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.BounceInterpolator;
 import android.widget.Toast;
 
 import com.franklinho.vidtrain_android.R;
@@ -29,6 +33,7 @@ public class HomeActivity extends AppCompatActivity {
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.viewReveal) View viewReveal;
     @Bind(R.id.fabCreate) FloatingActionButton fabCreate;
+    Transition.TransitionListener transitionListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +49,35 @@ public class HomeActivity extends AppCompatActivity {
 
         // Give the TabLayout the ViewPager
         tabLayout.setupWithViewPager(viewPager);
+        fabCreate.setVisibility(View.INVISIBLE);
+
+        transitionListener = new Transition.TransitionListener() {
+            @Override
+            public void onTransitionStart(Transition transition) {
+
+            }
+
+            @Override
+            public void onTransitionEnd(Transition transition) {
+                enterReveal();
+
+            }
+
+            @Override
+            public void onTransitionCancel(Transition transition) {
+
+            }
+
+            @Override
+            public void onTransitionPause(Transition transition) {
+
+            }
+
+            @Override
+            public void onTransitionResume(Transition transition) {
+
+            }
+        };
     }
 
     @Override
@@ -70,12 +104,20 @@ public class HomeActivity extends AppCompatActivity {
             int cx = (int) fabCreate.getX() + fabCreate.getWidth()/2;
             int cy = (int) fabCreate.getY() + fabCreate.getHeight()/2;
 
-            float finalRadius = (float) Math.hypot(cx, cy);
+//            float finalRadius = (float) Math.hypot(cx, cy);
+            float finalRadius = getWindow().getDecorView().getHeight();
             Animator anim = ViewAnimationUtils.createCircularReveal(viewReveal, cx, cy, 0, finalRadius);
+            anim.setInterpolator(new AccelerateInterpolator());
             viewReveal.setVisibility(View.VISIBLE);
             anim.start();
-            Intent in = new Intent(getBaseContext(), VideoCaptureActivity.class);
-            startActivityForResult(in, 1);
+            final Intent in = new Intent(getBaseContext(), VideoCaptureActivity.class);
+            anim.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    startActivityForResult(in, 1);
+                }
+            });
 
 
 
@@ -104,5 +146,46 @@ public class HomeActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         viewReveal.setVisibility(View.GONE);
+    }
+
+    void enterReveal() {
+        View myView = fabCreate;
+
+        int cx = myView.getMeasuredWidth() / 2;
+        int cy = myView.getMeasuredHeight() / 2;
+
+        int finalRadius = Math.max(myView.getWidth(), myView.getHeight()) / 2;
+
+
+        Animator anim = ViewAnimationUtils.createCircularReveal(myView, cx, cy, 0, finalRadius);
+
+
+        myView.setVisibility(View.VISIBLE);
+        anim.setInterpolator(new BounceInterpolator());
+        anim.start();
+
+
+        anim.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                getWindow().getEnterTransition().removeListener(transitionListener);
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
     }
 }

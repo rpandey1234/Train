@@ -44,7 +44,9 @@
                 android:src="@drawable/profile_icon"
                 app:riv_border_color="@android:color/white"
                 app:riv_border_width="2dp"
-                app:riv_corner_radius="25dp" />
+                app:riv_corner_radius="25dp"
+                android:transitionName="collaboratorImage"
+                />
 
             <TextView
                 android:id="@+id/tvVideoCount"
@@ -91,6 +93,7 @@
                     android:id="@+id/vpPreview"
                     android:background="@android:color/black"
                     android:onClick=""
+                    android:transitionName="viewer"
                     />
                 <com.franklinho.vidtrain_android.utilities.VideoPageIndicator
                     android:layout_width="match_parent"
