@@ -49,8 +49,7 @@
         <activity
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"
-            android:name=".activities.LogInActivity"
-            android:noHistory="true">
+            android:name=".activities.LogInActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
