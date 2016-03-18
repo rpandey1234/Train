@@ -48,6 +48,7 @@
     <string name="add_to_vidtrain">Add your video to the train!</string>
     <string name="view_x_videos">View x Videos</string>
     <string name="zero">0</string>
+    <string name="redo_search">Redo search here</string>
 
     <string-array name="privacy_states">
         <item>Public</item>

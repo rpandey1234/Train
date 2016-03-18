@@ -54,4 +54,13 @@
         style="@style/FacebookLoginButtonStyle"
         android:foreground="?android:attr/selectableItemBackground"
         />
+
+    <ProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        android:id="@+id/pbProgessAction" />
 </RelativeLayout>

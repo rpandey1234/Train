@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -34,6 +35,7 @@ public class LogInActivity extends AppCompatActivity {
     CallbackManager callbackManager;
 
     @Bind(R.id.login_button) Button loginButton;
+    @Bind(R.id.pbProgessAction) View pbProgessAction;
 //    @Bind(R.id.vvLogin)
 //    DynamicVideoPlayerView vvLogin;
 
@@ -97,7 +99,9 @@ public class LogInActivity extends AppCompatActivity {
                     public void done(ParseUser user, ParseException e) {
                         if (user == null) {
                             Log.d(VidtrainApplication.TAG, "User cancelled the Facebook login.");
+                            Toast.makeText(LogInActivity.this, "Failed to log into Facebook", Toast.LENGTH_SHORT).show();
                         } else {
+                            showProgressBar();
                             updateUserInfo(user);
                             sendToHomeActivity();
                         }
@@ -116,5 +120,15 @@ public class LogInActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    public void showProgressBar() {
+        // Show progress item
+        pbProgessAction.setVisibility(View.VISIBLE);
+    }
+
+    public void hideProgressBar() {
+        // Hide progress item
+        pbProgessAction.setVisibility(View.GONE);
     }
 }

@@ -1,21 +1,27 @@
 package com.franklinho.vidtrain_android.fragments;
 
 import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.franklinho.vidtrain_android.Manifest;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.activities.HomeActivity;
+import com.franklinho.vidtrain_android.activities.ProfileActivity;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.google.android.gms.common.ConnectionResult;
@@ -37,7 +43,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,6 +54,7 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
@@ -73,6 +82,7 @@ public class MapFragment extends Fragment implements
     private List<Marker> markers;
     @Bind(R.id.bottomsheet)
     BottomSheetLayout bottomsheet;
+    @Bind(R.id.btnSearchMap) Button btnSearchMap;
 
     public MapFragment() {
         // Required empty public constructor
@@ -141,6 +151,8 @@ public class MapFragment extends Fragment implements
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         ButterKnife.bind(view);
+
+
         return view;
     }
 
@@ -153,18 +165,23 @@ public class MapFragment extends Fragment implements
         setUpMapIfNeeded();
     }
 
-    private void requestVidTrains(final boolean newTimeline) {
+    private void requestVidTrains(final boolean initialRequest) {
         final int currentSize;
-        if (newTimeline) {
-            vidTrains.clear();
-            currentSize = 0;
-        } else {
-            currentSize  = vidTrains.size();
-        }
+        vidTrains.clear();
+        currentSize = 0;
 
         // TODO: query based on current location
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
         query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        if (initialRequest) {
+            LocationManager lm = (LocationManager) getContext().getSystemService(
+                    Context.LOCATION_SERVICE);
+            Location lc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            query.whereNear("ll", new ParseGeoPoint(lc.getLatitude(), lc.getLongitude()));
+        } else {
+            LatLng currentMapTarget = map.getCameraPosition().target;
+            query.whereNear("ll", new ParseGeoPoint(currentMapTarget.latitude, currentMapTarget.longitude));
+        }
         query.addDescendingOrder("createdAt");
         query.setSkip(currentSize);
         query.setLimit(5);
@@ -174,6 +191,7 @@ public class MapFragment extends Fragment implements
             @Override
             public void done(List<VidTrain> objects, ParseException e) {
                 if (e == null) {
+                    map.clear();
                     for (VidTrain vidTrain : objects) {
                         vidTrainsMap.put(vidTrain.getObjectId(), vidTrain);
                         Log.d(VidtrainApplication.TAG, vidTrain.getTitle());
@@ -325,4 +343,6 @@ public class MapFragment extends Fragment implements
             return mDialog;
         }
     }
+
+
 }
