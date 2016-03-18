@@ -88,6 +88,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         requestVidTrain(true);
 
+        swipeContainer.setColorSchemeResources(R.color.bluePrimary);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

@@ -12,6 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.flipboard.bottomsheet.BottomSheetLayout;
+import com.flipboard.bottomsheet.commons.BottomSheetFragment;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -44,6 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
@@ -70,6 +74,8 @@ public class MapFragment extends Fragment implements
     private List<VidTrain> vidTrains;
     private Map<String, VidTrain> vidTrainsMap;
     private List<Marker> markers;
+    @Bind(R.id.bottomsheet)
+    BottomSheetLayout bottomsheet;
 
     public MapFragment() {
         // Required empty public constructor
@@ -282,6 +288,7 @@ public class MapFragment extends Fragment implements
         bundle.putString("vidTrainId", marker.getSnippet());
         imagePreviewDialogFragment.setArguments(bundle);
         imagePreviewDialogFragment.show(fm, "fragment_image_preview");
+//        bottomsheet.showWithSheetView(LayoutInflater.from(getContext()).inflate(R.layout.fragment_image_preview, bottomsheet, false));
         return true;
     }
 
