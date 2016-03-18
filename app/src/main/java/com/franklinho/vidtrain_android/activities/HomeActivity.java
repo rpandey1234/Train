@@ -204,7 +204,7 @@ public class HomeActivity extends AppCompatActivity {
         exitReveal();
     }
 
-    void enterReveal() {
+    public void enterReveal() {
 
         int cx = fabCreate.getMeasuredWidth() / 2;
         int cy = fabCreate.getMeasuredHeight() / 2;
@@ -230,7 +230,7 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    void exitReveal() {
+    public void exitReveal() {
 
 
         int cx = fabCreate.getMeasuredWidth() / 2;
@@ -253,4 +253,38 @@ public class HomeActivity extends AppCompatActivity {
 
         anim.start();
     }
+
+
+    public void transitionSafeEnterReveal() {
+                transitionListener = new Transition.TransitionListener() {
+            @Override
+            public void onTransitionStart(Transition transition) {
+
+            }
+
+            @Override
+            public void onTransitionEnd(Transition transition) {
+                enterReveal();
+            }
+
+            @Override
+            public void onTransitionCancel(Transition transition) {
+
+            }
+
+            @Override
+            public void onTransitionPause(Transition transition) {
+
+            }
+
+            @Override
+            public void onTransitionResume(Transition transition) {
+
+            }
+        };
+
+        getWindow().getEnterTransition().addListener(transitionListener);
+
+    }
+
 }

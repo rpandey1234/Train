@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -21,6 +20,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.flipboard.bottomsheet.commons.BottomSheetFragment;
 import com.franklinho.vidtrain_android.R;
+import com.franklinho.vidtrain_android.activities.HomeActivity;
 import com.franklinho.vidtrain_android.activities.ProfileActivity;
 import com.franklinho.vidtrain_android.activities.VidTrainDetailActivity;
 import com.franklinho.vidtrain_android.adapters.ImagePagerAdapter;
@@ -81,24 +81,24 @@ public class ImagePreviewFragment extends BottomSheetFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        final View v = inflater.inflate(R.layout.fragment_image_preview, container);
+        final View v = inflater.inflate(R.layout.fragment_image_preview_bottomsheet, container);
         ButterKnife.bind(this, v);
-        v.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                vpPreview.post(new Runnable() {
-                    public void run() {
-                        int width = v.getWidth();
-//                        int height = width;
-//                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(width, height);
+//        v.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                vpPreview.post(new Runnable() {
+//                    public void run() {
+//                        int width = v.getWidth();
+////                        int height = width;
+////                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(width, height);
+////                        vpPreview.setLayoutParams(lp);
+//                        ViewGroup.LayoutParams lp = vpPreview.getLayoutParams();
+//                        lp.height = width;
 //                        vpPreview.setLayoutParams(lp);
-                        ViewGroup.LayoutParams lp = vpPreview.getLayoutParams();
-                        lp.height = width;
-                        vpPreview.setLayoutParams(lp);
-                    }
-                });
-            }
-        });
+//                    }
+//                });
+//            }
+//        });
 
 
 //        vpPreview.setHeightRatio(1);
@@ -143,7 +143,9 @@ public class ImagePreviewFragment extends BottomSheetFragment {
                             return;
                         }
                         String profileImageUrl = User.getProfileImageUrl((ParseUser) object);
-                        Glide.with(getContext()).load(profileImageUrl).into(ivCollaborators);
+                        if (getContext() != null) {
+                            Glide.with(getContext()).load(profileImageUrl).into(ivCollaborators);
+                        }
                     }
                 });
 
@@ -151,12 +153,12 @@ public class ImagePreviewFragment extends BottomSheetFragment {
                 final List<Video> videos = vidTrain.getVideos();
                 vpPreview.setAdapter(new ImagePagerAdapter(getContext(), videos));
                 cpIndicator.setViewPager(vpPreview);
-                int dpRadius = (int) getResources().getDisplayMetrics().density * 15;
-                cpIndicator.setRadius(dpRadius);
-                int dpWidth = (int) getResources().getDisplayMetrics().density * 2;
-                cpIndicator.setStrokeWidth(dpWidth);
-                cpIndicator.invalidate();
-                cpIndicator.requestLayout();
+//                int dpRadius = (int) getResources().getDisplayMetrics().density * 3;
+//                cpIndicator.setRadius(dpRadius);
+//                int dpWidth = (int) getResources().getDisplayMetrics().density * 2;
+//                cpIndicator.setStrokeWidth(dpWidth);
+//                cpIndicator.invalidate();
+//                cpIndicator.requestLayout();
 
                 final int PROGRESS_INTERVAL = 750;
                 final Handler mHandler = new Handler();
@@ -232,4 +234,10 @@ public class ImagePreviewFragment extends BottomSheetFragment {
         }
     }
 
+    @Override
+    public void onPause() {
+        HomeActivity homeActivity = (HomeActivity) getActivity();
+        homeActivity.enterReveal();
+        super.onPause();
+    }
 }
