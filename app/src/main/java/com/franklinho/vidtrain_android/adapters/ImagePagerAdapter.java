@@ -9,10 +9,12 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
+import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.Video;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +69,23 @@ public class ImagePagerAdapter extends PagerAdapter {
 
         // Return the page
         return itemView;
+    }
+
+    public void setUserImageAtPosition(int position, final ImageView ivCollaborators) {
+        final Video video = videos.get(position);
+        video.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                video.getUser().fetchInBackground(new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject user, ParseException e) {
+                        final String profileImageUrl = User.getProfileImageUrl((ParseUser) user);
+                        Glide.with(mContext).load(profileImageUrl).into(ivCollaborators);
+                    }
+                });
+
+            }
+        });
     }
 
     // Removes the page from the container for the given position.

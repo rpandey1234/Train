@@ -2,6 +2,7 @@ package com.franklinho.vidtrain_android.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,6 +77,13 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
         });
 
         holder.vpPreview.setAdapter(new ImagePagerAdapter(holder.context, vidTrain.getVideos()));
+        holder.vpPreview.addOnPageChangeListener(new SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                final ImagePagerAdapter adapter = (ImagePagerAdapter) holder.vpPreview.getAdapter();
+                adapter.setUserImageAtPosition(position, holder.ivCollaborators);
+            }
+        });
         holder.cpIndicator.setViewPager(holder.vpPreview);
         int dpRadius = (int) holder.context.getResources().getDisplayMetrics().density * 15;
         holder.cpIndicator.setRadius(dpRadius);
