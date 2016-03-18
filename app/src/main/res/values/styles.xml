@@ -68,5 +68,10 @@
         <item name="android:layout_margin">0dp</item>
         <item name="android:padding">0dp</item>
     </style>
+    
+    <style name="FacebookLoginButtonStyle" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:colorButtonNormal">@color/facebookBlue</item>
+        <item name="android:colorAccent">@color/facebookAccent</item>
+    </style>
 
 </resources>
