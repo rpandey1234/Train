@@ -154,13 +154,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:background="@color/blueAccent"
                     android:text="@string/add_to_vidtrain"
                     android:textColor="@android:color/white"
                     android:onClick="showCreateFlow"
                     android:visibility="gone"
                     android:layout_marginTop="20dp"
                     android:layout_below="@id/tvTime"
+                    style="@style/CustomColoredButtonStyle"
+                    android:foreground="?android:attr/selectableItemBackground"
                     />
 
             </RelativeLayout>

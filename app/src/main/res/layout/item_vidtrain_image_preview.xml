@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
+    card_view:cardCornerRadius="30dp"
+    card_view:cardElevation="30dp"
     android:background="@android:color/white"
-    >
+    android:layout_margin="5dp"
+    android:foreground="?android:attr/selectableItemBackground">
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:layout_width="40dp"
@@ -108,11 +111,12 @@
         android:layout_below="@id/videoContainer"
         android:id="@+id/btnWatchVideos"
         android:textColor="@android:color/white"
-        android:background="@color/blueAccent"
+        style="@style/CustomColoredButtonStyle"
+        android:foreground="?android:attr/selectableItemBackground"
         />
 
     <View style="@style/section_item_divider"
         android:layout_below="@+id/btnWatchVideos"
         />
 
-</RelativeLayout>
+</android.support.v7.widget.CardView>
