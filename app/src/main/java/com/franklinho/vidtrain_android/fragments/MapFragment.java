@@ -281,14 +281,20 @@ public class MapFragment extends Fragment implements
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        FragmentManager fm = getFragmentManager();
-//        MapDialogFragment mapDialogFragment = MapDialogFragment.newInstance(marker.getSnippet());
-        ImagePreviewDialogFragment imagePreviewDialogFragment =  ImagePreviewDialogFragment.newInstance(marker.getSnippet());
+//        FragmentManager fm = getFragmentManager();
+////        MapDialogFragment mapDialogFragment = MapDialogFragment.newInstance(marker.getSnippet());
+//        ImagePreviewDialogFragment imagePreviewDialogFragment =  ImagePreviewDialogFragment.newInstance(marker.getSnippet());
+//        Bundle bundle = new Bundle();
+//        bundle.putString("vidTrainId", marker.getSnippet());
+//        imagePreviewDialogFragment.setArguments(bundle);
+//        imagePreviewDialogFragment.show(fm, "fragment_image_preview");
+//        bottomsheet.showWithSheetView(LayoutInflater.from(getContext()).inflate(R.layout.fragment_image_preview, bottomsheet, false));
+        ImagePreviewFragment imagePreviewFragment = new ImagePreviewFragment().newInstance(marker.getSnippet());
         Bundle bundle = new Bundle();
         bundle.putString("vidTrainId", marker.getSnippet());
-        imagePreviewDialogFragment.setArguments(bundle);
-        imagePreviewDialogFragment.show(fm, "fragment_image_preview");
-//        bottomsheet.showWithSheetView(LayoutInflater.from(getContext()).inflate(R.layout.fragment_image_preview, bottomsheet, false));
+        imagePreviewFragment.setArguments(bundle);
+        imagePreviewFragment.show(getFragmentManager(), R.id.bottomsheet);
+
         return true;
     }
 
