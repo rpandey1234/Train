@@ -258,6 +258,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                     getResources().getDisplayMetrics());
             viewPager.setPageMargin(-margin);
             cpIndicator.setViewPager(viewPager);
+            cpIndicator.notifyDataSetChanged();
             playVideoAtPosition(0);
 
             viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
