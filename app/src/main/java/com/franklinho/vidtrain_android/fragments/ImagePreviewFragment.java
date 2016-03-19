@@ -83,29 +83,9 @@ public class ImagePreviewFragment extends BottomSheetFragment {
             Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.fragment_image_preview_bottomsheet, container);
         ButterKnife.bind(this, v);
-//        v.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//            @Override
-//            public void onGlobalLayout() {
-//                vpPreview.post(new Runnable() {
-//                    public void run() {
-//                        int width = v.getWidth();
-////                        int height = width;
-////                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(width, height);
-////                        vpPreview.setLayoutParams(lp);
-//                        ViewGroup.LayoutParams lp = vpPreview.getLayoutParams();
-//                        lp.height = width;
-//                        vpPreview.setLayoutParams(lp);
-//                    }
-//                });
-//            }
-//        });
-
-
-//        vpPreview.setHeightRatio(1);
-        final String vidTrainId = getArguments().getString(VIDTRAIN_ID);
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
         query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
-        query.whereEqualTo("objectId", vidTrainId);
+        query.whereEqualTo("objectId", getArguments().getString(VIDTRAIN_ID));
         query.getFirstInBackground(new GetCallback<VidTrain>() {
             @Override
             public void done(final VidTrain returnedVidTrain, ParseException e) {
@@ -130,11 +110,11 @@ public class ImagePreviewFragment extends BottomSheetFragment {
 
                 titleTv.setText(vidTrain.getTitle());
                 int videoCount = vidTrain.getVideosCount();
-                String totalVideos = getResources().getQuantityString(R.plurals.videos_count,
-                        videoCount, videoCount);
-                btnWatchVideos.setText(String.format("View %s", totalVideos));
-//                tvTime.setText(Utility.getRelativeTime(vidTrain.getCreatedAt().getTime()));
-
+                if (isAdded()) {
+                    String totalVideos = getResources().getQuantityString(R.plurals.videos_count,
+                            videoCount, videoCount);
+                    btnWatchVideos.setText(String.format("View %s", totalVideos));
+                }
                 final ParseUser user = vidTrain.getUser();
                 user.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
                     @Override
@@ -149,7 +129,6 @@ public class ImagePreviewFragment extends BottomSheetFragment {
                     }
                 });
 
-
                 final List<Video> videos = vidTrain.getVideos();
                 vpPreview.setAdapter(new ImagePagerAdapter(getContext(), videos));
                 vpPreview.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -160,12 +139,6 @@ public class ImagePreviewFragment extends BottomSheetFragment {
                     }
                 });
                 cpIndicator.setViewPager(vpPreview);
-//                int dpRadius = (int) getResources().getDisplayMetrics().density * 3;
-//                cpIndicator.setRadius(dpRadius);
-//                int dpWidth = (int) getResources().getDisplayMetrics().density * 2;
-//                cpIndicator.setStrokeWidth(dpWidth);
-//                cpIndicator.invalidate();
-//                cpIndicator.requestLayout();
 
                 final int PROGRESS_INTERVAL = 750;
                 final Handler mHandler = new Handler();
@@ -179,9 +152,7 @@ public class ImagePreviewFragment extends BottomSheetFragment {
                         mHandler.postDelayed(this, PROGRESS_INTERVAL);
                     }
                 };
-
                 mHandler.postDelayed(mImageProgressRunnable, PROGRESS_INTERVAL);
-
             }
         });
         return v;
