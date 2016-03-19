@@ -55,6 +55,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     @Bind(R.id.ibtnLike) ImageButton ibtnLike;
     @Bind(R.id.tvLikeCount) TextView tvLikeCount;
     @Bind(R.id.tvVideoCount) TextView tvVideoCount;
+    @Bind(R.id.tvTitle) TextView tvTitle;
     @Bind(R.id.tvTime) TextView tvTime;
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.btnAddvidTrain) Button btnAddvidTrain;
@@ -76,6 +77,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        VideoPlayer.resetVideoPlayerManager();
         setContentView(R.layout.activity_vid_train_detail);
         ButterKnife.bind(this);
 
@@ -86,6 +88,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         actionBar.setDefaultDisplayHomeAsUpEnabled(true);
 //        actionBar.setHomeAsUpIndicator(actionBar.DISPLAY_HOME_AS_UP);
         actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(false);
         requestVidTrain(true);
 
         swipeContainer.setColorSchemeResources(R.color.bluePrimary);
@@ -328,7 +331,8 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                 tvLikeCount.setText(getResources().getQuantityString(R.plurals.likes_count,
                         vidTrain.getLikes(), vidTrain.getLikes()));
 
-                toolbar.setTitle(vidTrain.getTitle());
+//                toolbar.setTitle(vidTrain.getTitle());
+                tvTitle.setText(vidTrain.getTitle());
                 int videosCount = vidTrain.getVideosCount();
                 totalVideos = getResources().getQuantityString(R.plurals.videos_count,
                         videosCount, videosCount);

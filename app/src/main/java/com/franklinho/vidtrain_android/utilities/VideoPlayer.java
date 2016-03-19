@@ -27,6 +27,13 @@ public class VideoPlayer {
         videoPlayerManager.playNewVideo(null, videoPlayer, videoUrl);
     }
 
+    public static void resetVideoPlayerManager() {
+        videoPlayerManager = new SingleVideoPlayerManager(new PlayerItemChangeListener() {
+            @Override
+            public void onPlayerItemChanged(MetaData metaData) {}
+        });
+    }
+
     public static void resetMediaPlayer() {
         videoPlayerManager.resetMediaPlayer();
     }

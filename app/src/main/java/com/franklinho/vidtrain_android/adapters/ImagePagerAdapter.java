@@ -60,7 +60,7 @@ public class ImagePagerAdapter extends PagerAdapter {
         video.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
             @Override
             public void done(ParseObject object, ParseException e) {
-                if (video.getThumbnail() != null) {
+                if (video.getThumbnail() != null && mContext != null) {
                     Glide.with(mContext).load(video.getThumbnail().getUrl()).into(imageView);
                 }
 
@@ -80,7 +80,10 @@ public class ImagePagerAdapter extends PagerAdapter {
                     @Override
                     public void done(ParseObject user, ParseException e) {
                         final String profileImageUrl = User.getProfileImageUrl((ParseUser) user);
-                        Glide.with(mContext).load(profileImageUrl).into(ivCollaborators);
+                        if (profileImageUrl != null && mContext != null) {
+                            Glide.with(mContext).load(profileImageUrl).into(ivCollaborators);
+                        }
+
                     }
                 });
 

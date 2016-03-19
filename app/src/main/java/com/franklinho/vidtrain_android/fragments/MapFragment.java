@@ -293,18 +293,19 @@ public class MapFragment extends Fragment implements
         if (location != null) {
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
-            map.animateCamera(cameraUpdate, new GoogleMap.CancelableCallback() {
-                @Override
-                public void onFinish() {
-                    userGeneratedCameraChange = false;
-                }
-
-                @Override
-                public void onCancel() {
-                    userGeneratedCameraChange = true;
-
-                }
-            });
+            map.moveCamera(cameraUpdate);
+//            map.animateCamera(cameraUpdate, new GoogleMap.CancelableCallback() {
+//                @Override
+//                public void onFinish() {
+//                    userGeneratedCameraChange = false;
+//                }
+//
+//                @Override
+//                public void onCancel() {
+//                    userGeneratedCameraChange = true;
+//
+//                }
+//            });
         }
     }
 

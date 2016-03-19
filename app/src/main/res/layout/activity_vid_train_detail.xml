@@ -45,13 +45,30 @@
                     android:layout_height="50dp"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="15dp"
                     android:layout_marginLeft="15dp"
                     android:src="@drawable/profile_icon"
                     app:riv_border_color="@android:color/white"
                     app:riv_border_width="2dp"
                     app:riv_corner_radius="25dp"
+                    android:layout_marginTop="5dp"
                     android:transitionName="collaboratorImage"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvTitle"
+                    android:layout_alignTop="@id/ivCollaborators"
+                    android:layout_alignBottom="@id/ivCollaborators"
+                    android:gravity="center_vertical|left"
+                    android:textSize="20sp"
+                    android:layout_toRightOf="@id/ivCollaborators"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_toLeftOf="@+id/tvVideoCount"
+                    android:transitionName="title"
+                    android:ellipsize="end"
                     />
 
                 <TextView
@@ -63,7 +80,6 @@
                     android:layout_alignTop="@id/ivCollaborators"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="15dp"
-                    android:layout_toRightOf="@id/ivCollaborators"
                     android:gravity="center_vertical|end"
                     android:textSize="16sp" />
 
@@ -118,7 +134,7 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginBottom="10dp"
                     android:layout_marginRight="10dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="15dp"
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/heart"
                     android:padding="5dp"
@@ -147,6 +163,7 @@
                     android:layout_marginRight="15dp"
                     android:gravity="center_vertical"
                     android:textSize="16sp"
+                    android:layout_marginBottom="10dp"
                     />
 
                 <Button
