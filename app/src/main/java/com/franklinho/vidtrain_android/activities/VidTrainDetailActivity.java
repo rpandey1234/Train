@@ -115,15 +115,15 @@ public class VidTrainDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        int videosCount = vidTrain.getVideosCount();
-        totalVideos = getResources().getQuantityString(R.plurals.videos_count,
-                videosCount + 1, videosCount + 1);
-        tvVideoCount.setText(totalVideos);
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode != VIDEO_CAPTURE) {
             return;
         }
         if (resultCode == RESULT_OK) {
+            int videosCount = vidTrain.getVideosCount();
+            totalVideos = getResources().getQuantityString(R.plurals.videos_count,
+                    videosCount + 1, videosCount + 1);
+            tvVideoCount.setText(totalVideos);
             progress = ProgressDialog.show(this, "Adding your video", "Just a moment please!",
                     true);
             // data.getData().toString() is the following:
