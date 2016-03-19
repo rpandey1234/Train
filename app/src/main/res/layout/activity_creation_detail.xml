@@ -131,7 +131,7 @@
         android:layout_height="wrap_content"
         android:text="@string/submit"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/etCollaborators"
+        android:layout_below="@id/containerCollab"
         android:onClick="submitVidTrain"
         android:background="@color/bluePrimary"
         android:layout_marginTop="10dp"
