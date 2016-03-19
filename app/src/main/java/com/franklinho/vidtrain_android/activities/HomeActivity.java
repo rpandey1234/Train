@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -20,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.BounceInterpolator;
 import android.widget.ProgressBar;
@@ -49,6 +51,8 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
+        relayoutViewPager();
+
 
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -185,6 +189,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        relayoutViewPager();
         viewReveal.setVisibility(View.GONE);
         fabCreate.setVisibility(View.INVISIBLE);
 
@@ -306,4 +311,37 @@ public class HomeActivity extends AppCompatActivity {
         // Hide progress item
         miActionProgressItem.setVisible(false);
     }
+
+    public void relayoutViewPager() {
+        ViewTreeObserver vto = toolbar.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                tabLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                Rect rectangle= new Rect();
+                Window window= getWindow();
+                window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
+                int statusBarHeight= rectangle.top;
+                int contentViewTop=
+                        window.findViewById(Window.ID_ANDROID_CONTENT).getTop();
+                int titleBarHeight= contentViewTop - statusBarHeight;
+
+
+                int relativeBottom = getRelativeBottom(toolbar);
+                viewPager.setPadding(0, 0, 0, relativeBottom + tabLayout.getHeight() - 52);
+                viewPager.invalidate();
+                viewPager.requestLayout();
+
+            }
+        });
+    }
+
+    private int getRelativeBottom(View myView) {
+        if (myView.getParent() == myView.getRootView())
+            return myView.getTop();
+        else
+            return myView.getTop() + getRelativeBottom((View) myView.getParent());
+    }
+
 }
