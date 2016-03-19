@@ -63,6 +63,8 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
             Display display = getWindowManager().getDefaultDisplay();
             int width = display.getWidth();
             double fraction = UPDATE_FREQUENCY / (float) MAX_TIME;
+            // TODO(rahul): adding 2 pixels is a hack to ensure we get to the end of the screen
+            // due to issues with rounding
             int widthToAdd = (int) (fraction * width) + 2;
             int resultWidth = timerView.getWidth() + widthToAdd;
             LayoutParams layoutParams = timerView.getLayoutParams();

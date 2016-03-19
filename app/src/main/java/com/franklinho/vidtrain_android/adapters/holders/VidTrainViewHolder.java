@@ -40,7 +40,6 @@ public class VidTrainViewHolder extends  RecyclerView.ViewHolder implements View
     @Bind(R.id.vpPreview) public ViewPager vpPreview;
     @Bind(R.id.cpIndicator) public CirclePageIndicator cpIndicator;
     @Bind(R.id.btnWatchVideos) public Button btnWatchVideos;
-    public int currentPage = 0;
 
     public Context context;
     public Activity activity;
@@ -58,12 +57,8 @@ public class VidTrainViewHolder extends  RecyclerView.ViewHolder implements View
             public void onGlobalLayout() {
                 vpPreview.post(new Runnable() {
                     public void run() {
-                        int width = itemView.getWidth();
-//                        int height = width;
-//                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(width, height);
-//                        vpPreview.setLayoutParams(lp);
                         ViewGroup.LayoutParams lp = vpPreview.getLayoutParams();
-                        lp.height = width;
+                        lp.height = itemView.getWidth();
                         vpPreview.setLayoutParams(lp);
                     }
                 });

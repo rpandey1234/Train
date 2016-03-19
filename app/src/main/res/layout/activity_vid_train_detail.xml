@@ -62,7 +62,7 @@
                     android:layout_alignTop="@id/ivCollaborators"
                     android:layout_alignBottom="@id/ivCollaborators"
                     android:gravity="center_vertical|left"
-                    android:textSize="20sp"
+                    android:textSize="24sp"
                     android:layout_toRightOf="@id/ivCollaborators"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
@@ -89,18 +89,6 @@
                     android:layout_height="300dp"
                     android:layout_below="@+id/ivCollaborators"
                     android:orientation="vertical">
-
-                    <!--<com.franklinho.vidtrain_android.models.DynamicVideoPlayerView-->
-                        <!--android:id="@+id/vvPreview"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="300dp" />-->
-                    <!--<ImageView-->
-                        <!--android:id="@+id/ivThumbnail"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="300dp"-->
-                        <!--android:background="@android:color/darker_gray"-->
-                        <!--android:contentDescription="@string/video_thumbnail"-->
-                        <!--android:scaleType="centerCrop" />-->
                     <ProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
                         style="?android:attr/progressBarStyleLarge"
                         android:layout_width="wrap_content"
@@ -157,13 +145,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@+id/ibtnLike"
+                    android:layout_alignTop="@+id/ibtnLike"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
-                    android:layout_alignTop="@+id/ibtnLike"
                     android:layout_marginRight="15dp"
                     android:gravity="center_vertical"
                     android:textSize="16sp"
-                    android:layout_marginBottom="10dp"
                     />
 
                 <Button
@@ -175,7 +162,9 @@
                     android:textColor="@android:color/white"
                     android:onClick="showCreateFlow"
                     android:visibility="gone"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="40dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
                     android:layout_below="@id/tvTime"
                     style="@style/CustomColoredButtonStyle"
                     android:foreground="?android:attr/selectableItemBackground"
