@@ -338,7 +338,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                     @Override
                     public void done(ParseObject object, ParseException e) {
                         String profileImageUrl = User.getProfileImageUrl(vidTrain.getUser());
-                        Glide.with(getBaseContext()).load(profileImageUrl).into(ivCollaborators);
+                        Glide.with(getBaseContext()).load(profileImageUrl).placeholder(R.drawable.profile_icon).into(ivCollaborators);
                     }
                 });
                 new VideoDownloadTask(vpPreview).execute(vidTrain);

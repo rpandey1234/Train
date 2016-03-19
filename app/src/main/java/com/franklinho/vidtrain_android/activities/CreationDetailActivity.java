@@ -155,7 +155,7 @@ public class CreationDetailActivity extends AppCompatActivity {
                 View profileImage = getLayoutInflater().inflate(R.layout.profile_image, null);
                 RoundedImageView ivProfileCollaborator = (RoundedImageView) profileImage
                         .findViewById(R.id.ivProfileCollaborator);
-                Glide.with(getApplicationContext()).load(User.getProfileImageUrl(user)).into(
+                Glide.with(getApplicationContext()).load(User.getProfileImageUrl(user)).placeholder(R.drawable.profile_icon).into(
                         ivProfileCollaborator);
                 containerCollab.addView(profileImage);
 
