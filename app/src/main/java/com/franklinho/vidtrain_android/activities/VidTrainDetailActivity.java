@@ -115,6 +115,10 @@ public class VidTrainDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        int videosCount = vidTrain.getVideosCount();
+        totalVideos = getResources().getQuantityString(R.plurals.videos_count,
+                videosCount + 1, videosCount + 1);
+        tvVideoCount.setText(totalVideos);
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode != VIDEO_CAPTURE) {
             return;
@@ -142,27 +146,27 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                     video.setVideoFile(parseFile);
                     video.setVidTrain(vidTrain);
                     video.setThumbnail(parseThumbnail);
-                    final SaveCallback vidTrainSaved = new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            user.put("vidtrains", User.maybeInitAndAdd(user, vidTrain));
-                            user.put("videos", User.maybeInitAndAdd(user, video));
-                            user.saveInBackground(new SaveCallback() {
-                                @Override
-                                public void done(ParseException e) {
-                                    progress.dismiss();
-                                    Toast.makeText(getBaseContext(), "Successfully added video",
-                                            Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
-                    };
                     video.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
                             vidTrain.setLatestVideo(parseFile);
                             vidTrain.setVideos(vidTrain.maybeInitAndAdd(video));
-                            vidTrain.saveInBackground(vidTrainSaved);
+                            vidTrain.saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    layoutVidTrain();
+                                    user.put("vidtrains", User.maybeInitAndAdd(user, vidTrain));
+                                    user.put("videos", User.maybeInitAndAdd(user, video));
+                                    user.saveInBackground(new SaveCallback() {
+                                        @Override
+                                        public void done(ParseException e) {
+                                            progress.dismiss();
+                                            Toast.makeText(getBaseContext(), "Successfully added video",
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+                            });
                         }
                     });
                 }
@@ -318,36 +322,42 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                     return;
                 }
                 vidTrain = object;
-                if (!vidTrain.getWritePrivacy() ||
-                        Utility.contains(vidTrain.getCollaborators(), ParseUser.getCurrentUser())) {
-                    btnAddvidTrain.setVisibility(View.VISIBLE);
-                }
+                layoutVidTrain();
 
-                if (User.hasLikedVidtrain(ParseUser.getCurrentUser(), vidTrain.getObjectId())) {
-                    liked = true;
-                    ibtnLike.setImageResource(R.drawable.heart_icon_red);
-                }
-
-                tvLikeCount.setText(getResources().getQuantityString(R.plurals.likes_count,
-                        vidTrain.getLikes(), vidTrain.getLikes()));
-
-//                toolbar.setTitle(vidTrain.getTitle());
-                tvTitle.setText(vidTrain.getTitle());
-                int videosCount = vidTrain.getVideosCount();
-                totalVideos = getResources().getQuantityString(R.plurals.videos_count,
-                        videosCount, videosCount);
-                tvVideoCount.setText(totalVideos);
-                tvTime.setText(Utility.getRelativeTime(vidTrain.getCreatedAt().getTime()));
-                vidTrain.getUser().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
-                    @Override
-                    public void done(ParseObject object, ParseException e) {
-                        String profileImageUrl = User.getProfileImageUrl(vidTrain.getUser());
-                        Glide.with(getBaseContext()).load(profileImageUrl).placeholder(R.drawable.profile_icon).into(ivCollaborators);
-                    }
-                });
-                new VideoDownloadTask(vpPreview).execute(vidTrain);
             }
         });
+    }
+
+    void layoutVidTrain() {
+        if (!vidTrain.getWritePrivacy() ||
+                Utility.contains(vidTrain.getCollaborators(), ParseUser.getCurrentUser())) {
+            btnAddvidTrain.setVisibility(View.VISIBLE);
+        }
+
+        if (User.hasLikedVidtrain(ParseUser.getCurrentUser(), vidTrain.getObjectId())) {
+            liked = true;
+            ibtnLike.setImageResource(R.drawable.heart_icon_red);
+        }
+
+        tvLikeCount.setText(getResources().getQuantityString(R.plurals.likes_count,
+                vidTrain.getLikes(), vidTrain.getLikes()));
+
+//                toolbar.setTitle(vidTrain.getTitle());
+        tvTitle.setText(vidTrain.getTitle());
+        int videosCount = vidTrain.getVideosCount();
+        totalVideos = getResources().getQuantityString(R.plurals.videos_count,
+                videosCount, videosCount);
+        tvVideoCount.setText(totalVideos);
+        tvTime.setText(Utility.getRelativeTime(vidTrain.getCreatedAt().getTime()));
+        vidTrain.getUser().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                String profileImageUrl = User.getProfileImageUrl(vidTrain.getUser());
+                Glide.with(getBaseContext()).load(profileImageUrl).placeholder(R.drawable.profile_icon).into(ivCollaborators);
+            }
+        });
+        new VideoDownloadTask(vpPreview).execute(vidTrain);
+
     }
 
 }
