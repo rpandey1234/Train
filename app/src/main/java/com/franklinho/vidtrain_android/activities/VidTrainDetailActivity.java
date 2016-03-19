@@ -84,11 +84,12 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
 
-        actionBar.setDisplayShowHomeEnabled(true);
-        actionBar.setDefaultDisplayHomeAsUpEnabled(true);
-//        actionBar.setHomeAsUpIndicator(actionBar.DISPLAY_HOME_AS_UP);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(false);
+        if (actionBar != null) {
+            actionBar.setDisplayShowHomeEnabled(true);
+            actionBar.setDefaultDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(false);
+        }
         requestVidTrain(true);
 
         swipeContainer.setColorSchemeResources(R.color.bluePrimary);
@@ -324,7 +325,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                 }
                 vidTrain = object;
                 layoutVidTrain();
-
             }
         });
     }
@@ -343,7 +343,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         tvLikeCount.setText(getResources().getQuantityString(R.plurals.likes_count,
                 vidTrain.getLikes(), vidTrain.getLikes()));
 
-//                toolbar.setTitle(vidTrain.getTitle());
         tvTitle.setText(vidTrain.getTitle());
         int videosCount = vidTrain.getVideosCount();
         totalVideos = getResources().getQuantityString(R.plurals.videos_count,
@@ -354,11 +353,10 @@ public class VidTrainDetailActivity extends AppCompatActivity {
             @Override
             public void done(ParseObject object, ParseException e) {
                 String profileImageUrl = User.getProfileImageUrl(vidTrain.getUser());
-                Glide.with(getBaseContext()).load(profileImageUrl).placeholder(R.drawable.profile_icon).into(ivCollaborators);
+                Glide.with(getBaseContext()).load(profileImageUrl).placeholder(
+                        R.drawable.profile_icon).into(ivCollaborators);
             }
         });
         new VideoDownloadTask(vpPreview).execute(vidTrain);
-
     }
-
 }

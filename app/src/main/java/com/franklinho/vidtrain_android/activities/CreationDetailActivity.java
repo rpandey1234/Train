@@ -66,7 +66,6 @@ public class CreationDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(R.style.AppBaseLightTheme);
         setContentView(R.layout.activity_creation_detail);
         ButterKnife.bind(this);
         videoPath = getIntent().getExtras().getString("videoPath");
@@ -154,7 +153,8 @@ public class CreationDetailActivity extends AppCompatActivity {
                 View profileImage = getLayoutInflater().inflate(R.layout.profile_image, null);
                 RoundedImageView ivProfileCollaborator = (RoundedImageView) profileImage
                         .findViewById(R.id.ivProfileCollaborator);
-                Glide.with(getApplicationContext()).load(User.getProfileImageUrl(user)).placeholder(R.drawable.profile_icon).into(
+                Glide.with(getApplicationContext()).load(User.getProfileImageUrl(user)).placeholder(
+                        R.drawable.profile_icon).into(
                         ivProfileCollaborator);
                 containerCollab.addView(profileImage);
 
