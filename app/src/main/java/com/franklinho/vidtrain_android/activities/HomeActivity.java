@@ -72,25 +72,18 @@ public class HomeActivity extends AppCompatActivity {
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager(),
                 HomeActivity.this));
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-            }
-
+        viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                enterReveal();
                 if (position == 1) {
                     removePagerPadding();
                 } else {
                     relayoutViewPager();
+
                 }
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
             }
         });
 
@@ -243,8 +236,9 @@ public class HomeActivity extends AppCompatActivity {
         int cx = fabCreate.getMeasuredWidth() / 2;
         int cy = fabCreate.getMeasuredHeight() / 2;
 
-        int finalRadius = Math.max(fabCreate.getWidth(), fabCreate.getHeight()) / 2;
+//        int finalRadius = Math.max(fabCreate.getWidth(), fabCreate.getHeight()) / 2;
 
+        int finalRadius = 168;
 
         Animator anim = ViewAnimationUtils.createCircularReveal(fabCreate, cx, cy, 0, finalRadius);
 
