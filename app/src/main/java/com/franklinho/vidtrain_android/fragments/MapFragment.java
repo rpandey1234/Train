@@ -2,12 +2,10 @@ package com.franklinho.vidtrain_android.fragments;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -16,14 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
-
-import com.flipboard.bottomsheet.BottomSheetLayout;
-import com.franklinho.vidtrain_android.Manifest;
-import com.franklinho.vidtrain_android.R;
-import com.franklinho.vidtrain_android.activities.HomeActivity;
-import com.franklinho.vidtrain_android.activities.ProfileActivity;
-import com.franklinho.vidtrain_android.models.VidTrain;
-import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -41,11 +31,17 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import com.flipboard.bottomsheet.BottomSheetLayout;
+import com.franklinho.vidtrain_android.Manifest;
+import com.franklinho.vidtrain_android.R;
+import com.franklinho.vidtrain_android.activities.HomeActivity;
+import com.franklinho.vidtrain_android.models.VidTrain;
+import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -80,8 +76,7 @@ public class MapFragment extends Fragment implements
     private List<VidTrain> vidTrains;
     private Map<String, VidTrain> vidTrainsMap;
     private List<Marker> markers;
-    @Bind(R.id.bottomsheet)
-    BottomSheetLayout bottomsheet;
+    @Bind(R.id.bottomsheet) BottomSheetLayout bottomsheet;
     @Bind(R.id.btnSearchMap) Button btnSearchMap;
 
     public MapFragment() {
@@ -150,10 +145,14 @@ public class MapFragment extends Fragment implements
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
-        ButterKnife.bind(view);
-
-
+        ButterKnife.bind(this, view);
         return view;
+    }
+
+    @OnClick(R.id.btnSearchMap)
+    public void searchMap(View view) {
+        Log.d(VidtrainApplication.TAG, "search map clicked!");
+        requestVidTrains(false);
     }
 
     @Override
@@ -161,6 +160,7 @@ public class MapFragment extends Fragment implements
         mapFragment = new SupportMapFragment();
         android.support.v4.app.FragmentTransaction
                 transaction = getChildFragmentManager().beginTransaction();
+
         transaction.replace(R.id.map, mapFragment).commit();
         setUpMapIfNeeded();
     }
@@ -304,7 +304,8 @@ public class MapFragment extends Fragment implements
 //        imagePreviewDialogFragment.setArguments(bundle);
 //        imagePreviewDialogFragment.show(fm, "fragment_image_preview");
 //        bottomsheet.showWithSheetView(LayoutInflater.from(getContext()).inflate(R.layout.fragment_image_preview, bottomsheet, false));
-        ImagePreviewFragment imagePreviewFragment = new ImagePreviewFragment().newInstance(marker.getSnippet());
+        ImagePreviewFragment imagePreviewFragment = ImagePreviewFragment.newInstance(
+                marker.getSnippet());
         Bundle bundle = new Bundle();
         bundle.putString("vidTrainId", marker.getSnippet());
         imagePreviewFragment.setArguments(bundle);
