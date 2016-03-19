@@ -182,9 +182,9 @@ public class MapFragment extends Fragment implements
             LatLng currentMapTarget = map.getCameraPosition().target;
             query.whereNear("ll", new ParseGeoPoint(currentMapTarget.latitude, currentMapTarget.longitude));
         }
-        query.addDescendingOrder("createdAt");
+        query.addDescendingOrder("rankingValue");
         query.setSkip(currentSize);
-        query.setLimit(5);
+        query.setLimit(10);
         final BitmapDescriptor defaultMarker = BitmapDescriptorFactory.defaultMarker(
                 160.0F);
         query.findInBackground(new FindCallback<VidTrain>() {

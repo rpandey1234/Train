@@ -11,6 +11,9 @@
     android:layout_margin="5dp"
     android:foreground="?android:attr/selectableItemBackground">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <com.makeramen.roundedimageview.RoundedImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -115,8 +118,9 @@
         android:foreground="?android:attr/selectableItemBackground"
         />
 
-    <View style="@style/section_item_divider"
-        android:layout_below="@+id/btnWatchVideos"
-        />
+    <!--<View style="@style/section_item_divider"-->
+        <!--android:layout_below="@+id/btnWatchVideos"-->
+        <!--/>-->
+    </RelativeLayout>
 
 </android.support.v7.widget.CardView>
