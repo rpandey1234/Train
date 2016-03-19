@@ -1,36 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.flipboard.bottomsheet.BottomSheetLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/bottomsheet">
 
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <FrameLayout
-        android:id="@+id/map"
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/CustomColoredButtonStyle"
-        android:id="@+id/btnSearchMap"
-        android:text="@string/redo_search"
-        android:layout_centerHorizontal="true"
-        android:padding="10dp"
-        android:layout_above="@+id/placeholderView"
-        />
+        <FrameLayout
+            android:id="@+id/map"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/CustomColoredButtonStyle"
+            android:id="@+id/btnSearchMap"
+            android:text="@string/redo_search"
+            android:layout_centerHorizontal="true"
+            android:padding="10dp"
+            android:layout_above="@+id/placeholderView"
+            />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_alignParentBottom="true"
             android:layout_marginTop="76dp"
-            android:id="@+id/placeholderView"></View>
+            android:id="@+id/placeholderView"
+            />
     </RelativeLayout>
 
 
