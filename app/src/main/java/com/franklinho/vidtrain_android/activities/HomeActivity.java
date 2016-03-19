@@ -72,6 +72,27 @@ public class HomeActivity extends AppCompatActivity {
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager(),
                 HomeActivity.this));
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 1) {
+                    removePagerPadding();
+                } else {
+                    relayoutViewPager();
+                }
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         // Give the TabLayout the ViewPager
         tabLayout.setupWithViewPager(viewPager);
@@ -324,13 +345,13 @@ public class HomeActivity extends AppCompatActivity {
             public void onGlobalLayout() {
                 tabLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
-                Rect rectangle= new Rect();
-                Window window= getWindow();
+                Rect rectangle = new Rect();
+                Window window = getWindow();
                 window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
-                int statusBarHeight= rectangle.top;
-                int contentViewTop=
+                int statusBarHeight = rectangle.top;
+                int contentViewTop =
                         window.findViewById(Window.ID_ANDROID_CONTENT).getTop();
-                int titleBarHeight= contentViewTop - statusBarHeight;
+                int titleBarHeight = contentViewTop - statusBarHeight;
 
 
                 int relativeBottom = getRelativeBottom(toolbar);
@@ -340,6 +361,12 @@ public class HomeActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void removePagerPadding() {
+        viewPager.setPadding(0, 0, 0, 0);
+        viewPager.invalidate();
+        viewPager.requestLayout();
     }
 
     private int getRelativeBottom(View myView) {

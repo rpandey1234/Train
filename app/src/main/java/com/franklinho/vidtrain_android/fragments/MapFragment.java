@@ -363,6 +363,7 @@ public class MapFragment extends Fragment implements
         Bundle bundle = new Bundle();
         bundle.putString("vidTrainId", marker.getSnippet());
         imagePreviewFragment.setArguments(bundle);
+
         imagePreviewFragment.show(getFragmentManager(), R.id.bottomsheet);
         HomeActivity homeActivity = (HomeActivity) getActivity();
         homeActivity.exitReveal();
