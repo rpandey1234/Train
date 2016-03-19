@@ -49,6 +49,8 @@
     <string name="view_x_videos">View x Videos</string>
     <string name="zero">0</string>
     <string name="redo_search">Redo search here</string>
+    <string name="capture">Capture</string>
+    <string name="swtich_camera">Switch Camera</string>
 
     <string-array name="privacy_states">
         <item>Public</item>

@@ -9,14 +9,23 @@
         android:layout_height="fill_parent">
 
     </RelativeLayout>
-    <ImageButton
-        android:id="@+id/button_ChangeCamera"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+    <!--<ImageButton-->
+        <!--android:id="@+id/button_ChangeCamera"-->
+        <!--android:layout_width="50dp"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:text="@string/swtich_camera"-->
+        <!--android:src="@drawable/ic_sync_black_24dp"-->
+        <!--/>-->
+
+    <View
+        android:id="@+id/timer"
+        android:layout_width="0dp"
+        android:layout_height="10dp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:text="Switch Camera"
-        android:src="@drawable/ic_sync_black_24dp"/>
+        android:background="@color/bluePrimary"
+        />
 
     <ImageButton
         android:id="@+id/button_capture"
@@ -24,6 +33,7 @@
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="Capture"
-        android:src="@drawable/ic_camera_black_24dp"/>
+        android:text="@string/capture"
+        android:src="@drawable/icon_vidtrain_small"
+        />
 </RelativeLayout>

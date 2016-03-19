@@ -54,8 +54,7 @@ public class CreationDetailActivity extends AppCompatActivity {
     @Bind(R.id.vvThumbnail) ImageView vvThumbnail;
     @Bind(R.id.btnSubmit) Button btnSubmit;
     @Bind(R.id.etTitle) EditText etTitle;
-    @Bind(R.id.toggleBtn)
-    SwitchCompat toggleBtn;
+    @Bind(R.id.toggleBtn) SwitchCompat toggleBtn;
     @Bind(R.id.etCollaborators) AutoCompleteTextView etCollaborators;
     @Bind(R.id.containerCollab) LinearLayout containerCollab;
 

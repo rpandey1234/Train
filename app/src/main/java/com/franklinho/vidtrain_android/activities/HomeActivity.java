@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +30,7 @@ import android.widget.Toast;
 
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.fragments.FragmentPagerAdapter;
+import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.Utility;
 
 import butterknife.Bind;
@@ -36,6 +38,7 @@ import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity {
     private static final int VIDEO_CAPTURE = 101;
+    public static final String UNIQUE_ID_INTENT = "UNIQUE_ID";
 
     @Bind(R.id.viewpager) ViewPager viewPager;
     @Bind(R.id.sliding_tabs) TabLayout tabLayout;
@@ -45,6 +48,7 @@ public class HomeActivity extends AppCompatActivity {
     private Transition.TransitionListener transitionListener;
     boolean revealStarted = false;
     MenuItem miActionProgressItem;
+    String uniqueId = Long.toString(System.currentTimeMillis());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,12 +157,13 @@ public class HomeActivity extends AppCompatActivity {
             anim.setInterpolator(new AccelerateInterpolator());
             viewReveal.setVisibility(View.VISIBLE);
             anim.start();
-            final Intent in = new Intent(getBaseContext(), VideoCaptureActivity.class);
             anim.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
-                    startActivityForResult(in, 1);
+                    Intent intent = new Intent(getBaseContext(), VideoCaptureActivity.class);
+                    intent.putExtra(UNIQUE_ID_INTENT, uniqueId);
+                    startActivityForResult(intent, VIDEO_CAPTURE);
 //                    startActivityForResult(Utility.getVideoIntent(), VIDEO_CAPTURE);
                 }
             });
@@ -172,11 +177,11 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Toast.makeText(this, "Success",  Toast.LENGTH_LONG).show();
         if (requestCode == VIDEO_CAPTURE) {
             if (resultCode == RESULT_OK) {
                 Intent i = new Intent(this, CreationDetailActivity.class);
-                i.putExtra("videoPath", Utility.getOutputMediaFile().getPath());
+                Log.d(VidtrainApplication.TAG, "from HomeActivity: " + uniqueId);
+                i.putExtra("videoPath", Utility.getOutputMediaFile(uniqueId).getPath());
                 startActivity(i);
             } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, "Video recording cancelled.",  Toast.LENGTH_LONG).show();
