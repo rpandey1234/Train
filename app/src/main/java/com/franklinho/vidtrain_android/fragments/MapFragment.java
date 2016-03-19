@@ -1,5 +1,6 @@
 package com.franklinho.vidtrain_android.fragments;
 
+import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.IntentSender;
@@ -14,6 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.flipboard.bottomsheet.BottomSheetLayout;
+import com.franklinho.vidtrain_android.Manifest;
+import com.franklinho.vidtrain_android.R;
+import com.franklinho.vidtrain_android.activities.HomeActivity;
+import com.franklinho.vidtrain_android.models.VidTrain;
+import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -27,17 +35,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import com.flipboard.bottomsheet.BottomSheetLayout;
-import com.franklinho.vidtrain_android.Manifest;
-import com.franklinho.vidtrain_android.R;
-import com.franklinho.vidtrain_android.activities.HomeActivity;
-import com.franklinho.vidtrain_android.models.VidTrain;
-import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
@@ -78,6 +80,7 @@ public class MapFragment extends Fragment implements
     private List<Marker> markers;
     @Bind(R.id.bottomsheet) BottomSheetLayout bottomsheet;
     @Bind(R.id.btnSearchMap) Button btnSearchMap;
+    boolean userGeneratedCameraChange = false;
 
     public MapFragment() {
         // Required empty public constructor
@@ -146,6 +149,7 @@ public class MapFragment extends Fragment implements
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         ButterKnife.bind(this, view);
+        btnSearchMap.setVisibility(View.GONE);
         return view;
     }
 
@@ -166,6 +170,7 @@ public class MapFragment extends Fragment implements
     }
 
     private void requestVidTrains(final boolean initialRequest) {
+        hideMapSearchButton();
         final HomeActivity homeActivity = (HomeActivity) getActivity();
         homeActivity.showProgressBar();
         final int currentSize;
@@ -179,7 +184,9 @@ public class MapFragment extends Fragment implements
             LocationManager lm = (LocationManager) getContext().getSystemService(
                     Context.LOCATION_SERVICE);
             Location lc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            query.whereNear("ll", new ParseGeoPoint(lc.getLatitude(), lc.getLongitude()));
+            if (lc != null) {
+                query.whereNear("ll", new ParseGeoPoint(lc.getLatitude(), lc.getLongitude()));
+            }
         } else {
             LatLng currentMapTarget = map.getCameraPosition().target;
             query.whereNear("ll", new ParseGeoPoint(currentMapTarget.latitude, currentMapTarget.longitude));
@@ -215,7 +222,22 @@ public class MapFragment extends Fragment implements
                     int padding = 100;
                     CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
 
+                    userGeneratedCameraChange = false;
                     map.animateCamera(cu);
+                    map.animateCamera(cu, new GoogleMap.CancelableCallback() {
+                        @Override
+                        public void onFinish() {
+                            userGeneratedCameraChange = false;
+                        }
+
+                        @Override
+                        public void onCancel() {
+                            userGeneratedCameraChange = true;
+
+                        }
+                    });
+
+
                 }
 
             }
@@ -227,6 +249,23 @@ public class MapFragment extends Fragment implements
         map = googleMap;
         if (map != null) {
             map.setOnMarkerClickListener(this);
+            map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+                @Override
+                public void onCameraChange(CameraPosition cameraPosition) {
+                    if (userGeneratedCameraChange) {
+                        // User caused onCameraChange...
+                        if (btnSearchMap.getVisibility() != View.VISIBLE) {
+                            showSearchMapButton();
+                        }
+                    } else {
+                        // The next map move will be caused by user, unless we
+                        // do another move programmatically
+                        userGeneratedCameraChange = true;
+
+                        // onCameraChange caused by program...
+                    }
+                }
+            });
             MapFragmentPermissionsDispatcher.getMyLocationWithCheck(this);
         } else {
             Toast.makeText(getContext(), "Error - Map was null!!", Toast.LENGTH_SHORT).show();
@@ -254,7 +293,18 @@ public class MapFragment extends Fragment implements
         if (location != null) {
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
-            map.moveCamera(cameraUpdate);
+            map.animateCamera(cameraUpdate, new GoogleMap.CancelableCallback() {
+                @Override
+                public void onFinish() {
+                    userGeneratedCameraChange = false;
+                }
+
+                @Override
+                public void onCancel() {
+                    userGeneratedCameraChange = true;
+
+                }
+            });
         }
     }
 
@@ -346,6 +396,21 @@ public class MapFragment extends Fragment implements
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             return mDialog;
         }
+    }
+
+    public void showSearchMapButton() {
+        btnSearchMap.setVisibility(View.VISIBLE);
+        ObjectAnimator fadeAltAnim = ObjectAnimator.ofFloat(btnSearchMap, View.ALPHA, 0, 1);
+        fadeAltAnim.setDuration(1000);
+        fadeAltAnim.start();
+    }
+
+    public void hideMapSearchButton() {
+
+        ObjectAnimator fadeAltAnim = ObjectAnimator.ofFloat(btnSearchMap, View.ALPHA, 0, 1);
+        fadeAltAnim.setDuration(1000);
+        fadeAltAnim.start();
+        btnSearchMap.setVisibility(View.GONE);
     }
 
 
