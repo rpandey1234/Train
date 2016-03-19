@@ -166,6 +166,8 @@ public class MapFragment extends Fragment implements
     }
 
     private void requestVidTrains(final boolean initialRequest) {
+        final HomeActivity homeActivity = (HomeActivity) getActivity();
+        homeActivity.showProgressBar();
         final int currentSize;
         vidTrains.clear();
         currentSize = 0;
@@ -190,6 +192,7 @@ public class MapFragment extends Fragment implements
         query.findInBackground(new FindCallback<VidTrain>() {
             @Override
             public void done(List<VidTrain> objects, ParseException e) {
+                homeActivity.hideProgressBar();
                 if (e == null) {
                     map.clear();
                     for (VidTrain vidTrain : objects) {

@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +22,7 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.BounceInterpolator;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.franklinho.vidtrain_android.R;
@@ -40,6 +42,7 @@ public class HomeActivity extends AppCompatActivity {
     @Bind(R.id.fabCreate) FloatingActionButton fabCreate;
     private Transition.TransitionListener transitionListener;
     boolean revealStarted = false;
+    MenuItem miActionProgressItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -287,4 +290,20 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        miActionProgressItem = menu.findItem(R.id.miActionProgress);
+        ProgressBar v =  (ProgressBar) MenuItemCompat.getActionView(miActionProgressItem);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    public void showProgressBar() {
+        // Show progress item
+        miActionProgressItem.setVisible(true);
+    }
+
+    public void hideProgressBar() {
+        // Hide progress item
+        miActionProgressItem.setVisible(false);
+    }
 }
