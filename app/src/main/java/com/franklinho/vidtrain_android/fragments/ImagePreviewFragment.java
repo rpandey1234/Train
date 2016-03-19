@@ -152,6 +152,13 @@ public class ImagePreviewFragment extends BottomSheetFragment {
 
                 final List<Video> videos = vidTrain.getVideos();
                 vpPreview.setAdapter(new ImagePagerAdapter(getContext(), videos));
+                vpPreview.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+                    @Override
+                    public void onPageSelected(int position) {
+                        final ImagePagerAdapter adapter = (ImagePagerAdapter) vpPreview.getAdapter();
+                        adapter.setUserImageAtPosition(position, ivCollaborators);
+                    }
+                });
                 cpIndicator.setViewPager(vpPreview);
 //                int dpRadius = (int) getResources().getDisplayMetrics().density * 3;
 //                cpIndicator.setRadius(dpRadius);
