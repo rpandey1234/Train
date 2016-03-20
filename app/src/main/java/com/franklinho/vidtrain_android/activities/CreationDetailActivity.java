@@ -206,6 +206,8 @@ public class CreationDetailActivity extends AppCompatActivity {
                                 Context.LOCATION_SERVICE);
                         Location lc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                         vidTrain.setLL(new ParseGeoPoint(lc.getLatitude(), lc.getLongitude()));
+                        vidTrain.setRankingValue((System.currentTimeMillis()/1000L - 1134028003)/45000);
+
                         vidTrain.saveInBackground(new SaveCallback() {
                             @Override
                             public void done(ParseException e) {
@@ -217,6 +219,8 @@ public class CreationDetailActivity extends AppCompatActivity {
                                     @Override
                                     public void done(ParseException e) {
                                         successfullySavedVidtrain();
+
+
                                     }
                                 });
                             }

@@ -161,6 +161,11 @@ public class VidTrain extends ParseObject implements Serializable {
         return getInt(LIKES_KEY);
     }
 
+    public void setRankingValue(double rankingValue) {
+        put("rankingValue", rankingValue);
+    }
+
+
 //    public List<File> getVideoFiles() {
 //        final List<Video> videos = getVideos();
 //        final List<File> localVideoFiles = new ArrayList<>();
