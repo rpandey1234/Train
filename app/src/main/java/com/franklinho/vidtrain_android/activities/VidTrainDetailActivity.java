@@ -52,9 +52,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class VidTrainDetailActivity extends AppCompatActivity {
+
     @Bind(R.id.ivCollaborators) ImageView ivCollaborators;
-//    @Bind(R.id.vvPreview) DynamicVideoPlayerView vvPreview;
-//    @Bind(R.id.ivThumbnail) ImageView ivThumbnail;
     @Bind(R.id.ibtnLike) ImageButton ibtnLike;
     @Bind(R.id.tvLikeCount) TextView tvLikeCount;
     @Bind(R.id.tvVideoCount) TextView tvVideoCount;
@@ -68,13 +67,14 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     @Bind(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
 
     public static final String VIDTRAIN_KEY = "vidTrain";
+    public static final int VIDEO_CAPTURE = 101;
     private ProgressDialog progress;
     private VidTrain vidTrain;
-    private static final int VIDEO_CAPTURE = 101;
-    public boolean liked = false;
-    String totalVideos;
-    VideoPagerAdapter videoPagerAdapter;
-    List<File> filesList;
+    private boolean liked = false;
+    private String totalVideos;
+    private VideoPagerAdapter videoPagerAdapter;
+    private List<File> filesList;
+    private String uniqueId = Long.toString(System.currentTimeMillis());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +109,11 @@ public class VidTrainDetailActivity extends AppCompatActivity {
 
     public void showCreateFlow(View view) {
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
-            startActivityForResult(Utility.getVideoIntent(), VIDEO_CAPTURE);
+            Intent intent = new Intent(getBaseContext(), VideoCaptureActivity.class);
+            intent.putExtra(HomeActivity.UNIQUE_ID_INTENT, uniqueId);
+            intent.putExtra(HomeActivity.SHOW_CONFIRM, true);
+            startActivityForResult(intent, VIDEO_CAPTURE);
+//            startActivityForResult(Utility.getVideoIntent(), VIDEO_CAPTURE);
         } else {
             Toast.makeText(this, "No camera on device", Toast.LENGTH_LONG).show();
         }
@@ -132,7 +136,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
             // "file:///storage/emulated/0/Movies/VidTrainApp/VID_CAPTURED.mp4"
             // below is where data is stored:
             // "/storage/emulated/0/Movies/VidTrainApp/VID_CAPTURED.mp4"
-            String videoPath = Utility.getOutputMediaFile().getPath();
+            String videoPath = Utility.getOutputMediaFile(uniqueId).getPath();
             final Video video = new Video();
             final ParseUser user = ParseUser.getCurrentUser();
             final ParseFile parseFile = Utility.createParseFile(videoPath);
@@ -242,7 +246,8 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                     @Override
                     public void done(byte[] data, ParseException e) {
                         if (e == null) {
-                            File localVideoFile = Utility.getOutputMediaFile(latestVideo.getObjectId());
+                            File localVideoFile = Utility.getOutputMediaFile(
+                                    latestVideo.getObjectId());
                             Utility.writeToFile(data, localVideoFile);
                             filesList.add(localVideoFile);
                             videoPagerAdapter.notifyDataSetChanged();

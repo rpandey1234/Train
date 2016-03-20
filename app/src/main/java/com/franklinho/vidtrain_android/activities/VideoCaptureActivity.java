@@ -8,7 +8,6 @@ import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.Size;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -18,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
@@ -35,7 +35,6 @@ import butterknife.ButterKnife;
 
 public class VideoCaptureActivity extends Activity implements MediaRecorder.OnInfoListener {
 
-    private static String uniqueId;
     @Bind(R.id.camera_preview) RelativeLayout preview;
     @Bind(R.id.button_capture) ImageButton captureButton;
     @Bind(R.id.timer) View timerView;
@@ -43,6 +42,9 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
 
     public static final int MAX_TIME = 5000;
     public static final int UPDATE_FREQUENCY = 50;
+
+    private static boolean showConfirm;
+    private static String uniqueId;
     private static Camera mCamera = null;
     private CameraPreview mPreview;
     private MediaRecorder mMediaRecorder;
@@ -86,7 +88,9 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         setContentView(R.layout.video_capture);
         ButterKnife.bind(this);
         uniqueId = getIntent().getStringExtra(HomeActivity.UNIQUE_ID_INTENT);
-        Log.d(VidtrainApplication.TAG, "VideoCaptureActivity: " + uniqueId);
+        showConfirm = getIntent().getBooleanExtra(HomeActivity.SHOW_CONFIRM, false);
+        Log.d(VidtrainApplication.TAG, "show confirm? " + showConfirm);
+        Log.d(VidtrainApplication.TAG, "uniqueId: " + uniqueId);
         // Create an instance of Camera
         mCamera = getCameraInstance();
 
@@ -137,6 +141,10 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         //setCaptureButtonText("Capture");
         isRecording = false;
         handler.removeCallbacks(runnableCode);
+        if (showConfirm) {
+            // TODO: open dialog
+            Toast.makeText(this, "should show confirm dialog", Toast.LENGTH_SHORT);
+        }
         setResult(Activity.RESULT_OK);
         finish();
     }
@@ -174,11 +182,11 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         }
 
         setCameraDisplayOrientation(this, camId, mCamera);
-        //mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
         mMediaRecorder = new MediaRecorder();
 
         final List<Size> supportedVideoSizes = mCamera.getParameters().getSupportedVideoSizes();
-//        mCamera.getParameters().
+        Size smallestSize = getSmallestSize(supportedVideoSizes);
+
         // Step 1: Unlock and set camera to MediaRecorder
         mCamera.unlock();
         //mCamera.setDisplayOrientation(90);
@@ -197,40 +205,10 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         // Step 5: Set the preview output
         mMediaRecorder.setPreviewDisplay(mPreview.getHolder().getSurface());
         mMediaRecorder.setOrientationHint(VideoCaptureActivity.orientation);
-        /////////
         mMediaRecorder.setVideoFrameRate(16);
         mMediaRecorder.setVideoEncodingBitRate(1000000);
-//        mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-
-        Log.d(VidtrainApplication.TAG, "" + supportedVideoSizes.size());
-        Collections.sort(supportedVideoSizes, new Comparator<Size>() {
-            @Override
-            public int compare(Size lhs, Size rhs) {
-                double avg1 = (lhs.height + lhs.width) / 2.0;
-                double avg2 = (rhs.height + rhs.width) / 2.0;
-                if (avg1 < avg2) {
-                    return -1;
-                } else if (avg1 > avg2) {
-                    return 1;
-                } else {
-                    return 0;
-                }
-            }
-        });
-        Size lowestSize = supportedVideoSizes.get(0);
-        Log.d(VidtrainApplication.TAG,
-                "smallest video size: " + lowestSize.width + " " + lowestSize.height);
-        Log.d(VidtrainApplication.TAG,
-                "2nd smallest video size: " + supportedVideoSizes.get(1).width + " "
-                        + supportedVideoSizes.get(1).height);
-        mMediaRecorder.setVideoSize(lowestSize.width, lowestSize.height);
-        // max parse file size is 10485760 bytes
-        mMediaRecorder.setMaxFileSize(2000000);
-
-//        Parameters params = new Parameters(mCamera.getParameters());
-//        mCamera.getParameters().setPictureSize();
-//        mCamera.setParameters(params);
-        ////
+        mMediaRecorder.setVideoSize(smallestSize.width, smallestSize.height);
+        mMediaRecorder.setMaxFileSize(2000000); // max parse file size is 10485760 bytes
         mMediaRecorder.setMaxDuration(MAX_TIME);
         mMediaRecorder.setOnInfoListener(this);
         // Step 6: Prepare configured MediaRecorder
@@ -246,6 +224,31 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
             return false;
         }
         return true;
+    }
+
+    private Size getSmallestSize(List<Size> supportedVideoSizes) {
+        Log.d(VidtrainApplication.TAG, "Num supported sizes: " + supportedVideoSizes.size());
+        Collections.sort(supportedVideoSizes, new Comparator<Size>() {
+            @Override
+            public int compare(Size lhs, Size rhs) {
+                double avg1 = (lhs.height + lhs.width) / 2.0;
+                double avg2 = (rhs.height + rhs.width) / 2.0;
+                if (avg1 < avg2) {
+                    return -1;
+                } else if (avg1 > avg2) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+        Size smallestSize = supportedVideoSizes.get(0);
+        Log.d(VidtrainApplication.TAG,
+                "smallest video size: " + smallestSize.width + " " + smallestSize.height);
+        Log.d(VidtrainApplication.TAG,
+                "2nd smallest video size: " + supportedVideoSizes.get(1).width + " "
+                        + supportedVideoSizes.get(1).height);
+        return smallestSize;
     }
 
     @Override
@@ -274,41 +277,6 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
     private static File getOutputMediaFile(int type) {
         return Utility.getOutputMediaFile(uniqueId);
     }
-    /**
-     * Create a File for saving an image or video
-     */
-//    private static File getOutputMediaFile(int type) {
-//        // To be safe, you should check that the SDCard is mounted
-//        // using Environment.getExternalStorageState() before doing this.
-//
-//        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-//                Environment.DIRECTORY_PICTURES), "VidTrain");
-//        // This location works best if you want the created images to be shared
-//        // between applications and persist after your app has been uninstalled.
-//
-//        // Create the storage directory if it does not exist
-//        if (!mediaStorageDir.exists()) {
-//            if (!mediaStorageDir.mkdirs()) {
-//                Log.d("MyCameraApp", "failed to create directory");
-//                return null;
-//            }
-//        }
-//
-//        // Create a media file name
-//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-//        File mediaFile;
-//        if (type == MEDIA_TYPE_IMAGE) {
-//            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-//                    "IMG_" + timeStamp + ".jpg");
-//        } else if (type == MEDIA_TYPE_VIDEO) {
-//            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-//                    "VID_" + timeStamp + ".mp4");
-//        } else {
-//            return null;
-//        }
-//
-//        return mediaFile;
-//    }
 
     private void releaseCameraAndPreview() {
         //mPreview.setCamera(null);
