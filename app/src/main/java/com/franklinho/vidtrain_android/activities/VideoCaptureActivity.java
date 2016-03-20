@@ -1,7 +1,11 @@
 package com.franklinho.vidtrain_android.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
@@ -12,17 +16,22 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.franklinho.vidtrain_android.R;
+import com.franklinho.vidtrain_android.models.DynamicVideoPlayerView;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.CameraPreview;
 import com.franklinho.vidtrain_android.utilities.Utility;
+import com.franklinho.vidtrain_android.utilities.VideoPlayer;
+import com.volokh.danylo.video_player_manager.ui.SimpleMainThreadMediaPlayerListener;
 
 import java.io.File;
 import java.io.IOException;
@@ -142,11 +151,55 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         isRecording = false;
         handler.removeCallbacks(runnableCode);
         if (showConfirm) {
-            // TODO: open dialog
-            Toast.makeText(this, "should show confirm dialog", Toast.LENGTH_SHORT);
+            final String videoPath = Utility.getOutputMediaFile(uniqueId).getPath();
+            View itemView = getLayoutInflater().inflate(R.layout.pager_item_video, null);
+            itemView.setPadding(itemView.getPaddingLeft(), itemView.getPaddingTop() + 10,
+                    itemView.getPaddingRight(), itemView.getPaddingBottom());
+            final DynamicVideoPlayerView vvPreview = (DynamicVideoPlayerView) itemView.findViewById(
+                    R.id.vvPreview);
+            final ImageView ivThumbnail = (ImageView) itemView.findViewById(R.id.ivThumbnail);
+            ivThumbnail.setImageBitmap(Utility.getImageBitmap(videoPath));
+            vvPreview.setVisibility(View.GONE);
+            vvPreview.addMediaPlayerListener(new SimpleMainThreadMediaPlayerListener() {
+                @Override
+                public void onVideoCompletionMainThread() {
+                    vvPreview.setVisibility(View.GONE);
+                    ivThumbnail.setVisibility(View.VISIBLE);
+                }
+            });
+            ivThumbnail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ivThumbnail.setVisibility(View.GONE);
+                    vvPreview.setVisibility(View.VISIBLE);
+                    VideoPlayer.playVideo(vvPreview, videoPath);
+                }
+            });
+            AlertDialog.Builder builder = new Builder(this)
+                    .setTitle("Add to Vidtrain?")
+                    .setView(itemView)
+                    .setPositiveButton("Yes", new OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Log.d(VidtrainApplication.TAG, "yes clicked!!");
+                            setResult(Activity.RESULT_OK);
+                            finish();
+                        }
+                    })
+                    .setNegativeButton("Cancel", new OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Log.d(VidtrainApplication.TAG, "Cancel clicked!!");
+                            setResult(Activity.RESULT_CANCELED);
+                            finish();
+                        }
+                    });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        } else {
+            setResult(Activity.RESULT_OK);
+            finish();
         }
-        setResult(Activity.RESULT_OK);
-        finish();
     }
 
     private boolean checkCameraHardware(Context context) {
@@ -205,7 +258,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         // Step 5: Set the preview output
         mMediaRecorder.setPreviewDisplay(mPreview.getHolder().getSurface());
         mMediaRecorder.setOrientationHint(VideoCaptureActivity.orientation);
-        mMediaRecorder.setVideoFrameRate(16);
+        mMediaRecorder.setVideoFrameRate(24);
         mMediaRecorder.setVideoEncodingBitRate(1000000);
         mMediaRecorder.setVideoSize(smallestSize.width, smallestSize.height);
         mMediaRecorder.setMaxFileSize(2000000); // max parse file size is 10485760 bytes
