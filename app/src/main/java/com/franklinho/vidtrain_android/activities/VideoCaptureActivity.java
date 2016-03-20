@@ -16,14 +16,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
-import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.models.DynamicVideoPlayerView;
@@ -41,6 +39,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class VideoCaptureActivity extends Activity implements MediaRecorder.OnInfoListener {
 
@@ -84,12 +83,21 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         }
     };
 
-//    @OnClick(R.id.button_ChangeCamera)
-//    public void switchCamera(View view) {
-//        Log.d(VidtrainApplication.TAG, "switch camer clicked!");
-//        camId = CameraInfo.CAMERA_FACING_FRONT;
-//        prepareVideoRecorder();
-//    }
+    @OnClick(R.id.button_change_camera)
+    public void switchCamera(View view) {
+        Log.d(VidtrainApplication.TAG, "switch camera clicked!");
+        releaseCameraAndPreview();
+        if (camId == CameraInfo.CAMERA_FACING_BACK) {
+            camId = CameraInfo.CAMERA_FACING_FRONT;
+        } else {
+            camId = CameraInfo.CAMERA_FACING_BACK;
+        }
+        mCamera = Camera.open(camId);
+        mPreview = new CameraPreview(this, mCamera);
+        preview.removeAllViews();
+        preview.addView(mPreview);
+        setCameraDisplayOrientation(this, camId, mCamera);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -118,13 +126,11 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
                             if (prepareVideoRecorder()) {
                                 // Camera is available and unlocked, MediaRecorder is prepared,
                                 // now you can start recording
-                                //mCamera.setDisplayOrientation(90);
                                 mMediaRecorder.start();
                                 captureButton.setImageDrawable(getResources().getDrawable(
                                         R.drawable.ic_stop_black_24dp));
                                 // Start the initial runnable task by posting through the handler
                                 handler.post(runnableCode);
-                                Log.i("Hi", "Hello");
                                 // inform the user that recording has started
                                 //setCaptureButtonText("Stop");
                                 isRecording = true;
@@ -235,6 +241,9 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         }
 
         setCameraDisplayOrientation(this, camId, mCamera);
+        if (camId == CameraInfo.CAMERA_FACING_FRONT) {
+            mCamera.setDisplayOrientation(90);
+        }
         mMediaRecorder = new MediaRecorder();
 
         final List<Size> supportedVideoSizes = mCamera.getParameters().getSupportedVideoSizes();
@@ -361,6 +370,8 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
             result = (info.orientation + degrees) % 360;
             result = (360 - result) % 360;  // compensate the mirror
+            // Hack so that the resulting video is straight.
+            result += 180 % 360;
         } else {  // back-facing
             result = (info.orientation - degrees + 360) % 360;
         }
