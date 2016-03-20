@@ -11,6 +11,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,10 +30,12 @@ import com.franklinho.vidtrain_android.models.DynamicVideoPlayerView;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
+import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.Utility;
 import com.franklinho.vidtrain_android.utilities.VideoPageIndicator;
 import com.franklinho.vidtrain_android.utilities.VideoPlayer;
 import com.parse.GetCallback;
+import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -77,7 +80,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        VideoPlayer.resetVideoPlayerManager();
         setContentView(R.layout.activity_vid_train_detail);
         ButterKnife.bind(this);
 
@@ -231,6 +233,32 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                 vidTrain.getLikes(), vidTrain.getLikes()));
     }
 
+    void updateVideos() {
+        final Video latestVideo = vidTrain.getVideos().get(vidTrain.getVideos().size());
+        latestVideo.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                ParseFile videoFile = latestVideo.getVideoFile();
+                videoFile.getDataInBackground(new GetDataCallback() {
+                    @Override
+                    public void done(byte[] data, ParseException e) {
+                        if (e == null) {
+                            File localVideoFile = Utility.getOutputMediaFile(latestVideo.getObjectId());
+                            Utility.writeToFile(data, localVideoFile);
+                            filesList.add(localVideoFile);
+                            videoPagerAdapter.notifyDataSetChanged();
+                            cpIndicator.notifyDataSetChanged();
+                            VideoPlayer.resetVideoPlayerManager();
+                        } else {
+                            Log.d(VidtrainApplication.TAG, e.toString());
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+
     private class VideoDownloadTask extends AsyncTask<VidTrain, Void, List<File>> {
         ViewPager viewPager;
 
@@ -273,28 +301,30 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         private void playVideoAtPosition(final int position) {
             setProfileImageUrlAtIndex(position);
             View pagerView = videoPagerAdapter.getView(position);
-            final DynamicVideoPlayerView vvPreview = (DynamicVideoPlayerView) pagerView.findViewById(R.id.vvPreview);
-            final ImageView ivThumbnail = (ImageView) pagerView.findViewById(R.id.ivThumbnail);
-            ivThumbnail.setVisibility(View.GONE);
-            vvPreview.addMediaPlayerListener(new SimpleMainThreadMediaPlayerListener() {
-                @Override
-                public void onVideoCompletionMainThread() {
-                    if (position < filesList.size()) {
-                        ivThumbnail.setVisibility(View.VISIBLE);
-                        vpPreview.setCurrentItem(viewPager.getCurrentItem() + 1, true);
-                    }
-                }
-            });
-            if (position == videoPagerAdapter.getCount() - 1) {
-                // restart from beginning on click
-                ivThumbnail.setOnClickListener(new OnClickListener() {
+            if (pagerView != null) {
+                final DynamicVideoPlayerView vvPreview = (DynamicVideoPlayerView) pagerView.findViewById(R.id.vvPreview);
+                final ImageView ivThumbnail = (ImageView) pagerView.findViewById(R.id.ivThumbnail);
+                ivThumbnail.setVisibility(View.GONE);
+                vvPreview.addMediaPlayerListener(new SimpleMainThreadMediaPlayerListener() {
                     @Override
-                    public void onClick(View v) {
-                        vpPreview.setCurrentItem(0, true);
+                    public void onVideoCompletionMainThread() {
+                        if (position < filesList.size()) {
+                            ivThumbnail.setVisibility(View.VISIBLE);
+                            vpPreview.setCurrentItem(viewPager.getCurrentItem() + 1, true);
+                        }
                     }
                 });
+                if (position == videoPagerAdapter.getCount() - 1) {
+                    // restart from beginning on click
+                    ivThumbnail.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            vpPreview.setCurrentItem(0, true);
+                        }
+                    });
+                }
+                VideoPlayer.playVideo(vvPreview, filesList.get(position).getPath());
             }
-            VideoPlayer.playVideo(vvPreview, filesList.get(position).getPath());
         }
     }
 
@@ -309,7 +339,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     }
 
     void requestVidTrain(Boolean newView) {
-        VideoPlayer.resetMediaPlayer();
         String vidTrainId = getIntent().getExtras().getString(VIDTRAIN_KEY);
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
         query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
@@ -330,6 +359,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     }
 
     void layoutVidTrain() {
+        VideoPlayer.resetVideoPlayerManager();
         if (!vidTrain.getWritePrivacy() ||
                 Utility.contains(vidTrain.getCollaborators(), ParseUser.getCurrentUser())) {
             btnAddvidTrain.setVisibility(View.VISIBLE);
