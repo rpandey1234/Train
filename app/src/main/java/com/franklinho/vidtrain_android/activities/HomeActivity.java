@@ -325,12 +325,16 @@ public class HomeActivity extends AppCompatActivity {
 
     public void showProgressBar() {
         // Show progress item
-        miActionProgressItem.setVisible(true);
+        if (miActionProgressItem != null) {
+            miActionProgressItem.setVisible(true);
+        }
     }
 
     public void hideProgressBar() {
         // Hide progress item
-        miActionProgressItem.setVisible(false);
+        if (miActionProgressItem != null) {
+            miActionProgressItem.setVisible(false);
+        }
     }
 
     public void relayoutViewPager() {
