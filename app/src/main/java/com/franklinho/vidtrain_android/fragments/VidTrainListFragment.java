@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.adapters.VidTrainArrayAdapter;
 import com.franklinho.vidtrain_android.models.VidTrain;
-import com.franklinho.vidtrain_android.utilities.EndlessRecyclerViewScrollListener;
 import com.franklinho.vidtrain_android.utilities.VideoPlayer;
 
 import java.util.ArrayList;
@@ -56,25 +55,8 @@ public class VidTrainListFragment extends Fragment {
         linearLayoutManager = new LinearLayoutManager(getContext());
         rvVidTrains.setAdapter(aVidTrains);
         swipeContainer.setColorSchemeResources(R.color.bluePrimary);
-        rvVidTrains.setLayoutManager(linearLayoutManager);
 
-
-        rvVidTrains.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount) {
-                requestVidTrains(false);
-            }
-        });
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                requestVidTrains(true);
-            }
-        });
-
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         rvVidTrains.setAdapter(aVidTrains);
-        rvVidTrains.setLayoutManager(linearLayoutManager);
 
         return v;
     }
