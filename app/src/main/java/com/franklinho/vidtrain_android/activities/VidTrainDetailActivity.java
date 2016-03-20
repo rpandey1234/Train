@@ -248,7 +248,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                             filesList.add(localVideoFile);
                             videoPagerAdapter.notifyDataSetChanged();
                             cpIndicator.notifyDataSetChanged();
-                            VideoPlayer.resetVideoPlayerManager();
+//                            VideoPlayer.resetVideoPlayerManager();
                         } else {
                             Log.d(VidtrainApplication.TAG, e.toString());
                         }
