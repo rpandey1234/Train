@@ -343,13 +343,11 @@ public class HomeActivity extends AppCompatActivity {
                 Window window = getWindow();
                 window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
                 int statusBarHeight = rectangle.top;
-                int contentViewTop =
-                        window.findViewById(Window.ID_ANDROID_CONTENT).getTop();
-                int titleBarHeight = contentViewTop - statusBarHeight;
+
 
 
                 int relativeBottom = getRelativeBottom(toolbar);
-                viewPager.setPadding(0, 0, 0, relativeBottom + tabLayout.getHeight() - 52);
+                viewPager.setPadding(0, 0, 0,  relativeBottom + tabLayout.getMeasuredHeight() - statusBarHeight );
                 viewPager.invalidate();
                 viewPager.requestLayout();
 

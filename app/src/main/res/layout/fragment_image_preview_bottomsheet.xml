@@ -107,7 +107,7 @@
         android:layout_below="@id/tvTitle"
         android:id="@+id/btnWatchVideos"
         android:textColor="@android:color/white"
-        android:background="@color/blueAccent"
+        style="@style/CustomColoredButtonStyle"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
         android:layout_alignStart="@id/tvTitle"
