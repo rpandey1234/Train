@@ -27,8 +27,6 @@ public class PopularFragment extends VidTrainListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
-
-
         showProgressBar();
 
         linearLayoutManager = new LinearLayoutManager(getContext());
@@ -46,10 +44,7 @@ public class PopularFragment extends VidTrainListFragment {
                 requestVidTrains(true);
             }
         });
-
         requestVidTrains(true);
-
-
         return v;
     }
 
@@ -61,7 +56,7 @@ public class PopularFragment extends VidTrainListFragment {
             vidTrains.clear();
             currentSize = 0;
         } else {
-            currentSize  = vidTrains.size();
+            currentSize = vidTrains.size();
         }
 
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
@@ -79,6 +74,7 @@ public class PopularFragment extends VidTrainListFragment {
                     if (newTimeline) {
                         aVidTrains.notifyDataSetChanged();
                     } else {
+                        // TODO: should be objects.size()
                         aVidTrains.notifyItemRangeInserted(currentSize, vidTrains.size() - 1);
                     }
                 }

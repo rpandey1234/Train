@@ -27,7 +27,7 @@ public class VidTrainListFragment extends Fragment {
 
     @Bind(R.id.rvVidTrains) public RecyclerView rvVidTrains;
     @Bind(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
-    @Bind(R.id.pbProgessAction) View pbProgessAction;
+    @Bind(R.id.pbProgessAction) View pbProgressAction;
 
     List<VidTrain> vidTrains;
     VidTrainArrayAdapter aVidTrains;
@@ -55,7 +55,6 @@ public class VidTrainListFragment extends Fragment {
         linearLayoutManager = new LinearLayoutManager(getContext());
         rvVidTrains.setAdapter(aVidTrains);
         swipeContainer.setColorSchemeResources(R.color.bluePrimary);
-
         rvVidTrains.setAdapter(aVidTrains);
 
         return v;
@@ -77,11 +76,11 @@ public class VidTrainListFragment extends Fragment {
 
     public void showProgressBar() {
         // Show progress item
-        pbProgessAction.setVisibility(View.VISIBLE);
+        pbProgressAction.setVisibility(View.VISIBLE);
     }
 
     public void hideProgressBar() {
         // Hide progress item
-        pbProgessAction.setVisibility(View.GONE);
+        pbProgressAction.setVisibility(View.GONE);
     }
 }

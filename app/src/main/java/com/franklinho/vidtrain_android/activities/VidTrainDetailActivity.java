@@ -65,8 +65,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     @Bind(R.id.pbProgressAction) View pbProgessAction;
     @Bind(R.id.vpPreview) ViewPager vpPreview;
     @Bind(R.id.cpIndicator) VideoPageIndicator cpIndicator;
-    @Bind(R.id.swipeContainer)
-    SwipeRefreshLayout swipeContainer;
+    @Bind(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
 
     public static final String VIDTRAIN_KEY = "vidTrain";
     private ProgressDialog progress;
