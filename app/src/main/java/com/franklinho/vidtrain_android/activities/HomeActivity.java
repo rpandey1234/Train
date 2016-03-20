@@ -37,8 +37,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity {
-    private static final int VIDEO_CAPTURE = 101;
+    public static final int VIDEO_CAPTURE = 101;
     public static final String UNIQUE_ID_INTENT = "UNIQUE_ID";
+    public static final String SHOW_CONFIRM = "SHOW_CONFIRM";
 
     @Bind(R.id.viewpager) ViewPager viewPager;
     @Bind(R.id.sliding_tabs) TabLayout tabLayout;
@@ -177,6 +178,7 @@ public class HomeActivity extends AppCompatActivity {
                     super.onAnimationEnd(animation);
                     Intent intent = new Intent(getBaseContext(), VideoCaptureActivity.class);
                     intent.putExtra(UNIQUE_ID_INTENT, uniqueId);
+                    intent.putExtra(SHOW_CONFIRM, false);
                     startActivityForResult(intent, VIDEO_CAPTURE);
 //                    startActivityForResult(Utility.getVideoIntent(), VIDEO_CAPTURE);
                 }
@@ -194,7 +196,6 @@ public class HomeActivity extends AppCompatActivity {
         if (requestCode == VIDEO_CAPTURE) {
             if (resultCode == RESULT_OK) {
                 Intent i = new Intent(this, CreationDetailActivity.class);
-                Log.d(VidtrainApplication.TAG, "from HomeActivity: " + uniqueId);
                 i.putExtra("videoPath", Utility.getOutputMediaFile(uniqueId).getPath());
                 startActivity(i);
             } else if (resultCode == RESULT_CANCELED) {
@@ -343,7 +344,6 @@ public class HomeActivity extends AppCompatActivity {
                 Window window = getWindow();
                 window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
                 int statusBarHeight = rectangle.top;
-
 
 
                 int relativeBottom = getRelativeBottom(toolbar);
