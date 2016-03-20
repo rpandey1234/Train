@@ -9,15 +9,16 @@
         android:layout_height="fill_parent">
 
     </RelativeLayout>
-    <!--<ImageButton-->
-        <!--android:id="@+id/button_ChangeCamera"-->
-        <!--android:layout_width="50dp"-->
-        <!--android:layout_height="50dp"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:text="@string/swtich_camera"-->
-        <!--android:src="@drawable/ic_sync_black_24dp"-->
-        <!--/>-->
+
+    <ImageButton
+        android:id="@+id/button_change_camera"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:text="@string/swtich_camera"
+        android:src="@drawable/ic_sync_black_24dp"
+        />
 
     <View
         android:id="@+id/timer"
