@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * Created by franklinho on 3/15/16.
  */
-public class VideoPagerAdapter extends PagerAdapter implements VideoIconPagerAdapter{
+public class VideoPagerAdapter extends PagerAdapter implements VideoIconPagerAdapter {
 
     Context mContext;
     LayoutInflater mLayoutInflater;

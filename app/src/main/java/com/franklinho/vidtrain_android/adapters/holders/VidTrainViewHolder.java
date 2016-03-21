@@ -122,10 +122,8 @@ public class VidTrainViewHolder extends  RecyclerView.ViewHolder implements View
             ibtnLike.setImageResource(R.drawable.heart_icon_red);
             int currentLikeCount = vidTrain.getLikes();
             vidTrain.setLikes( currentLikeCount + 1);
-
         }
         view.startAnimation(animScale);
         tvLikeCount.setText(String.valueOf(vidTrain.getLikes()));
-
     }
 }
