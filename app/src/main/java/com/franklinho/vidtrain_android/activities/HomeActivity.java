@@ -45,7 +45,6 @@ public class HomeActivity extends AppCompatActivity {
     @Bind(R.id.viewReveal) View viewReveal;
     @Bind(R.id.fabCreate) FloatingActionButton fabCreate;
     private Transition.TransitionListener transitionListener;
-    boolean revealStarted = false;
     MenuItem miActionProgressItem;
     String uniqueId = Long.toString(System.currentTimeMillis());
 
@@ -98,40 +97,6 @@ public class HomeActivity extends AppCompatActivity {
                 enterReveal();
             }
         });
-
-
-
-
-//        transitionListener = new Transition.TransitionListener() {
-//            @Override
-//            public void onTransitionStart(Transition transition) {
-//
-//            }
-//
-//            @Override
-//            public void onTransitionEnd(Transition transition) {
-//                enterReveal();
-//            }
-//
-//            @Override
-//            public void onTransitionCancel(Transition transition) {
-//
-//            }
-//
-//            @Override
-//            public void onTransitionPause(Transition transition) {
-//
-//            }
-//
-//            @Override
-//            public void onTransitionResume(Transition transition) {
-//
-//            }
-//        };
-//
-//        getWindow().getEnterTransition().addListener(transitionListener);
-//
-
     }
 
     @Override
@@ -212,13 +177,14 @@ public class HomeActivity extends AppCompatActivity {
         fabCreate.setVisibility(View.INVISIBLE);
 
 
-        fabCreate.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                fabCreate.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                enterReveal();
-            }
-        });
+        fabCreate.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        fabCreate.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        enterReveal();
+                    }
+                });
 
 
     }
@@ -252,14 +218,9 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         anim.start();
-
-
-
     }
 
     public void exitReveal() {
-
-
         int cx = fabCreate.getMeasuredWidth() / 2;
         int cy = fabCreate.getMeasuredHeight() / 2;
 
@@ -279,39 +240,6 @@ public class HomeActivity extends AppCompatActivity {
 
 
         anim.start();
-    }
-
-
-    public void transitionSafeEnterReveal() {
-                transitionListener = new Transition.TransitionListener() {
-            @Override
-            public void onTransitionStart(Transition transition) {
-
-            }
-
-            @Override
-            public void onTransitionEnd(Transition transition) {
-                enterReveal();
-            }
-
-            @Override
-            public void onTransitionCancel(Transition transition) {
-
-            }
-
-            @Override
-            public void onTransitionPause(Transition transition) {
-
-            }
-
-            @Override
-            public void onTransitionResume(Transition transition) {
-
-            }
-        };
-
-        getWindow().getEnterTransition().addListener(transitionListener);
-
     }
 
     @Override
@@ -369,5 +297,4 @@ public class HomeActivity extends AppCompatActivity {
         else
             return myView.getTop() + getRelativeBottom((View) myView.getParent());
     }
-
 }

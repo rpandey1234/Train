@@ -51,8 +51,6 @@ public class ImagePreviewFragment extends BottomSheetFragment {
     @Bind(R.id.vpPreview) ViewPager vpPreview;
     @Bind(R.id.cpIndicator) CirclePageIndicator cpIndicator;
     @Bind(R.id.tvTitle) TextView titleTv;
-//    @Bind(R.id.tvVideoCount) TextView tvVideoCount;
-//    @Bind(R.id.tvTime) TextView tvTime;
     @Bind(R.id.tvLikeCount) TextView tvLikeCount;
     @Bind(R.id.ibtnLike) ImageButton ibtnLike;
     @Bind(R.id.btnWatchVideos)
