@@ -161,7 +161,7 @@ public class VidTrain extends ParseObject implements Serializable {
         return getInt(LIKES_KEY);
     }
 
-    public void setRankingValue(double rankingValue) {
+    public void setRankingValue(float rankingValue) {
         put("rankingValue", rankingValue);
     }
 

@@ -206,7 +206,7 @@ public class CreationDetailActivity extends AppCompatActivity {
                                 Context.LOCATION_SERVICE);
                         Location lc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                         vidTrain.setLL(new ParseGeoPoint(lc.getLatitude(), lc.getLongitude()));
-                        vidTrain.setRankingValue((System.currentTimeMillis()/1000L - 1134028003)/45000);
+                        vidTrain.setRankingValue(((float) System.currentTimeMillis()/(float)1000 - (float)1134028003)/(float) 45000 + 1);
 
                         vidTrain.saveInBackground(new SaveCallback() {
                             @Override
