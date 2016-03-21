@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
         android:id="@+id/camera_preview"
@@ -9,6 +10,25 @@
         android:layout_height="fill_parent">
 
     </RelativeLayout>
+
+
+
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_alignParentTop="true"
+        android:id="@+id/vTop"
+        android:background="@android:color/darker_gray"
+        android:alpha="0.5"></View>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/vBottom"
+        android:background="@android:color/darker_gray"
+        android:alpha="0.5"></View>
 
     <ImageButton
         android:id="@+id/button_change_camera"
@@ -28,13 +48,17 @@
         android:background="@color/bluePrimary"
         />
 
-    <ImageButton
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/button_capture"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:text="@string/capture"
-        android:src="@drawable/icon_vidtrain_small"
+        android:src="@drawable/icon_vidtrain_white"
+        android:layout_marginBottom="30dp"
+        app:fabSize="normal"
         />
+
+
 </RelativeLayout>

@@ -7,22 +7,28 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.Size;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.Display;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.ImageButton;
+import android.view.ViewTreeObserver;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.desmond.squarecamera.ImageParameters;
+import com.desmond.squarecamera.ResizeAnimation;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.models.DynamicVideoPlayerView;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
@@ -44,9 +50,14 @@ import butterknife.OnClick;
 public class VideoCaptureActivity extends Activity implements MediaRecorder.OnInfoListener {
 
     @Bind(R.id.camera_preview) RelativeLayout preview;
-    @Bind(R.id.button_capture) ImageButton captureButton;
+    @Bind(R.id.button_capture)
+    FloatingActionButton captureButton;
     @Bind(R.id.timer) View timerView;
+    @Bind(R.id.vTop) View vTop;
+    @Bind(R.id.vBottom) View vBottom;
 //    @Bind(R.id.button_ChangeCamera) ImageButton switchCamera;
+
+    private ImageParameters mImageParameters;
 
     public static final int MAX_TIME = 5000;
     public static final int UPDATE_FREQUENCY = 50;
@@ -102,6 +113,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.video_capture);
         ButterKnife.bind(this);
         uniqueId = getIntent().getStringExtra(HomeActivity.UNIQUE_ID_INTENT);
@@ -111,9 +123,16 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         // Create an instance of Camera
         mCamera = getCameraInstance();
 
+
+
+
+
         // Create our Preview view and set it as the content of our activity.
         mPreview = new CameraPreview(this, mCamera);
         preview.addView(mPreview);
+
+        mImageParameters = new ImageParameters();
+        relayoutCovers();
 
         captureButton.setOnClickListener(
                 new View.OnClickListener() {
@@ -128,7 +147,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
                                 // now you can start recording
                                 mMediaRecorder.start();
                                 captureButton.setImageDrawable(getResources().getDrawable(
-                                        R.drawable.ic_stop_black_24dp));
+                                        R.drawable.icon_square_white));
                                 // Start the initial runnable task by posting through the handler
                                 handler.post(runnableCode);
                                 // inform the user that recording has started
@@ -394,6 +413,50 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
     public void onBackPressed() {
         super.onBackPressed();
         handler.removeCallbacks(runnableCode);
+    }
+
+
+   void relayoutCovers() {
+       mImageParameters.mIsPortrait =
+               getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+
+
+       ViewTreeObserver observer = preview.getViewTreeObserver();
+       observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+           @Override
+           public void onGlobalLayout() {
+               mImageParameters.mPreviewWidth = preview.getWidth();
+               mImageParameters.mPreviewHeight = preview.getHeight();
+
+               mImageParameters.mCoverWidth = mImageParameters.mCoverHeight
+                       = mImageParameters.calculateCoverWidthHeight();
+
+//                    Log.d(TAG, "parameters: " + mImageParameters.getStringValues());
+//                    Log.d(TAG, "cover height " + topCoverView.getHeight());
+               resizeTopAndBtmCover(vTop, vBottom);
+
+               if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                   preview.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+               } else {
+                   preview.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+               }
+           }
+       });
+
+   }
+
+    private void resizeTopAndBtmCover( final View topCover, final View bottomCover) {
+        ResizeAnimation resizeTopAnimation
+                = new ResizeAnimation(topCover, mImageParameters);
+        resizeTopAnimation.setDuration(800);
+        resizeTopAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
+        topCover.startAnimation(resizeTopAnimation);
+
+        ResizeAnimation resizeBtmAnimation
+                = new ResizeAnimation(bottomCover, mImageParameters);
+        resizeBtmAnimation.setDuration(800);
+        resizeBtmAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
+        bottomCover.startAnimation(resizeBtmAnimation);
     }
 }
 
