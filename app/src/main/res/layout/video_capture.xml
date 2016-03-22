@@ -38,6 +38,8 @@
         android:layout_alignParentRight="true"
         android:text="@string/swtich_camera"
         android:src="@drawable/ic_sync_black_24dp"
+        android:tint="@color/bluePrimary"
+        android:background="@android:color/transparent"
         />
 
     <View
