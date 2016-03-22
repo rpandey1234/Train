@@ -81,6 +81,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vid_train_detail);
         ButterKnife.bind(this);
+        VideoPlayer.resetVideoPlayerManager();
 
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -109,6 +110,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
 
     public void showCreateFlow(View view) {
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
+            VideoPlayer.resetVideoPlayerManager();
             Intent intent = new Intent(getBaseContext(), VideoCaptureActivity.class);
             intent.putExtra(HomeActivity.UNIQUE_ID_INTENT, uniqueId);
             intent.putExtra(HomeActivity.SHOW_CONFIRM, true);
@@ -363,7 +365,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     }
 
     void layoutVidTrain() {
-        VideoPlayer.resetVideoPlayerManager();
         if (!vidTrain.getWritePrivacy() ||
                 Utility.contains(vidTrain.getCollaborators(), ParseUser.getCurrentUser())) {
             btnAddvidTrain.setVisibility(View.VISIBLE);
