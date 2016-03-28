@@ -39,11 +39,16 @@ import com.parse.GetCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.volokh.danylo.video_player_manager.ui.SimpleMainThreadMediaPlayerListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.List;
@@ -77,6 +82,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     private List<File> filesList;
     private String uniqueId = Long.toString(System.currentTimeMillis());
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +92,8 @@ public class VidTrainDetailActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
+
+
 
         if (actionBar != null) {
             actionBar.setDisplayShowHomeEnabled(true);
@@ -164,6 +172,10 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                                 @Override
                                 public void done(ParseException e) {
                                     layoutVidTrain();
+                                    List<ParseUser> collaborators = vidTrain.getCollaborators();
+                                    for (ParseUser collaborator : collaborators) {
+                                        sendVidtrainUpdatedNotification(ParseUser.getCurrentUser(), vidTrain);
+                                    }
                                     user.put("vidtrains", User.maybeInitAndAdd(user, vidTrain));
                                     user.put("videos", User.maybeInitAndAdd(user, video));
                                     user.saveInBackground(new SaveCallback() {
@@ -410,5 +422,27 @@ public class VidTrainDetailActivity extends AppCompatActivity {
             }
         });
         new VideoDownloadTask(vpPreview).execute(vidTrain);
+    }
+
+    public void sendVidtrainUpdatedNotification(ParseUser user, VidTrain vidtrain) {
+        ParseQuery pushQuery = ParseInstallation.getQuery();
+        pushQuery.whereEqualTo("user", user.getObjectId());
+        String currentUserName = ParseUser.getCurrentUser().getString("name");
+        String alertString = currentUserName + " has just updated the vidtrain: " + vidtrain.getTitle();
+        JSONObject data = new JSONObject();
+
+        try {
+            data.put("alert", alertString);
+            data.put("title", "VidTrain");
+            data.put("vidTrain", vidtrain.getObjectId());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        ParsePush push = new ParsePush();
+        push.setQuery(pushQuery);
+        push.setData(data);
+        push.sendInBackground();
+
     }
 }

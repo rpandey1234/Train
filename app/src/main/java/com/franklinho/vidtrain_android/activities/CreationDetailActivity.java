@@ -39,9 +39,14 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseInstallation;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -206,7 +211,7 @@ public class CreationDetailActivity extends AppCompatActivity {
                                 Context.LOCATION_SERVICE);
                         Location lc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                         vidTrain.setLL(new ParseGeoPoint(lc.getLatitude(), lc.getLongitude()));
-                        vidTrain.setRankingValue(((float) System.currentTimeMillis()/(float)1000 - (float)1134028003)/(float) 45000 + 1);
+                        vidTrain.setRankingValue(((float) System.currentTimeMillis() / (float) 1000 - (float) 1134028003) / (float) 45000 + 1);
 
                         vidTrain.saveInBackground(new SaveCallback() {
                             @Override
@@ -220,6 +225,9 @@ public class CreationDetailActivity extends AppCompatActivity {
                                     public void done(ParseException e) {
                                         successfullySavedVidtrain();
 
+                                        for (ParseUser collaborator : collaborators) {
+                                            sendCollaboratorNotification(collaborator, vidTrain);
+                                        };
 
                                     }
                                 });
@@ -235,5 +243,27 @@ public class CreationDetailActivity extends AppCompatActivity {
         progress.dismiss();
         Toast.makeText(getBaseContext(), "Successfully saved Vidtrain!", Toast.LENGTH_SHORT).show();
         this.finish();
+    }
+
+    public void sendCollaboratorNotification(ParseUser user, VidTrain vidtrain) {
+        ParseQuery pushQuery = ParseInstallation.getQuery();
+        pushQuery.whereEqualTo("user", user.getObjectId());
+        String currentUserName = ParseUser.getCurrentUser().getString("name");
+        String alertString = currentUserName + " has added you to the vidtrain: " + vidtrain.getTitle();
+        JSONObject data = new JSONObject();
+
+        try {
+            data.put("alert", alertString);
+            data.put("title", "VidTrain");
+            data.put("vidTrain", vidtrain.getObjectId());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        ParsePush push = new ParsePush();
+        push.setQuery(pushQuery);
+        push.setData(data);
+        push.sendInBackground();
+
     }
 }

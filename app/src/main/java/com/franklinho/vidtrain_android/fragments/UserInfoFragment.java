@@ -17,10 +17,15 @@ import com.franklinho.vidtrain_android.models.User;
 import com.parse.CountCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -91,6 +96,8 @@ public class UserInfoFragment extends Fragment {
                 isFollowing = !isFollowing;
                 // TODO: animate this
                 btnFollow.setText(isFollowing ? R.string.unfollow : R.string.follow);
+                sendFollowedNotification(profileUser);
+
             }
         });
     }
@@ -126,5 +133,27 @@ public class UserInfoFragment extends Fragment {
         args.putString(ProfileActivity.USER_ID, userId);
         userInfoFragment.setArguments(args);
         return userInfoFragment;
+    }
+
+    public void sendFollowedNotification(ParseUser user) {
+        ParseQuery pushQuery = ParseInstallation.getQuery();
+        pushQuery.whereEqualTo("user", user.getObjectId());
+        String currentUserName = currentUser.getString("name");
+        String alertString = currentUserName + " has just followed you";
+        JSONObject data = new JSONObject();
+
+        try {
+            data.put("alert", alertString);
+            data.put("title", "VidTrain");
+            data.put("userId", currentUser.getObjectId());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        ParsePush push = new ParsePush();
+        push.setQuery(pushQuery);
+        push.setData(data);
+        push.sendInBackground();
+
     }
 }

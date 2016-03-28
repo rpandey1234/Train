@@ -30,6 +30,8 @@ import android.widget.Toast;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.fragments.FragmentPagerAdapter;
 import com.franklinho.vidtrain_android.utilities.Utility;
+import com.parse.ParseInstallation;
+import com.parse.ParseUser;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -54,6 +56,14 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
         relayoutViewPager();
+
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        if (currentUser != null) {
+            ParseInstallation currentInstallation = ParseInstallation.getCurrentInstallation();
+            currentInstallation.put("user", currentUser.getObjectId());
+            currentInstallation.saveInBackground();
+
+        }
 
 
         setSupportActionBar(toolbar);
