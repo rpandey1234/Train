@@ -3,10 +3,10 @@ package com.franklinho.vidtrain_android.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,16 +14,19 @@ import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.activities.ProfileActivity;
 import com.franklinho.vidtrain_android.models.User;
-import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.parse.CountCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by rahul on 3/5/16.
@@ -34,6 +37,11 @@ public class UserInfoFragment extends Fragment {
     @Bind(R.id.tvName) TextView tvName;
     @Bind(R.id.tvVidtrains) TextView tvVidtrains;
     @Bind(R.id.tvVideos) TextView tvVideos;
+    @Bind(R.id.btnFollow) Button btnFollow;
+
+    private ParseUser currentUser;
+    private ParseUser profileUser;
+    private boolean isFollowing;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,7 +53,9 @@ public class UserInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater i, ViewGroup container, Bundle savedInstanceState) {
         View view = i.inflate(R.layout.fragment_user_info, container, false);
         ButterKnife.bind(this, view);
-        String userId = getArguments().getString(ProfileActivity.USER_ID);
+        currentUser = ParseUser.getCurrentUser();
+        final String currentUserId = currentUser.getObjectId();
+        final String userId = getArguments().getString(ProfileActivity.USER_ID);
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereEqualTo("objectId", userId);
         query.getFirstInBackground(new GetCallback<ParseUser>() {
@@ -54,9 +64,35 @@ public class UserInfoFragment extends Fragment {
                 tvName.setText(User.getName(user));
                 Glide.with(getContext()).load(User.getProfileImageUrl(user)).into(ivProfileImage);
                 queryUserCounts(user);
+                profileUser = user;
+                if (!currentUserId.equals(userId)) {
+                    btnFollow.setVisibility(View.VISIBLE);
+                    isFollowing = User.isFollowing(currentUser, profileUser);
+                    if (isFollowing) {
+                        btnFollow.setText(R.string.unfollow);
+                    } else {
+                        btnFollow.setText(R.string.follow);
+                    }
+                }
             }
         });
+
         return view;
+    }
+
+    @OnClick(R.id.btnFollow)
+    public void onFollowClicked(View view) {
+        List<ParseUser> updatedFollowingList = isFollowing ? User.unfollow(currentUser, profileUser)
+                : User.maybeInitAndAdd(currentUser, profileUser);
+        currentUser.put("following", updatedFollowingList);
+        currentUser.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                isFollowing = !isFollowing;
+                // TODO: animate this
+                btnFollow.setText(isFollowing ? R.string.unfollow : R.string.follow);
+            }
+        });
     }
 
     private void queryUserCounts(ParseUser user) {

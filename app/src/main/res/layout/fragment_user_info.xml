@@ -51,4 +51,16 @@
         android:layout_alignStart="@+id/tvName"
         />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnFollow"
+        android:layout_below="@+id/tvVideos"
+        android:layout_alignLeft="@+id/tvName"
+        android:layout_alignStart="@+id/tvName"
+        android:textColor="@android:color/white"
+        style="@style/CustomColoredButtonStyle"
+        android:visibility="gone"
+        />
+
 </RelativeLayout>

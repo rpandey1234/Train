@@ -42,6 +42,7 @@ public class User extends ParseObject implements Serializable {
     public static final String EMAIL = "email";
     public static final String FBID = "fbid";
     public static final String LIKES = "likes";
+    public static final String FOLLOWING = "following";
 
     public User(){}
 
@@ -86,6 +87,24 @@ public class User extends ParseObject implements Serializable {
         }
     }
 
+    public static List<ParseUser> getFollowing(ParseUser user) {
+        return user.getList(FOLLOWING);
+    }
+
+    public static boolean isFollowing(ParseUser user, ParseUser candidate) {
+        List<ParseUser> following = getFollowing(user);
+        if (following == null) {
+            return false;
+        }
+        for (int i = 0; i < following.size(); i++) {
+            ParseUser candidateUser = following.get(i);
+            if (candidate.getObjectId().equals(candidateUser.getObjectId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static String getName(ParseUser user) {
         return user.getString(NAME);
     }
@@ -124,6 +143,17 @@ public class User extends ParseObject implements Serializable {
         return videos;
     }
 
+    public static List<ParseUser> maybeInitAndAdd(ParseUser user, ParseUser other) {
+        List<ParseUser> following = getFollowing(user);
+        if (following == null) {
+            following = new ArrayList<>();
+        }
+        if (!following.contains(other)) {
+            following.add(other);
+        }
+        return following;
+    }
+
     public static Map<String,Boolean> getLikes(ParseUser user) {
         return user.getMap(LIKES);
     }
@@ -154,5 +184,17 @@ public class User extends ParseObject implements Serializable {
     public static boolean hasLikedVidtrain(ParseUser user, String vidtrainId) {
         Map<String, Boolean> userLikes = getLikes(user);
         return userLikes != null && Boolean.TRUE.equals(userLikes.get(vidtrainId));
+    }
+
+    public static List<ParseUser> unfollow(ParseUser currentUser, ParseUser profileUser) {
+        List<ParseUser> following = getFollowing(currentUser);
+        for (int i = 0; i < following.size(); i++) {
+            ParseUser user = following.get(i);
+            if (user.getObjectId().equals(profileUser.getObjectId())) {
+                following.remove(i);
+                break;
+            }
+        }
+        return following;
     }
 }

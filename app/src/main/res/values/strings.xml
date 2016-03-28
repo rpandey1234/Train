@@ -51,6 +51,8 @@
     <string name="redo_search">Redo search here</string>
     <string name="capture">Capture</string>
     <string name="swtich_camera">Switch Camera</string>
+    <string name="follow">Follow</string>
+    <string name="unfollow">Unfollow</string>
 
     <string-array name="privacy_states">
         <item>Public</item>
