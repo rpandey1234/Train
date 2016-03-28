@@ -1,14 +1,19 @@
 package com.franklinho.vidtrain_android.adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
+import com.franklinho.vidtrain_android.activities.ProfileActivity;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.Video;
 import com.parse.GetCallback;
@@ -24,14 +29,16 @@ import java.util.List;
  */
 public class ImagePagerAdapter extends PagerAdapter {
 
+    Activity mActivity;
     Context mContext;
     LayoutInflater mLayoutInflater;
     List<Video> videos = new ArrayList<>();
 
-    public ImagePagerAdapter(Context context, List<Video> videos) {
+    public ImagePagerAdapter(Context context, List<Video> videos, Activity activity) {
         mContext = context;
         mLayoutInflater = LayoutInflater.from(mContext);
         this.videos = videos;
+        mActivity = activity;
     }
 
     // Returns the number of pages to be displayed in the ViewPager.
@@ -63,7 +70,6 @@ public class ImagePagerAdapter extends PagerAdapter {
                 if (video.getThumbnail() != null && mContext != null) {
                     Glide.with(mContext).load(video.getThumbnail().getUrl()).into(imageView);
                 }
-
             }
         });
 
@@ -83,10 +89,19 @@ public class ImagePagerAdapter extends PagerAdapter {
                         if (profileImageUrl != null && mContext != null) {
                             Glide.with(mContext).load(profileImageUrl).into(ivCollaborators);
                         }
-
                     }
                 });
-
+            }
+        });
+        ivCollaborators.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ParseUser user = video.getUser();
+                Intent intent = new Intent(mContext, ProfileActivity.class);
+                intent.putExtra(ProfileActivity.USER_ID, user.getObjectId());
+                android.support.v4.util.Pair<View, String> p1 = android.support.v4.util.Pair.create((View) ivCollaborators, "collaboratorImage");
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, p1);
+                mContext.startActivity(intent, options.toBundle());
             }
         });
     }

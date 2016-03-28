@@ -128,7 +128,7 @@ public class ImagePreviewFragment extends BottomSheetFragment {
                 });
 
                 final List<Video> videos = vidTrain.getVideos();
-                vpPreview.setAdapter(new ImagePagerAdapter(getContext(), videos));
+                vpPreview.setAdapter(new ImagePagerAdapter(getContext(), videos, getActivity()));
                 vpPreview.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
                     @Override
                     public void onPageSelected(int position) {

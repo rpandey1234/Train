@@ -27,18 +27,18 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
 
     private List<VidTrain> mVidTrains;
     private Context mContext;
-    private Activity activity;
+    private Activity mActivity;
 
     public VidTrainArrayAdapter( List<VidTrain> vidTrains, Context context, Activity activity) {
         mVidTrains = vidTrains;
         mContext = context;
-        this.activity = activity;
+        mActivity = activity;
     }
 
     @Override
     public VidTrainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_vidtrain_image_preview, parent, false);
-        return new VidTrainViewHolder(view, activity);
+        return new VidTrainViewHolder(view, mActivity);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
             }
         });
 
-        holder.vpPreview.setAdapter(new ImagePagerAdapter(holder.context, vidTrain.getVideos()));
+        holder.vpPreview.setAdapter(new ImagePagerAdapter(holder.context, vidTrain.getVideos(), mActivity));
         holder.vpPreview.addOnPageChangeListener(new SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
