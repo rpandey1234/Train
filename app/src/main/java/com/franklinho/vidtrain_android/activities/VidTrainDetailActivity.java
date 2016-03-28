@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -353,7 +354,15 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     }
 
     void requestVidTrain(Boolean newView) {
-        String vidTrainId = getIntent().getExtras().getString(VIDTRAIN_KEY);
+        Intent intent = getIntent();
+        String vidTrainId;
+        if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+            Uri uri = intent.getData();
+            vidTrainId = uri.getQueryParameter(VIDTRAIN_KEY);
+        } else {
+            vidTrainId = getIntent().getExtras().getString(VIDTRAIN_KEY);
+        }
+
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
         query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
         query.whereEqualTo("objectId", vidTrainId);
