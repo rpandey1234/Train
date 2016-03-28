@@ -193,7 +193,7 @@ public class MapFragment extends Fragment implements
         }
         query.addDescendingOrder("rankingValue");
         query.setSkip(currentSize);
-        query.setLimit(10);
+        query.setLimit(5);
         final BitmapDescriptor defaultMarker = BitmapDescriptorFactory.defaultMarker(
                 160.0F);
         query.findInBackground(new FindCallback<VidTrain>() {

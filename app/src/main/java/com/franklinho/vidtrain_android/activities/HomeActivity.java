@@ -76,7 +76,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 enterReveal();
-                if (position == 1) {
+                if (position != 0) {
                     removePagerPadding();
                 } else {
                     relayoutViewPager();

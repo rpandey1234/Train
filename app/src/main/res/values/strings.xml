@@ -54,6 +54,7 @@
     <string name="follow">Follow</string>
     <string name="unfollow">Unfollow</string>
     <string name="logout">Logout</string>
+    <string name="not_following_users">Not Following Any Users</string>
 
     <string-array name="privacy_states">
         <item>Public</item>

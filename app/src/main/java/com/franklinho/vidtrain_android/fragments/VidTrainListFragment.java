@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.adapters.VidTrainArrayAdapter;
@@ -28,6 +29,8 @@ public class VidTrainListFragment extends Fragment {
     @Bind(R.id.rvVidTrains) public RecyclerView rvVidTrains;
     @Bind(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
     @Bind(R.id.pbProgessAction) View pbProgressAction;
+    @Bind(R.id.tvNotFollowingLabel)
+    TextView tvNotFollowingLabel;
 
     List<VidTrain> vidTrains;
     VidTrainArrayAdapter aVidTrains;

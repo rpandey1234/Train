@@ -27,4 +27,16 @@
         android:visibility="gone"
         android:id="@+id/pbProgessAction" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/not_following_users"
+        android:id="@+id/tvNotFollowingLabel"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/bluePrimary"
+        android:textStyle="bold"
+        android:visibility="gone"/>
+
 </RelativeLayout>
