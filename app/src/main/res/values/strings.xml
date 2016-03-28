@@ -53,6 +53,7 @@
     <string name="swtich_camera">Switch Camera</string>
     <string name="follow">Follow</string>
     <string name="unfollow">Unfollow</string>
+    <string name="logout">Logout</string>
 
     <string-array name="privacy_states">
         <item>Public</item>
