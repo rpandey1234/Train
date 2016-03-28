@@ -192,7 +192,15 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         video.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
             @Override
             public void done(ParseObject object, ParseException e) {
-                ParseUser user = video.getUser();
+                final ParseUser user = video.getUser();
+                ivCollaborators.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                        intent.putExtra(ProfileActivity.USER_ID, user.getObjectId());
+                        startActivity(intent);
+                    }
+                });
                 user.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
                     @Override
                     public void done(ParseObject object, ParseException e) {
