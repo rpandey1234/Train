@@ -1,18 +1,16 @@
 package com.franklinho.vidtrain_android.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.franklinho.vidtrain_android.R;
-import com.franklinho.vidtrain_android.fragments.PopularFragment;
 import com.franklinho.vidtrain_android.fragments.UserCreationsFragment;
 import com.franklinho.vidtrain_android.fragments.UserInfoFragment;
 import com.parse.LogOutCallback;
@@ -42,12 +40,20 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        String userId = getIntent().getStringExtra(USER_ID);
+        Intent intent = getIntent();
+        String userId;
+        if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+            Uri uri = intent.getData();
+            userId = uri.getQueryParameter(USER_ID);
+        } else {
+            userId = intent.getStringExtra(USER_ID);
+        }
+
         if (userId == null) {
             ParseUser currentUser = ParseUser.getCurrentUser();
             if (currentUser == null) {
-                Intent intent = new Intent(this, LogInActivity.class);
-                startActivity(intent);
+                Intent i = new Intent(this, LogInActivity.class);
+                startActivity(i);
                 return;
             }
             userId = currentUser.getObjectId();

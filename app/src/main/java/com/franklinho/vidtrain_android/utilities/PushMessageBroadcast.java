@@ -6,8 +6,12 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.franklinho.vidtrain_android.activities.HomeActivity;
+import com.franklinho.vidtrain_android.activities.LogInActivity;
+import com.franklinho.vidtrain_android.activities.ProfileActivity;
+import com.franklinho.vidtrain_android.activities.VidTrainDetailActivity;
 import com.parse.ParseAnalytics;
 import com.parse.ParsePushBroadcastReceiver;
+import com.parse.ParseUser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,13 +24,38 @@ public class PushMessageBroadcast extends ParsePushBroadcastReceiver {
     public void onPushOpen(Context context, Intent intent) {
         ParseAnalytics.trackAppOpenedInBackground(intent);
 
-        //Here is data you sent
-        Log.i("ParsePush", intent.getExtras().getString( "com.parse.Data" ));
+       if (ParseUser.getCurrentUser() != null) {
+           String parseData = intent.getExtras().getString( "com.parse.Data" );
+           //Here is data you sent
+           Log.i("ParsePush", parseData);
 
-        Intent i = new Intent(context, HomeActivity.class);
-        i.putExtras(intent.getExtras());
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(i);
+
+           String vidTrainId = getVidtrainFromData(parseData);
+           String userId = getUserIdFromData(parseData);
+
+
+           if (!vidTrainId.equals("")){
+               Intent i = new Intent(context, VidTrainDetailActivity.class);
+               i.putExtra(VidTrainDetailActivity.VIDTRAIN_KEY, vidTrainId);
+               i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+               context.startActivity(i);
+           } else if (!userId.equals("")) {
+               Intent i = new Intent(context, ProfileActivity.class);
+               i.putExtra(ProfileActivity.USER_ID, userId);
+               i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+               context.startActivity(i);
+           } else {
+               Intent i = new Intent(context, HomeActivity.class);
+               i.putExtras(intent.getExtras());
+               i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+               context.startActivity(i);
+           }
+       } else {
+           Intent i = new Intent(context, LogInActivity.class);
+           i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+           context.startActivity(i);
+       }
+
     }
 
     @Override
@@ -49,13 +78,28 @@ public class PushMessageBroadcast extends ParsePushBroadcastReceiver {
     }
 
 
-    private String getData(String jsonData) {
+    private String getVidtrainFromData(String jsonData) {
 // Parse JSON Data
         try {
             System.out.println("JSON Data ["+jsonData+"]");
             JSONObject obj = new JSONObject(jsonData);
 
-            return obj.getString("message");
+            return obj.getString("vidTrain");
+        }
+        catch(JSONException jse) {
+            jse.printStackTrace();
+        }
+
+        return "";
+    }
+
+    private String getUserIdFromData(String jsonData) {
+// Parse JSON Data
+        try {
+            System.out.println("JSON Data ["+jsonData+"]");
+            JSONObject obj = new JSONObject(jsonData);
+
+            return obj.getString("userId");
         }
         catch(JSONException jse) {
             jse.printStackTrace();
