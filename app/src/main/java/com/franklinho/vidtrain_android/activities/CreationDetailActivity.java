@@ -44,6 +44,7 @@ import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.parse.SendCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -225,9 +226,11 @@ public class CreationDetailActivity extends AppCompatActivity {
                                     public void done(ParseException e) {
                                         successfullySavedVidtrain();
 
-                                        for (ParseUser collaborator : collaborators) {
-                                            sendCollaboratorNotification(collaborator, vidTrain);
-                                        };
+                                        if (collaborators != null) {
+                                            for (ParseUser collaborator : collaborators) {
+                                                sendCollaboratorNotification(collaborator, vidTrain);
+                                            };
+                                        }
 
                                     }
                                 });
@@ -263,7 +266,12 @@ public class CreationDetailActivity extends AppCompatActivity {
         ParsePush push = new ParsePush();
         push.setQuery(pushQuery);
         push.setData(data);
-        push.sendInBackground();
+        push.sendInBackground(new SendCallback() {
+            @Override
+            public void done(ParseException e) {
+                e.printStackTrace();
+            }
+        });
 
     }
 }

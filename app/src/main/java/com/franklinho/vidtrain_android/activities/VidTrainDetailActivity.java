@@ -137,7 +137,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
             return;
         }
         if (resultCode == RESULT_OK) {
-            int videosCount = vidTrain.getVideosCount();
+            final int videosCount = vidTrain.getVideosCount();
             totalVideos = getResources().getQuantityString(R.plurals.videos_count,
                     videosCount + 1, videosCount + 1);
             tvVideoCount.setText(totalVideos);
@@ -172,9 +172,14 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                                 @Override
                                 public void done(ParseException e) {
                                     layoutVidTrain();
-                                    List<ParseUser> collaborators = vidTrain.getCollaborators();
-                                    for (ParseUser collaborator : collaborators) {
-                                        sendVidtrainUpdatedNotification(ParseUser.getCurrentUser(), vidTrain);
+                                    List<Video> collabvideos = vidTrain.getVideos();
+                                    for (final Video collabvideo : collabvideos) {
+                                        collabvideo.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+                                            @Override
+                                            public void done(ParseObject object, ParseException e) {
+                                                sendVidtrainUpdatedNotification(collabvideo.getUser(), vidTrain);
+                                            }
+                                        });
                                     }
                                     user.put("vidtrains", User.maybeInitAndAdd(user, vidTrain));
                                     user.put("videos", User.maybeInitAndAdd(user, video));
