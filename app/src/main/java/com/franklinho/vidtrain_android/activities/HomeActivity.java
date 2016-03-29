@@ -4,12 +4,14 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.MenuItemCompat;
@@ -60,6 +62,9 @@ public class HomeActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         relayoutViewPager();
 
+        SharedPreferences mSettings = PreferenceManager.getDefaultSharedPreferences(this);
+        final SharedPreferences.Editor editor = mSettings.edit();
+
         Bitmap notificationLargeIconBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.icon_vidtrain);
 
         android.support.v4.app.NotificationCompat.Builder mBuilder = new android.support.v4.app.NotificationCompat.Builder(this)
@@ -102,11 +107,15 @@ public class HomeActivity extends AppCompatActivity {
                     relayoutViewPager();
 
                 }
+                editor.putInt("currentPage", position);
+                editor.commit();
             }
         });
 
         // Give the TabLayout the ViewPager
         tabLayout.setupWithViewPager(viewPager);
+        int savedPage = mSettings.getInt("currentPage", 0);
+        viewPager.setCurrentItem(savedPage);
         fabCreate.setVisibility(View.INVISIBLE);
 
 
