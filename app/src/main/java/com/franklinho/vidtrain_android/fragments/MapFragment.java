@@ -23,6 +23,7 @@ import com.franklinho.vidtrain_android.activities.HomeActivity;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.ErrorDialogFragment;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -296,42 +297,44 @@ public class MapFragment extends Fragment implements
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
             map.moveCamera(cameraUpdate);
 
-            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            for (Marker marker : markers) {
-                builder.include(marker.getPosition());
+            if (markers.size() > 0) {
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                for (Marker marker : markers) {
+                    builder.include(marker.getPosition());
+                }
+                LatLngBounds bounds = builder.build();
+                int padding = 100;
+                CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+
+                userGeneratedCameraChange = false;
+                map.animateCamera(cu);
+                map.animateCamera(cu, new GoogleMap.CancelableCallback() {
+                    @Override
+                    public void onFinish() {
+                        userGeneratedCameraChange = false;
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        userGeneratedCameraChange = true;
+
+                    }
+                });
+            } else {
+                cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
+                map.animateCamera(cameraUpdate, new GoogleMap.CancelableCallback() {
+                    @Override
+                    public void onFinish() {
+                        userGeneratedCameraChange = false;
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        userGeneratedCameraChange = true;
+
+                    }
+                });
             }
-            LatLngBounds bounds = builder.build();
-            int padding = 100;
-            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-
-            userGeneratedCameraChange = false;
-            map.animateCamera(cu);
-            map.animateCamera(cu, new GoogleMap.CancelableCallback() {
-                @Override
-                public void onFinish() {
-                    userGeneratedCameraChange = false;
-                }
-
-                @Override
-                public void onCancel() {
-                    userGeneratedCameraChange = true;
-
-                }
-            });
-//            cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
-//            map.animateCamera(cameraUpdate, new GoogleMap.CancelableCallback() {
-//                @Override
-//                public void onFinish() {
-//                    userGeneratedCameraChange = false;
-//                }
-//
-//                @Override
-//                public void onCancel() {
-//                    userGeneratedCameraChange = true;
-//
-//                }
-//            });
-
         }
     }
 

@@ -46,7 +46,7 @@
         android:id="@+id/timer"
         android:layout_width="0dp"
         android:layout_height="10dp"
-        android:layout_alignParentTop="true"
+        android:layout_above="@id/vBottom"
         android:background="@color/bluePrimary"
         />
 
