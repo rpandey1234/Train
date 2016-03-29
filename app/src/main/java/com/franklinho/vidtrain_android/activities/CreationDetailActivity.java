@@ -269,7 +269,9 @@ public class CreationDetailActivity extends AppCompatActivity {
         push.sendInBackground(new SendCallback() {
             @Override
             public void done(ParseException e) {
-                e.printStackTrace();
+                if (e != null) {
+                    e.printStackTrace();
+                }
             }
         });
 
