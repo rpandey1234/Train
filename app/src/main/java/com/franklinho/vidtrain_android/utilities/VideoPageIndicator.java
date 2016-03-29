@@ -17,6 +17,8 @@
 package com.franklinho.vidtrain_android.utilities;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -26,9 +28,8 @@ import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 
+import com.franklinho.vidtrain_android.R;
 import com.viewpagerindicator.PageIndicator;
-
-import java.util.ResourceBundle;
 
 import static android.view.ViewGroup.LayoutParams.FILL_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -65,8 +66,10 @@ public class VideoPageIndicator extends HorizontalScrollView implements PageIndi
                     = mIconsLayout.getChildAt(i);
             if (i != mSelectedIndex) {
                 opacityView.setAlpha(0.50f);
+                opacityView.setBackgroundColor(Color.WHITE);
             } else {
                 opacityView.setAlpha(1.0f);
+                opacityView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.bluePrimary));
             }
         }
 
@@ -146,12 +149,18 @@ public class VideoPageIndicator extends HorizontalScrollView implements PageIndi
         int count = iconAdapter.getCount();
         for (int i = 0; i < count; i++) {
             ImageView view = new ImageView(getContext(), null, com.viewpagerindicator.R.attr.vpiIconPageIndicatorStyle);
+            view.setPadding(2, 2, 2, 2);
+
+
             int dpOfImage = (int) getResources().getDisplayMetrics().density * 40;
             view.setAdjustViewBounds(true);
             view.setMaxHeight(dpOfImage);
             view.setMaxWidth(dpOfImage);
             if (i != mSelectedIndex) {
                 view.setAlpha(0.50f);
+                view.setBackgroundColor(Color.WHITE);
+            } else {
+                view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.bluePrimary));
             }
             view.setImageBitmap(iconAdapter.getIconBitMap(i));
             mIconsLayout.addView(view);
