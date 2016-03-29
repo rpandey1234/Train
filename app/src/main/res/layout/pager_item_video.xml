@@ -8,7 +8,7 @@
     android:paddingRight="20dp"
     >
 
-    <ImageView
+    <com.franklinho.vidtrain_android.models.DynamicHeightImageView
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:id="@+id/ivThumbnail"

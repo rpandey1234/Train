@@ -24,12 +24,12 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.desmond.squarecamera.ImageParameters;
 import com.desmond.squarecamera.ResizeAnimation;
 import com.franklinho.vidtrain_android.R;
+import com.franklinho.vidtrain_android.models.DynamicHeightImageView;
 import com.franklinho.vidtrain_android.models.DynamicVideoPlayerView;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.CameraPreview;
@@ -91,6 +91,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
             LayoutParams layoutParams = timerView.getLayoutParams();
             layoutParams.width = resultWidth;
             timerView.setLayoutParams(layoutParams);
+
         }
     };
 
@@ -124,6 +125,8 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         mCamera = getCameraInstance();
 
 
+//        pbProgressBar.getIndeterminateDrawable().setColorFilter(0xFFFFFF,
+//                android.graphics.PorterDuff.Mode.MULTIPLY);
 
 
 
@@ -182,7 +185,9 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
                     itemView.getPaddingRight(), itemView.getPaddingBottom());
             final DynamicVideoPlayerView vvPreview = (DynamicVideoPlayerView) itemView.findViewById(
                     R.id.vvPreview);
-            final ImageView ivThumbnail = (ImageView) itemView.findViewById(R.id.ivThumbnail);
+            vvPreview.setHeightRatio(1);
+            final DynamicHeightImageView ivThumbnail = (DynamicHeightImageView) itemView.findViewById(R.id.ivThumbnail);
+            ivThumbnail.setHeightRatio(1);
             ivThumbnail.setImageBitmap(Utility.getImageBitmap(videoPath));
             vvPreview.setVisibility(View.GONE);
             vvPreview.addMediaPlayerListener(new SimpleMainThreadMediaPlayerListener() {

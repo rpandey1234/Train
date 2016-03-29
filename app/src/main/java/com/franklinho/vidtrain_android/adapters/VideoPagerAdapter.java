@@ -7,9 +7,9 @@ import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.franklinho.vidtrain_android.R;
+import com.franklinho.vidtrain_android.models.DynamicHeightImageView;
 import com.franklinho.vidtrain_android.utilities.Utility;
 import com.franklinho.vidtrain_android.utilities.VideoIconPagerAdapter;
 
@@ -68,7 +68,7 @@ public class VideoPagerAdapter extends PagerAdapter implements VideoIconPagerAda
                     itemView.getPaddingBottom());
         }
         // Find and populate data into the page (i.e set the image)
-        ImageView ivThumbnail = (ImageView) itemView.findViewById(R.id.ivThumbnail);
+        DynamicHeightImageView ivThumbnail = (DynamicHeightImageView) itemView.findViewById(R.id.ivThumbnail);
         // Add the page to the container
         container.addView(itemView);
         final File videoFile = mVideoFiles.get(position);
