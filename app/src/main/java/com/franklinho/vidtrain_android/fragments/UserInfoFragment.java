@@ -96,7 +96,9 @@ public class UserInfoFragment extends Fragment {
                 isFollowing = !isFollowing;
                 // TODO: animate this
                 btnFollow.setText(isFollowing ? R.string.unfollow : R.string.follow);
-                sendFollowedNotification(profileUser);
+                if (isFollowing) {
+                    sendFollowedNotification(profileUser);
+                }
 
             }
         });

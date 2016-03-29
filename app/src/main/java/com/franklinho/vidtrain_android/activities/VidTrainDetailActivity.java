@@ -177,7 +177,9 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                                         collabvideo.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
                                             @Override
                                             public void done(ParseObject object, ParseException e) {
-                                                sendVidtrainUpdatedNotification(collabvideo.getUser(), vidTrain);
+                                                if (collabvideo.getUser().getObjectId() != ParseUser.getCurrentUser().getObjectId()) {
+                                                    sendVidtrainUpdatedNotification(collabvideo.getUser(), vidTrain);
+                                                }
                                             }
                                         });
                                     }
