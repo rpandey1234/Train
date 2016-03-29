@@ -74,6 +74,14 @@
         <item name="android:padding">0dp</item>
         <item name="colorButtonNormal">@color/blueAccent</item>
     </style>
+
+    <style name="FollowButtonStyle" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:padding">10dp</item>
+        <item name="colorButtonNormal">@android:color/white</item>
+        <item name="android:textColor">@color/bluePrimary</item>
+    </style>
+
+
     
     <style name="FacebookLoginButtonStyle" parent="Widget.AppCompat.Button.Colored">
         <item name="android:colorButtonNormal">@color/facebookBlue</item>
