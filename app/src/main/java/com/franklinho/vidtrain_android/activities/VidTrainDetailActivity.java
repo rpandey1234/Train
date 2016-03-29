@@ -435,7 +435,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         ParseQuery pushQuery = ParseInstallation.getQuery();
         pushQuery.whereEqualTo("user", user.getObjectId());
         String currentUserName = ParseUser.getCurrentUser().getString("name");
-        String alertString = currentUserName + " has just updated the vidtrain: " + vidtrain.getTitle();
+        String alertString = currentUserName + " has just updated the Vidtrain: " + vidtrain.getTitle();
         JSONObject data = new JSONObject();
 
         try {
