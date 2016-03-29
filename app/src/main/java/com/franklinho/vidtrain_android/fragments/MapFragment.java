@@ -295,8 +295,18 @@ public class MapFragment extends Fragment implements
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
             map.moveCamera(cameraUpdate);
-            cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
-            map.animateCamera(cameraUpdate, new GoogleMap.CancelableCallback() {
+
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            for (Marker marker : markers) {
+                builder.include(marker.getPosition());
+            }
+            LatLngBounds bounds = builder.build();
+            int padding = 100;
+            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+
+            userGeneratedCameraChange = false;
+            map.animateCamera(cu);
+            map.animateCamera(cu, new GoogleMap.CancelableCallback() {
                 @Override
                 public void onFinish() {
                     userGeneratedCameraChange = false;
@@ -308,6 +318,19 @@ public class MapFragment extends Fragment implements
 
                 }
             });
+//            cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
+//            map.animateCamera(cameraUpdate, new GoogleMap.CancelableCallback() {
+//                @Override
+//                public void onFinish() {
+//                    userGeneratedCameraChange = false;
+//                }
+//
+//                @Override
+//                public void onCancel() {
+//                    userGeneratedCameraChange = true;
+//
+//                }
+//            });
 
         }
     }
