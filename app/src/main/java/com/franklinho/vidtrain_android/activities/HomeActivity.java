@@ -62,7 +62,7 @@ public class HomeActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         relayoutViewPager();
 
-        SharedPreferences mSettings = PreferenceManager.getDefaultSharedPreferences(this);
+        final SharedPreferences mSettings = PreferenceManager.getDefaultSharedPreferences(this);
         final SharedPreferences.Editor editor = mSettings.edit();
 
         Bitmap notificationLargeIconBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.icon_vidtrain);
@@ -100,12 +100,12 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
+
                 enterReveal();
                 if (position != 0) {
                     removePagerPadding();
                 } else {
                     relayoutViewPager();
-
                 }
                 editor.putInt("currentPage", position);
                 editor.commit();
@@ -114,8 +114,40 @@ public class HomeActivity extends AppCompatActivity {
 
         // Give the TabLayout the ViewPager
         tabLayout.setupWithViewPager(viewPager);
-        int savedPage = mSettings.getInt("currentPage", 0);
-        viewPager.setCurrentItem(savedPage);
+
+
+        transitionListener = new Transition.TransitionListener() {
+            @Override
+            public void onTransitionStart(Transition transition) {
+
+            }
+
+            @Override
+            public void onTransitionEnd(Transition transition) {
+                int savedPage = mSettings.getInt("currentPage", 0);
+                viewPager.setCurrentItem(savedPage);
+
+            }
+
+            @Override
+            public void onTransitionCancel(Transition transition) {
+
+            }
+
+            @Override
+            public void onTransitionPause(Transition transition) {
+
+            }
+
+            @Override
+            public void onTransitionResume(Transition transition) {
+
+            }
+        };
+
+        getWindow().getEnterTransition().addListener(transitionListener);
+
+
         fabCreate.setVisibility(View.INVISIBLE);
 
 
