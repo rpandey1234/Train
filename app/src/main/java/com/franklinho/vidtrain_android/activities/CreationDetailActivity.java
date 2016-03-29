@@ -232,6 +232,16 @@ public class CreationDetailActivity extends AppCompatActivity {
                                             };
                                         }
 
+                                        ParsePush.subscribeInBackground(vidTrain.getObjectId(), new SaveCallback() {
+
+                                            @Override
+
+                                            public void done(com.parse.ParseException arg0) {
+
+                                            }
+
+                                        });
+
                                     }
                                 });
                             }

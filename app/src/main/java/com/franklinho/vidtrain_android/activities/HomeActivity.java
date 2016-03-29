@@ -5,6 +5,9 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -56,6 +59,13 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
         relayoutViewPager();
+
+        Bitmap notificationLargeIconBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.icon_vidtrain);
+
+        android.support.v4.app.NotificationCompat.Builder mBuilder = new android.support.v4.app.NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.icon_vidtrain)
+                .setLargeIcon(notificationLargeIconBitmap)
+                .setColor(Color.WHITE);
 
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {

@@ -1,8 +1,10 @@
 package com.franklinho.vidtrain_android.networking;
 
 import android.app.Application;
+import android.support.v7.app.NotificationCompat;
 
 import com.facebook.FacebookSdk;
+import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.models.Comment;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
@@ -59,5 +61,7 @@ public class VidtrainApplication extends Application {
         });
 
         sVideoPlayer = new VideoPlayer();
+
+
     }
 }

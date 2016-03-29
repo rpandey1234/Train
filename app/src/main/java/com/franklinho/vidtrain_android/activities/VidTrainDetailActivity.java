@@ -172,17 +172,16 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                                 @Override
                                 public void done(ParseException e) {
                                     layoutVidTrain();
-                                    List<Video> collabvideos = vidTrain.getVideos();
-                                    for (final Video collabvideo : collabvideos) {
-                                        collabvideo.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
-                                            @Override
-                                            public void done(ParseObject object, ParseException e) {
-                                                if (collabvideo.getUser().getObjectId() != ParseUser.getCurrentUser().getObjectId()) {
-                                                    sendVidtrainUpdatedNotification(collabvideo.getUser(), vidTrain);
-                                                }
-                                            }
-                                        });
-                                    }
+                                    sendVidtrainUpdatedNotification(vidTrain);
+                                    ParsePush.subscribeInBackground(vidTrain.getObjectId(), new SaveCallback() {
+
+                                        @Override
+
+                                        public void done(com.parse.ParseException arg0) {
+
+                                        }
+
+                                    });
                                     user.put("vidtrains", User.maybeInitAndAdd(user, vidTrain));
                                     user.put("videos", User.maybeInitAndAdd(user, video));
                                     user.saveInBackground(new SaveCallback() {
@@ -431,9 +430,10 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         new VideoDownloadTask(vpPreview).execute(vidTrain);
     }
 
-    public void sendVidtrainUpdatedNotification(ParseUser user, VidTrain vidtrain) {
+    public void sendVidtrainUpdatedNotification(VidTrain vidtrain) {
         ParseQuery pushQuery = ParseInstallation.getQuery();
-        pushQuery.whereEqualTo("user", user.getObjectId());
+        pushQuery.whereEqualTo("channels", vidtrain.getObjectId()); // Set the channel
+        pushQuery.whereNotEqualTo("objectId", ParseInstallation.getCurrentInstallation().getObjectId());
         String currentUserName = ParseUser.getCurrentUser().getString("name");
         String alertString = currentUserName + " has just updated the vidtrain: " + vidtrain.getTitle();
         JSONObject data = new JSONObject();
