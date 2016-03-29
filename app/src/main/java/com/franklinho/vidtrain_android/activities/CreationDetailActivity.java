@@ -257,7 +257,7 @@ public class CreationDetailActivity extends AppCompatActivity {
 
         try {
             data.put("alert", alertString);
-            data.put("title", "VidTrain");
+            data.put("title", "Vidtrain");
             data.put("vidTrain", vidtrain.getObjectId());
         } catch (JSONException e) {
             e.printStackTrace();

@@ -146,7 +146,7 @@ public class UserInfoFragment extends Fragment {
 
         try {
             data.put("alert", alertString);
-            data.put("title", "VidTrain");
+            data.put("title", "Vidtrain");
             data.put("userId", currentUser.getObjectId());
         } catch (JSONException e) {
             e.printStackTrace();
