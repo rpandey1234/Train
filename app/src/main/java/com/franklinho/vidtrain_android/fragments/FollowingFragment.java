@@ -20,10 +20,17 @@ import java.util.List;
  * Created by rahul on 3/5/16.
  */
 public class FollowingFragment extends VidTrainListFragment {
+    ParseUser followingUser;
 
     List<ParseUser> followingList;
     public static FollowingFragment newInstance() {
         return new FollowingFragment();
+    }
+
+    public static FollowingFragment newInstance(ParseUser user) {
+        FollowingFragment followingFragment = new FollowingFragment();
+        followingFragment.followingUser = user;
+        return followingFragment;
     }
 
 
@@ -32,7 +39,11 @@ public class FollowingFragment extends VidTrainListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
         showProgressBar();
-        followingList = (List<ParseUser>) ParseUser.getCurrentUser().get("following");
+        if (followingUser == null) {
+            followingList = (List<ParseUser>) ParseUser.getCurrentUser().get("following");
+        } else {
+            followingList = (List<ParseUser>) followingUser.get("following");
+        }
 
         linearLayoutManager = new LinearLayoutManager(getContext());
         rvVidTrains.setLayoutManager(linearLayoutManager);

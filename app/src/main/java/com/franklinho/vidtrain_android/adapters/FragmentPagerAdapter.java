@@ -1,11 +1,14 @@
-package com.franklinho.vidtrain_android.fragments;
+package com.franklinho.vidtrain_android.adapters;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
+import com.franklinho.vidtrain_android.fragments.MapFragment;
+import com.franklinho.vidtrain_android.fragments.PopularFragment;
+
 public class FragmentPagerAdapter extends android.support.v4.app.FragmentPagerAdapter {
-    private String tabTitles[] = new String[]{"Map", "Popular", "Following"};
+    private String tabTitles[] = new String[]{"Map", "Popular"};
     private Context context;
 
     public FragmentPagerAdapter(FragmentManager fm, Context context) {
@@ -22,10 +25,8 @@ public class FragmentPagerAdapter extends android.support.v4.app.FragmentPagerAd
     public Fragment getItem(int position) {
         if (position == 0) {
             return MapFragment.newInstance();
-        } else if (position == 1){
-            return PopularFragment.newInstance();
         } else {
-            return FollowingFragment.newInstance();
+            return PopularFragment.newInstance();
         }
     }
 
@@ -35,3 +36,5 @@ public class FragmentPagerAdapter extends android.support.v4.app.FragmentPagerAd
         return tabTitles[position];
     }
 }
+
+

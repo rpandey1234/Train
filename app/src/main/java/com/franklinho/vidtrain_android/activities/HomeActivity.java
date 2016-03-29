@@ -33,7 +33,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.franklinho.vidtrain_android.R;
-import com.franklinho.vidtrain_android.fragments.FragmentPagerAdapter;
+import com.franklinho.vidtrain_android.adapters.FragmentPagerAdapter;
 import com.franklinho.vidtrain_android.utilities.Utility;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
