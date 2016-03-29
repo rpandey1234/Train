@@ -113,7 +113,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     }
 
     public void invalidVidtrain() {
-        Toast.makeText(this, "This VidTrain is invalid", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "This Vidtrain is invalid", Toast.LENGTH_SHORT).show();
         this.finish();
     }
 
@@ -435,12 +435,12 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         pushQuery.whereEqualTo("channels", vidtrain.getObjectId()); // Set the channel
         pushQuery.whereNotEqualTo("objectId", ParseInstallation.getCurrentInstallation().getObjectId());
         String currentUserName = ParseUser.getCurrentUser().getString("name");
-        String alertString = currentUserName + " has just updated the vidtrain: " + vidtrain.getTitle();
+        String alertString = currentUserName + " has just updated the Vidtrain: " + vidtrain.getTitle();
         JSONObject data = new JSONObject();
 
         try {
             data.put("alert", alertString);
-            data.put("title", "VidTrain");
+            data.put("title", "Vidtrain");
             data.put("vidTrain", vidtrain.getObjectId());
         } catch (JSONException e) {
             e.printStackTrace();

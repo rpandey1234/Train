@@ -262,12 +262,12 @@ public class CreationDetailActivity extends AppCompatActivity {
         ParseQuery pushQuery = ParseInstallation.getQuery();
         pushQuery.whereEqualTo("user", user.getObjectId());
         String currentUserName = ParseUser.getCurrentUser().getString("name");
-        String alertString = currentUserName + " has added you to the vidtrain: " + vidtrain.getTitle();
+        String alertString = currentUserName + " has added you to the Vidtrain: " + vidtrain.getTitle();
         JSONObject data = new JSONObject();
 
         try {
             data.put("alert", alertString);
-            data.put("title", "VidTrain");
+            data.put("title", "Vidtrain");
             data.put("vidTrain", vidtrain.getObjectId());
         } catch (JSONException e) {
             e.printStackTrace();
