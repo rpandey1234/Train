@@ -90,14 +90,14 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         VideoPlayer.resetVideoPlayerManager();
 
         setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-
-        if (actionBar != null) {
-            actionBar.setDisplayShowHomeEnabled(true);
-            actionBar.setDefaultDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowTitleEnabled(false);
-        }
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         requestVidTrain(true);
 
         swipeContainer.setColorSchemeResources(R.color.bluePrimary);
