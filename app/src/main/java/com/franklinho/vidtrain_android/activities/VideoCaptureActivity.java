@@ -124,12 +124,6 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         // Create an instance of Camera
         mCamera = getCameraInstance();
 
-
-//        pbProgressBar.getIndeterminateDrawable().setColorFilter(0xFFFFFF,
-//                android.graphics.PorterDuff.Mode.MULTIPLY);
-
-
-
         // Create our Preview view and set it as the content of our activity.
         mPreview = new CameraPreview(this, mCamera);
         preview.addView(mPreview);
@@ -283,7 +277,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
 
         // Step 3: Set a CamcorderProfile (requires API Level 8 or higher)
-        mMediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_LOW));
+        mMediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_720P));
 
         // Step 4: Set output file
         mMediaRecorder.setOutputFile(getOutputMediaFile(MEDIA_TYPE_VIDEO).toString());
@@ -292,9 +286,9 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         mMediaRecorder.setPreviewDisplay(mPreview.getHolder().getSurface());
         mMediaRecorder.setOrientationHint(VideoCaptureActivity.orientation);
         mMediaRecorder.setVideoFrameRate(24);
-        mMediaRecorder.setVideoEncodingBitRate(1000000);
-        mMediaRecorder.setVideoSize(smallestSize.width, smallestSize.height);
-        mMediaRecorder.setMaxFileSize(2000000); // max parse file size is 10485760 bytes
+        mMediaRecorder.setVideoEncodingBitRate(5000000);
+//        mMediaRecorder.setVideoSize(smallestSize.width, smallestSize.height);
+        mMediaRecorder.setMaxFileSize(8000000); // max parse file size is 10485760 bytes
         mMediaRecorder.setMaxDuration(MAX_TIME);
         mMediaRecorder.setOnInfoListener(this);
         // Step 6: Prepare configured MediaRecorder

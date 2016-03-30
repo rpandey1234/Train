@@ -225,21 +225,17 @@ public class CreationDetailActivity extends AppCompatActivity {
                                     @Override
                                     public void done(ParseException e) {
                                         successfullySavedVidtrain();
-
                                         if (collaborators != null) {
                                             for (ParseUser collaborator : collaborators) {
-                                                sendCollaboratorNotification(collaborator, vidTrain);
-                                            };
+                                                if (!collaborator.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
+                                                    sendCollaboratorNotification(collaborator, vidTrain);
+                                                }
+                                            }
                                         }
 
                                         ParsePush.subscribeInBackground(vidTrain.getObjectId(), new SaveCallback() {
-
                                             @Override
-
-                                            public void done(com.parse.ParseException arg0) {
-
-                                            }
-
+                                            public void done(com.parse.ParseException arg0) {}
                                         });
 
                                     }
