@@ -3,8 +3,10 @@ package com.franklinho.vidtrain_android.utilities;
 import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 
+import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.activities.HomeActivity;
 import com.franklinho.vidtrain_android.activities.LogInActivity;
 import com.franklinho.vidtrain_android.activities.ProfileActivity;
@@ -60,8 +62,11 @@ public class PushMessageBroadcast extends ParsePushBroadcastReceiver {
 
     @Override
     protected Notification getNotification(Context context, Intent intent) {
-        // TODO Auto-generated method stub
-        return super.getNotification(context, intent);
+        Notification notification = super.getNotification(context, intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            notification.color = context.getResources().getColor(R.color.white);
+        }
+        return notification;
     }
 
     @Override

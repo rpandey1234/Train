@@ -9,4 +9,5 @@
     <color name="bluePrimary">#2DAB9E</color>
     <color name="bluePrimaryDark">#0B9D8E</color>
     <color name="blueAccent">#16CFBB</color>
+    <color name="white">#FFFFFF</color>
 </resources>
