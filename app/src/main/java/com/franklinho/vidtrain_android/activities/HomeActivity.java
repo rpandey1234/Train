@@ -265,13 +265,8 @@ public class HomeActivity extends AppCompatActivity {
     public void exitReveal() {
         int cx = fabCreate.getMeasuredWidth() / 2;
         int cy = fabCreate.getMeasuredHeight() / 2;
-
         int initialRadius = Math.max(fabCreate.getWidth(), fabCreate.getHeight()) / 2;
-
-
         Animator anim = ViewAnimationUtils.createCircularReveal(fabCreate, cx, cy, initialRadius, 0);
-
-
         anim.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
@@ -279,8 +274,6 @@ public class HomeActivity extends AppCompatActivity {
                 fabCreate.setVisibility(View.INVISIBLE);
             }
         });
-
-
         anim.start();
     }
 
