@@ -77,20 +77,8 @@ public class HomeActivity extends AppCompatActivity {
             ParseInstallation currentInstallation = ParseInstallation.getCurrentInstallation();
             currentInstallation.put("user", currentUser.getObjectId());
             currentInstallation.saveInBackground();
-
         }
-
-
         setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-
-//        actionBar.setLogo(R.layout.space_between_icon);
-//        actionBar.setDisplayUseLogoEnabled(true);
-//        actionBar.setDisplayShowHomeEnabled(true);
-//        actionBar.setDefaultDisplayHomeAsUpEnabled(false);
-//        actionBar.setHomeAsUpIndicator(0);
-//        actionBar.setDisplayHomeAsUpEnabled(false);
-//        actionBar.setDisplayShowTitleEnabled(false);
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager(),
@@ -190,7 +178,6 @@ public class HomeActivity extends AppCompatActivity {
             int cx = (int) fabCreate.getX() + fabCreate.getWidth()/2;
             int cy = (int) fabCreate.getY() + fabCreate.getHeight()/2;
 
-//            float finalRadius = (float) Math.hypot(cx, cy);
             float finalRadius = getWindow().getDecorView().getHeight();
             Animator anim = ViewAnimationUtils.createCircularReveal(viewReveal, cx, cy, 0, finalRadius);
             anim.setInterpolator(new AccelerateInterpolator());
@@ -204,12 +191,8 @@ public class HomeActivity extends AppCompatActivity {
                     intent.putExtra(UNIQUE_ID_INTENT, uniqueId);
                     intent.putExtra(SHOW_CONFIRM, false);
                     startActivityForResult(intent, VIDEO_CAPTURE);
-//                    startActivityForResult(Utility.getVideoIntent(), VIDEO_CAPTURE);
                 }
             });
-
-
-
         } else {
             Toast.makeText(this, "No camera on device", Toast.LENGTH_LONG).show();
         }
@@ -236,8 +219,6 @@ public class HomeActivity extends AppCompatActivity {
         relayoutViewPager();
         viewReveal.setVisibility(View.GONE);
         fabCreate.setVisibility(View.INVISIBLE);
-
-
         fabCreate.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
