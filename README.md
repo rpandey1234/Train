@@ -44,15 +44,9 @@ Other users can comment on the videos with annotations to particular points in t
 			*  :white_check_mark: Story can be set to public so anyone can collaborate
 			*  :white_large_square: Story privacy can be set to public or private. If private, only viewable by collaborators
 
-![Skeleton Functionality](https://github.com/VidTrain/vidtrain-android/blob/master/VidTrainWalkThrough.gif)
 
-![Core Functionality](https://github.com/VidTrain/vidtrain-android/blob/master/VidTrainWalkThroughCoreFlows.gif)
+![Core Functionality](https://github.com/VidTrain/vidtrain-android/blob/master/VidTrainWalkThroughCoreFlowsMaterial.gif)
 
-Note: Creation flow currently complete, but missing from walkthrough due to emulator issues. See below for static screenshots:
-
-![Camera](https://github.com/VidTrain/vidtrain-android/blob/master/Vactivities-LogInActivity-03142016180050.png)
-
-![Approval](https://github.com/VidTrain/vidtrain-android/blob/master/activities-LogInActivity-03142016180130.png)
 
 ![Creation Detail](https://github.com/VidTrain/vidtrain-android/blob/master/activities-LogInActivity-03142016180140.png)
 
