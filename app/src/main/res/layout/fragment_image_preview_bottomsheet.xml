@@ -5,10 +5,6 @@
     android:background="#fafafa"
     android:orientation="vertical">
 
-
-
-
-
     <android.support.v4.view.ViewPager
         android:layout_width="200dp"
         android:layout_height="200dp"
@@ -19,8 +15,8 @@
         android:background="@android:color/black"
         android:onClick=""
         android:transitionName="viewer"
-
         />
+
     <com.viewpagerindicator.CirclePageIndicator
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -38,39 +34,39 @@
         android:layout_toRightOf="@id/vpPreview"
         android:layout_centerVertical="true">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvTitle"
+            android:gravity="center_horizontal"
+            android:textSize="20sp"
+            android:textColor="@color/bluePrimary"
+            android:maxLines="2"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
+            android:ellipsize="end"
+            android:transitionName="title"
+            android:layout_marginBottom="10dp"
+            />
+
         <com.makeramen.roundedimageview.RoundedImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:id="@+id/ivCollaborators"
             app:riv_corner_radius="25dp"
             app:riv_border_color="@android:color/white"
             app:riv_border_width="2dp"
             android:src="@drawable/user_icon"
+            android:layout_below="@id/tvTitle"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:transitionName="collaboratorImage"
             />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/tvTitle"
-            android:layout_alignStart="@id/ivCollaborators"
-            android:layout_below="@id/ivCollaborators"
-            android:gravity="center"
-            android:textSize="25dp"
-            android:layout_marginRight="10dp"
-            android:textColor="@color/bluePrimary"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:transitionName="title"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_alignParentRight="true"
-            />
         <ImageButton
-            android:layout_width="44dp"
-            android:layout_height="44dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:src="@drawable/heart_icon"
             android:gravity="center_vertical|end"
             android:layout_toLeftOf="@+id/tvLikeCount"
@@ -89,37 +85,21 @@
             android:layout_alignBottom="@+id/ivCollaborators"
             android:layout_alignRight="@+id/btnWatchVideos"
             android:gravity="center_vertical"
-            android:textSize="30dp"
+            android:textSize="20sp"
             android:id="@+id/tvLikeCount"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/ibtnLike"
-            android:layout_alignBottom="@+id/ibtnLike"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="10dp"
-            android:gravity="center_vertical"
-            android:textSize="16sp"
-            android:id="@+id/tvTime"
             />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="View x Videos"
-            android:layout_below="@id/tvTitle"
+            android:layout_below="@id/ivCollaborators"
             android:id="@+id/btnWatchVideos"
             android:textColor="@android:color/white"
             android:theme="@style/BottomSheetButtonStyle"
-            android:layout_alignStart="@id/tvTitle"
-            android:layout_alignEnd="@id/tvTitle"
-            android:layout_marginBottom="20dp"
+            android:gravity="center"
             />
     </RelativeLayout>
-
 </android.support.percent.PercentRelativeLayout>
