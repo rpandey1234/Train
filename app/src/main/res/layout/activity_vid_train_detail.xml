@@ -137,7 +137,6 @@
                 android:layout_alignBottom="@+id/ibtnLike"
                 android:layout_alignTop="@+id/ibtnLike"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
                 android:layout_marginRight="20dp"
                 android:gravity="center_vertical"
                 android:textSize="16sp"

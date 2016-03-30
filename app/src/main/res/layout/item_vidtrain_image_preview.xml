@@ -14,15 +14,16 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
     <com.makeramen.roundedimageview.RoundedImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:id="@+id/ivCollaborators"
         app:riv_corner_radius="25dp"
-        app:riv_border_color="@android:color/white"
-        app:riv_border_width="2dp"
         android:src="@drawable/user_icon"
-        android:layout_margin="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:transitionName="collaboratorImage"
         />
 
@@ -35,13 +36,10 @@
         android:gravity="center_vertical|left"
         android:textSize="20sp"
         android:layout_toRightOf="@id/ivCollaborators"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginLeft="10dp"
         android:layout_toLeftOf="@id/ibtnLike"
         android:transitionName="title"
         />
-
-
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -69,43 +67,30 @@
     </RelativeLayout>
 
     <ImageButton
-        android:layout_width="44dp"
-        android:layout_height="44dp"
-        android:src="@drawable/heart_icon"
-        android:gravity="center_vertical|end"
-        android:layout_toLeftOf="@+id/tvLikeCount"
-        android:scaleType="centerInside"
-        android:background="@android:color/transparent"
         android:id="@+id/ibtnLike"
-        android:padding="5dp"
-        android:layout_margin="10dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/heart_icon"
+        android:scaleType="centerInside"
+        android:layout_alignBottom="@id/ivCollaborators"
+        android:layout_alignTop="@id/ivCollaborators"
+        android:gravity="center_vertical"
+        android:background="@android:color/transparent"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@+id/tvLikeCount"
         />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0"
-        android:layout_alignTop="@id/ivCollaborators"
-        android:layout_alignBottom="@id/ivCollaborators"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:gravity="center_vertical|end"
-        android:textSize="16sp"
+        android:layout_alignBottom="@id/ivCollaborators"
+        android:layout_alignTop="@id/ivCollaborators"
+        android:gravity="center_vertical"
+        android:textSize="20sp"
         android:id="@+id/tvLikeCount"
         android:layout_marginRight="10dp"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/ibtnLike"
-        android:layout_alignBottom="@+id/ibtnLike"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="10dp"
-        android:gravity="center_vertical"
-        android:textSize="16sp"
-        android:id="@+id/tvTime"
         />
 
     <Button
@@ -119,9 +104,5 @@
         android:foreground="?android:attr/selectableItemBackground"
         />
 
-    <!--<View style="@style/section_item_divider"-->
-        <!--android:layout_below="@+id/btnWatchVideos"-->
-        <!--/>-->
     </RelativeLayout>
-
 </android.support.v7.widget.CardView>

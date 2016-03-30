@@ -36,7 +36,6 @@ public class VidTrainViewHolder extends  RecyclerView.ViewHolder implements View
     @Bind(R.id.ibtnLike) public ImageButton ibtnLike;
     @Bind(R.id.tvLikeCount) public TextView tvLikeCount;
     @Bind(R.id.tvTitle) public TextView tvTitle;
-    @Bind(R.id.tvTime) public TextView tvTime;
     @Bind(R.id.vpPreview) public ViewPager vpPreview;
     @Bind(R.id.cpIndicator) public CirclePageIndicator cpIndicator;
     @Bind(R.id.btnWatchVideos) public Button btnWatchVideos;
