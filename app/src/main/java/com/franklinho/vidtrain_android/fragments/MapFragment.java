@@ -15,15 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
-
-import com.flipboard.bottomsheet.BottomSheetLayout;
-import com.franklinho.vidtrain_android.Manifest;
-import com.franklinho.vidtrain_android.R;
-import com.franklinho.vidtrain_android.activities.HomeActivity;
-import com.franklinho.vidtrain_android.models.VidTrain;
-import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.ErrorDialogFragment;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -41,6 +33,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import com.flipboard.bottomsheet.BottomSheetLayout;
+import com.franklinho.vidtrain_android.Manifest;
+import com.franklinho.vidtrain_android.R;
+import com.franklinho.vidtrain_android.activities.HomeActivity;
+import com.franklinho.vidtrain_android.models.VidTrain;
+import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
@@ -254,6 +253,10 @@ public class MapFragment extends Fragment implements
                 @Override
                 public void onCameraChange(CameraPosition cameraPosition) {
                     if (userGeneratedCameraChange) {
+                        // reset all marker colors
+                        for (Marker marker : markers) {
+                            marker.setIcon(BitmapDescriptorFactory.defaultMarker(160.0F));
+                        }
                         // User caused onCameraChange...
                         if (btnSearchMap.getVisibility() != View.VISIBLE) {
                             showSearchMapButton();
@@ -379,16 +382,11 @@ public class MapFragment extends Fragment implements
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-//        FragmentManager fm = getFragmentManager();
-////        MapDialogFragment mapDialogFragment = MapDialogFragment.newInstance(marker.getSnippet());
-//        ImagePreviewDialogFragment imagePreviewDialogFragment =  ImagePreviewDialogFragment.newInstance(marker.getSnippet());
-//        Bundle bundle = new Bundle();
-//        bundle.putString("vidTrainId", marker.getSnippet());
-//        imagePreviewDialogFragment.setArguments(bundle);
-//        imagePreviewDialogFragment.show(fm, "fragment_image_preview");
-//        bottomsheet.showWithSheetView(LayoutInflater.from(getContext()).inflate(R.layout.fragment_image_preview, bottomsheet, false));
-        ImagePreviewFragment imagePreviewFragment = ImagePreviewFragment.newInstance(
-                marker.getSnippet());
+        // set color
+        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(marker.getPosition());
+        map.animateCamera(cameraUpdate);
+        ImagePreviewFragment imagePreviewFragment = ImagePreviewFragment.newInstance(marker.getSnippet());
         Bundle bundle = new Bundle();
         bundle.putString("vidTrainId", marker.getSnippet());
         imagePreviewFragment.setArguments(bundle);
@@ -443,6 +441,4 @@ public class MapFragment extends Fragment implements
         fadeAltAnim.start();
         btnSearchMap.setVisibility(View.GONE);
     }
-
-
 }
