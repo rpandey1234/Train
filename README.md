@@ -44,7 +44,7 @@ Other users can comment on the videos with annotations to particular points in t
 			*  :white_check_mark: Story can be set to public so anyone can collaborate
 			*  :white_large_square: Story privacy can be set to public or private. If private, only viewable by collaborators
 
-
+Note: Videos are sideways in simulator, but on devices are oriented correctly
 ![Core Functionality](https://github.com/VidTrain/vidtrain-android/blob/master/VidTrainWalkThroughCoreFlowsMaterial.gif)
 
 
