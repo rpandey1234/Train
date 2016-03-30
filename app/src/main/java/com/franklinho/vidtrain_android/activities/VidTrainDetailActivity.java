@@ -77,7 +77,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     private ProgressDialog progress;
     private VidTrain vidTrain;
     private boolean liked = false;
-    private String totalVideos;
     private VideoPagerAdapter videoPagerAdapter;
     private List<File> filesList;
     private String uniqueId = Long.toString(System.currentTimeMillis());
@@ -92,8 +91,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-
-
 
         if (actionBar != null) {
             actionBar.setDisplayShowHomeEnabled(true);
@@ -138,8 +135,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         }
         if (resultCode == RESULT_OK) {
             final int videosCount = vidTrain.getVideosCount();
-//            totalVideos = getResources().getQuantityString(R.plurals.videos_count,
-//                    videosCount + 1, videosCount + 1);
             tvVideoCount.setText(String.valueOf(videosCount + 1));
             progress = ProgressDialog.show(this, "Adding your video", "Just a moment please!",
                     true);
@@ -261,8 +256,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
             vidTrain.setLikes(vidTrain.getLikes() + 1);
         }
         view.startAnimation(animScale);
-//        tvLikeCount.setText(getResources().getQuantityString(R.plurals.likes_count,
-//                vidTrain.getLikes(), vidTrain.getLikes()));
         tvLikeCount.setText(String.valueOf(vidTrain.getLikes()));
     }
 
@@ -282,7 +275,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                             filesList.add(localVideoFile);
                             videoPagerAdapter.notifyDataSetChanged();
                             cpIndicator.notifyDataSetChanged();
-//                            VideoPlayer.resetVideoPlayerManager();
                         } else {
                             Log.d(VidtrainApplication.TAG, e.toString());
                         }
@@ -417,8 +409,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         tvLikeCount.setText(String.valueOf(vidTrain.getLikes()));
         tvTitle.setText(vidTrain.getTitle());
         int videosCount = vidTrain.getVideosCount();
-//        totalVideos = getResources().getQuantityString(R.plurals.videos_count,
-//                videosCount, videosCount);
         tvVideoCount.setText(String.valueOf(videosCount));
         tvTime.setText(Utility.getRelativeTime(vidTrain.getCreatedAt().getTime()));
         vidTrain.getUser().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
@@ -452,6 +442,5 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         push.setQuery(pushQuery);
         push.setData(data);
         push.sendInBackground();
-
     }
 }
