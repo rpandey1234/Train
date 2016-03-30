@@ -81,7 +81,10 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="15dp"
                     android:gravity="center_vertical|end"
-                    android:textSize="16sp" />
+                    android:textSize="20sp"
+                    android:drawablePadding="10dp"
+                    android:drawableStart="@drawable/icon_vidtrain_small"
+                    />
 
                 <RelativeLayout
                     android:id="@+id/videoContainer"
@@ -138,7 +141,7 @@
                     android:layout_toRightOf="@id/ibtnLike"
                     android:gravity="center_vertical"
                     android:text="@string/likes"
-                    android:textSize="16sp" />
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/tvTime"

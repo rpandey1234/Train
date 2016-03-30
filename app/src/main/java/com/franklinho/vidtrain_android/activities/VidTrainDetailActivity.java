@@ -138,9 +138,9 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         }
         if (resultCode == RESULT_OK) {
             final int videosCount = vidTrain.getVideosCount();
-            totalVideos = getResources().getQuantityString(R.plurals.videos_count,
-                    videosCount + 1, videosCount + 1);
-            tvVideoCount.setText(totalVideos);
+//            totalVideos = getResources().getQuantityString(R.plurals.videos_count,
+//                    videosCount + 1, videosCount + 1);
+            tvVideoCount.setText(String.valueOf(videosCount + 1));
             progress = ProgressDialog.show(this, "Adding your video", "Just a moment please!",
                     true);
             // data.getData().toString() is the following:
@@ -261,8 +261,9 @@ public class VidTrainDetailActivity extends AppCompatActivity {
             vidTrain.setLikes(vidTrain.getLikes() + 1);
         }
         view.startAnimation(animScale);
-        tvLikeCount.setText(getResources().getQuantityString(R.plurals.likes_count,
-                vidTrain.getLikes(), vidTrain.getLikes()));
+//        tvLikeCount.setText(getResources().getQuantityString(R.plurals.likes_count,
+//                vidTrain.getLikes(), vidTrain.getLikes()));
+        tvLikeCount.setText(String.valueOf(vidTrain.getLikes()));
     }
 
     void updateVideos() {
@@ -413,11 +414,12 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         tvLikeCount.setText(getResources().getQuantityString(R.plurals.likes_count,
                 vidTrain.getLikes(), vidTrain.getLikes()));
 
+        tvLikeCount.setText(String.valueOf(vidTrain.getLikes()));
         tvTitle.setText(vidTrain.getTitle());
         int videosCount = vidTrain.getVideosCount();
-        totalVideos = getResources().getQuantityString(R.plurals.videos_count,
-                videosCount, videosCount);
-        tvVideoCount.setText(totalVideos);
+//        totalVideos = getResources().getQuantityString(R.plurals.videos_count,
+//                videosCount, videosCount);
+        tvVideoCount.setText(String.valueOf(videosCount));
         tvTime.setText(Utility.getRelativeTime(vidTrain.getCreatedAt().getTime()));
         vidTrain.getUser().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
             @Override
