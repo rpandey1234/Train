@@ -15,6 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.flipboard.bottomsheet.BottomSheetLayout;
+import com.franklinho.vidtrain_android.Manifest;
+import com.franklinho.vidtrain_android.R;
+import com.franklinho.vidtrain_android.activities.HomeActivity;
+import com.franklinho.vidtrain_android.models.VidTrain;
+import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -33,13 +40,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import com.flipboard.bottomsheet.BottomSheetLayout;
-import com.franklinho.vidtrain_android.Manifest;
-import com.franklinho.vidtrain_android.R;
-import com.franklinho.vidtrain_android.activities.HomeActivity;
-import com.franklinho.vidtrain_android.models.VidTrain;
-import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
