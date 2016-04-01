@@ -42,9 +42,13 @@ public class Utility {
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_MOVIES), "VidTrainApp");
         if (!mediaStorageDir.exists()) {
-            if (!mediaStorageDir.mkdirs()){
+            // if directory already created, then do nothing
+            // else create directory
+            if (!mediaStorageDir.mkdirs()) {
                 Log.d(VidtrainApplication.TAG, "failed to create directory");
-                return null;
+                mediaStorageDir.mkdir();
+                return mediaStorageDir;
+//                return null;
             }
         }
         return new File(mediaStorageDir.getPath() + File.separator + "VID_CAPTURED" + objectId + ".mp4");

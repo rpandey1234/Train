@@ -149,7 +149,7 @@ public class VideoPageIndicator extends HorizontalScrollView implements PageIndi
         int count = iconAdapter.getCount();
         for (int i = 0; i < count; i++) {
             ImageView view = new ImageView(getContext(), null, com.viewpagerindicator.R.attr.vpiIconPageIndicatorStyle);
-            view.setPadding(2, 2, 2, 2);
+            view.setPadding(4, 4, 4, 4);
 
 
             int dpOfImage = (int) getResources().getDisplayMetrics().density * 40;

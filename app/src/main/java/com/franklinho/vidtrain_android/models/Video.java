@@ -1,5 +1,8 @@
 package com.franklinho.vidtrain_android.models;
 
+import android.util.Log;
+
+import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -51,6 +54,13 @@ public class Video extends ParseObject {
     }
 
     public ParseFile getThumbnail() {
-        return getParseFile(THUMBNAIL_KEY);
+        // TODO: this check is a hack to prevent random crash:
+        // java.lang.IllegalStateException: ParseObject has no data for 'thumbnail'.
+        // Call fetchIfNeeded() to get the data.
+        if (containsKey(THUMBNAIL_KEY)) {
+            return getParseFile(THUMBNAIL_KEY);
+        }
+        Log.d(VidtrainApplication.TAG, "just saved a crash! rejoice");
+        return null;
     }
 }
