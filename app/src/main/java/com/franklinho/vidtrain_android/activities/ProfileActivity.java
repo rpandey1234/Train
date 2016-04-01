@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.franklinho.vidtrain_android.R;
+import com.franklinho.vidtrain_android.fragments.UserContainerFragment;
 import com.franklinho.vidtrain_android.fragments.UserCreationsFragment;
 import com.franklinho.vidtrain_android.fragments.UserInfoFragment;
 import com.parse.LogOutCallback;
@@ -23,7 +24,6 @@ import butterknife.ButterKnife;
 public class ProfileActivity extends AppCompatActivity {
 
     public static final String USER_ID = "userId";
-    UserCreationsFragment userProfileFragment;
     @Bind(R.id.toolbar) Toolbar toolbar;
 
     @Override
@@ -65,8 +65,10 @@ public class ProfileActivity extends AppCompatActivity {
             UserInfoFragment userInfoFragment = UserInfoFragment.newInstance(userId);
             ft.replace(R.id.flUserInfo, userInfoFragment);
 
-            userProfileFragment = UserCreationsFragment.newInstance(userId);
-            ft.replace(R.id.flUserContent, userProfileFragment);
+//            UserCreationsFragment userProfileFragment = UserCreationsFragment.newInstance(userId);
+//            ft.replace(R.id.flUserContent, userProfileFragment);
+            UserContainerFragment userContainerFragment = UserContainerFragment.newInstance(userId);
+            ft.replace(R.id.flUserContent, userContainerFragment);
 
             ft.commit();
         }

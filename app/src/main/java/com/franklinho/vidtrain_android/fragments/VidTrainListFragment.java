@@ -1,6 +1,7 @@
 package com.franklinho.vidtrain_android.fragments;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,8 +30,7 @@ public class VidTrainListFragment extends Fragment {
     @Bind(R.id.rvVidTrains) public RecyclerView rvVidTrains;
     @Bind(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
     @Bind(R.id.pbProgessAction) View pbProgressAction;
-    @Bind(R.id.tvNotFollowingLabel)
-    TextView tvNotFollowingLabel;
+    @Bind(R.id.tvNotFollowingLabel) TextView tvNotFollowingLabel;
 
     List<VidTrain> vidTrains;
     VidTrainArrayAdapter aVidTrains;

@@ -7,9 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
+import com.franklinho.vidtrain_android.R;
+import com.franklinho.vidtrain_android.activities.ProfileActivity;
+import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.utilities.EndlessRecyclerViewScrollListener;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -23,6 +28,7 @@ public class FollowingFragment extends VidTrainListFragment {
     ParseUser followingUser;
 
     List<ParseUser> followingList;
+
     public static FollowingFragment newInstance() {
         return new FollowingFragment();
     }
@@ -33,17 +39,20 @@ public class FollowingFragment extends VidTrainListFragment {
         return followingFragment;
     }
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
         showProgressBar();
-        if (followingUser == null) {
-            followingList = (List<ParseUser>) ParseUser.getCurrentUser().get("following");
-        } else {
-            followingList = (List<ParseUser>) followingUser.get("following");
-        }
+        String userId = getArguments().getString(ProfileActivity.USER_ID);
+        ParseQuery<ParseUser> query = ParseUser.getQuery();
+        query.whereEqualTo("objectId", userId);
+        query.getFirstInBackground(new GetCallback<ParseUser>() {
+            @Override
+            public void done(ParseUser user, ParseException e) {
+                followingList = (List<ParseUser>) user.get("following");
+                requestVidTrains(true);
+            }
+        });
 
         linearLayoutManager = new LinearLayoutManager(getContext());
         rvVidTrains.setLayoutManager(linearLayoutManager);
@@ -60,7 +69,6 @@ public class FollowingFragment extends VidTrainListFragment {
                 requestVidTrains(true);
             }
         });
-        requestVidTrains(true);
         return v;
     }
 
