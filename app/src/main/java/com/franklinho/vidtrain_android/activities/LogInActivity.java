@@ -36,9 +36,6 @@ public class LogInActivity extends AppCompatActivity {
 
     @Bind(R.id.login_button) Button loginButton;
     @Bind(R.id.pbProgessAction) View pbProgessAction;
-//    @Bind(R.id.vvLogin)
-//    DynamicVideoPlayerView vvLogin;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
