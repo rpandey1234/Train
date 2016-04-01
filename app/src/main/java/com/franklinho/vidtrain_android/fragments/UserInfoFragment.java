@@ -61,26 +61,31 @@ public class UserInfoFragment extends Fragment {
         currentUser = ParseUser.getCurrentUser();
         final String currentUserId = currentUser.getObjectId();
         final String userId = getArguments().getString(ProfileActivity.USER_ID);
-        ParseQuery<ParseUser> query = ParseUser.getQuery();
-        query.whereEqualTo("objectId", userId);
-        query.getFirstInBackground(new GetCallback<ParseUser>() {
-            @Override
-            public void done(ParseUser user, ParseException e) {
-                tvName.setText(User.getName(user));
-                Glide.with(getContext()).load(User.getProfileImageUrl(user)).into(ivProfileImage);
-                queryUserCounts(user);
-                profileUser = user;
-                if (!currentUserId.equals(userId)) {
-                    btnFollow.setVisibility(View.VISIBLE);
-                    isFollowing = User.isFollowing(currentUser, profileUser);
-                    if (isFollowing) {
-                        btnFollow.setText(R.string.unfollow);
-                    } else {
-                        btnFollow.setText(R.string.follow);
+
+        try {
+            ParseQuery<ParseUser> query = ParseUser.getQuery();
+            query.whereEqualTo("objectId", userId);
+            query.getFirstInBackground(new GetCallback<ParseUser>() {
+                @Override
+                public void done(ParseUser user, ParseException e) {
+                    tvName.setText(User.getName(user));
+                    Glide.with(getContext()).load(User.getProfileImageUrl(user)).into(ivProfileImage);
+                    queryUserCounts(user);
+                    profileUser = user;
+                    if (!currentUserId.equals(userId)) {
+                        btnFollow.setVisibility(View.VISIBLE);
+                        isFollowing = User.isFollowing(currentUser, profileUser);
+                        if (isFollowing) {
+                            btnFollow.setText(R.string.unfollow);
+                        } else {
+                            btnFollow.setText(R.string.follow);
+                        }
                     }
                 }
-            }
-        });
+            });
+        } catch (android.net.ParseException e){
+            e.printStackTrace();
+        }
 
         return view;
     }
@@ -117,6 +122,7 @@ public class UserInfoFragment extends Fragment {
             }
         });
 
+        try{
         ParseQuery<ParseObject> videoQuery = ParseQuery.getQuery("Video");
         videoQuery.whereEqualTo("user", user);
         videoQuery.countInBackground(new CountCallback() {
@@ -127,6 +133,9 @@ public class UserInfoFragment extends Fragment {
                 tvVideos.setText(videosCreated);
             }
         });
+        } catch(android.net.ParseException e){
+            e.printStackTrace();
+        }
     }
 
     public static UserInfoFragment newInstance(String userId) {
