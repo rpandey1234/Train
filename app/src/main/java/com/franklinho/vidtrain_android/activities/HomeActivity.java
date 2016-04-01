@@ -16,7 +16,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
@@ -46,7 +45,7 @@ public class HomeActivity extends AppCompatActivity {
     public static final String UNIQUE_ID_INTENT = "UNIQUE_ID";
     public static final String SHOW_CONFIRM = "SHOW_CONFIRM";
 
-    @Bind(R.id.viewpager) ViewPager viewPager;
+    public @Bind(R.id.viewpager) ViewPager viewPager;
     @Bind(R.id.sliding_tabs) TabLayout tabLayout;
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.viewReveal) View viewReveal;
@@ -54,6 +53,7 @@ public class HomeActivity extends AppCompatActivity {
     private Transition.TransitionListener transitionListener;
     MenuItem miActionProgressItem;
     String uniqueId = Long.toString(System.currentTimeMillis());
+    public FragmentPagerAdapter fragmentPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,8 +81,9 @@ public class HomeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
-        viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager(),
-                HomeActivity.this));
+        fragmentPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager(),
+                HomeActivity.this);
+        viewPager.setAdapter(fragmentPagerAdapter);
 
         viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
@@ -94,6 +95,7 @@ public class HomeActivity extends AppCompatActivity {
                     removePagerPadding();
                 } else {
                     relayoutViewPager();
+                    fragmentPagerAdapter.mapFragment.setAllMarkersAlphaToOne();
                 }
                 editor.putInt("currentPage", position);
                 editor.commit();

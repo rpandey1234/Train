@@ -10,6 +10,7 @@ import com.franklinho.vidtrain_android.fragments.PopularFragment;
 public class FragmentPagerAdapter extends android.support.v4.app.FragmentPagerAdapter {
     private String tabTitles[] = new String[]{"Map", "Popular"};
     private Context context;
+    public MapFragment mapFragment;
 
     public FragmentPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
@@ -24,7 +25,8 @@ public class FragmentPagerAdapter extends android.support.v4.app.FragmentPagerAd
     @Override
     public Fragment getItem(int position) {
         if (position == 0) {
-            return MapFragment.newInstance();
+            mapFragment = MapFragment.newInstance();
+            return mapFragment;
         } else {
             return PopularFragment.newInstance();
         }
@@ -35,6 +37,7 @@ public class FragmentPagerAdapter extends android.support.v4.app.FragmentPagerAd
         // Generate title based on item position
         return tabTitles[position];
     }
+
 }
 
 
