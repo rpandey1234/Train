@@ -39,6 +39,14 @@ public class FollowingFragment extends VidTrainListFragment {
         return followingFragment;
     }
 
+    public static FollowingFragment newInstance(String userId) {
+        FollowingFragment followingFragment = new FollowingFragment();
+        Bundle args = new Bundle();
+        args.putString(ProfileActivity.USER_ID, userId);
+        followingFragment.setArguments(args);
+        return followingFragment;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);

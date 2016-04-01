@@ -2,14 +2,16 @@ package com.franklinho.vidtrain_android.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTabHost;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.activities.ProfileActivity;
+import com.franklinho.vidtrain_android.adapters.ProfileFragmentPagerAdapter;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -19,7 +21,8 @@ import butterknife.ButterKnife;
  */
 public class UserContainerFragment extends Fragment {
 
-    @Bind(R.id.tabHost) FragmentTabHost fragmentTabHost;
+    @Bind(R.id.viewpager) ViewPager viewPager;
+    @Bind(R.id.sliding_tabs) TabLayout tabLayout;
     String userId;
 
     public UserContainerFragment() {}
@@ -39,15 +42,9 @@ public class UserContainerFragment extends Fragment {
         View view = inflater.inflate(R.layout.user_container_fragment, container, false);
         ButterKnife.bind(this, view);
         userId = getArguments().getString(ProfileActivity.USER_ID);
-        fragmentTabHost.setup(getContext(), getFragmentManager(), R.id.tabContent);
-
-        Bundle args = new Bundle();
-        args.putString(ProfileActivity.USER_ID, userId);
-
-        fragmentTabHost.addTab(fragmentTabHost.newTabSpec("meTab").setIndicator("Vidtrains"),
-                UserCreationsFragment.class, args);
-        fragmentTabHost.addTab(fragmentTabHost.newTabSpec("followTab").setIndicator("Following"),
-                FollowingFragment.class, args);
+        viewPager.setAdapter(new ProfileFragmentPagerAdapter(getFragmentManager(), getContext(),
+                userId));
+        tabLayout.setupWithViewPager(viewPager);
         return view;
     }
 }
