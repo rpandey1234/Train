@@ -173,11 +173,9 @@ public class MapFragment extends Fragment implements
         hideMapSearchButton();
         final HomeActivity homeActivity = (HomeActivity) getActivity();
         homeActivity.showProgressBar();
-        final int currentSize;
         vidTrains.clear();
-        currentSize = 0;
+        final int currentSize = 0;
 
-        // TODO: query based on current location
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
         query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
         if (initialRequest) {
@@ -189,7 +187,7 @@ public class MapFragment extends Fragment implements
             }
         } else {
             LatLng currentMapTarget = map.getCameraPosition().target;
-            query.whereWithinMiles("ll", new ParseGeoPoint(currentMapTarget.latitude, currentMapTarget.longitude), 20 );
+            query.whereWithinMiles("ll", new ParseGeoPoint(currentMapTarget.latitude, currentMapTarget.longitude), 20);
         }
         query.addDescendingOrder("rankingValue");
         query.setSkip(currentSize);
@@ -236,10 +234,7 @@ public class MapFragment extends Fragment implements
 
                         }
                     });
-
-
                 }
-
             }
         });
     }
