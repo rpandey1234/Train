@@ -1,9 +1,12 @@
 package com.franklinho.vidtrain_android.fragments;
 
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.IntentSender;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -15,6 +18,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.flipboard.bottomsheet.BottomSheetLayout;
+import com.franklinho.vidtrain_android.Manifest;
+import com.franklinho.vidtrain_android.R;
+import com.franklinho.vidtrain_android.activities.HomeActivity;
+import com.franklinho.vidtrain_android.adapters.MapInfoWindowAdapter;
+import com.franklinho.vidtrain_android.models.VidTrain;
+import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -33,18 +44,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import com.flipboard.bottomsheet.BottomSheetLayout;
-import com.franklinho.vidtrain_android.Manifest;
-import com.franklinho.vidtrain_android.R;
-import com.franklinho.vidtrain_android.activities.HomeActivity;
-import com.franklinho.vidtrain_android.models.VidTrain;
-import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -81,6 +86,7 @@ public class MapFragment extends Fragment implements
     @Bind(R.id.bottomsheet) BottomSheetLayout bottomsheet;
     @Bind(R.id.btnSearchMap) Button btnSearchMap;
     boolean userGeneratedCameraChange = false;
+
 
     public MapFragment() {
         // Required empty public constructor
@@ -192,8 +198,9 @@ public class MapFragment extends Fragment implements
         query.addDescendingOrder("rankingValue");
         query.setSkip(currentSize);
         query.setLimit(10);
-        final BitmapDescriptor defaultMarker = BitmapDescriptorFactory.defaultMarker(
-                160.0F);
+//        final BitmapDescriptor defaultMarker = BitmapDescriptorFactory.defaultMarker(
+//                160.0F);
+
         query.findInBackground(new FindCallback<VidTrain>() {
             @Override
             public void done(List<VidTrain> objects, ParseException e) {
@@ -204,11 +211,25 @@ public class MapFragment extends Fragment implements
                         vidTrainsMap.put(vidTrain.getObjectId(), vidTrain);
                         Log.d(VidtrainApplication.TAG, vidTrain.getTitle());
 
+                        Bitmap imageBitmap;
+
+                        if (vidTrain.getVideosCount() > 9) {
+                            imageBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.marker9plus);
+
+                        } else {
+                            imageBitmap = BitmapFactory.decodeResource(getResources(), getResources().getIdentifier("marker"+ String.valueOf(vidTrain.getVideosCount()), "drawable",getContext().getPackageName()));
+
+                        }
+
+                        Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, 100, 100, false);
+                        BitmapDescriptor customMarker = BitmapDescriptorFactory.fromBitmap(resizedBitmap);
+
+
                         Marker marker = map.addMarker(new MarkerOptions()
                                 .position(vidTrain.getLatLong())
                                 .title(vidTrain.getTitle())
                                 .snippet(vidTrain.getObjectId())
-                                .icon(defaultMarker));
+                                .icon(customMarker));
 
                         markers.add(marker);
                     }
@@ -249,17 +270,20 @@ public class MapFragment extends Fragment implements
                 public void onCameraChange(CameraPosition cameraPosition) {
                     if (userGeneratedCameraChange) {
                         // reset all marker colors
-                        for (Marker marker : markers) {
-                            marker.setIcon(BitmapDescriptorFactory.defaultMarker(160.0F));
-                        }
+
                         // User caused onCameraChange...
                         if (btnSearchMap.getVisibility() != View.VISIBLE) {
                             showSearchMapButton();
                         }
+                        for (Marker othermarker : markers) {
+                            othermarker.setAlpha(1.0f);
+                        }
+
                     } else {
                         // The next map move will be caused by user, unless we
                         // do another move programmatically
                         userGeneratedCameraChange = true;
+
 
                         // onCameraChange caused by program...
                     }
@@ -377,9 +401,28 @@ public class MapFragment extends Fragment implements
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        // set color
-        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+
+
+        for (final Marker othermarker : markers) {
+            if (!marker.equals(othermarker)) {
+                ValueAnimator ani = ValueAnimator.ofFloat(marker.getAlpha(), 0.5f); //change for (0,1) if you want a fade in
+                ani.setDuration(500);
+                ani.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        othermarker.setAlpha((float) animation.getAnimatedValue());
+                    }
+                });
+                ani.start();
+            }
+        }
+        //Makes no infowindow show up
+        map.setInfoWindowAdapter(new MapInfoWindowAdapter(getContext()));
+
+        //Call showInfoWindow to put marker on top of others.
+        marker.showInfoWindow();
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(marker.getPosition());
+        userGeneratedCameraChange = false;
         map.animateCamera(cameraUpdate);
         ImagePreviewFragment imagePreviewFragment = ImagePreviewFragment.newInstance(marker.getSnippet());
         Bundle bundle = new Bundle();
@@ -435,5 +478,30 @@ public class MapFragment extends Fragment implements
         fadeAltAnim.setDuration(1000);
         fadeAltAnim.start();
         btnSearchMap.setVisibility(View.GONE);
+    }
+
+    public static int getResId(String resName, Class<?> c) {
+
+        try {
+            Field idField = c.getDeclaredField(resName);
+            return idField.getInt(idField);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    public void setAllMarkersAlphaToOne() {
+        for (final Marker marker : markers) {
+            ValueAnimator ani = ValueAnimator.ofFloat(marker.getAlpha(), 1.0f); //change for (0,1) if you want a fade in
+            ani.setDuration(500);
+            ani.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    marker.setAlpha((float) animation.getAnimatedValue());
+                }
+            });
+            ani.start();
+        }
     }
 }

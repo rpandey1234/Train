@@ -214,6 +214,7 @@ public class ImagePreviewFragment extends BottomSheetFragment {
     public void onPause() {
         HomeActivity homeActivity = (HomeActivity) getActivity();
         homeActivity.enterReveal();
+        homeActivity.fragmentPagerAdapter.mapFragment.setAllMarkersAlphaToOne();
         super.onPause();
     }
 }
