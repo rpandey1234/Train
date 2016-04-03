@@ -85,7 +85,7 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<VidTrainViewHolde
             }
         });
         holder.cpIndicator.setViewPager(holder.vpPreview);
-        int dpRadius = (int) holder.context.getResources().getDisplayMetrics().density * 15;
+        int dpRadius = (int) holder.context.getResources().getDisplayMetrics().density * 13;
         holder.cpIndicator.setRadius(dpRadius);
         int dpWidth = (int) holder.context.getResources().getDisplayMetrics().density * 2;
         holder.cpIndicator.setStrokeWidth(dpWidth);

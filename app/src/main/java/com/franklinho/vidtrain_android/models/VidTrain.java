@@ -117,7 +117,7 @@ public class VidTrain extends ParseObject implements Serializable {
     }
 
     public List<ParseUser> getCollaborators() {
-        return getList(COLLABORATORS);
+        return (List<ParseUser>) get(COLLABORATORS);
     }
 
     public List<Video> maybeInitAndAdd(Video video) {
