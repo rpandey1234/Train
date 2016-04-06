@@ -9,7 +9,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -51,6 +50,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -104,6 +104,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+
                 requestVidTrain(false);
             }
         });
@@ -167,16 +168,21 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                                 @Override
                                 public void done(ParseException e) {
                                     layoutVidTrain();
-                                    sendVidtrainUpdatedNotification(vidTrain);
-                                    ParsePush.subscribeInBackground(vidTrain.getObjectId(), new SaveCallback() {
-
-                                        @Override
-
-                                        public void done(com.parse.ParseException arg0) {
-
+                                    List<Video> collabvideos = vidTrain.getVideos();
+                                    final List<ParseUser> notificationsSent = new ArrayList<ParseUser>();
+                                    for (final Video collabvideo : collabvideos) {
+                                        collabvideo.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+                                            @Override
+                                            public void done(ParseObject object, ParseException e) {
+                                                if (collabvideo.getUser().getObjectId() != ParseUser.getCurrentUser().getObjectId()) {
+                                                    if (!notificationsSent.contains(collabvideo.getUser())) {
+                                                        sendVidtrainUpdatedNotification(collabvideo.getUser(), vidTrain);
+                                                        notificationsSent.add(collabvideo.getUser());
+                                                    }
+                                                }
+                                            }
+                                            });
                                         }
-
-                                    });
                                     user.put("vidtrains", User.maybeInitAndAdd(user, vidTrain));
                                     user.put("videos", User.maybeInitAndAdd(user, video));
                                     user.saveInBackground(new SaveCallback() {
@@ -422,9 +428,10 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         new VideoDownloadTask(vpPreview).execute(vidTrain);
     }
 
-    public void sendVidtrainUpdatedNotification(VidTrain vidtrain) {
+    public void sendVidtrainUpdatedNotification(ParseUser user, VidTrain vidtrain) {
         ParseQuery pushQuery = ParseInstallation.getQuery();
-        pushQuery.whereEqualTo("channels", vidtrain.getObjectId()); // Set the channel
+        pushQuery.whereEqualTo("user", user.getObjectId());
+//        pushQuery.whereEqualTo("channels", vidtrain.getObjectId()); // Set the channel
         pushQuery.whereNotEqualTo("objectId", ParseInstallation.getCurrentInstallation().getObjectId());
         String currentUserName = ParseUser.getCurrentUser().getString("name");
         String alertString = currentUserName + " has just updated the Vidtrain: " + vidtrain.getTitle();
