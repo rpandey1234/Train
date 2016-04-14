@@ -94,7 +94,9 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
-
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="9ba9282424d60bca2b371ddeb7921c49f7582043" />
 
         <activity
             android:name=".activities.ProfileActivity"

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.GraphRequest;
@@ -29,6 +30,7 @@ import java.util.Arrays;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.fabric.sdk.android.Fabric;
 
 public class LogInActivity extends AppCompatActivity {
 
@@ -40,6 +42,7 @@ public class LogInActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         callbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.activity_log_in);
         ButterKnife.bind(this);
@@ -107,11 +110,17 @@ public class LogInActivity extends AppCompatActivity {
     }
 
     public void sendToHomeActivity() {
+        logUser();
         Intent i = new Intent(getBaseContext(), HomeActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
         finish();
         Log.d(VidtrainApplication.TAG, "Logged in with Facebook");
+    }
+
+    private void logUser() {
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        Crashlytics.setUserName(User.getName(currentUser));
     }
 
     @Override
