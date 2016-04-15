@@ -2,13 +2,9 @@ package com.franklinho.vidtrain_android.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -19,7 +15,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
-import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -64,13 +59,6 @@ public class HomeActivity extends AppCompatActivity {
 
         final SharedPreferences mSettings = PreferenceManager.getDefaultSharedPreferences(this);
         final SharedPreferences.Editor editor = mSettings.edit();
-
-        Bitmap notificationLargeIconBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.icon_vidtrain);
-
-        android.support.v4.app.NotificationCompat.Builder mBuilder = new android.support.v4.app.NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.icon_vidtrain)
-                .setLargeIcon(notificationLargeIconBitmap)
-                .setColor(Color.WHITE);
 
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
@@ -148,12 +136,6 @@ public class HomeActivity extends AppCompatActivity {
                 enterReveal();
             }
         });
-    }
-
-    @Override
-    public View onCreateView(String name, Context context, AttributeSet attrs) {
-        View v = super.onCreateView(name, context, attrs);
-        return v;
     }
 
     @Override
