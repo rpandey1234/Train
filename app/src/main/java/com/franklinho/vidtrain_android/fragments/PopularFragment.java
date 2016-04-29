@@ -29,8 +29,6 @@ public class PopularFragment extends VidTrainListFragment {
         View v = super.onCreateView(inflater, container, savedInstanceState);
         showProgressBar();
 
-        linearLayoutManager = new LinearLayoutManager(getContext());
-        rvVidTrains.setLayoutManager(linearLayoutManager);
         rvVidTrains.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
@@ -64,6 +62,7 @@ public class PopularFragment extends VidTrainListFragment {
         );
         query.orderByDescending("rankingValue");
         query.addDescendingOrder("createdAt");
+        query.include("collaborators");
         query.setSkip(currentSize);
         query.setLimit(5);
         query.findInBackground(new FindCallback<VidTrain>() {

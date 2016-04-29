@@ -57,8 +57,8 @@ public class VidTrainListFragment extends Fragment {
 
         linearLayoutManager = new LinearLayoutManager(getContext());
         rvVidTrains.setAdapter(aVidTrains);
+        rvVidTrains.setLayoutManager(linearLayoutManager);
         swipeContainer.setColorSchemeResources(R.color.bluePrimary);
-        rvVidTrains.setAdapter(aVidTrains);
 
         return v;
     }
