@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @OnClick(R.id.button_create)
+    @OnClick(R.id.fab_create)
     public void startCreateFlow(View view) {
         Intent intent = new Intent(getBaseContext(), VideoCaptureActivity.class);
         intent.putExtra(UNIQUE_ID_INTENT, uniqueId);

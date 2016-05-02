@@ -13,7 +13,7 @@
         app:riv_border_width="2dp"
         app:riv_border_color="@android:color/white"
         android:layout_margin="4dp"
-        android:src="@drawable/user_icon"
+        android:src="@drawable/profile_icon"
         />
 
     <TextView
@@ -25,7 +25,6 @@
         android:layout_toRightOf="@id/ivProfileImage"
         android:layout_alignTop="@id/ivProfileImage"
         android:layout_alignBottom="@id/ivProfileImage"
-
         />
 
 </RelativeLayout>
