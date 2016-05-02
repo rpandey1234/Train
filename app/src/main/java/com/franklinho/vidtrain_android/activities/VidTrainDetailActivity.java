@@ -119,8 +119,8 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
             VideoPlayer.resetVideoPlayerManager();
             Intent intent = new Intent(getBaseContext(), VideoCaptureActivity.class);
-            intent.putExtra(HomeActivity.UNIQUE_ID_INTENT, uniqueId);
-            intent.putExtra(HomeActivity.SHOW_CONFIRM, true);
+            intent.putExtra(MainActivity.UNIQUE_ID_INTENT, uniqueId);
+            intent.putExtra(MainActivity.SHOW_CONFIRM, true);
             startActivityForResult(intent, VIDEO_CAPTURE);
 //            startActivityForResult(Utility.getVideoIntent(), VIDEO_CAPTURE);
         } else {
@@ -213,14 +213,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
             @Override
             public void done(ParseObject object, ParseException e) {
                 final ParseUser user = video.getUser();
-                ivCollaborators.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
-                        intent.putExtra(ProfileActivity.USER_ID, user.getObjectId());
-                        startActivity(intent);
-                    }
-                });
                 user.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
                     @Override
                     public void done(ParseObject object, ParseException e) {
@@ -230,15 +222,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                 });
             }
         });
-    }
-
-    @SuppressWarnings("unused")
-    @OnClick(R.id.ivCollaborators)
-    public void onCollaboratorClicked(View view) {
-        ParseUser user = vidTrain.getUser();
-        Intent intent = new Intent(this, ProfileActivity.class);
-        intent.putExtra(ProfileActivity.USER_ID, user.getObjectId());
-        this.startActivity(intent);
     }
 
     @SuppressWarnings("unused")

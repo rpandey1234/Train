@@ -117,8 +117,8 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
 
         setContentView(R.layout.video_capture);
         ButterKnife.bind(this);
-        uniqueId = getIntent().getStringExtra(HomeActivity.UNIQUE_ID_INTENT);
-        showConfirm = getIntent().getBooleanExtra(HomeActivity.SHOW_CONFIRM, false);
+        uniqueId = getIntent().getStringExtra(MainActivity.UNIQUE_ID_INTENT);
+        showConfirm = getIntent().getBooleanExtra(MainActivity.SHOW_CONFIRM, false);
         Log.d(VidtrainApplication.TAG, "show confirm? " + showConfirm);
         Log.d(VidtrainApplication.TAG, "uniqueId: " + uniqueId);
         // Create an instance of Camera

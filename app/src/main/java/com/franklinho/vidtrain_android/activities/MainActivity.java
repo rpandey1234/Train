@@ -13,6 +13,9 @@ import android.widget.FrameLayout;
 
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.fragments.PopularFragment;
+import com.parse.LogOutCallback;
+import com.parse.ParseException;
+import com.parse.ParseUser;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -50,9 +53,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.miProfile) {
-            Intent intent = new Intent(this, ProfileActivity.class);
-            startActivity(intent);
+        if (id == R.id.actionLogout) {
+            ParseUser.logOutInBackground(new LogOutCallback() {
+                @Override
+                public void done(ParseException e) {
+                    Intent intent = new Intent(getApplicationContext(), LogInActivity.class);
+                    startActivity(intent);
+                }
+            });
             return true;
         }
         return super.onOptionsItemSelected(item);

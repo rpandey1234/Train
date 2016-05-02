@@ -4,10 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/miProfile"
-        android:icon="@drawable/profile_icon"
-        android:title="@string/profile"
-        app:showAsAction="ifRoom"
+        android:id="@+id/actionLogout"
+        android:title="@string/logout"
+        app:showAsAction="never"
         />
 
     <item

@@ -7,9 +7,8 @@ import android.os.Build;
 import android.util.Log;
 
 import com.franklinho.vidtrain_android.R;
-import com.franklinho.vidtrain_android.activities.HomeActivity;
 import com.franklinho.vidtrain_android.activities.LogInActivity;
-import com.franklinho.vidtrain_android.activities.ProfileActivity;
+import com.franklinho.vidtrain_android.activities.MainActivity;
 import com.franklinho.vidtrain_android.activities.VidTrainDetailActivity;
 import com.parse.ParseAnalytics;
 import com.parse.ParsePushBroadcastReceiver;
@@ -41,13 +40,8 @@ public class PushMessageBroadcast extends ParsePushBroadcastReceiver {
                i.putExtra(VidTrainDetailActivity.VIDTRAIN_KEY, vidTrainId);
                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                context.startActivity(i);
-           } else if (!userId.equals("")) {
-               Intent i = new Intent(context, ProfileActivity.class);
-               i.putExtra(ProfileActivity.USER_ID, userId);
-               i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-               context.startActivity(i);
            } else {
-               Intent i = new Intent(context, HomeActivity.class);
+               Intent i = new Intent(context, MainActivity.class);
                i.putExtras(intent.getExtras());
                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                context.startActivity(i);
