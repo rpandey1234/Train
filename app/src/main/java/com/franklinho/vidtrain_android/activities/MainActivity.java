@@ -9,9 +9,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.fragments.ConversationsFragment;
+import com.franklinho.vidtrain_android.utilities.Utility;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -71,5 +73,20 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(UNIQUE_ID_INTENT, uniqueId);
         intent.putExtra(SHOW_CONFIRM, false);
         startActivityForResult(intent, VIDEO_CAPTURE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == VIDEO_CAPTURE) {
+            if (resultCode == RESULT_OK) {
+                Intent i = new Intent(this, CreationDetailActivity.class);
+                i.putExtra("videoPath", Utility.getOutputMediaFile(uniqueId).getPath());
+                startActivity(i);
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(this, "Video recording cancelled.",  Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Failed to record video",  Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }
