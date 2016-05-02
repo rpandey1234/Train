@@ -1,7 +1,6 @@
 package com.franklinho.vidtrain_android.activities;
 
 import android.content.Intent;
-import android.support.annotation.BinderThread;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,7 +11,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.franklinho.vidtrain_android.R;
-import com.franklinho.vidtrain_android.fragments.PopularFragment;
+import com.franklinho.vidtrain_android.fragments.ConversationsFragment;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -39,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.conversations_fragment, PopularFragment.newInstance());
+        fragmentTransaction.replace(R.id.conversations_fragment, ConversationsFragment.newInstance());
         fragmentTransaction.commit();
     }
 

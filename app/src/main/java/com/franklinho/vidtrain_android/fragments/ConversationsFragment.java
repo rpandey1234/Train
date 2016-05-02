@@ -1,14 +1,6 @@
 package com.franklinho.vidtrain_android.fragments;
 
-import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.franklinho.vidtrain_android.models.VidTrain;
-import com.franklinho.vidtrain_android.utilities.EndlessRecyclerViewScrollListener;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -18,32 +10,10 @@ import java.util.List;
 /**
  * Created by rahul on 3/5/16.
  */
-public class PopularFragment extends VidTrainListFragment {
+public class ConversationsFragment extends VidTrainListFragment {
 
-    public static PopularFragment newInstance() {
-        return new PopularFragment();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = super.onCreateView(inflater, container, savedInstanceState);
-        showProgressBar();
-
-        rvVidTrains.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount) {
-                requestVidTrains(false);
-            }
-        });
-
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                requestVidTrains(true);
-            }
-        });
-        requestVidTrains(true);
-        return v;
+    public static ConversationsFragment newInstance() {
+        return new ConversationsFragment();
     }
 
     @Override
@@ -81,12 +51,5 @@ public class PopularFragment extends VidTrainListFragment {
                 hideProgressBar();
             }
         });
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        aVidTrains.notifyItemRangeChanged(0, vidTrains.size());
     }
 }
