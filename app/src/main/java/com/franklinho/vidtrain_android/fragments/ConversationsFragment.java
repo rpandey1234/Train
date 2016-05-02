@@ -33,6 +33,7 @@ public class ConversationsFragment extends VidTrainListFragment {
         query.orderByDescending("rankingValue");
         query.addDescendingOrder("createdAt");
         query.include("collaborators");
+        query.include("videos");
         query.setSkip(currentSize);
         query.setLimit(5);
         query.findInBackground(new FindCallback<VidTrain>() {

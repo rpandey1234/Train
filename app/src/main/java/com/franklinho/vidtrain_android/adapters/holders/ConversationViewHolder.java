@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -15,6 +16,7 @@ import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.activities.VidTrainDetailActivity;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
+import com.franklinho.vidtrain_android.models.Video;
 import com.franklinho.vidtrain_android.utilities.Utility;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.parse.ParseUser;
@@ -32,6 +34,7 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements V
     @Bind(R.id.conversation_title) public TextView conversationTitle;
     @Bind(R.id.timestamp) public TextView timestamp;
     @Bind(R.id.participants_rv) public RecyclerView rvParticipants;
+    @Bind(R.id.image_preview) public ImageView videoImagePreview;
 
 
     private final Activity _activity;
@@ -53,6 +56,10 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements V
         timestamp.setText(Utility.getRelativeTime(vidTrain.getCreatedAt().getTime()));
         rvParticipants.setLayoutManager(new LinearLayoutManager(_context, LinearLayoutManager.HORIZONTAL, false));
         rvParticipants.setAdapter(new ParticipantsAdapter(vidTrain));
+        videoImagePreview.setImageResource(R.drawable.icon_vidtrain);
+        List<Video> videos = _vidTrain.getVideos();
+        Video lastVideo = videos.get(videos.size() - 1);
+        Glide.with(_context).load(lastVideo.getThumbnail().getUrl()).into(videoImagePreview);
     }
 
     @Override

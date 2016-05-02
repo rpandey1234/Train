@@ -24,7 +24,6 @@ public class Video extends ParseObject {
     VidTrain vidTrain;
     ParseFile videoFile;
 
-
     public void setUser(ParseUser user) {
         put(USER_KEY, user);
     }
