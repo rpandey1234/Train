@@ -19,14 +19,10 @@ public class Video extends ParseObject {
     public static final String VIDTRAIN_KEY = "vidTrain";
     public static final String THUMBNAIL_KEY = "thumbnail";
 
-    User user;
-    long likes;
-    VidTrain vidTrain;
-    ParseFile videoFile;
-
     public void setUser(ParseUser user) {
         put(USER_KEY, user);
     }
+
     public ParseUser getUser() {
         return getParseUser(USER_KEY);
     }

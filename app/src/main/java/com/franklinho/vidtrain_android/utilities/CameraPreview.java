@@ -1,10 +1,5 @@
 package com.franklinho.vidtrain_android.utilities;
 
-/**
- * Created by VRAJA03 on 3/14/2016.
- */
-
-
 import java.io.IOException;
 
 import android.content.Context;
@@ -16,6 +11,9 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
 
+/**
+ * Created by VRAJA03 on 3/14/2016.
+ */
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
     private SurfaceHolder mHolder;
     private Camera mCamera;

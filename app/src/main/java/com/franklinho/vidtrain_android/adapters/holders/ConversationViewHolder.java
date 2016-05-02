@@ -64,10 +64,6 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements V
 
     @Override
     public void onClick(View v) {
-        showDetailActivity();
-    }
-
-    public void showDetailActivity() {
         if (_vidTrain != null) {
             Intent i = new Intent(_context, VidTrainDetailActivity.class);
             i.putExtra(VidTrainDetailActivity.VIDTRAIN_KEY, _vidTrain.getObjectId());

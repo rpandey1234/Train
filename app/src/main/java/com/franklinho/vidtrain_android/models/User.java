@@ -23,19 +23,6 @@ public class User extends ParseObject implements Serializable {
     public static final String FB_PROFILE_PIC_FORMAT
             = "http://graph.facebook.com/%s/picture?height=160&width=160";
 
-    public String name;
-    public String username;
-    String fbid;
-    long userId;
-    long videoCount;
-    String email;
-    List<VidTrain> vidTrains;
-    List<Video> videos;
-    long likes;
-    List<User> friends;
-    List<User> following;
-    String profileImageUrl;
-
     public static final String NAME = "name";
     public static final String USER_NAME = "username";
     public static final String PASSWORD = "password";
@@ -46,20 +33,8 @@ public class User extends ParseObject implements Serializable {
 
     public User(){}
 
-    public String getName() {
-        return name;
-    }
-
     public void setName(String name) {
         put(NAME, name);
-    }
-
-    public String getFbid() {
-        return fbid;
-    }
-
-    public void setFbid(String fbid) {
-        put(FBID, fbid);
     }
 
     public static void updateFacebookData(ParseUser user, GraphResponse response) {

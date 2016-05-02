@@ -25,15 +25,6 @@ import java.util.List;
 @ParseClassName("VidTrain")
 public class VidTrain extends ParseObject implements Serializable {
 
-    User user;
-    List<User> collaborators;
-    String title;
-    String description;
-    List<Video> videos;
-    Enum readPrivacy;
-    Enum writePrivacy;
-    ParseGeoPoint ll;
-
     public static final String USER_KEY = "user";
     public static final String TITLE_KEY = "title";
     public static final String DESCRIPTION_KEY = "description";
