@@ -11,14 +11,21 @@ import android.text.format.DateUtils;
 import android.util.Log;
 import com.google.common.io.Files;
 
+import com.facebook.GraphResponse;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -116,5 +123,33 @@ public class Utility {
             }
         }
         return false;
+    }
+
+    public static List<String> getFacebookFriends(GraphResponse response) {
+        List<String> friends = new ArrayList<>();
+        JSONObject jsonObject = response.getJSONObject();
+        try {
+            // TODO: need to account for paging
+            JSONArray data = jsonObject.getJSONArray("data");
+            for (int i = 0; i < data.length(); i++) {
+                JSONObject friendData = data.getJSONObject(i);
+                friends.add(friendData.getString("name"));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return friends;
+    }
+
+    public static List<String> getCandidateUsers(List<String> names, String startsWith) {
+        String lowerCasePrefix = startsWith.toLowerCase();
+        List<String> candidates = new ArrayList<>();
+        for (String name : names) {
+            if (name.toLowerCase().startsWith(lowerCasePrefix)) {
+                candidates.add(name);
+            }
+        }
+        return candidates;
     }
 }
