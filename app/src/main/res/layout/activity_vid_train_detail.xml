@@ -52,20 +52,21 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/tvTitle"
+                    android:id="@+id/tvAuthor"
                     android:layout_alignTop="@id/ivCollaborators"
                     android:layout_alignBottom="@id/ivCollaborators"
                     android:gravity="center_vertical|left"
-                    android:textSize="22sp"
+                    android:textSize="16sp"
                     android:layout_toRightOf="@id/ivCollaborators"
                     android:layout_marginLeft="10dp"
-                    android:layout_toLeftOf="@+id/tvVideoCount"
+                    android:layout_toLeftOf="@+id/tvTime"
                     android:transitionName="title"
+                    android:maxLines="2"
                     android:ellipsize="end"
                     />
 
                 <TextView
-                    android:id="@+id/tvVideoCount"
+                    android:id="@+id/tvTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@id/ivCollaborators"
@@ -74,9 +75,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="20dp"
                     android:gravity="center_vertical|end"
-                    android:textSize="20sp"
-                    android:drawablePadding="10dp"
-                    android:drawableStart="@drawable/icon_vidtrain_small"
+                    android:textSize="16sp"
                     />
 
                 <RelativeLayout
@@ -111,7 +110,20 @@
                 </RelativeLayout>
 
                 <TextView
-                    android:id="@+id/tvTime"
+                    android:id="@+id/tvTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/videoContainer"
+                    android:layout_marginTop="20dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginLeft="20dp"
+                    android:gravity="center_vertical"
+                    android:layout_toLeftOf="@+id/tvVideoCount"
+                    android:textSize="20sp"
+                    />
+
+                <TextView
+                    android:id="@+id/tvVideoCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/videoContainer"
@@ -119,7 +131,9 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginRight="20dp"
                     android:gravity="center_vertical"
-                    android:textSize="16sp"
+                    android:textSize="20sp"
+                    android:drawablePadding="10dp"
+                    android:drawableStart="@drawable/icon_vidtrain_small"
                     />
 
                 <Button
@@ -131,7 +145,7 @@
                     android:textColor="@android:color/white"
                     android:onClick="showCreateFlow"
                     android:visibility="gone"
-                    android:layout_below="@id/tvTime"
+                    android:layout_below="@id/tvVideoCount"
                     style="@style/CustomColoredButtonStyle"
                     android:foreground="?android:attr/selectableItemBackground"
                     />

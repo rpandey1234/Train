@@ -61,6 +61,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
 
     @Bind(R.id.ivCollaborators) ImageView ivCollaborators;
     @Bind(R.id.tvVideoCount) TextView tvVideoCount;
+    @Bind(R.id.tvAuthor) TextView tvAuthor;
     @Bind(R.id.tvTitle) TextView tvTitle;
     @Bind(R.id.tvTime) TextView tvTime;
     @Bind(R.id.toolbar) Toolbar toolbar;
@@ -214,6 +215,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                     public void done(ParseObject object, ParseException e) {
                         String profileImageUrl = User.getProfileImageUrl(video.getUser());
                         Glide.with(getBaseContext()).load(profileImageUrl).into(ivCollaborators);
+                        tvAuthor.setText(User.getName(video.getUser()));
                     }
                 });
             }
@@ -368,6 +370,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                 String profileImageUrl = User.getProfileImageUrl(vidTrain.getUser());
                 Glide.with(getBaseContext()).load(profileImageUrl).placeholder(
                         R.drawable.profile_icon).into(ivCollaborators);
+                tvAuthor.setText(User.getName(vidTrain.getUser()));
             }
         });
         new VideoDownloadTask(vpPreview).execute(vidTrain);
