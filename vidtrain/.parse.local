@@ -1,5 +1,8 @@
 {
   "applications": {
+    "NarekRahul": {
+      "applicationId": "R3sycPbc3PD7Boafm1LgtuSrKhaeFCe1JV8TUvtL"
+    },
     "_default": {
       "link": "vidtrain"
     },

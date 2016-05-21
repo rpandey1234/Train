@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -26,12 +27,17 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.adapters.UsersAdapter;
 import com.franklinho.vidtrain_android.models.DynamicVideoPlayerView;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
+import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.Utility;
 import com.franklinho.vidtrain_android.utilities.VideoPlayer;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -50,6 +56,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import butterknife.Bind;
@@ -60,12 +67,12 @@ public class CreationDetailActivity extends AppCompatActivity {
     @Bind(R.id.vvThumbnail) ImageView vvThumbnail;
     @Bind(R.id.btnSubmit) Button btnSubmit;
     @Bind(R.id.etTitle) EditText etTitle;
-    @Bind(R.id.toggleBtn) SwitchCompat toggleBtn;
     @Bind(R.id.etCollaborators) AutoCompleteTextView etCollaborators;
     @Bind(R.id.containerCollab) LinearLayout containerCollab;
 
     ProgressDialog progress;
     String videoPath;
+    List<String> friendsUsingApp;
     List<ParseUser> collaborators;
     List<ParseUser> usersFromAutocomplete;
 
@@ -74,24 +81,29 @@ public class CreationDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_creation_detail);
         ButterKnife.bind(this);
-        videoPath = getIntent().getExtras().getString("videoPath");
+        new GraphRequest(
+                AccessToken.getCurrentAccessToken(),
+                "/me/friends",
+                null,
+                HttpMethod.GET,
+                new GraphRequest.Callback() {
+                    @Override
+                    public void onCompleted(GraphResponse response) {
+                        friendsUsingApp = Utility.getFacebookFriends(response);
+                    }
+                }
+        ).executeAsync();
+        Bundle extras = getIntent().getExtras();
+        if (extras == null) {
+            videoPath = null;
+        } else {
+            videoPath = extras.getString("videoPath");
+        }
         collaborators = new ArrayList<>();
         final ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
             collaborators.add(currentUser);
         }
-        toggleBtn.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    etCollaborators.setVisibility(View.VISIBLE);
-                    containerCollab.setVisibility(View.VISIBLE);
-                } else {
-                    etCollaborators.setVisibility(View.GONE);
-                    containerCollab.setVisibility(View.GONE);
-                }
-            }
-        });
 
         vvPreview.setHeightRatio(1);
         if (videoPath != null) {
@@ -117,22 +129,29 @@ public class CreationDetailActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                ParseQuery<ParseUser> query = ParseUser.getQuery();
-                query.whereMatches("name", "^" + s.toString(), "i");
-                query.setLimit(4);
-                query.findInBackground(new FindCallback<ParseUser>() {
-                    public void done(List<ParseUser> objects, ParseException e) {
-                        if (e == null) {
-                            usersFromAutocomplete = objects;
-                            // Create the adapter and set it to the AutoCompleteTextView
-                            ArrayAdapter<ParseUser> adapter = new UsersAdapter(getApplicationContext(), usersFromAutocomplete);
-                            etCollaborators.setAdapter(adapter);
-                            adapter.notifyDataSetChanged();
-                        } else {
-                            e.printStackTrace();
-                        }
-                    }
-                });
+                if (friendsUsingApp == null) {
+                    // Add message asking user to manually invite friends
+                    return;
+                }
+                String query = s.toString();
+                List<String> candidateUsers = Utility.getCandidateUsers(friendsUsingApp, query);
+                ParseUser.getQuery()
+                        .whereContainedIn("name", candidateUsers)
+                        .setLimit(4)
+                        .findInBackground(new FindCallback<ParseUser>() {
+                            public void done(List<ParseUser> objects, ParseException e) {
+                                if (e == null) {
+                                    usersFromAutocomplete = objects;
+                                    // Create the adapter and set it to the AutoCompleteTextView
+                                    ArrayAdapter<ParseUser> adapter = new UsersAdapter(
+                                            getApplicationContext(), usersFromAutocomplete);
+                                    etCollaborators.setAdapter(adapter);
+                                    adapter.notifyDataSetChanged();
+                                } else {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
             }
 
             @Override
@@ -200,11 +219,9 @@ public class CreationDetailActivity extends AppCompatActivity {
                         ArrayList<Video> videos = new ArrayList<>();
                         videos.add(video);
                         vidTrain.setVideos(videos);
-                        if (toggleBtn.isChecked() && !collaborators.isEmpty()) {
-                            vidTrain.setWritePrivacy(true);
+                        vidTrain.setWritePrivacy(true);
+                        if (!collaborators.isEmpty()) {
                             vidTrain.setCollaborators(collaborators);
-                        } else {
-                            vidTrain.setWritePrivacy(false);
                         }
                         vidTrain.setReadPrivacy(false);
                         vidTrain.setLatestVideo(parseFile);

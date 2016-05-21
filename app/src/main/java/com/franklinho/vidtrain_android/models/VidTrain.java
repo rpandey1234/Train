@@ -1,16 +1,18 @@
 package com.franklinho.vidtrain_android.models;
 
 import android.util.Log;
+import com.google.android.gms.maps.model.LatLng;
 
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.Utility;
-import com.google.android.gms.maps.model.LatLng;
 import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+
+import org.w3c.dom.Comment;
 
 import java.io.File;
 import java.io.Serializable;
@@ -22,16 +24,6 @@ import java.util.List;
  */
 @ParseClassName("VidTrain")
 public class VidTrain extends ParseObject implements Serializable {
-
-    User user;
-    List<User> collaborators;
-    String title;
-    String description;
-    List<Video> videos;
-    List<com.franklinho.vidtrain_android.models.Comment> comments;
-    Enum readPrivacy;
-    Enum writePrivacy;
-    ParseGeoPoint ll;
 
     public static final String USER_KEY = "user";
     public static final String TITLE_KEY = "title";

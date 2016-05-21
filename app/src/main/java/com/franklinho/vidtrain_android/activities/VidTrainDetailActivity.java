@@ -60,9 +60,8 @@ import butterknife.OnClick;
 public class VidTrainDetailActivity extends AppCompatActivity {
 
     @Bind(R.id.ivCollaborators) ImageView ivCollaborators;
-    @Bind(R.id.ibtnLike) ImageButton ibtnLike;
-    @Bind(R.id.tvLikeCount) TextView tvLikeCount;
     @Bind(R.id.tvVideoCount) TextView tvVideoCount;
+    @Bind(R.id.tvAuthor) TextView tvAuthor;
     @Bind(R.id.tvTitle) TextView tvTitle;
     @Bind(R.id.tvTime) TextView tvTime;
     @Bind(R.id.toolbar) Toolbar toolbar;
@@ -76,7 +75,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     public static final int VIDEO_CAPTURE = 101;
     private ProgressDialog progress;
     private VidTrain vidTrain;
-    private boolean liked = false;
     private VideoPagerAdapter videoPagerAdapter;
     private List<File> filesList;
     private String uniqueId = Long.toString(System.currentTimeMillis());
@@ -119,10 +117,9 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
             VideoPlayer.resetVideoPlayerManager();
             Intent intent = new Intent(getBaseContext(), VideoCaptureActivity.class);
-            intent.putExtra(HomeActivity.UNIQUE_ID_INTENT, uniqueId);
-            intent.putExtra(HomeActivity.SHOW_CONFIRM, true);
+            intent.putExtra(MainActivity.UNIQUE_ID_INTENT, uniqueId);
+            intent.putExtra(MainActivity.SHOW_CONFIRM, true);
             startActivityForResult(intent, VIDEO_CAPTURE);
-//            startActivityForResult(Utility.getVideoIntent(), VIDEO_CAPTURE);
         } else {
             Toast.makeText(this, "No camera on device", Toast.LENGTH_LONG).show();
         }
@@ -213,56 +210,16 @@ public class VidTrainDetailActivity extends AppCompatActivity {
             @Override
             public void done(ParseObject object, ParseException e) {
                 final ParseUser user = video.getUser();
-                ivCollaborators.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
-                        intent.putExtra(ProfileActivity.USER_ID, user.getObjectId());
-                        startActivity(intent);
-                    }
-                });
                 user.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
                     @Override
                     public void done(ParseObject object, ParseException e) {
                         String profileImageUrl = User.getProfileImageUrl(video.getUser());
                         Glide.with(getBaseContext()).load(profileImageUrl).into(ivCollaborators);
+                        tvAuthor.setText(User.getName(video.getUser()));
                     }
                 });
             }
         });
-    }
-
-    @SuppressWarnings("unused")
-    @OnClick(R.id.ivCollaborators)
-    public void onCollaboratorClicked(View view) {
-        ParseUser user = vidTrain.getUser();
-        Intent intent = new Intent(this, ProfileActivity.class);
-        intent.putExtra(ProfileActivity.USER_ID, user.getObjectId());
-        this.startActivity(intent);
-    }
-
-    @SuppressWarnings("unused")
-    @OnClick(R.id.ibtnLike)
-    public void onVidTrainLiked(View view) {
-        final Animation animScale = AnimationUtils.loadAnimation(this, R.anim.anim_scale);
-        if (liked) {
-            User.postUnlike(ParseUser.getCurrentUser(), vidTrain.getObjectId());
-            liked = false;
-            ibtnLike.setImageResource(R.drawable.heart_icon);
-            int currentLikeCount = vidTrain.getLikes();
-            if (currentLikeCount > 0) {
-                vidTrain.setLikes(currentLikeCount - 1);
-            } else {
-                vidTrain.setLikes(0);
-            }
-        } else {
-            User.postLike(ParseUser.getCurrentUser(), vidTrain.getObjectId());
-            liked = true;
-            ibtnLike.setImageResource(R.drawable.heart_icon_red);
-            vidTrain.setLikes(vidTrain.getLikes() + 1);
-        }
-        view.startAnimation(animScale);
-        tvLikeCount.setText(String.valueOf(vidTrain.getLikes()));
     }
 
     void updateVideos() {
@@ -403,16 +360,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                 Utility.contains(vidTrain.getCollaborators(), ParseUser.getCurrentUser())) {
             btnAddvidTrain.setVisibility(View.VISIBLE);
         }
-
-        if (User.hasLikedVidtrain(ParseUser.getCurrentUser(), vidTrain.getObjectId())) {
-            liked = true;
-            ibtnLike.setImageResource(R.drawable.heart_icon_red);
-        }
-
-        tvLikeCount.setText(getResources().getQuantityString(R.plurals.likes_count,
-                vidTrain.getLikes(), vidTrain.getLikes()));
-
-        tvLikeCount.setText(String.valueOf(vidTrain.getLikes()));
         tvTitle.setText(vidTrain.getTitle());
         int videosCount = vidTrain.getVideosCount();
         tvVideoCount.setText(String.valueOf(videosCount));
@@ -423,6 +370,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                 String profileImageUrl = User.getProfileImageUrl(vidTrain.getUser());
                 Glide.with(getBaseContext()).load(profileImageUrl).placeholder(
                         R.drawable.profile_icon).into(ivCollaborators);
+                tvAuthor.setText(User.getName(vidTrain.getUser()));
             }
         });
         new VideoDownloadTask(vpPreview).execute(vidTrain);
