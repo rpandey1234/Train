@@ -68,6 +68,8 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
     private CameraPreview mPreview;
     private MediaRecorder mMediaRecorder;
     private boolean isRecording = false;
+    private boolean isPauseandCalled = false;
+
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
     public static int orientation;
@@ -121,7 +123,12 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         showConfirm = getIntent().getBooleanExtra(HomeActivity.SHOW_CONFIRM, false);
         Log.d(VidtrainApplication.TAG, "show confirm? " + showConfirm);
         Log.d(VidtrainApplication.TAG, "uniqueId: " + uniqueId);
-        // Create an instance of Camera
+        initializeCamera();
+    }
+
+
+    protected void initializeCamera(){
+// Create an instance of Camera
         mCamera = getCameraInstance();
 
         // Create our Preview view and set it as the content of our activity.
@@ -331,11 +338,21 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         return smallestSize;
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(mCamera == null){
+            initializeCamera();
+        }
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
         releaseMediaRecorder();       // if you are using MediaRecorder, release it first
         releaseCamera();              // release the camera immediately on pause event
+        isPauseandCalled = true;
     }
 
     private void releaseMediaRecorder() {
@@ -351,6 +368,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         if (mCamera != null) {
             mCamera.release();        // release the camera for other applications
             mCamera = null;
+            mPreview.getHolder().removeCallback(mPreview);
         }
     }
 
