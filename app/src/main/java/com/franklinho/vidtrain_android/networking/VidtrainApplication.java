@@ -16,6 +16,7 @@ import com.parse.SaveCallback;
 
 /**
  * Created by franklinho on 3/1/16.
+ * mongodb://vidtrain:vidtrain@ds017514.mlab.com:17514/vidtrain
  */
 public class VidtrainApplication extends Application {
 

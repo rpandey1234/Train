@@ -6,6 +6,7 @@ import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.hardware.Camera;
@@ -228,7 +229,9 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
             AlertDialog alertDialog = builder.create();
             alertDialog.show();
         } else {
-            setResult(Activity.RESULT_OK);
+            Intent dataBack = new Intent();
+            dataBack.putExtra(MainActivity.UNIQUE_ID_INTENT, uniqueId);
+            setResult(Activity.RESULT_OK, dataBack);
             finish();
         }
     }

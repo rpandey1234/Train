@@ -31,8 +31,6 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.conversations_fragment) FrameLayout conversationsFragment;
 
-    private String uniqueId = Long.toString(System.currentTimeMillis());
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.fab_create)
     public void startCreateFlow(View view) {
         Intent intent = new Intent(getBaseContext(), VideoCaptureActivity.class);
-        intent.putExtra(UNIQUE_ID_INTENT, uniqueId);
+        intent.putExtra(UNIQUE_ID_INTENT, Long.toString(System.currentTimeMillis()));
         intent.putExtra(SHOW_CONFIRM, false);
         startActivityForResult(intent, VIDEO_CAPTURE);
     }
@@ -79,8 +77,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == VIDEO_CAPTURE) {
             if (resultCode == RESULT_OK) {
+                String uid = data.getStringExtra(UNIQUE_ID_INTENT);
                 Intent i = new Intent(this, CreationDetailActivity.class);
-                i.putExtra("videoPath", Utility.getOutputMediaFile(uniqueId).getPath());
+                i.putExtra("videoPath", Utility.getOutputMediaFile(uid).getPath());
                 startActivity(i);
             } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, "Video recording cancelled.",  Toast.LENGTH_LONG).show();
