@@ -53,6 +53,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class VidTrainDetailActivity extends AppCompatActivity {
 
@@ -109,6 +110,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         this.finish();
     }
 
+    @OnClick(R.id.btnAddvidTrain)
     public void showCreateFlow(View view) {
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
             VideoPlayer.resetVideoPlayerManager();

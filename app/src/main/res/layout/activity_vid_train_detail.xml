@@ -97,7 +97,6 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/vpPreview"
                         android:background="@android:color/black"
-                        android:onClick=""
                         android:transitionName="viewer"
                         />
                     <com.franklinho.vidtrain_android.utilities.VideoPageIndicator
@@ -143,7 +142,6 @@
                     android:layout_centerVertical="true"
                     android:text="@string/add_to_vidtrain"
                     android:textColor="@android:color/white"
-                    android:onClick="showCreateFlow"
                     android:visibility="gone"
                     android:layout_below="@id/tvVideoCount"
                     style="@style/CustomColoredButtonStyle"

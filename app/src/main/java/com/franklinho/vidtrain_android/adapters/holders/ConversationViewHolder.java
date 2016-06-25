@@ -5,8 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.OnItemTouchListener;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,17 +28,17 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by rahul on 4/28/16.
  */
-public class ConversationViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class ConversationViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
 
     @Bind(R.id.conversation_title) public TextView conversationTitle;
     @Bind(R.id.timestamp) public TextView timestamp;
     @Bind(R.id.participants_rv) public RecyclerView rvParticipants;
     @Bind(R.id.image_preview) public ImageView videoImagePreview;
-
 
     private final Activity _activity;
     private Context _context;
@@ -47,7 +50,6 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements V
         _context = view.getContext();
         _activity = activity;
         view.setOnClickListener(this);
-
     }
 
     public void bind(VidTrain vidTrain) {
@@ -55,8 +57,7 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements V
         conversationTitle.setText(vidTrain.getTitle());
         timestamp.setText(Utility.getRelativeTime(vidTrain.getCreatedAt().getTime()));
         rvParticipants.setLayoutManager(new LinearLayoutManager(_context, LinearLayoutManager.HORIZONTAL, false));
-        rvParticipants.setAdapter(new ParticipantsAdapter(vidTrain));
-        videoImagePreview.setImageResource(R.drawable.icon_vidtrain);
+        rvParticipants.setAdapter(new ParticipantsAdapter());
         List<Video> videos = _vidTrain.getVideos();
         Video lastVideo = videos.get(videos.size() - 1);
         Glide.with(_context).load(lastVideo.getThumbnail().getUrl()).into(videoImagePreview);
@@ -73,10 +74,7 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements V
 
     public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantViewHolder> {
 
-        VidTrain _vidTrain2;
-
-        public ParticipantsAdapter(VidTrain vidTrain) {
-            _vidTrain2 = vidTrain;
+        public ParticipantsAdapter() {
         }
 
         @Override
@@ -87,13 +85,13 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements V
 
         @Override
         public void onBindViewHolder(ParticipantViewHolder holder, int position) {
-            ParseUser parseUser = _vidTrain2.getCollaborators().get(position);
+            ParseUser parseUser = _vidTrain.getCollaborators().get(position);
             holder.bind(parseUser);
         }
 
         @Override
         public int getItemCount() {
-            List<ParseUser> collaborators = _vidTrain2.getCollaborators();
+            List<ParseUser> collaborators = _vidTrain.getCollaborators();
             if (collaborators != null) {
                 return collaborators.size();
             } else {
@@ -102,18 +100,27 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements V
         }
     }
 
-    public class ParticipantViewHolder extends RecyclerView.ViewHolder {
-
+    public class ParticipantViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
         @Bind(R.id.user_image) RoundedImageView userImage;
 
         public ParticipantViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
         }
 
         public void bind(ParseUser parseUser) {
             userImage.setOval(true);
             Glide.with(_context).load(User.getProfileImageUrl(parseUser)).into(userImage);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (_vidTrain != null) {
+                Intent i = new Intent(_context, VidTrainDetailActivity.class);
+                i.putExtra(VidTrainDetailActivity.VIDTRAIN_KEY, _vidTrain.getObjectId());
+                _context.startActivity(i);
+            }
         }
     }
 }
