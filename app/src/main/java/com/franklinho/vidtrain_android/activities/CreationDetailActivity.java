@@ -228,8 +228,12 @@ public class CreationDetailActivity extends AppCompatActivity {
                         vidTrain.setLatestVideo(parseFile);
                         LocationManager lm = (LocationManager) getSystemService(
                                 Context.LOCATION_SERVICE);
-                        Location lc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                        vidTrain.setLL(new ParseGeoPoint(lc.getLatitude(), lc.getLongitude()));
+                        if (lm != null) {
+                            Location lc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                            if (lc != null) {
+                                vidTrain.setLL(new ParseGeoPoint(lc.getLatitude(), lc.getLongitude()));
+                            }
+                        }
                         vidTrain.setRankingValue(((float) System.currentTimeMillis() / (float) 1000 - (float) 1134028003) / (float) 45000 + 1);
 
                         vidTrain.saveInBackground(new SaveCallback() {

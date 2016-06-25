@@ -39,6 +39,7 @@ import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
+import com.parse.ParseQuery.CachePolicy;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.volokh.danylo.video_player_manager.ui.SimpleMainThreadMediaPlayerListener;
@@ -92,6 +93,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
             }
         });
 
+        Log.d(VidtrainApplication.TAG, "on create called");
         requestVidTrain();
 
         swipeContainer.setColorSchemeResources(R.color.bluePrimary);
@@ -120,6 +122,29 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         }
     }
 
+    private String getVidtrainId() {
+        Intent intent = getIntent();
+        if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+            Uri uri = intent.getData();
+            return uri.getQueryParameter(VIDTRAIN_KEY);
+        } else {
+            return getIntent().getExtras().getString(VIDTRAIN_KEY);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(VidtrainApplication.TAG, "on pause called");
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(VidtrainApplication.TAG, "on resume called");
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -136,17 +161,9 @@ public class VidTrainDetailActivity extends AppCompatActivity {
             Toast.makeText(this, "Intent data is null.",  Toast.LENGTH_LONG).show();
             return;
         }
-//        Intent intent = getIntent();
-//        String vidTrainId;
-//        if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-//            Uri uri = intent.getData();
-//            vidTrainId = uri.getQueryParameter(VIDTRAIN_KEY);
-//        } else {
-//            vidTrainId = getIntent().getExtras().getString(VIDTRAIN_KEY);
-//        }
 //        ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
 //        query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
-//        query.whereEqualTo("objectId", vidTrainId);
+//        query.whereEqualTo("objectId", getVidtrainId());
 //        query.include("user");
 //        query.getFirstInBackground(new GetCallback<VidTrain>() {
 //            @Override
@@ -157,6 +174,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
 //                    return;
 //                }
 //                vidTrain = object;
+//                System.out.println("vidtrain loaded in onActivityResult!!!");
 //                layoutVidTrain();
 //            }
 //        });
@@ -195,21 +213,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                                 @Override
                                 public void done(ParseException e) {
                                     layoutVidTrain();
-                                    List<Video> collabvideos = vidTrain.getVideos();
-                                    final List<ParseUser> notificationsSent = new ArrayList<ParseUser>();
-                                    for (final Video collabvideo : collabvideos) {
-                                        collabvideo.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
-                                            @Override
-                                            public void done(ParseObject object, ParseException e) {
-                                                if (collabvideo.getUser().getObjectId() != ParseUser.getCurrentUser().getObjectId()) {
-                                                    if (!notificationsSent.contains(collabvideo.getUser())) {
-                                                        sendVidtrainUpdatedNotification(collabvideo.getUser(), vidTrain);
-                                                        notificationsSent.add(collabvideo.getUser());
-                                                    }
-                                                }
-                                            }
-                                            });
-                                        }
+                                    sendNotifications(vidTrain);
                                     user.put("vidtrains", User.maybeInitAndAdd(user, vidTrain));
                                     user.put("videos", User.maybeInitAndAdd(user, video));
                                     user.saveInBackground(new SaveCallback() {
@@ -233,6 +237,24 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         }
     }
 
+    private void sendNotifications(final VidTrain vidtrain) {
+        List<Video> collabvideos = vidtrain.getVideos();
+        final List<ParseUser> notificationsSent = new ArrayList<>();
+        for (final Video collabVideo : collabvideos) {
+            collabVideo.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+                @Override
+                public void done(ParseObject object, ParseException e) {
+                    if (!collabVideo.getUser().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
+                        if (!notificationsSent.contains(collabVideo.getUser())) {
+                            sendVidtrainUpdatedNotification(collabVideo.getUser(), vidtrain);
+                            notificationsSent.add(collabVideo.getUser());
+                        }
+                    }
+                }
+            });
+        }
+    }
+
     public void setProfileImageUrlAtIndex(int index) {
         List<Video> videos = vidTrain.getVideos();
         final Video video = videos.get(index);
@@ -250,32 +272,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                 });
             }
         });
-    }
-
-    void updateVideos() {
-        final Video latestVideo = vidTrain.getVideos().get(vidTrain.getVideos().size());
-        latestVideo.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
-            @Override
-            public void done(ParseObject object, ParseException e) {
-                ParseFile videoFile = latestVideo.getVideoFile();
-                videoFile.getDataInBackground(new GetDataCallback() {
-                    @Override
-                    public void done(byte[] data, ParseException e) {
-                        if (e == null) {
-                            File localVideoFile = Utility.getOutputMediaFile(
-                                    latestVideo.getObjectId());
-                            Utility.writeToFile(data, localVideoFile);
-                            filesList.add(localVideoFile);
-                            videoPagerAdapter.notifyDataSetChanged();
-                            cpIndicator.notifyDataSetChanged();
-                        } else {
-                            Log.d(VidtrainApplication.TAG, e.toString());
-                        }
-                    }
-                });
-            }
-        });
-
     }
 
     private class VideoDownloadTask extends AsyncTask<VidTrain, Void, List<File>> {
@@ -358,18 +354,9 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     }
 
     void requestVidTrain() {
-        Intent intent = getIntent();
-        String vidTrainId;
-        if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-            Uri uri = intent.getData();
-            vidTrainId = uri.getQueryParameter(VIDTRAIN_KEY);
-        } else {
-            vidTrainId = getIntent().getExtras().getString(VIDTRAIN_KEY);
-        }
-
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
         query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
-        query.whereEqualTo("objectId", vidTrainId);
+        query.whereEqualTo("objectId", getVidtrainId());
         query.include("user");
         query.getFirstInBackground(new GetCallback<VidTrain>() {
             @Override

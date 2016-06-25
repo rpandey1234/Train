@@ -297,7 +297,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         // Step 5: Set the preview output
         mMediaRecorder.setPreviewDisplay(mPreview.getHolder().getSurface());
         mMediaRecorder.setOrientationHint(VideoCaptureActivity.orientation);
-        mMediaRecorder.setVideoFrameRate(24);
+//        mMediaRecorder.setVideoFrameRate(24);
         mMediaRecorder.setVideoEncodingBitRate(5000000);
 //        mMediaRecorder.setVideoSize(smallestSize.width, smallestSize.height);
         mMediaRecorder.setMaxFileSize(8000000); // max parse file size is 10485760 bytes
