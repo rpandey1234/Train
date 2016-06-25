@@ -27,15 +27,12 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by rahul on 4/28/16.
- */
 public class ConversationViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
 
-    @Bind(R.id.conversation_title) public TextView conversationTitle;
-    @Bind(R.id.timestamp) public TextView timestamp;
-    @Bind(R.id.participants_rv) public RecyclerView rvParticipants;
-    @Bind(R.id.image_preview) public ImageView videoImagePreview;
+    @Bind(R.id.conversation_title) TextView _conversationTitle;
+    @Bind(R.id.timestamp) TextView _timestamp;
+    @Bind(R.id.participants_rv) RecyclerView _rvParticipants;
+    @Bind(R.id.image_preview) ImageView _videoImagePreview;
 
     private final Activity _activity;
     private Context _context;
@@ -51,13 +48,13 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements O
 
     public void bind(VidTrain vidTrain) {
         _vidTrain = vidTrain;
-        conversationTitle.setText(vidTrain.getTitle());
-        timestamp.setText(Utility.getRelativeTime(vidTrain.getCreatedAt().getTime()));
-        rvParticipants.setLayoutManager(new LinearLayoutManager(_context, LinearLayoutManager.HORIZONTAL, false));
-        rvParticipants.setAdapter(new ParticipantsAdapter());
+        _conversationTitle.setText(vidTrain.getTitle());
+        _timestamp.setText(Utility.getRelativeTime(vidTrain.getCreatedAt().getTime()));
+        _rvParticipants.setLayoutManager(new LinearLayoutManager(_context, LinearLayoutManager.HORIZONTAL, false));
+        _rvParticipants.setAdapter(new ParticipantsAdapter());
         List<Video> videos = _vidTrain.getVideos();
         Video lastVideo = videos.get(videos.size() - 1);
-        Glide.with(_context).load(lastVideo.getThumbnail().getUrl()).into(videoImagePreview);
+        Glide.with(_context).load(lastVideo.getThumbnail().getUrl()).into(_videoImagePreview);
     }
 
     @Override

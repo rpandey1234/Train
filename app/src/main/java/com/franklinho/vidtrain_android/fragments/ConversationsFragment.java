@@ -7,9 +7,6 @@ import com.parse.ParseQuery;
 
 import java.util.List;
 
-/**
- * Created by rahul on 3/5/16.
- */
 public class ConversationsFragment extends VidTrainListFragment {
 
     public static final int NUM_CONVERSATIONS_INITIAL = 10;
@@ -23,10 +20,10 @@ public class ConversationsFragment extends VidTrainListFragment {
         super.requestVidTrains(newTimeline);
         final int currentSize;
         if (newTimeline) {
-            vidTrains.clear();
+            _vidTrains.clear();
             currentSize = 0;
         } else {
-            currentSize = vidTrains.size();
+            currentSize = _vidTrains.size();
         }
 
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
@@ -40,14 +37,14 @@ public class ConversationsFragment extends VidTrainListFragment {
         query.findInBackground(new FindCallback<VidTrain>() {
             @Override
             public void done(List<VidTrain> objects, ParseException e) {
-                swipeContainer.setRefreshing(false);
+                _swipeContainer.setRefreshing(false);
                 if (e == null) {
-                    vidTrains.addAll(objects);
+                    _vidTrains.addAll(objects);
                     if (newTimeline) {
-                        aVidTrains.notifyDataSetChanged();
+                        _aVidTrains.notifyDataSetChanged();
                     } else {
                         // TODO: should be objects.size()
-                        aVidTrains.notifyItemRangeInserted(currentSize, vidTrains.size() - 1);
+                        _aVidTrains.notifyItemRangeInserted(currentSize, _vidTrains.size() - 1);
                     }
                 }
                 hideProgressBar();

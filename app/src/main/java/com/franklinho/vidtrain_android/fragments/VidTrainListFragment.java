@@ -22,19 +22,16 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by rahul on 3/5/16.
- */
 public class VidTrainListFragment extends Fragment {
 
-    @Bind(R.id.rvVidTrains) public RecyclerView rvVidTrains;
-    @Bind(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
-    @Bind(R.id.pbProgessAction) View pbProgressAction;
-    @Bind(R.id.tvNotFollowingLabel) TextView tvNotFollowingLabel;
+    @Bind(R.id.rvVidTrains) public RecyclerView _rvVidTrains;
+    @Bind(R.id.swipeContainer) SwipeRefreshLayout _swipeContainer;
+    @Bind(R.id.pbProgessAction) View _pbProgressAction;
+    @Bind(R.id.tvNotFollowingLabel) TextView _tvNotFollowingLabel;
 
-    List<VidTrain> vidTrains;
-    VidTrainArrayAdapter aVidTrains;
-    LinearLayoutManager linearLayoutManager;
+    List<VidTrain> _vidTrains;
+    VidTrainArrayAdapter _aVidTrains;
+    LinearLayoutManager _linearLayoutManager;
 
     public VidTrainListFragment() {
         // Required empty public constructor
@@ -43,9 +40,9 @@ public class VidTrainListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        vidTrains = new ArrayList<>();
+        _vidTrains = new ArrayList<>();
         //Construct the adapter
-        aVidTrains = new VidTrainArrayAdapter(vidTrains, getContext(), getActivity());
+        _aVidTrains = new VidTrainArrayAdapter(_vidTrains, getContext(), getActivity());
     }
 
     @Override
@@ -54,20 +51,20 @@ public class VidTrainListFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_conversations, container, false);
         ButterKnife.bind(this, v);
 
-        linearLayoutManager = new LinearLayoutManager(getContext());
-        rvVidTrains.setAdapter(aVidTrains);
-        rvVidTrains.setLayoutManager(linearLayoutManager);
-        swipeContainer.setColorSchemeResources(R.color.bluePrimary);
+        _linearLayoutManager = new LinearLayoutManager(getContext());
+        _rvVidTrains.setAdapter(_aVidTrains);
+        _rvVidTrains.setLayoutManager(_linearLayoutManager);
+        _swipeContainer.setColorSchemeResources(R.color.bluePrimary);
         showProgressBar();
 
-        rvVidTrains.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+        _rvVidTrains.addOnScrollListener(new EndlessRecyclerViewScrollListener(_linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
                 requestVidTrains(false);
             }
         });
 
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        _swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 requestVidTrains(true);
@@ -82,7 +79,7 @@ public class VidTrainListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        aVidTrains.notifyDataSetChanged();
+        _aVidTrains.notifyDataSetChanged();
     }
 
     @Override
@@ -94,11 +91,11 @@ public class VidTrainListFragment extends Fragment {
 
     public void showProgressBar() {
         // Show progress item
-        pbProgressAction.setVisibility(View.VISIBLE);
+        _pbProgressAction.setVisibility(View.VISIBLE);
     }
 
     public void hideProgressBar() {
         // Hide progress item
-        pbProgressAction.setVisibility(View.GONE);
+        _pbProgressAction.setVisibility(View.GONE);
     }
 }

@@ -18,17 +18,14 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by rahul on 3/11/16.
- */
 public class UsersAdapter extends ArrayAdapter<ParseUser> {
-    Context mContext;
-    private final LayoutInflater inflater;
+    Context _context;
+    private final LayoutInflater _layoutInflater;
 
     public UsersAdapter(Context context, List<ParseUser> users) {
         super(context, R.layout.item_user, users);
-        mContext = context;
-        inflater = LayoutInflater.from(context);
+        _context = context;
+        _layoutInflater = LayoutInflater.from(context);
     }
 
     @Override
@@ -38,25 +35,24 @@ public class UsersAdapter extends ArrayAdapter<ParseUser> {
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder;
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.item_user, parent, false);
+            convertView = _layoutInflater.inflate(R.layout.item_user, parent, false);
             viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         // Populate the data into the template view using the data object
-        viewHolder.tvName.setText(User.getName(user));
+        viewHolder._tvName.setText(User.getName(user));
         String profileImageUrl = User.getProfileImageUrl(user);
-        Glide.with(mContext).load(profileImageUrl).into(viewHolder.ivProfileImage);
+        Glide.with(_context).load(profileImageUrl).into(viewHolder._ivProfileImage);
         // Return the completed view to render on screen
         return convertView;
     }
 
     // View lookup cache
     static class ViewHolder {
-        @Bind(R.id.tvName) TextView tvName;
-        @Bind(R.id.ivProfileImage)
-        RoundedImageView ivProfileImage;
+        @Bind(R.id.tvName) TextView _tvName;
+        @Bind(R.id.ivProfileImage) RoundedImageView _ivProfileImage;
 
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);

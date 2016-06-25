@@ -20,27 +20,24 @@ import com.parse.ParseUser;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by franklinho on 3/15/16.
- */
 public class ImagePagerAdapter extends PagerAdapter {
 
-    Activity mActivity;
-    Context mContext;
-    LayoutInflater mLayoutInflater;
-    List<Video> videos = new ArrayList<>();
+    Activity _activity;
+    Context _context;
+    LayoutInflater _layoutInflater;
+    List<Video> _videos = new ArrayList<>();
 
     public ImagePagerAdapter(Context context, List<Video> videos, Activity activity) {
-        mContext = context;
-        mLayoutInflater = LayoutInflater.from(mContext);
-        this.videos = videos;
-        mActivity = activity;
+        _context = context;
+        _layoutInflater = LayoutInflater.from(_context);
+        _videos = videos;
+        _activity = activity;
     }
 
     // Returns the number of pages to be displayed in the ViewPager.
     @Override
     public int getCount() {
-        return videos.size();
+        return _videos.size();
     }
 
     // Returns true if a particular object (page) is from a particular page
@@ -53,18 +50,18 @@ public class ImagePagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         // Inflate the layout for the page
-        View itemView = mLayoutInflater.inflate(R.layout.pager_item, container, false);
+        View itemView = _layoutInflater.inflate(R.layout.pager_item, container, false);
         // Find and populate data into the page (i.e set the image)
         final ImageView imageView = (ImageView) itemView.findViewById(R.id.ivPagerImage);
         // ...
         // Add the page to the container
         container.addView(itemView);
-        final Video video = videos.get(position);
+        final Video video = _videos.get(position);
         video.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
             @Override
             public void done(ParseObject object, ParseException e) {
-                if (video.getThumbnail() != null && mContext != null) {
-                    Glide.with(mContext).load(video.getThumbnail().getUrl()).into(imageView);
+                if (video.getThumbnail() != null && _context != null) {
+                    Glide.with(_context).load(video.getThumbnail().getUrl()).into(imageView);
                 }
             }
         });
@@ -74,7 +71,7 @@ public class ImagePagerAdapter extends PagerAdapter {
     }
 
     public void setUserImageAtPosition(int position, final ImageView ivCollaborators) {
-        final Video video = videos.get(position);
+        final Video video = _videos.get(position);
         video.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
             @Override
             public void done(ParseObject object, ParseException e) {
@@ -82,8 +79,8 @@ public class ImagePagerAdapter extends PagerAdapter {
                     @Override
                     public void done(ParseObject user, ParseException e) {
                         final String profileImageUrl = User.getProfileImageUrl((ParseUser) user);
-                        if (profileImageUrl != null && mContext != null) {
-                            Glide.with(mContext).load(profileImageUrl).into(ivCollaborators);
+                        if (profileImageUrl != null && _context != null) {
+                            Glide.with(_context).load(profileImageUrl).into(ivCollaborators);
                         }
                     }
                 });

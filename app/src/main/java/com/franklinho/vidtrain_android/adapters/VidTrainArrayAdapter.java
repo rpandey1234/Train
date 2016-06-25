@@ -10,39 +10,35 @@ import android.view.ViewGroup;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.adapters.holders.ConversationViewHolder;
 import com.franklinho.vidtrain_android.models.VidTrain;
-import com.franklinho.vidtrain_android.utilities.Utility;
 
 import java.util.List;
 
-/**
- * Created by franklinho on 3/7/16.
- */
 public class VidTrainArrayAdapter extends RecyclerView.Adapter<ConversationViewHolder> {
 
-    private List<VidTrain> mVidTrains;
-    private Context mContext;
-    private Activity mActivity;
+    private List<VidTrain> _vidTrains;
+    private Context _context;
+    private Activity _activity;
 
     public VidTrainArrayAdapter( List<VidTrain> vidTrains, Context context, Activity activity) {
-        mVidTrains = vidTrains;
-        mContext = context;
-        mActivity = activity;
+        _vidTrains = vidTrains;
+        _context = context;
+        _activity = activity;
     }
 
     @Override
     public ConversationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.conversation_vidtrain_preview, parent, false);
-        return new ConversationViewHolder(view, mActivity);
+        View view = LayoutInflater.from(_context).inflate(R.layout.conversation_vidtrain_preview, parent, false);
+        return new ConversationViewHolder(view, _activity);
     }
 
     @Override
     public void onBindViewHolder(final ConversationViewHolder holder, int position) {
-        VidTrain vidTrain = mVidTrains.get(position);
+        VidTrain vidTrain = _vidTrains.get(position);
         holder.bind(vidTrain);
     }
 
     @Override
     public int getItemCount() {
-        return mVidTrains.size();
+        return _vidTrains.size();
     }
 }
