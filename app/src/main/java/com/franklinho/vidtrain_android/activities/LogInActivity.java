@@ -1,10 +1,8 @@
 package com.franklinho.vidtrain_android.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -54,15 +52,6 @@ public class LogInActivity extends AppCompatActivity {
             }
             goMainActivity();
         }
-    }
-
-    @Override
-    public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
-        View view = super.onCreateView(parent, name, context, attrs);
-
-
-        return view;
-
     }
 
     private void updateUserInfo(final ParseUser user) {
@@ -123,11 +112,6 @@ public class LogInActivity extends AppCompatActivity {
     private void logUser() {
         ParseUser currentUser = ParseUser.getCurrentUser();
         Crashlytics.setUserName(User.getName(currentUser));
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     public void showProgressBar() {

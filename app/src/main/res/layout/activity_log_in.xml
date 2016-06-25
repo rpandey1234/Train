@@ -6,15 +6,6 @@
     android:background="@drawable/gradient"
     tools:context=".activities.LogInActivity">
 
-    <!--<ImageView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:scaleType="centerCrop"-->
-        <!--android:id="@+id/ivBackground"-->
-        <!--android:src="@drawable/gg1"-->
-        <!--android:alpha="0.4"-->
-        <!--/>-->
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
