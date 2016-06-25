@@ -93,7 +93,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
             }
         });
 
-        Log.d(VidtrainApplication.TAG, "on create called");
         requestVidTrain();
 
         swipeContainer.setColorSchemeResources(R.color.bluePrimary);
@@ -133,27 +132,9 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d(VidtrainApplication.TAG, "on pause called");
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d(VidtrainApplication.TAG, "on resume called");
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode != VIDEO_CAPTURE) {
-            return;
-        }
-        if (vidTrain == null) {
-            Log.d(VidtrainApplication.TAG, "Vidtrain object is null! Exiting early.");
-            Toast.makeText(this, "Vidtrain object is null",  Toast.LENGTH_LONG).show();
             return;
         }
         if (data == null) {
@@ -161,80 +142,83 @@ public class VidTrainDetailActivity extends AppCompatActivity {
             Toast.makeText(this, "Intent data is null.",  Toast.LENGTH_LONG).show();
             return;
         }
-//        ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
-//        query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
-//        query.whereEqualTo("objectId", getVidtrainId());
-//        query.include("user");
-//        query.getFirstInBackground(new GetCallback<VidTrain>() {
-//            @Override
-//            public void done(VidTrain object, ParseException e) {
-//                swipeContainer.setRefreshing(false);
-//                if (e != null) {
-//                    invalidVidtrain();
-//                    return;
-//                }
-//                vidTrain = object;
-//                System.out.println("vidtrain loaded in onActivityResult!!!");
-//                layoutVidTrain();
-//            }
-//        });
-        String uid = data.getStringExtra(MainActivity.UNIQUE_ID_INTENT);
         if (resultCode == RESULT_OK) {
-            final int videosCount = vidTrain.getVideosCount();
-            tvVideoCount.setText(String.valueOf(videosCount + 1));
-            progress = ProgressDialog.show(this, "Adding your video", "Just a moment please!",
-                    true);
+            progress = ProgressDialog
+                    .show(this, "Adding your video", "Just a moment please!", true);
             // data.getData().toString() is the following:
             // "file:///storage/emulated/0/Movies/VidTrainApp/VID_CAPTURED.mp4"
             // below is where data is stored:
             // "/storage/emulated/0/Movies/VidTrainApp/VID_CAPTURED.mp4"
-            String videoPath = Utility.getOutputMediaFile(uid).getPath();
-            final Video video = new Video();
-            final ParseUser user = ParseUser.getCurrentUser();
-            final ParseFile parseFile = Utility.createParseFile(videoPath);
-            if (parseFile == null) {
-                return;
-            }
-            Bitmap thumbnailBitmap = Utility.getImageBitmap(videoPath);
-            final ParseFile parseThumbnail = Utility.createParseFileFromBitmap(thumbnailBitmap);
-            parseFile.saveInBackground(new SaveCallback() {
-                @Override
-                public void done(ParseException e) {
-                    video.setUser(user);
-                    video.setVideoFile(parseFile);
-                    video.setVidTrain(vidTrain);
-                    video.setThumbnail(parseThumbnail);
-                    video.saveInBackground(new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            vidTrain.setLatestVideo(parseFile);
-                            vidTrain.setVideos(vidTrain.maybeInitAndAdd(video));
-                            vidTrain.saveInBackground(new SaveCallback() {
-                                @Override
-                                public void done(ParseException e) {
-                                    layoutVidTrain();
-                                    sendNotifications(vidTrain);
-                                    user.put("vidtrains", User.maybeInitAndAdd(user, vidTrain));
-                                    user.put("videos", User.maybeInitAndAdd(user, video));
-                                    user.saveInBackground(new SaveCallback() {
-                                        @Override
-                                        public void done(ParseException e) {
-                                            progress.dismiss();
-                                            Toast.makeText(getBaseContext(), "Successfully added video",
-                                                    Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                }
-                            });
-                        }
-                    });
-                }
-            });
+            String videoPath = Utility.getOutputMediaFile(
+                    data.getStringExtra(MainActivity.UNIQUE_ID_INTENT)).getPath();
+            addVideoToVidtrain(videoPath);
         } else if (resultCode == RESULT_CANCELED) {
             Toast.makeText(this, "Video recording cancelled.", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(this, "Failed to record video", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void addVideoToVidtrain(final String videoPath) {
+        ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
+        query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        query.whereEqualTo("objectId", getVidtrainId());
+        query.include("user");
+        query.getFirstInBackground(new GetCallback<VidTrain>() {
+            @Override
+            public void done(VidTrain object, ParseException e) {
+                swipeContainer.setRefreshing(false);
+                if (e != null) {
+                    invalidVidtrain();
+                    return;
+                }
+                // Need to re-fetch vidtrain since it becomes null on some phones/OS
+                vidTrain = object;
+                final int videosCount = vidTrain.getVideosCount();
+                tvVideoCount.setText(String.valueOf(videosCount + 1));
+                final Video video = new Video();
+                final ParseUser user = ParseUser.getCurrentUser();
+                final ParseFile parseFile = Utility.createParseFile(videoPath);
+                if (parseFile == null) {
+                    return;
+                }
+                Bitmap thumbnailBitmap = Utility.getImageBitmap(videoPath);
+                final ParseFile parseThumbnail = Utility.createParseFileFromBitmap(thumbnailBitmap);
+                parseFile.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        video.setUser(user);
+                        video.setVideoFile(parseFile);
+                        video.setVidTrain(vidTrain);
+                        video.setThumbnail(parseThumbnail);
+                        video.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                vidTrain.setLatestVideo(parseFile);
+                                vidTrain.setVideos(vidTrain.maybeInitAndAdd(video));
+                                vidTrain.saveInBackground(new SaveCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        layoutVidTrain();
+                                        sendNotifications(vidTrain);
+                                        user.put("vidtrains", User.maybeInitAndAdd(user, vidTrain));
+                                        user.put("videos", User.maybeInitAndAdd(user, video));
+                                        user.saveInBackground(new SaveCallback() {
+                                            @Override
+                                            public void done(ParseException e) {
+                                                progress.dismiss();
+                                                Toast.makeText(getBaseContext(), "Successfully added video",
+                                                        Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
     }
 
     private void sendNotifications(final VidTrain vidtrain) {
