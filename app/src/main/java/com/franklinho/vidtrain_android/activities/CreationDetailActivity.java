@@ -194,14 +194,15 @@ public class CreationDetailActivity extends AppCompatActivity {
             Toast.makeText(this, "Please enter a title", Toast.LENGTH_SHORT).show();
             return;
         }
+        final ParseFile parseFile = Utility.createParseFile(videoPath);
+        if (parseFile == null) {
+            Toast.makeText(this, "Was unable to create file for video.",  Toast.LENGTH_LONG).show();
+            return;
+        }
         progress = ProgressDialog.show(this, "Saving", "Just a moment please!", true);
         final Video video = new Video();
         final VidTrain vidTrain = new VidTrain();
 
-        final ParseFile parseFile = Utility.createParseFile(videoPath);
-        if (parseFile == null) {
-            return;
-        }
         Bitmap thumbnailBitmap = Utility.getImageBitmap(videoPath);
         final ParseFile parseThumbnail = Utility.createParseFileFromBitmap(thumbnailBitmap);
         parseFile.saveInBackground(new SaveCallback() {

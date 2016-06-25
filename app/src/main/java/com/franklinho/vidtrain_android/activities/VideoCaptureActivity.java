@@ -214,7 +214,9 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             Log.d(VidtrainApplication.TAG, "yes clicked!!");
-                            setResult(Activity.RESULT_OK);
+                            Intent dataBack = new Intent();
+                            dataBack.putExtra(MainActivity.UNIQUE_ID_INTENT, uniqueId);
+                            setResult(Activity.RESULT_OK, dataBack);
                             finish();
                         }
                     })

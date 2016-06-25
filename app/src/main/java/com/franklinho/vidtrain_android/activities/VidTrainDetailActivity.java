@@ -15,10 +15,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,7 +52,6 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class VidTrainDetailActivity extends AppCompatActivity {
 
@@ -77,7 +73,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     private VidTrain vidTrain;
     private VideoPagerAdapter videoPagerAdapter;
     private List<File> filesList;
-    private String uniqueId = Long.toString(System.currentTimeMillis());
 
 
     @Override
@@ -96,14 +91,14 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                 finish();
             }
         });
-        requestVidTrain(true);
+
+        requestVidTrain();
 
         swipeContainer.setColorSchemeResources(R.color.bluePrimary);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
-                requestVidTrain(false);
+                requestVidTrain();
             }
         });
     }
@@ -117,7 +112,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
             VideoPlayer.resetVideoPlayerManager();
             Intent intent = new Intent(getBaseContext(), VideoCaptureActivity.class);
-            intent.putExtra(MainActivity.UNIQUE_ID_INTENT, uniqueId);
+            intent.putExtra(MainActivity.UNIQUE_ID_INTENT, Long.toString(System.currentTimeMillis()));
             intent.putExtra(MainActivity.SHOW_CONFIRM, true);
             startActivityForResult(intent, VIDEO_CAPTURE);
         } else {
@@ -131,6 +126,41 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         if (requestCode != VIDEO_CAPTURE) {
             return;
         }
+        if (vidTrain == null) {
+            Log.d(VidtrainApplication.TAG, "Vidtrain object is null! Exiting early.");
+            Toast.makeText(this, "Vidtrain object is null",  Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (data == null) {
+            Log.d(VidtrainApplication.TAG, "intent data is null");
+            Toast.makeText(this, "Intent data is null.",  Toast.LENGTH_LONG).show();
+            return;
+        }
+//        Intent intent = getIntent();
+//        String vidTrainId;
+//        if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+//            Uri uri = intent.getData();
+//            vidTrainId = uri.getQueryParameter(VIDTRAIN_KEY);
+//        } else {
+//            vidTrainId = getIntent().getExtras().getString(VIDTRAIN_KEY);
+//        }
+//        ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
+//        query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+//        query.whereEqualTo("objectId", vidTrainId);
+//        query.include("user");
+//        query.getFirstInBackground(new GetCallback<VidTrain>() {
+//            @Override
+//            public void done(VidTrain object, ParseException e) {
+//                swipeContainer.setRefreshing(false);
+//                if (e != null) {
+//                    invalidVidtrain();
+//                    return;
+//                }
+//                vidTrain = object;
+//                layoutVidTrain();
+//            }
+//        });
+        String uid = data.getStringExtra(MainActivity.UNIQUE_ID_INTENT);
         if (resultCode == RESULT_OK) {
             final int videosCount = vidTrain.getVideosCount();
             tvVideoCount.setText(String.valueOf(videosCount + 1));
@@ -140,7 +170,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
             // "file:///storage/emulated/0/Movies/VidTrainApp/VID_CAPTURED.mp4"
             // below is where data is stored:
             // "/storage/emulated/0/Movies/VidTrainApp/VID_CAPTURED.mp4"
-            String videoPath = Utility.getOutputMediaFile(uniqueId).getPath();
+            String videoPath = Utility.getOutputMediaFile(uid).getPath();
             final Video video = new Video();
             final ParseUser user = ParseUser.getCurrentUser();
             final ParseFile parseFile = Utility.createParseFile(videoPath);
@@ -327,7 +357,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         pbProgessAction.setVisibility(View.GONE);
     }
 
-    void requestVidTrain(Boolean newView) {
+    void requestVidTrain() {
         Intent intent = getIntent();
         String vidTrainId;
         if (Intent.ACTION_VIEW.equals(intent.getAction())) {

@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.fragments.ConversationsFragment;
+import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.Utility;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
@@ -75,6 +77,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data == null) {
+            Log.d(VidtrainApplication.TAG, "intent data is null");
+            Toast.makeText(this, "Intent data is null.",  Toast.LENGTH_LONG).show();
+            return;
+        }
         if (requestCode == VIDEO_CAPTURE) {
             if (resultCode == RESULT_OK) {
                 String uid = data.getStringExtra(UNIQUE_ID_INTENT);
