@@ -1,30 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-
-    android:background="@android:color/white"
+    android:background="@drawable/gradient"
     tools:context=".activities.LogInActivity">
 
-    <!--<com.franklinho.vidtrain_android.models.DynamicVideoPlayerView-->
+    <!--<ImageView-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent"-->
-        <!--android:id="@+id/vvLogin"/>-->
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:id="@+id/ivBackground"
-        android:src="@drawable/gg1"
-        android:alpha="0.4"/>
+        <!--android:scaleType="centerCrop"-->
+        <!--android:id="@+id/ivBackground"-->
+        <!--android:src="@drawable/gg1"-->
+        <!--android:alpha="0.4"-->
+        <!--/>-->
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
-        android:textColor="@color/bluePrimary"
+        android:textColor="@color/white"
         android:layout_centerHorizontal="true"
         android:id="@+id/tvVidTrain"
         android:textStyle="bold"
@@ -40,6 +35,7 @@
         android:layout_below="@+id/tvVidTrain"
         android:layout_marginTop="60dp"
         android:layout_centerHorizontal="true"
+        android:tint="@color/white"
         />
 
     <Button
@@ -49,13 +45,14 @@
         android:id="@+id/login_button"
         android:textColor="@android:color/white"
         android:textStyle="bold"
-        android:padding="20dp"
-        android:onClick="logInWithFaceBook"
+        android:padding="10dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/ivLogo"
         android:layout_marginTop="60dp"
-        style="@style/FacebookLoginButtonStyle"
+        android:background="@drawable/button_standard"
         android:foreground="?android:attr/selectableItemBackground"
+        android:drawableLeft="@drawable/fb_logo"
+        android:drawablePadding="8dp"
         />
 
     <ProgressBar xmlns:android="http://schemas.android.com/apk/res/android"

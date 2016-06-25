@@ -12,6 +12,8 @@ import java.util.List;
  */
 public class ConversationsFragment extends VidTrainListFragment {
 
+    public static final int NUM_CONVERSATIONS_INITIAL = 10;
+
     public static ConversationsFragment newInstance() {
         return new ConversationsFragment();
     }
@@ -34,7 +36,7 @@ public class ConversationsFragment extends VidTrainListFragment {
         query.include("collaborators");
         query.include("videos");
         query.setSkip(currentSize);
-        query.setLimit(5);
+        query.setLimit(NUM_CONVERSATIONS_INITIAL);
         query.findInBackground(new FindCallback<VidTrain>() {
             @Override
             public void done(List<VidTrain> objects, ParseException e) {

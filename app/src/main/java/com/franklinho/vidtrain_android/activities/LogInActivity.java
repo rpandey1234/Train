@@ -30,6 +30,7 @@ import java.util.Arrays;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.fabric.sdk.android.Fabric;
 
 public class LogInActivity extends AppCompatActivity {
@@ -88,6 +89,7 @@ public class LogInActivity extends AppCompatActivity {
         ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
     }
 
+    @OnClick(R.id.login_button)
     public void logInWithFaceBook(View view) {
         if (ParseUser.getCurrentUser() != null) {
             Log.d("Vidtrain", ParseUser.getCurrentUser().toString());

@@ -74,8 +74,7 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements O
 
     public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantViewHolder> {
 
-        public ParticipantsAdapter() {
-        }
+        public ParticipantsAdapter() {}
 
         @Override
         public ParticipantViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
