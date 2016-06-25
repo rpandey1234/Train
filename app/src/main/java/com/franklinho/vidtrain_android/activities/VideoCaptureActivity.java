@@ -50,51 +50,49 @@ import butterknife.OnClick;
 
 public class VideoCaptureActivity extends Activity implements MediaRecorder.OnInfoListener {
 
-    @Bind(R.id.camera_preview) RelativeLayout preview;
-    @Bind(R.id.button_capture)
-    FloatingActionButton captureButton;
-    @Bind(R.id.timer) View timerView;
-    @Bind(R.id.vTop) View vTop;
-    @Bind(R.id.vBottom) View vBottom;
+    @Bind(R.id.camera_preview) RelativeLayout _preview;
+    @Bind(R.id.button_capture) FloatingActionButton _captureButton;
+    @Bind(R.id.timer) View _timerView;
+    @Bind(R.id.vTop) View _vTop;
+    @Bind(R.id.vBottom) View _vBottom;
 //    @Bind(R.id.button_ChangeCamera) ImageButton switchCamera;
 
-    private ImageParameters mImageParameters;
 
     public static final int MAX_TIME = 5000;
     public static final int UPDATE_FREQUENCY = 50;
+    public static final int MEDIA_TYPE_IMAGE = 1;
+    public static final int MEDIA_TYPE_VIDEO = 2;
 
     private static boolean showConfirm;
     private static String uniqueId;
     private static Camera mCamera = null;
-    private CameraPreview mPreview;
-    private MediaRecorder mMediaRecorder;
-    private boolean isRecording = false;
-    private boolean isPauseandCalled = false;
-
-    public static final int MEDIA_TYPE_IMAGE = 1;
-    public static final int MEDIA_TYPE_VIDEO = 2;
     public static int orientation;
-    private int camId = CameraInfo.CAMERA_FACING_BACK;
+
+    private ImageParameters _imageParameters;
+    private CameraPreview _cameraPreview;
+    private MediaRecorder _mediaRecorder;
+    private boolean _isRecording = false;
+    private boolean _isPauseCalled = false;
+    private int _cameraId = CameraInfo.CAMERA_FACING_BACK;
     // Create the Handler object (on the main thread by default)
-    private Handler handler = new Handler();
+    private Handler _handler = new Handler();
     // Define the code block to be executed
-    final Runnable runnableCode = new Runnable() {
+    final Runnable _runnableCode = new Runnable() {
         @Override
         public void run() {
             // Do something here on the main thread
             // Repeat this the same runnable code block again another 2 seconds
-            handler.postDelayed(runnableCode, UPDATE_FREQUENCY);
+            _handler.postDelayed(_runnableCode, UPDATE_FREQUENCY);
             Display display = getWindowManager().getDefaultDisplay();
             int width = display.getWidth();
             double fraction = UPDATE_FREQUENCY / (float) MAX_TIME;
             // TODO(rahul): adding 2 pixels is a hack to ensure we get to the end of the screen
             // due to issues with rounding
             int widthToAdd = (int) (fraction * width) + 2;
-            int resultWidth = timerView.getWidth() + widthToAdd;
-            LayoutParams layoutParams = timerView.getLayoutParams();
+            int resultWidth = _timerView.getWidth() + widthToAdd;
+            LayoutParams layoutParams = _timerView.getLayoutParams();
             layoutParams.width = resultWidth;
-            timerView.setLayoutParams(layoutParams);
-
+            _timerView.setLayoutParams(layoutParams);
         }
     };
 
@@ -102,16 +100,16 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
     public void switchCamera(View view) {
         Log.d(VidtrainApplication.TAG, "switch camera clicked!");
         releaseCameraAndPreview();
-        if (camId == CameraInfo.CAMERA_FACING_BACK) {
-            camId = CameraInfo.CAMERA_FACING_FRONT;
+        if (_cameraId == CameraInfo.CAMERA_FACING_BACK) {
+            _cameraId = CameraInfo.CAMERA_FACING_FRONT;
         } else {
-            camId = CameraInfo.CAMERA_FACING_BACK;
+            _cameraId = CameraInfo.CAMERA_FACING_BACK;
         }
-        mCamera = Camera.open(camId);
-        mPreview = new CameraPreview(this, mCamera);
-        preview.removeAllViews();
-        preview.addView(mPreview);
-        setCameraDisplayOrientation(this, camId, mCamera);
+        mCamera = Camera.open(_cameraId);
+        _cameraPreview = new CameraPreview(this, mCamera);
+        _preview.removeAllViews();
+        _preview.addView(_cameraPreview);
+        setCameraDisplayOrientation(this, _cameraId, mCamera);
     }
 
     @Override
@@ -129,35 +127,35 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
 
 
     protected void initializeCamera(){
-// Create an instance of Camera
+        // Create an instance of Camera
         mCamera = getCameraInstance();
 
         // Create our Preview view and set it as the content of our activity.
-        mPreview = new CameraPreview(this, mCamera);
-        preview.addView(mPreview);
+        _cameraPreview = new CameraPreview(this, mCamera);
+        _preview.addView(_cameraPreview);
 
-        mImageParameters = new ImageParameters();
+        _imageParameters = new ImageParameters();
         relayoutCovers();
 
-        captureButton.setOnClickListener(
+        _captureButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (isRecording) {
+                        if (_isRecording) {
                             finishRecording();
                         } else {
                             // initialize video camera
                             if (prepareVideoRecorder()) {
                                 // Camera is available and unlocked, MediaRecorder is prepared,
                                 // now you can start recording
-                                mMediaRecorder.start();
-                                captureButton.setImageDrawable(getResources().getDrawable(
+                                _mediaRecorder.start();
+                                _captureButton.setImageDrawable(getResources().getDrawable(
                                         R.drawable.icon_square_white));
                                 // Start the initial runnable task by posting through the handler
-                                handler.post(runnableCode);
+                                _handler.post(_runnableCode);
                                 // inform the user that recording has started
                                 //setCaptureButtonText("Stop");
-                                isRecording = true;
+                                _isRecording = true;
 
                             } else {
                                 // prepare didn't work, release the camera
@@ -172,14 +170,14 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
 
     private void finishRecording() {
         // stop recording and release camera
-        mMediaRecorder.stop();  // stop the recording
+        _mediaRecorder.stop();  // stop the recording
         releaseMediaRecorder(); // release the MediaRecorder object
         mCamera.lock();         // take camera access back from MediaRecorder
 
         // inform the user that recording has stopped
         //setCaptureButtonText("Capture");
-        isRecording = false;
-        handler.removeCallbacks(runnableCode);
+        _isRecording = false;
+        _handler.removeCallbacks(_runnableCode);
         if (showConfirm) {
             final String videoPath = Utility.getOutputMediaFile(uniqueId).getPath();
             View itemView = getLayoutInflater().inflate(R.layout.pager_item_video, null);
@@ -264,17 +262,17 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
     private boolean prepareVideoRecorder() {
         try {
             releaseCameraAndPreview();
-            mCamera = Camera.open(camId);
+            mCamera = Camera.open(_cameraId);
         } catch (Exception e) {
             Log.e(getString(R.string.app_name), "failed to open Camera");
             e.printStackTrace();
         }
 
-        setCameraDisplayOrientation(this, camId, mCamera);
-        if (camId == CameraInfo.CAMERA_FACING_FRONT) {
+        setCameraDisplayOrientation(this, _cameraId, mCamera);
+        if (_cameraId == CameraInfo.CAMERA_FACING_FRONT) {
             mCamera.setDisplayOrientation(90);
         }
-        mMediaRecorder = new MediaRecorder();
+        _mediaRecorder = new MediaRecorder();
 
         final List<Size> supportedVideoSizes = mCamera.getParameters().getSupportedVideoSizes();
         Size smallestSize = getSmallestSize(supportedVideoSizes);
@@ -282,30 +280,30 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         // Step 1: Unlock and set camera to MediaRecorder
         mCamera.unlock();
         //mCamera.setDisplayOrientation(90);
-        mMediaRecorder.setCamera(mCamera);
+        _mediaRecorder.setCamera(mCamera);
 
         // Step 2: Set sources
-        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
-        mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
+        _mediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
+        _mediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
 
         // Step 3: Set a CamcorderProfile (requires API Level 8 or higher)
-        mMediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_720P));
+        _mediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_720P));
 
         // Step 4: Set output file
-        mMediaRecorder.setOutputFile(getOutputMediaFile(MEDIA_TYPE_VIDEO).toString());
+        _mediaRecorder.setOutputFile(getOutputMediaFile(MEDIA_TYPE_VIDEO).toString());
 
         // Step 5: Set the preview output
-        mMediaRecorder.setPreviewDisplay(mPreview.getHolder().getSurface());
-        mMediaRecorder.setOrientationHint(VideoCaptureActivity.orientation);
-//        mMediaRecorder.setVideoFrameRate(24);
-        mMediaRecorder.setVideoEncodingBitRate(5000000);
-//        mMediaRecorder.setVideoSize(smallestSize.width, smallestSize.height);
-        mMediaRecorder.setMaxFileSize(8000000); // max parse file size is 10485760 bytes
-        mMediaRecorder.setMaxDuration(MAX_TIME);
-        mMediaRecorder.setOnInfoListener(this);
+        _mediaRecorder.setPreviewDisplay(_cameraPreview.getHolder().getSurface());
+        _mediaRecorder.setOrientationHint(VideoCaptureActivity.orientation);
+//        _mediaRecorder.setVideoFrameRate(24);
+        _mediaRecorder.setVideoEncodingBitRate(5000000);
+//        _mediaRecorder.setVideoSize(smallestSize.width, smallestSize.height);
+        _mediaRecorder.setMaxFileSize(8000000); // max parse file size is 10485760 bytes
+        _mediaRecorder.setMaxDuration(MAX_TIME);
+        _mediaRecorder.setOnInfoListener(this);
         // Step 6: Prepare configured MediaRecorder
         try {
-            mMediaRecorder.prepare();
+            _mediaRecorder.prepare();
         } catch (IllegalStateException e) {
             Log.d("Issue", "IllegalStateException preparing MediaRecorder: " + e.getMessage());
             releaseMediaRecorder();
@@ -343,7 +341,6 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         return smallestSize;
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -357,14 +354,14 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         super.onPause();
         releaseMediaRecorder();       // if you are using MediaRecorder, release it first
         releaseCamera();              // release the camera immediately on pause event
-        isPauseandCalled = true;
+        _isPauseCalled = true;
     }
 
     private void releaseMediaRecorder() {
-        if (mMediaRecorder != null) {
-            mMediaRecorder.reset();   // clear recorder configuration
-            mMediaRecorder.release(); // release the recorder object
-            mMediaRecorder = null;
+        if (_mediaRecorder != null) {
+            _mediaRecorder.reset();   // clear recorder configuration
+            _mediaRecorder.release(); // release the recorder object
+            _mediaRecorder = null;
             mCamera.lock();           // lock camera for later use
         }
     }
@@ -373,7 +370,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         if (mCamera != null) {
             mCamera.release();        // release the camera for other applications
             mCamera = null;
-            mPreview.getHolder().removeCallback(mPreview);
+            _cameraPreview.getHolder().removeCallback(_cameraPreview);
         }
     }
 
@@ -382,7 +379,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
     }
 
     private void releaseCameraAndPreview() {
-        //mPreview.setCamera(null);
+        //_cameraPreview.setCamera(null);
         if (mCamera != null) {
             mCamera.release();
             mCamera = null;
@@ -434,48 +431,46 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        handler.removeCallbacks(runnableCode);
+        _handler.removeCallbacks(_runnableCode);
     }
 
-
    void relayoutCovers() {
-       mImageParameters.mIsPortrait =
+       _imageParameters.mIsPortrait =
                getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
 
 
-       ViewTreeObserver observer = preview.getViewTreeObserver();
+       ViewTreeObserver observer = _preview.getViewTreeObserver();
        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
            @Override
            public void onGlobalLayout() {
-               mImageParameters.mPreviewWidth = preview.getWidth();
-               mImageParameters.mPreviewHeight = preview.getHeight();
+               _imageParameters.mPreviewWidth = _preview.getWidth();
+               _imageParameters.mPreviewHeight = _preview.getHeight();
 
-               mImageParameters.mCoverWidth = mImageParameters.mCoverHeight
-                       = mImageParameters.calculateCoverWidthHeight();
+               _imageParameters.mCoverWidth = _imageParameters.mCoverHeight
+                       = _imageParameters.calculateCoverWidthHeight();
 
-//                    Log.d(TAG, "parameters: " + mImageParameters.getStringValues());
+//                    Log.d(TAG, "parameters: " + _imageParameters.getStringValues());
 //                    Log.d(TAG, "cover height " + topCoverView.getHeight());
-               resizeTopAndBtmCover(vTop, vBottom);
+               resizeTopAndBtmCover(_vTop, _vBottom);
 
                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                   preview.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                   _preview.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                } else {
-                   preview.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                   _preview.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                }
            }
        });
-
    }
 
     private void resizeTopAndBtmCover( final View topCover, final View bottomCover) {
         ResizeAnimation resizeTopAnimation
-                = new ResizeAnimation(topCover, mImageParameters);
+                = new ResizeAnimation(topCover, _imageParameters);
         resizeTopAnimation.setDuration(800);
         resizeTopAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
         topCover.startAnimation(resizeTopAnimation);
 
         ResizeAnimation resizeBtmAnimation
-                = new ResizeAnimation(bottomCover, mImageParameters);
+                = new ResizeAnimation(bottomCover, _imageParameters);
         resizeBtmAnimation.setDuration(800);
         resizeBtmAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
         bottomCover.startAnimation(resizeBtmAnimation);

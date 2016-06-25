@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
 import com.facebook.GraphRequest;
 import com.facebook.GraphRequest.GraphJSONObjectCallback;
 import com.facebook.GraphResponse;
@@ -33,16 +32,13 @@ import io.fabric.sdk.android.Fabric;
 
 public class LogInActivity extends AppCompatActivity {
 
-    CallbackManager callbackManager;
-
-    @Bind(R.id.login_button) Button loginButton;
-    @Bind(R.id.pbProgessAction) View pbProgessAction;
+    @Bind(R.id.login_button) Button _loginButton;
+    @Bind(R.id.progressBar) View _progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
-        callbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.activity_log_in);
         ButterKnife.bind(this);
         ParseUser currentUser = ParseUser.getCurrentUser();
@@ -116,11 +112,11 @@ public class LogInActivity extends AppCompatActivity {
 
     public void showProgressBar() {
         // Show progress item
-        pbProgessAction.setVisibility(View.VISIBLE);
+        _progressBar.setVisibility(View.VISIBLE);
     }
 
     public void hideProgressBar() {
         // Hide progress item
-        pbProgessAction.setVisibility(View.GONE);
+        _progressBar.setVisibility(View.GONE);
     }
 }

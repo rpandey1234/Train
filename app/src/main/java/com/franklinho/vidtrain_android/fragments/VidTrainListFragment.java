@@ -26,7 +26,7 @@ public class VidTrainListFragment extends Fragment {
 
     @Bind(R.id.rvVidTrains) public RecyclerView _rvVidTrains;
     @Bind(R.id.swipeContainer) SwipeRefreshLayout _swipeContainer;
-    @Bind(R.id.pbProgessAction) View _pbProgressAction;
+    @Bind(R.id.progressBar) View _pbProgressAction;
     @Bind(R.id.tvNotFollowingLabel) TextView _tvNotFollowingLabel;
 
     List<VidTrain> _vidTrains;

@@ -55,24 +55,24 @@ import butterknife.OnClick;
 
 public class VidTrainDetailActivity extends AppCompatActivity {
 
-    @Bind(R.id.ivCollaborators) ImageView ivCollaborators;
-    @Bind(R.id.tvVideoCount) TextView tvVideoCount;
-    @Bind(R.id.tvAuthor) TextView tvAuthor;
-    @Bind(R.id.tvTitle) TextView tvTitle;
-    @Bind(R.id.tvTime) TextView tvTime;
-    @Bind(R.id.toolbar) Toolbar toolbar;
-    @Bind(R.id.btnAddvidTrain) Button btnAddvidTrain;
-    @Bind(R.id.pbProgressAction) View pbProgessAction;
-    @Bind(R.id.vpPreview) ViewPager vpPreview;
-    @Bind(R.id.cpIndicator) VideoPageIndicator cpIndicator;
-    @Bind(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
+    @Bind(R.id.ivCollaborators) ImageView _ivCollaborators;
+    @Bind(R.id.tvVideoCount) TextView _tvVideoCount;
+    @Bind(R.id.tvAuthor) TextView _tvAuthor;
+    @Bind(R.id.tvTitle) TextView _tvTitle;
+    @Bind(R.id.tvTime) TextView _tvTime;
+    @Bind(R.id.toolbar) Toolbar _toolbar;
+    @Bind(R.id.btnAddvidTrain) Button _btnAddVidTrain;
+    @Bind(R.id.pbProgressAction) View _pbProgessAction;
+    @Bind(R.id.vpPreview) ViewPager _vpPreview;
+    @Bind(R.id.cpIndicator) VideoPageIndicator _cpIndicator;
+    @Bind(R.id.swipeContainer) SwipeRefreshLayout _swipeContainer;
 
     public static final String VIDTRAIN_KEY = "vidTrain";
     public static final int VIDEO_CAPTURE = 101;
-    private ProgressDialog progress;
-    private VidTrain vidTrain;
-    private VideoPagerAdapter videoPagerAdapter;
-    private List<File> filesList;
+    private ProgressDialog _progress;
+    private VidTrain _vidTrain;
+    private VideoPagerAdapter _videoPagerAdapter;
+    private List<File> _fileList;
 
 
     @Override
@@ -82,10 +82,10 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         VideoPlayer.resetVideoPlayerManager();
 
-        setSupportActionBar(toolbar);
+        setSupportActionBar(_toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        _toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+        _toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -94,8 +94,8 @@ public class VidTrainDetailActivity extends AppCompatActivity {
 
         requestVidTrain();
 
-        swipeContainer.setColorSchemeResources(R.color.bluePrimary);
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        _swipeContainer.setColorSchemeResources(R.color.bluePrimary);
+        _swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 requestVidTrain();
@@ -143,7 +143,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
             return;
         }
         if (resultCode == RESULT_OK) {
-            progress = ProgressDialog
+            _progress = ProgressDialog
                     .show(this, "Adding your video", "Just a moment please!", true);
             // data.getData().toString() is the following:
             // "file:///storage/emulated/0/Movies/VidTrainApp/VID_CAPTURED.mp4"
@@ -167,15 +167,15 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         query.getFirstInBackground(new GetCallback<VidTrain>() {
             @Override
             public void done(VidTrain object, ParseException e) {
-                swipeContainer.setRefreshing(false);
+                _swipeContainer.setRefreshing(false);
                 if (e != null) {
                     invalidVidtrain();
                     return;
                 }
                 // Need to re-fetch vidtrain since it becomes null on some phones/OS
-                vidTrain = object;
-                final int videosCount = vidTrain.getVideosCount();
-                tvVideoCount.setText(String.valueOf(videosCount + 1));
+                _vidTrain = object;
+                final int videosCount = _vidTrain.getVideosCount();
+                _tvVideoCount.setText(String.valueOf(videosCount + 1));
                 final Video video = new Video();
                 final ParseUser user = ParseUser.getCurrentUser();
                 final ParseFile parseFile = Utility.createParseFile(videoPath);
@@ -189,24 +189,24 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                     public void done(ParseException e) {
                         video.setUser(user);
                         video.setVideoFile(parseFile);
-                        video.setVidTrain(vidTrain);
+                        video.setVidTrain(_vidTrain);
                         video.setThumbnail(parseThumbnail);
                         video.saveInBackground(new SaveCallback() {
                             @Override
                             public void done(ParseException e) {
-                                vidTrain.setLatestVideo(parseFile);
-                                vidTrain.setVideos(vidTrain.maybeInitAndAdd(video));
-                                vidTrain.saveInBackground(new SaveCallback() {
+                                _vidTrain.setLatestVideo(parseFile);
+                                _vidTrain.setVideos(_vidTrain.maybeInitAndAdd(video));
+                                _vidTrain.saveInBackground(new SaveCallback() {
                                     @Override
                                     public void done(ParseException e) {
                                         layoutVidTrain();
-                                        sendNotifications(vidTrain);
-                                        user.put("vidtrains", User.maybeInitAndAdd(user, vidTrain));
+                                        sendNotifications(_vidTrain);
+                                        user.put("vidtrains", User.maybeInitAndAdd(user, _vidTrain));
                                         user.put("videos", User.maybeInitAndAdd(user, video));
                                         user.saveInBackground(new SaveCallback() {
                                             @Override
                                             public void done(ParseException e) {
-                                                progress.dismiss();
+                                                _progress.dismiss();
                                                 Toast.makeText(getBaseContext(), "Successfully added video",
                                                         Toast.LENGTH_SHORT).show();
                                             }
@@ -240,7 +240,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     }
 
     public void setProfileImageUrlAtIndex(int index) {
-        List<Video> videos = vidTrain.getVideos();
+        List<Video> videos = _vidTrain.getVideos();
         final Video video = videos.get(index);
         video.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
             @Override
@@ -250,8 +250,8 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                     @Override
                     public void done(ParseObject object, ParseException e) {
                         String profileImageUrl = User.getProfileImageUrl(video.getUser());
-                        Glide.with(getBaseContext()).load(profileImageUrl).into(ivCollaborators);
-                        tvAuthor.setText(User.getName(video.getUser()));
+                        Glide.with(getBaseContext()).load(profileImageUrl).into(_ivCollaborators);
+                        _tvAuthor.setText(User.getName(video.getUser()));
                     }
                 });
             }
@@ -273,20 +273,20 @@ public class VidTrainDetailActivity extends AppCompatActivity {
 
         @Override
         protected List<File> doInBackground(VidTrain... params) {
-            return vidTrain.getVideoFiles();
+            return _vidTrain.getVideoFiles();
         }
 
         @Override
         protected void onPostExecute(final List<File> localFiles) {
-            filesList = localFiles;
-            videoPagerAdapter =  new VideoPagerAdapter(getBaseContext(), filesList);
-            viewPager.setAdapter(videoPagerAdapter);
+            _fileList = localFiles;
+            _videoPagerAdapter =  new VideoPagerAdapter(getBaseContext(), _fileList);
+            viewPager.setAdapter(_videoPagerAdapter);
             viewPager.setClipChildren(false);
             int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20 * 2,
                     getResources().getDisplayMetrics());
             viewPager.setPageMargin(-margin);
-            cpIndicator.setViewPager(viewPager);
-            cpIndicator.notifyDataSetChanged();
+            _cpIndicator.setViewPager(viewPager);
+            _cpIndicator.notifyDataSetChanged();
             playVideoAtPosition(0);
 
             viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -299,7 +299,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
 
         private void playVideoAtPosition(final int position) {
             setProfileImageUrlAtIndex(position);
-            View pagerView = videoPagerAdapter.getView(position);
+            View pagerView = _videoPagerAdapter.getView(position);
             if (pagerView != null) {
                 final DynamicVideoPlayerView vvPreview = (DynamicVideoPlayerView) pagerView.findViewById(R.id.vvPreview);
                 final ImageView ivThumbnail = (ImageView) pagerView.findViewById(R.id.ivThumbnail);
@@ -307,34 +307,34 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                 vvPreview.addMediaPlayerListener(new SimpleMainThreadMediaPlayerListener() {
                     @Override
                     public void onVideoCompletionMainThread() {
-                        if (position < filesList.size()) {
+                        if (position < _fileList.size()) {
                             ivThumbnail.setVisibility(View.VISIBLE);
-                            vpPreview.setCurrentItem(viewPager.getCurrentItem() + 1, true);
+                            _vpPreview.setCurrentItem(viewPager.getCurrentItem() + 1, true);
                         }
                     }
                 });
-                if (position == videoPagerAdapter.getCount() - 1) {
+                if (position == _videoPagerAdapter.getCount() - 1) {
                     // restart from beginning on click
                     ivThumbnail.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            vpPreview.setCurrentItem(0, true);
+                            _vpPreview.setCurrentItem(0, true);
                         }
                     });
                 }
-                VideoPlayer.playVideo(vvPreview, filesList.get(position).getPath());
+                VideoPlayer.playVideo(vvPreview, _fileList.get(position).getPath());
             }
         }
     }
 
     public void showProgressBar() {
-        // Show progress item
-        pbProgessAction.setVisibility(View.VISIBLE);
+        // Show _progress item
+        _pbProgessAction.setVisibility(View.VISIBLE);
     }
 
     public void hideProgressBar() {
         // Hide progress item
-        pbProgessAction.setVisibility(View.GONE);
+        _pbProgessAction.setVisibility(View.GONE);
     }
 
     void requestVidTrain() {
@@ -345,36 +345,36 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         query.getFirstInBackground(new GetCallback<VidTrain>() {
             @Override
             public void done(VidTrain object, ParseException e) {
-                swipeContainer.setRefreshing(false);
+                _swipeContainer.setRefreshing(false);
                 if (e != null) {
                     invalidVidtrain();
                     return;
                 }
-                vidTrain = object;
+                _vidTrain = object;
                 layoutVidTrain();
             }
         });
     }
 
     void layoutVidTrain() {
-        if (!vidTrain.getWritePrivacy() ||
-                Utility.contains(vidTrain.getCollaborators(), ParseUser.getCurrentUser())) {
-            btnAddvidTrain.setVisibility(View.VISIBLE);
+        if (!_vidTrain.getWritePrivacy() ||
+                Utility.contains(_vidTrain.getCollaborators(), ParseUser.getCurrentUser())) {
+            _btnAddVidTrain.setVisibility(View.VISIBLE);
         }
-        tvTitle.setText(vidTrain.getTitle());
-        int videosCount = vidTrain.getVideosCount();
-        tvVideoCount.setText(String.valueOf(videosCount));
-        tvTime.setText(Utility.getRelativeTime(vidTrain.getCreatedAt().getTime()));
-        vidTrain.getUser().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+        _tvTitle.setText(_vidTrain.getTitle());
+        int videosCount = _vidTrain.getVideosCount();
+        _tvVideoCount.setText(String.valueOf(videosCount));
+        _tvTime.setText(Utility.getRelativeTime(_vidTrain.getCreatedAt().getTime()));
+        _vidTrain.getUser().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
             @Override
             public void done(ParseObject object, ParseException e) {
-                String profileImageUrl = User.getProfileImageUrl(vidTrain.getUser());
+                String profileImageUrl = User.getProfileImageUrl(_vidTrain.getUser());
                 Glide.with(getBaseContext()).load(profileImageUrl).placeholder(
-                        R.drawable.profile_icon).into(ivCollaborators);
-                tvAuthor.setText(User.getName(vidTrain.getUser()));
+                        R.drawable.profile_icon).into(_ivCollaborators);
+                _tvAuthor.setText(User.getName(_vidTrain.getUser()));
             }
         });
-        new VideoDownloadTask(vpPreview).execute(vidTrain);
+        new VideoDownloadTask(_vpPreview).execute(_vidTrain);
     }
 
     public void sendVidtrainUpdatedNotification(ParseUser user, VidTrain vidtrain) {

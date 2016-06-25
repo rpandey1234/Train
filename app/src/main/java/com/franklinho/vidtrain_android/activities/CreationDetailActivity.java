@@ -7,10 +7,8 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -19,8 +17,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -37,7 +33,6 @@ import com.franklinho.vidtrain_android.models.DynamicVideoPlayerView;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
-import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.Utility;
 import com.franklinho.vidtrain_android.utilities.VideoPlayer;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -56,25 +51,24 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class CreationDetailActivity extends AppCompatActivity {
-    @Bind(R.id.vvPreview) DynamicVideoPlayerView vvPreview;
-    @Bind(R.id.vvThumbnail) ImageView vvThumbnail;
-    @Bind(R.id.btnSubmit) Button btnSubmit;
-    @Bind(R.id.etTitle) EditText etTitle;
-    @Bind(R.id.etCollaborators) AutoCompleteTextView etCollaborators;
-    @Bind(R.id.containerCollab) LinearLayout containerCollab;
+    @Bind(R.id.vvPreview) DynamicVideoPlayerView _vvPreview;
+    @Bind(R.id.vvThumbnail) ImageView _vvThumbnail;
+    @Bind(R.id.btnSubmit) Button _btnSubmit;
+    @Bind(R.id.etTitle) EditText _etTitle;
+    @Bind(R.id.etCollaborators) AutoCompleteTextView _etCollaborators;
+    @Bind(R.id.containerCollab) LinearLayout _containerCollab;
 
-    ProgressDialog progress;
-    String videoPath;
-    List<String> friendsUsingApp;
-    List<ParseUser> collaborators;
-    List<ParseUser> usersFromAutocomplete;
+    ProgressDialog _progressDialog;
+    String _videoPath;
+    List<String> _friendsUsingApp;
+    List<ParseUser> _collaborators;
+    List<ParseUser> _usersFromAutocomplete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,63 +83,63 @@ public class CreationDetailActivity extends AppCompatActivity {
                 new GraphRequest.Callback() {
                     @Override
                     public void onCompleted(GraphResponse response) {
-                        friendsUsingApp = Utility.getFacebookFriends(response);
+                        _friendsUsingApp = Utility.getFacebookFriends(response);
                     }
                 }
         ).executeAsync();
         Bundle extras = getIntent().getExtras();
         if (extras == null) {
-            videoPath = null;
+            _videoPath = null;
         } else {
-            videoPath = extras.getString("videoPath");
+            _videoPath = extras.getString("videoPath");
         }
-        collaborators = new ArrayList<>();
+        _collaborators = new ArrayList<>();
         final ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
-            collaborators.add(currentUser);
+            _collaborators.add(currentUser);
         }
 
-        vvPreview.setHeightRatio(1);
-        if (videoPath != null) {
-            vvThumbnail.setImageBitmap(Utility.getImageBitmap(videoPath));
-            vvThumbnail.setOnClickListener(new OnClickListener() {
+        _vvPreview.setHeightRatio(1);
+        if (_videoPath != null) {
+            _vvThumbnail.setImageBitmap(Utility.getImageBitmap(_videoPath));
+            _vvThumbnail.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    vvThumbnail.setVisibility(View.GONE);
-                    VideoPlayer.playVideo(vvPreview, videoPath);
+                    _vvThumbnail.setVisibility(View.GONE);
+                    VideoPlayer.playVideo(_vvPreview, _videoPath);
                 }
             });
-            vvPreview.setOnClickListener(new OnClickListener() {
+            _vvPreview.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    VideoPlayer.playVideo(vvPreview, videoPath);
+                    VideoPlayer.playVideo(_vvPreview, _videoPath);
                 }
             });
         }
 
-        etCollaborators.addTextChangedListener(new TextWatcher() {
+        _etCollaborators.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (friendsUsingApp == null) {
+                if (_friendsUsingApp == null) {
                     // Add message asking user to manually invite friends
                     return;
                 }
                 String query = s.toString();
-                List<String> candidateUsers = Utility.getCandidateUsers(friendsUsingApp, query);
+                List<String> candidateUsers = Utility.getCandidateUsers(_friendsUsingApp, query);
                 ParseUser.getQuery()
                         .whereContainedIn("name", candidateUsers)
                         .setLimit(4)
                         .findInBackground(new FindCallback<ParseUser>() {
                             public void done(List<ParseUser> objects, ParseException e) {
                                 if (e == null) {
-                                    usersFromAutocomplete = objects;
+                                    _usersFromAutocomplete = objects;
                                     // Create the adapter and set it to the AutoCompleteTextView
                                     ArrayAdapter<ParseUser> adapter = new UsersAdapter(
-                                            getApplicationContext(), usersFromAutocomplete);
-                                    etCollaborators.setAdapter(adapter);
+                                            getApplicationContext(), _usersFromAutocomplete);
+                                    _etCollaborators.setAdapter(adapter);
                                     adapter.notifyDataSetChanged();
                                 } else {
                                     e.printStackTrace();
@@ -158,17 +152,17 @@ public class CreationDetailActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {}
         });
 
-        etCollaborators.setOnItemClickListener(new OnItemClickListener() {
+        _etCollaborators.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 in.hideSoftInputFromWindow(view.getApplicationWindowToken(), 0);
-                ParseUser user = usersFromAutocomplete.get(position);
+                ParseUser user = _usersFromAutocomplete.get(position);
 
                 // Clear the text field
-                etCollaborators.clearListSelection();
-                etCollaborators.setText("");
-                if (Utility.contains(collaborators, user)) {
+                _etCollaborators.clearListSelection();
+                _etCollaborators.setText("");
+                if (Utility.contains(_collaborators, user)) {
                     Toast.makeText(getApplicationContext(), "You already added this user!",
                             Toast.LENGTH_SHORT).show();
                     return;
@@ -181,29 +175,29 @@ public class CreationDetailActivity extends AppCompatActivity {
                 Glide.with(getApplicationContext()).load(User.getProfileImageUrl(user)).placeholder(
                         R.drawable.profile_icon).into(
                         ivProfileCollaborator);
-                containerCollab.addView(profileImage);
+                _containerCollab.addView(profileImage);
 
                 // Add the user to the collaborators ArrayList
-                collaborators.add(user);
+                _collaborators.add(user);
             }
         });
     }
 
     public void submitVidTrain(View view) {
-        if (etTitle.getText().toString().trim().length() == 0) {
+        if (_etTitle.getText().toString().trim().length() == 0) {
             Toast.makeText(this, "Please enter a title", Toast.LENGTH_SHORT).show();
             return;
         }
-        final ParseFile parseFile = Utility.createParseFile(videoPath);
+        final ParseFile parseFile = Utility.createParseFile(_videoPath);
         if (parseFile == null) {
             Toast.makeText(this, "Was unable to create file for video.",  Toast.LENGTH_LONG).show();
             return;
         }
-        progress = ProgressDialog.show(this, "Saving", "Just a moment please!", true);
+        _progressDialog = ProgressDialog.show(this, "Saving", "Just a moment please!", true);
         final Video video = new Video();
         final VidTrain vidTrain = new VidTrain();
 
-        Bitmap thumbnailBitmap = Utility.getImageBitmap(videoPath);
+        Bitmap thumbnailBitmap = Utility.getImageBitmap(_videoPath);
         final ParseFile parseThumbnail = Utility.createParseFileFromBitmap(thumbnailBitmap);
         parseFile.saveInBackground(new SaveCallback() {
             @Override
@@ -215,14 +209,14 @@ public class CreationDetailActivity extends AppCompatActivity {
                 video.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
-                        vidTrain.setTitle(etTitle.getText().toString());
+                        vidTrain.setTitle(_etTitle.getText().toString());
                         vidTrain.setUser(user);
                         ArrayList<Video> videos = new ArrayList<>();
                         videos.add(video);
                         vidTrain.setVideos(videos);
                         vidTrain.setWritePrivacy(true);
-                        if (!collaborators.isEmpty()) {
-                            vidTrain.setCollaborators(collaborators);
+                        if (!_collaborators.isEmpty()) {
+                            vidTrain.setCollaborators(_collaborators);
                         }
                         vidTrain.setReadPrivacy(false);
                         vidTrain.setLatestVideo(parseFile);
@@ -247,8 +241,8 @@ public class CreationDetailActivity extends AppCompatActivity {
                                     @Override
                                     public void done(ParseException e) {
                                         successfullySavedVidtrain();
-                                        if (collaborators != null) {
-                                            for (ParseUser collaborator : collaborators) {
+                                        if (_collaborators != null) {
+                                            for (ParseUser collaborator : _collaborators) {
                                                 if (!collaborator.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
                                                     sendCollaboratorNotification(collaborator, vidTrain);
                                                 }
@@ -271,7 +265,7 @@ public class CreationDetailActivity extends AppCompatActivity {
     }
 
     public void successfullySavedVidtrain() {
-        progress.dismiss();
+        _progressDialog.dismiss();
         Toast.makeText(getBaseContext(), "Successfully saved Vidtrain!", Toast.LENGTH_SHORT).show();
         this.finish();
     }
@@ -302,6 +296,5 @@ public class CreationDetailActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 }

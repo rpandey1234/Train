@@ -53,6 +53,6 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:visibility="gone"
-        android:id="@+id/pbProgessAction"
+        android:id="@+id/progressBar"
         />
 </RelativeLayout>

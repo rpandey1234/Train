@@ -30,15 +30,15 @@ public class MainActivity extends AppCompatActivity {
     public static final String UNIQUE_ID_INTENT = "UNIQUE_ID";
     public static final String SHOW_CONFIRM = "SHOW_CONFIRM";
 
-    @Bind(R.id.toolbar) Toolbar toolbar;
-    @Bind(R.id.conversations_fragment) FrameLayout conversationsFragment;
+    @Bind(R.id.toolbar) Toolbar _toolbar;
+    @Bind(R.id.conversations_fragment) FrameLayout _conversationsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
+        setSupportActionBar(_toolbar);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.conversations_fragment, ConversationsFragment.newInstance());
         fragmentTransaction.commit();
