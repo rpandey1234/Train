@@ -17,9 +17,6 @@ import com.parse.ParseUser;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by franklinho on 3/28/16.
- */
 public class PushMessageBroadcast extends ParsePushBroadcastReceiver {
     @Override
     public void onPushOpen(Context context, Intent intent) {

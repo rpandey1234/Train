@@ -11,7 +11,6 @@ import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.models.User;
 import com.makeramen.roundedimageview.RoundedImageView;
-import com.parse.ParseUser;
 
 import java.util.List;
 

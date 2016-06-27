@@ -21,7 +21,6 @@ import com.parse.SaveCallback;
 public class VidtrainApplication extends Application {
 
     public static final String TAG = "Vidtrain";
-    public static VideoPlayer sVideoPlayer;
 
     @Override
     public void onCreate() {
@@ -48,17 +47,10 @@ public class VidtrainApplication extends Application {
         ParseInstallation.getCurrentInstallation().saveInBackground();
 
         ParsePush.subscribeInBackground("", new SaveCallback() {
-
             @Override
-
             public void done(com.parse.ParseException arg0) {
 
             }
-
         });
-
-        sVideoPlayer = new VideoPlayer();
-
-
     }
 }

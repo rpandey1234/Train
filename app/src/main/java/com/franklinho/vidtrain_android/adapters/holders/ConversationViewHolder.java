@@ -20,7 +20,6 @@ import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
 import com.franklinho.vidtrain_android.utilities.Utility;
 import com.makeramen.roundedimageview.RoundedImageView;
-import com.parse.ParseUser;
 
 import java.util.List;
 

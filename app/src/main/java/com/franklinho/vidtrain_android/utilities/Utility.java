@@ -15,7 +15,6 @@ import com.facebook.GraphResponse;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.parse.ParseFile;
-import com.parse.ParseUser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,7 +25,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class Utility {

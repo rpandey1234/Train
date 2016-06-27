@@ -6,9 +6,6 @@ import com.volokh.danylo.video_player_manager.manager.PlayerItemChangeListener;
 import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
 import com.volokh.danylo.video_player_manager.meta.MetaData;
 
-/**
- * Created by rahul on 3/13/16.
- */
 public class VideoPlayer {
     private static SingleVideoPlayerManager videoPlayerManager;
 

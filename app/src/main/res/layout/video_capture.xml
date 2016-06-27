@@ -16,14 +16,16 @@
         android:layout_alignParentTop="true"
         android:id="@+id/vTop"
         android:background="@android:color/darker_gray"
-        android:alpha="0.5"></View>
+        android:alpha="0.5"
+        />
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_alignParentBottom="true"
         android:id="@+id/vBottom"
         android:background="@android:color/darker_gray"
-        android:alpha="0.5"></View>
+        android:alpha="0.5"
+        />
 
     <ImageButton
         android:id="@+id/button_change_camera"
