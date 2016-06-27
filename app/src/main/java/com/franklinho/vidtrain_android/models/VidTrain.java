@@ -19,9 +19,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by franklinho on 3/1/16.
- */
 @ParseClassName("VidTrain")
 public class VidTrain extends ParseObject implements Serializable {
 
@@ -89,8 +86,8 @@ public class VidTrain extends ParseObject implements Serializable {
         return getParseFile(THUMBNAIL_KEY);
     }
 
-    public ParseUser getUser() {
-        return (ParseUser) get(USER_KEY);
+    public User getUser() {
+        return (User) getParseUser(USER_KEY);
     }
 
     public LatLng getLatLong() {
@@ -104,12 +101,12 @@ public class VidTrain extends ParseObject implements Serializable {
         return getString(TITLE_KEY);
     }
 
-    public void setCollaborators(List<ParseUser> collaborators) {
+    public void setCollaborators(List<User> collaborators) {
         put(COLLABORATORS, collaborators);
     }
 
-    public List<ParseUser> getCollaborators() {
-        return (List<ParseUser>) get(COLLABORATORS);
+    public List<User> getCollaborators() {
+        return (List<User>) get(COLLABORATORS);
     }
 
     public List<Video> maybeInitAndAdd(Video video) {

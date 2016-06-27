@@ -12,10 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.common.io.Resources;
-
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.Resource;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.activities.VidTrainDetailActivity;
 import com.franklinho.vidtrain_android.models.User;
@@ -85,13 +82,13 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements O
 
         @Override
         public void onBindViewHolder(ParticipantViewHolder holder, int position) {
-            ParseUser parseUser = _vidTrain.getCollaborators().get(position);
+            User parseUser = _vidTrain.getCollaborators().get(position);
             holder.bind(parseUser);
         }
 
         @Override
         public int getItemCount() {
-            List<ParseUser> collaborators = _vidTrain.getCollaborators();
+            List<User> collaborators = _vidTrain.getCollaborators();
             if (collaborators != null) {
                 return collaborators.size();
             } else {
@@ -109,9 +106,9 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements O
             itemView.setOnClickListener(this);
         }
 
-        public void bind(ParseUser parseUser) {
+        public void bind(User user) {
             userImage.setOval(true);
-            Glide.with(_context).load(User.getProfileImageUrl(parseUser)).into(userImage);
+            Glide.with(_context).load(user.getProfileImageUrl()).into(userImage);
         }
 
         @Override

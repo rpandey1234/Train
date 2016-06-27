@@ -27,8 +27,7 @@ public class ConversationsFragment extends VidTrainListFragment {
         }
 
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
-        query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE
-        );
+        query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
         query.addDescendingOrder("createdAt");
         query.include("collaborators");
         query.include("videos");

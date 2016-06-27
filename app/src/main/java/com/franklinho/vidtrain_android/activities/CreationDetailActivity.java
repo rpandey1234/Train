@@ -41,6 +41,7 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseInstallation;
+import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -67,8 +68,8 @@ public class CreationDetailActivity extends AppCompatActivity {
     ProgressDialog _progressDialog;
     String _videoPath;
     List<String> _friendsUsingApp;
-    List<ParseUser> _collaborators;
-    List<ParseUser> _usersFromAutocomplete;
+    List<User> _collaborators;
+    List<User> _usersFromAutocomplete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +95,7 @@ public class CreationDetailActivity extends AppCompatActivity {
             _videoPath = extras.getString("videoPath");
         }
         _collaborators = new ArrayList<>();
-        final ParseUser currentUser = ParseUser.getCurrentUser();
+        final User currentUser = User.getCurrentUser();
         if (currentUser != null) {
             _collaborators.add(currentUser);
         }
@@ -129,15 +130,15 @@ public class CreationDetailActivity extends AppCompatActivity {
                 }
                 String query = s.toString();
                 List<String> candidateUsers = Utility.getCandidateUsers(_friendsUsingApp, query);
-                ParseUser.getQuery()
-                        .whereContainedIn("name", candidateUsers)
+                ParseQuery<User> userQuery = ParseQuery.getQuery("_User");
+                userQuery.whereContainedIn("name", candidateUsers)
                         .setLimit(4)
-                        .findInBackground(new FindCallback<ParseUser>() {
-                            public void done(List<ParseUser> objects, ParseException e) {
+                        .findInBackground(new FindCallback<User>() {
+                            public void done(List<User> objects, ParseException e) {
                                 if (e == null) {
                                     _usersFromAutocomplete = objects;
                                     // Create the adapter and set it to the AutoCompleteTextView
-                                    ArrayAdapter<ParseUser> adapter = new UsersAdapter(
+                                    ArrayAdapter<User> adapter = new UsersAdapter(
                                             getApplicationContext(), _usersFromAutocomplete);
                                     _etCollaborators.setAdapter(adapter);
                                     adapter.notifyDataSetChanged();
@@ -157,7 +158,7 @@ public class CreationDetailActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 in.hideSoftInputFromWindow(view.getApplicationWindowToken(), 0);
-                ParseUser user = _usersFromAutocomplete.get(position);
+                User user = _usersFromAutocomplete.get(position);
 
                 // Clear the text field
                 _etCollaborators.clearListSelection();
@@ -172,7 +173,7 @@ public class CreationDetailActivity extends AppCompatActivity {
                 View profileImage = getLayoutInflater().inflate(R.layout.profile_image, null);
                 RoundedImageView ivProfileCollaborator = (RoundedImageView) profileImage
                         .findViewById(R.id.ivProfileCollaborator);
-                Glide.with(getApplicationContext()).load(User.getProfileImageUrl(user)).placeholder(
+                Glide.with(getApplicationContext()).load(user.getProfileImageUrl()).placeholder(
                         R.drawable.profile_icon).into(
                         ivProfileCollaborator);
                 _containerCollab.addView(profileImage);
@@ -202,7 +203,7 @@ public class CreationDetailActivity extends AppCompatActivity {
         parseFile.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                final ParseUser user = ParseUser.getCurrentUser();
+                final User user = User.getCurrentUser();
                 video.setUser(user);
                 video.setVideoFile(parseFile);
                 video.setThumbnail(parseThumbnail);
@@ -235,8 +236,8 @@ public class CreationDetailActivity extends AppCompatActivity {
                             public void done(ParseException e) {
                                 video.setVidTrain(vidTrain);
                                 video.saveInBackground();
-                                user.put("vidtrains", User.maybeInitAndAdd(user, vidTrain));
-                                user.put("videos", User.maybeInitAndAdd(user, video));
+                                user.put("vidtrains", user.maybeInitAndAdd(vidTrain));
+                                user.put("videos", user.maybeInitAndAdd(video));
                                 user.saveInBackground(new SaveCallback() {
                                     @Override
                                     public void done(ParseException e) {

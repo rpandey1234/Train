@@ -177,7 +177,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                 final int videosCount = _vidTrain.getVideosCount();
                 _tvVideoCount.setText(String.valueOf(videosCount + 1));
                 final Video video = new Video();
-                final ParseUser user = ParseUser.getCurrentUser();
+                final User user = User.getCurrentUser();
                 final ParseFile parseFile = Utility.createParseFile(videoPath);
                 if (parseFile == null) {
                     return;
@@ -201,8 +201,8 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                                     public void done(ParseException e) {
                                         layoutVidTrain();
                                         sendNotifications(_vidTrain);
-                                        user.put("vidtrains", User.maybeInitAndAdd(user, _vidTrain));
-                                        user.put("videos", User.maybeInitAndAdd(user, video));
+                                        user.put("vidtrains", user.maybeInitAndAdd(_vidTrain));
+                                        user.put("videos", user.maybeInitAndAdd(video));
                                         user.saveInBackground(new SaveCallback() {
                                             @Override
                                             public void done(ParseException e) {
@@ -245,13 +245,13 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         video.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
             @Override
             public void done(ParseObject object, ParseException e) {
-                final ParseUser user = video.getUser();
+                final User user = video.getUser();
                 user.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
                     @Override
                     public void done(ParseObject object, ParseException e) {
-                        String profileImageUrl = User.getProfileImageUrl(video.getUser());
+                        String profileImageUrl = video.getUser().getProfileImageUrl();
                         Glide.with(getBaseContext()).load(profileImageUrl).into(_ivCollaborators);
-                        _tvAuthor.setText(User.getName(video.getUser()));
+                        _tvAuthor.setText(video.getUser().getName());
                     }
                 });
             }
@@ -358,7 +358,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
 
     void layoutVidTrain() {
         if (!_vidTrain.getWritePrivacy() ||
-                Utility.contains(_vidTrain.getCollaborators(), ParseUser.getCurrentUser())) {
+                Utility.contains(_vidTrain.getCollaborators(), User.getCurrentUser())) {
             _btnAddVidTrain.setVisibility(View.VISIBLE);
         }
         _tvTitle.setText(_vidTrain.getTitle());
@@ -368,10 +368,10 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         _vidTrain.getUser().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
             @Override
             public void done(ParseObject object, ParseException e) {
-                String profileImageUrl = User.getProfileImageUrl(_vidTrain.getUser());
+                String profileImageUrl = _vidTrain.getUser().getProfileImageUrl();
                 Glide.with(getBaseContext()).load(profileImageUrl).placeholder(
                         R.drawable.profile_icon).into(_ivCollaborators);
-                _tvAuthor.setText(User.getName(_vidTrain.getUser()));
+                _tvAuthor.setText(_vidTrain.getUser().getName());
             }
         });
         new VideoDownloadTask(_vpPreview).execute(_vidTrain);

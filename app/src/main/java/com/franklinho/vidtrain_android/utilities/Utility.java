@@ -12,6 +12,7 @@ import android.util.Log;
 import com.google.common.io.Files;
 
 import com.facebook.GraphResponse;
+import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
@@ -28,9 +29,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * Created by rahul on 3/12/16.
- */
 public class Utility {
 
     public static final String FILENAME = "video.mp4";
@@ -113,11 +111,11 @@ public class Utility {
     }
 
     // Equality check on ParseUser fails, so we need this helper method :(
-    public static boolean contains(List<ParseUser> users, ParseUser user) {
+    public static boolean contains(List<User> users, User user) {
         if (users == null || user == null) {
             return false;
         }
-        for (ParseUser pUser : users) {
+        for (User pUser : users) {
             if (user.getObjectId().equals(pUser.getObjectId())) {
                 return true;
             }

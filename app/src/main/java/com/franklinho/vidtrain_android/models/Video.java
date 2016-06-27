@@ -8,9 +8,6 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
-/**
- * Created by franklinho on 3/1/16.
- */
 @ParseClassName("Video")
 public class Video extends ParseObject {
     public static final String USER_KEY = "user";
@@ -23,8 +20,8 @@ public class Video extends ParseObject {
         put(USER_KEY, user);
     }
 
-    public ParseUser getUser() {
-        return getParseUser(USER_KEY);
+    public User getUser() {
+        return (User) getParseUser(USER_KEY);
     }
 
     public void setVideoFile(ParseFile file) {
@@ -34,7 +31,6 @@ public class Video extends ParseObject {
     public ParseFile getVideoFile() {
         return getParseFile(VIDEO_FILE_KEY);
     }
-
 
     public void setVidTrain(ParseObject vidTrain) {
         put(VIDTRAIN_KEY, vidTrain);

@@ -41,9 +41,9 @@ public class LogInActivity extends AppCompatActivity {
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_log_in);
         ButterKnife.bind(this);
-        ParseUser currentUser = ParseUser.getCurrentUser();
+        User currentUser = User.getCurrentUser();
         if (currentUser != null) {
-            if (User.getName(currentUser) == null) {
+            if (currentUser.getName() == null) {
                 updateUserInfo(currentUser);
             }
             goMainActivity();
@@ -106,8 +106,8 @@ public class LogInActivity extends AppCompatActivity {
     }
 
     private void logUser() {
-        ParseUser currentUser = ParseUser.getCurrentUser();
-        Crashlytics.setUserName(User.getName(currentUser));
+        User currentUser = User.getCurrentUser();
+        Crashlytics.setUserName(currentUser.getName());
     }
 
     public void showProgressBar() {

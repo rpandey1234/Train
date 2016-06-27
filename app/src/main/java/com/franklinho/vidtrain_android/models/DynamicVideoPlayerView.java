@@ -10,8 +10,7 @@ import com.volokh.danylo.video_player_manager.ui.VideoPlayerView;
  */
 public class DynamicVideoPlayerView extends VideoPlayerView {
 
-
-    private double mHeightRatio;
+    private double _heightRatio;
 
     public DynamicVideoPlayerView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -22,22 +21,22 @@ public class DynamicVideoPlayerView extends VideoPlayerView {
     }
 
     public void setHeightRatio(double ratio) {
-        if (ratio != mHeightRatio) {
-            mHeightRatio = ratio;
+        if (ratio != _heightRatio) {
+            _heightRatio = ratio;
             requestLayout();
         }
     }
 
     public double getHeightRatio() {
-        return mHeightRatio;
+        return _heightRatio;
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        if (mHeightRatio > 0.0) {
+        if (_heightRatio > 0.0) {
             // set the image views size
             int width = MeasureSpec.getSize(widthMeasureSpec);
-            int height = (int) (width * mHeightRatio);
+            int height = (int) (width * _heightRatio);
             setMeasuredDimension(width, height);
         }
         else {

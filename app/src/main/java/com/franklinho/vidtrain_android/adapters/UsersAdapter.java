@@ -18,11 +18,11 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class UsersAdapter extends ArrayAdapter<ParseUser> {
+public class UsersAdapter extends ArrayAdapter<User> {
     Context _context;
     private final LayoutInflater _layoutInflater;
 
-    public UsersAdapter(Context context, List<ParseUser> users) {
+    public UsersAdapter(Context context, List<User> users) {
         super(context, R.layout.item_user, users);
         _context = context;
         _layoutInflater = LayoutInflater.from(context);
@@ -31,7 +31,7 @@ public class UsersAdapter extends ArrayAdapter<ParseUser> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        ParseUser user = getItem(position);
+        User user = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder;
         if (convertView == null) {
@@ -42,8 +42,8 @@ public class UsersAdapter extends ArrayAdapter<ParseUser> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         // Populate the data into the template view using the data object
-        viewHolder._tvName.setText(User.getName(user));
-        String profileImageUrl = User.getProfileImageUrl(user);
+        viewHolder._tvName.setText(user.getName());
+        String profileImageUrl = user.getProfileImageUrl();
         Glide.with(_context).load(profileImageUrl).into(viewHolder._ivProfileImage);
         // Return the completed view to render on screen
         return convertView;

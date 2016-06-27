@@ -78,7 +78,7 @@ public class ImagePagerAdapter extends PagerAdapter {
                 video.getUser().fetchInBackground(new GetCallback<ParseObject>() {
                     @Override
                     public void done(ParseObject user, ParseException e) {
-                        final String profileImageUrl = User.getProfileImageUrl((ParseUser) user);
+                        final String profileImageUrl = ((User) user).getProfileImageUrl();
                         if (profileImageUrl != null && _context != null) {
                             Glide.with(_context).load(profileImageUrl).into(ivCollaborators);
                         }
