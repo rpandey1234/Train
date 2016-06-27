@@ -18,11 +18,22 @@
         android:padding="4dp">
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/conversation_title"
             android:text="hello world from vidtrain"
+            android:textSize="20sp"
             android:layout_marginBottom="8dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/video_count"
+            android:layout_toRightOf="@+id/conversation_title"
+            android:layout_alignBottom="@+id/conversation_title"
+            android:paddingLeft="4dp"
+            android:textSize="14sp"
             />
 
         <TextView

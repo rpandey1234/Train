@@ -12,7 +12,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.common.io.Resources;
+
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.Resource;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.activities.VidTrainDetailActivity;
 import com.franklinho.vidtrain_android.models.User;
@@ -30,6 +33,7 @@ import butterknife.ButterKnife;
 public class ConversationViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
 
     @Bind(R.id.conversation_title) TextView _conversationTitle;
+    @Bind(R.id.video_count) TextView _videoCount;
     @Bind(R.id.timestamp) TextView _timestamp;
     @Bind(R.id.participants_rv) RecyclerView _rvParticipants;
     @Bind(R.id.image_preview) ImageView _videoImagePreview;
@@ -49,6 +53,9 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements O
     public void bind(VidTrain vidTrain) {
         _vidTrain = vidTrain;
         _conversationTitle.setText(vidTrain.getTitle());
+        int videoCount = _vidTrain.getVideosCount();
+        _videoCount.setText(_context.getResources()
+                .getQuantityString(R.plurals.videos_count, videoCount, videoCount));
         _timestamp.setText(Utility.getRelativeTime(vidTrain.getCreatedAt().getTime()));
         _rvParticipants.setLayoutManager(new LinearLayoutManager(_context, LinearLayoutManager.HORIZONTAL, false));
         _rvParticipants.setAdapter(new ParticipantsAdapter());
