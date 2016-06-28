@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ConversationsFragment extends VidTrainListFragment {
 
-    public static final int NUM_CONVERSATIONS_INITIAL = 10;
+    public static final int PAGE_SIZE = 10;
 
     public static ConversationsFragment newInstance() {
         return new ConversationsFragment();
@@ -28,23 +28,18 @@ public class ConversationsFragment extends VidTrainListFragment {
 
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
         query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
-        query.addDescendingOrder("createdAt");
+        query.addDescendingOrder("updatedAt");
         query.include("collaborators");
         query.include("videos");
         query.setSkip(currentSize);
-        query.setLimit(NUM_CONVERSATIONS_INITIAL);
+        query.setLimit(PAGE_SIZE);
         query.findInBackground(new FindCallback<VidTrain>() {
             @Override
             public void done(List<VidTrain> objects, ParseException e) {
                 _swipeContainer.setRefreshing(false);
                 if (e == null) {
                     _vidTrains.addAll(objects);
-                    if (newTimeline) {
-                        _aVidTrains.notifyDataSetChanged();
-                    } else {
-                        // TODO: should be objects.size()
-                        _aVidTrains.notifyItemRangeInserted(currentSize, _vidTrains.size() - 1);
-                    }
+                    _aVidTrains.notifyDataSetChanged();
                 }
                 hideProgressBar();
             }
