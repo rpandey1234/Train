@@ -9,22 +9,11 @@ import com.volokh.danylo.video_player_manager.meta.MetaData;
 public class VideoPlayer {
     private static SingleVideoPlayerManager videoPlayerManager;
 
-    public VideoPlayer() {
-        videoPlayerManager = new SingleVideoPlayerManager(new PlayerItemChangeListener() {
-            @Override
-            public void onPlayerItemChanged(MetaData metaData) {}
-        });
-    }
-
-    public static SingleVideoPlayerManager getVideoPlayer() {
-        return videoPlayerManager;
-    }
-
     public static void playVideo(DynamicVideoPlayerView videoPlayer, String videoUrl) {
         videoPlayerManager.playNewVideo(null, videoPlayer, videoUrl);
     }
 
-    public static void resetVideoPlayerManager() {
+    public static void makeNewVideoPlayer() {
         videoPlayerManager = new SingleVideoPlayerManager(new PlayerItemChangeListener() {
             @Override
             public void onPlayerItemChanged(MetaData metaData) {}

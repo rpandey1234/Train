@@ -15,6 +15,7 @@ import com.franklinho.vidtrain_android.adapters.VidTrainArrayAdapter;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.utilities.EndlessRecyclerViewScrollListener;
 import com.franklinho.vidtrain_android.utilities.VideoPlayer;
+import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,13 +81,6 @@ public class VidTrainListFragment extends Fragment {
     public void onResume() {
         super.onResume();
         _aVidTrains.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        // we have to stop any playback in onStop
-        VideoPlayer.getVideoPlayer().resetMediaPlayer();
     }
 
     public void showProgressBar() {

@@ -1,6 +1,5 @@
 package com.franklinho.vidtrain_android.models;
 
-import android.net.Uri;
 import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -17,7 +16,6 @@ import org.w3c.dom.Comment;
 
 import java.io.File;
 import java.io.Serializable;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 

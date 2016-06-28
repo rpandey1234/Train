@@ -26,6 +26,7 @@ public class VidtrainApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        VideoPlayer.makeNewVideoPlayer();
         ParseObject.registerSubclass(Video.class);
         ParseObject.registerSubclass(User.class);
         ParseObject.registerSubclass(VidTrain.class);

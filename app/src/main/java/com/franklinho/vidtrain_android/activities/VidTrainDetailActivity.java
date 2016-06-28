@@ -22,7 +22,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
-import com.franklinho.vidtrain_android.adapters.VideoPagerAdapter;
 import com.franklinho.vidtrain_android.adapters.VideoPagerUrlAdapter;
 import com.franklinho.vidtrain_android.models.DynamicVideoPlayerView;
 import com.franklinho.vidtrain_android.models.User;
@@ -45,7 +44,6 @@ import com.volokh.danylo.video_player_manager.ui.SimpleMainThreadMediaPlayerList
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,13 +71,12 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     private VideoPagerUrlAdapter _videoPagerAdapter;
     private List<String> _urlList;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vid_train_detail);
         ButterKnife.bind(this);
-        VideoPlayer.resetVideoPlayerManager();
+        VideoPlayer.makeNewVideoPlayer();
 
         setSupportActionBar(_toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -110,7 +107,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     @OnClick(R.id.btnAddvidTrain)
     public void showCreateFlow(View view) {
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
-            VideoPlayer.resetVideoPlayerManager();
+            VideoPlayer.makeNewVideoPlayer();
             Intent intent = new Intent(getBaseContext(), VideoCaptureActivity.class);
             intent.putExtra(MainActivity.UNIQUE_ID_INTENT, Long.toString(System.currentTimeMillis()));
             intent.putExtra(MainActivity.SHOW_CONFIRM, true);
