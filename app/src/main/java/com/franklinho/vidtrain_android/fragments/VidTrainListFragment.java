@@ -14,8 +14,6 @@ import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.adapters.VidTrainArrayAdapter;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.utilities.EndlessRecyclerViewScrollListener;
-import com.franklinho.vidtrain_android.utilities.VideoPlayer;
-import com.volokh.danylo.video_player_manager.manager.SingleVideoPlayerManager;
 
 import java.util.ArrayList;
 import java.util.List;
