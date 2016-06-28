@@ -23,13 +23,13 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.adapters.VideoPagerAdapter;
+import com.franklinho.vidtrain_android.adapters.VideoPagerUrlAdapter;
 import com.franklinho.vidtrain_android.models.DynamicVideoPlayerView;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.Utility;
-import com.franklinho.vidtrain_android.utilities.VideoPageIndicator;
 import com.franklinho.vidtrain_android.utilities.VideoPlayer;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -64,15 +64,14 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     @Bind(R.id.btnAddvidTrain) Button _btnAddVidTrain;
     @Bind(R.id.pbProgressAction) View _pbProgessAction;
     @Bind(R.id.vpPreview) ViewPager _vpPreview;
-    @Bind(R.id.cpIndicator) VideoPageIndicator _cpIndicator;
     @Bind(R.id.swipeContainer) SwipeRefreshLayout _swipeContainer;
 
     public static final String VIDTRAIN_KEY = "vidTrain";
     public static final int VIDEO_CAPTURE = 101;
     private ProgressDialog _progress;
     private VidTrain _vidTrain;
-    private VideoPagerAdapter _videoPagerAdapter;
-    private List<File> _fileList;
+    private VideoPagerUrlAdapter _videoPagerAdapter;
+    private List<String> _urlList;
 
 
     @Override
@@ -258,8 +257,8 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         });
     }
 
-    private class VideoDownloadTask extends AsyncTask<VidTrain, Void, List<File>> {
-        ViewPager viewPager;
+    private class VideoDownloadTask extends AsyncTask<VidTrain, Void, List<String>> {
+        ViewPager _viewPager;
 
         @Override
         protected void onPreExecute() {
@@ -268,28 +267,26 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         }
 
         public VideoDownloadTask(ViewPager viewPager) {
-            this.viewPager = viewPager;
+            _viewPager = viewPager;
         }
 
         @Override
-        protected List<File> doInBackground(VidTrain... params) {
-            return _vidTrain.getVideoFiles();
+        protected List<String> doInBackground(VidTrain... params) {
+            return _vidTrain.getVideoUrls();
         }
 
         @Override
-        protected void onPostExecute(final List<File> localFiles) {
-            _fileList = localFiles;
-            _videoPagerAdapter =  new VideoPagerAdapter(getBaseContext(), _fileList);
-            viewPager.setAdapter(_videoPagerAdapter);
-            viewPager.setClipChildren(false);
+        protected void onPostExecute(final List<String> localFiles) {
+            _urlList = localFiles;
+            _videoPagerAdapter =  new VideoPagerUrlAdapter(getBaseContext(), _urlList);
+            _viewPager.setAdapter(_videoPagerAdapter);
+            _viewPager.setClipChildren(false);
             int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20 * 2,
                     getResources().getDisplayMetrics());
-            viewPager.setPageMargin(-margin);
-            _cpIndicator.setViewPager(viewPager);
-            _cpIndicator.notifyDataSetChanged();
+            _viewPager.setPageMargin(-margin);
             playVideoAtPosition(0);
 
-            viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            _viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
                 @Override
                 public void onPageSelected(final int position) {
                     playVideoAtPosition(position);
@@ -307,9 +304,9 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                 vvPreview.addMediaPlayerListener(new SimpleMainThreadMediaPlayerListener() {
                     @Override
                     public void onVideoCompletionMainThread() {
-                        if (position < _fileList.size()) {
+                        if (position < _urlList.size()) {
                             ivThumbnail.setVisibility(View.VISIBLE);
-                            _vpPreview.setCurrentItem(viewPager.getCurrentItem() + 1, true);
+                            _vpPreview.setCurrentItem(_viewPager.getCurrentItem() + 1, true);
                         }
                     }
                 });
@@ -322,7 +319,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                         }
                     });
                 }
-                VideoPlayer.playVideo(vvPreview, _fileList.get(position).getPath());
+                VideoPlayer.playVideo(vvPreview, _urlList.get(position));
             }
         }
     }

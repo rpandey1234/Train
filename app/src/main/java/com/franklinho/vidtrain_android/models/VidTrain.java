@@ -1,5 +1,6 @@
 package com.franklinho.vidtrain_android.models;
 
+import android.net.Uri;
 import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -16,6 +17,7 @@ import org.w3c.dom.Comment;
 
 import java.io.File;
 import java.io.Serializable;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -128,7 +130,8 @@ public class VidTrain extends ParseObject implements Serializable {
         for (Video video : videos) {
             try {
                 video.fetchIfNeeded();
-                final byte[] data = video.getVideoFile().getData();
+                ParseFile videoFile = video.getVideoFile();
+                final byte[] data = videoFile.getData();
                 File localVideoFile = Utility.getOutputMediaFile(video.getObjectId());
                 Utility.writeToFile(data, localVideoFile);
                 localVideoFiles.add(localVideoFile);
@@ -139,46 +142,21 @@ public class VidTrain extends ParseObject implements Serializable {
         return localVideoFiles;
     }
 
-
-
-    public void setLikes(int likeCount) {
-        put(LIKES_KEY, likeCount);
-        saveInBackground();
-    }
-
-    public int getLikes() {
-        return getInt(LIKES_KEY);
+    public List<String> getVideoUrls() {
+        List<Video> videos = getVideos();
+        List<String> videoUrls = new ArrayList<>();
+        for (Video video : videos) {
+            try {
+                video.fetchIfNeeded();
+                videoUrls.add(video.getVideoFile().getUrl());
+            } catch (ParseException parseException) {
+                Log.d(VidtrainApplication.TAG, parseException.toString());
+            }
+        }
+        return videoUrls;
     }
 
     public void setRankingValue(float rankingValue) {
         put("rankingValue", rankingValue);
     }
-
-
-//    public List<File> getVideoFiles() {
-//        final List<Video> videos = getVideos();
-//        final List<File> localVideoFiles = new ArrayList<>();
-//        for (final Video video : videos) {
-//            video.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
-//                @Override
-//                public void done(ParseObject object, ParseException e) {
-//                    if (e == null) {
-//                        video.getVideoFile().getDataInBackground(new GetDataCallback() {
-//                            @Override
-//                            public void done(byte[] data, ParseException e) {
-//                                File localVideoFile = Utility.getOutputMediaFile(video.getObjectId());
-//                                Utility.writeToFile(data, localVideoFile);
-//                                localVideoFiles.add(localVideoFile);
-//                            }
-//                        });
-//
-//                    } else {
-//                        Log.d(VidtrainApplication.TAG, e.toString());
-//                    }
-//
-//                }
-//            });
-//        }
-//        return localVideoFiles;
-//    }
 }
