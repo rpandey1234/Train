@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -22,7 +21,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
-import com.franklinho.vidtrain_android.adapters.VideoPagerUrlAdapter;
+import com.franklinho.vidtrain_android.adapters.VideoPagerAdapter;
 import com.franklinho.vidtrain_android.models.DynamicVideoPlayerView;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
@@ -68,8 +67,8 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     public static final int VIDEO_CAPTURE = 101;
     private ProgressDialog _progress;
     private VidTrain _vidTrain;
-    private VideoPagerUrlAdapter _videoPagerAdapter;
-    private List<String> _urlList;
+    private VideoPagerAdapter _videoPagerAdapter;
+    private List<Video> _videos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -254,70 +253,32 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         });
     }
 
-    private class VideoDownloadTask extends AsyncTask<VidTrain, Void, List<String>> {
-        ViewPager _viewPager;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            showProgressBar();
-        }
-
-        public VideoDownloadTask(ViewPager viewPager) {
-            _viewPager = viewPager;
-        }
-
-        @Override
-        protected List<String> doInBackground(VidTrain... params) {
-            return _vidTrain.getVideoUrls();
-        }
-
-        @Override
-        protected void onPostExecute(final List<String> localFiles) {
-            _urlList = localFiles;
-            _videoPagerAdapter =  new VideoPagerUrlAdapter(getBaseContext(), _urlList);
-            _viewPager.setAdapter(_videoPagerAdapter);
-            _viewPager.setClipChildren(false);
-            int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20 * 2,
-                    getResources().getDisplayMetrics());
-            _viewPager.setPageMargin(-margin);
-            playVideoAtPosition(0);
-
-            _viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+    private void playVideoAtPosition(final int position) {
+        setProfileImageUrlAtIndex(position);
+        View pagerView = _videoPagerAdapter.getView(position);
+        if (pagerView != null) {
+            final DynamicVideoPlayerView vvPreview = (DynamicVideoPlayerView) pagerView.findViewById(R.id.vvPreview);
+            final ImageView ivThumbnail = (ImageView) pagerView.findViewById(R.id.ivThumbnail);
+            ivThumbnail.setVisibility(View.GONE);
+            vvPreview.addMediaPlayerListener(new SimpleMainThreadMediaPlayerListener() {
                 @Override
-                public void onPageSelected(final int position) {
-                    playVideoAtPosition(position);
+                public void onVideoCompletionMainThread() {
+                    if (position < _videos.size()) {
+                        ivThumbnail.setVisibility(View.VISIBLE);
+                        _vpPreview.setCurrentItem(_vpPreview.getCurrentItem() + 1, true);
+                    }
                 }
             });
-        }
-
-        private void playVideoAtPosition(final int position) {
-            setProfileImageUrlAtIndex(position);
-            View pagerView = _videoPagerAdapter.getView(position);
-            if (pagerView != null) {
-                final DynamicVideoPlayerView vvPreview = (DynamicVideoPlayerView) pagerView.findViewById(R.id.vvPreview);
-                final ImageView ivThumbnail = (ImageView) pagerView.findViewById(R.id.ivThumbnail);
-                ivThumbnail.setVisibility(View.GONE);
-                vvPreview.addMediaPlayerListener(new SimpleMainThreadMediaPlayerListener() {
+            if (position == _videoPagerAdapter.getCount() - 1) {
+                // restart from beginning on click
+                ivThumbnail.setOnClickListener(new OnClickListener() {
                     @Override
-                    public void onVideoCompletionMainThread() {
-                        if (position < _urlList.size()) {
-                            ivThumbnail.setVisibility(View.VISIBLE);
-                            _vpPreview.setCurrentItem(_viewPager.getCurrentItem() + 1, true);
-                        }
+                    public void onClick(View v) {
+                        _vpPreview.setCurrentItem(0, true);
                     }
                 });
-                if (position == _videoPagerAdapter.getCount() - 1) {
-                    // restart from beginning on click
-                    ivThumbnail.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            _vpPreview.setCurrentItem(0, true);
-                        }
-                    });
-                }
-                VideoPlayer.playVideo(vvPreview, _urlList.get(position));
             }
+            VideoPlayer.playVideo(vvPreview, _videos.get(position).getVideoFile().getUrl());
         }
     }
 
@@ -336,6 +297,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
         query.whereEqualTo("objectId", getVidtrainId());
         query.include("user");
+        query.include("videos");
         query.getFirstInBackground(new GetCallback<VidTrain>() {
             @Override
             public void done(VidTrain object, ParseException e) {
@@ -356,6 +318,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
             _btnAddVidTrain.setVisibility(View.VISIBLE);
         }
         _tvTitle.setText(_vidTrain.getTitle());
+        _videos = _vidTrain.getVideos();
         int videosCount = _vidTrain.getVideosCount();
         _tvVideoCount.setText(String.valueOf(videosCount));
         _tvTime.setText(Utility.getRelativeTime(_vidTrain.getCreatedAt().getTime()));
@@ -368,7 +331,21 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                 _tvAuthor.setText(_vidTrain.getUser().getName());
             }
         });
-        new VideoDownloadTask(_vpPreview).execute(_vidTrain);
+
+        _videoPagerAdapter =  new VideoPagerAdapter(getBaseContext(), _vidTrain.getVideos());
+        _vpPreview.setAdapter(_videoPagerAdapter);
+        _vpPreview.setClipChildren(false);
+        int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20 * 2,
+                getResources().getDisplayMetrics());
+        _vpPreview.setPageMargin(-margin);
+        playVideoAtPosition(0);
+
+        _vpPreview.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(final int position) {
+                playVideoAtPosition(position);
+            }
+        });
     }
 
     public void sendVidtrainUpdatedNotification(ParseUser user, VidTrain vidtrain) {

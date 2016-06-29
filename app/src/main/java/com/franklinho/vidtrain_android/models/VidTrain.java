@@ -140,20 +140,6 @@ public class VidTrain extends ParseObject implements Serializable {
         return localVideoFiles;
     }
 
-    public List<String> getVideoUrls() {
-        List<Video> videos = getVideos();
-        List<String> videoUrls = new ArrayList<>();
-        for (Video video : videos) {
-            try {
-                video.fetchIfNeeded();
-                videoUrls.add(video.getVideoFile().getUrl());
-            } catch (ParseException parseException) {
-                Log.d(VidtrainApplication.TAG, parseException.toString());
-            }
-        }
-        return videoUrls;
-    }
-
     public void setRankingValue(float rankingValue) {
         put("rankingValue", rankingValue);
     }
