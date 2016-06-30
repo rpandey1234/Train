@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="20dp"
-    android:paddingRight="20dp"
-    >
+    android:paddingRight="20dp">
 
     <com.franklinho.vidtrain_android.models.DynamicHeightImageView
         android:layout_width="match_parent"
@@ -16,7 +15,6 @@
         android:scaleType="centerCrop"
         android:src="@drawable/placeholder_video"
         android:contentDescription="@string/video_thumbnail"
-
         />
 
     <com.franklinho.vidtrain_android.models.DynamicVideoPlayerView

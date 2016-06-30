@@ -54,17 +54,6 @@ public class VideoPagerAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         // Inflate the layout for the page
         View itemView = _layoutInflater.inflate(R.layout.pager_item_video, container, false);
-        if (position == 0) {
-            // no left padding
-            // TODO(rahul): set margin instead of 0 padding so we show the background
-            itemView.setPadding(0, itemView.getPaddingTop(), itemView.getPaddingRight(),
-                    itemView.getPaddingBottom());
-        }
-        if (position == getCount() - 1) {
-            // no right padding
-            itemView.setPadding(itemView.getPaddingLeft(), itemView.getPaddingTop(), 0,
-                    itemView.getPaddingBottom());
-        }
         // Find and populate data into the page (i.e set the image)
         final DynamicHeightImageView ivThumbnail = (DynamicHeightImageView) itemView.findViewById(R.id.ivThumbnail);
         // Add the page to the container

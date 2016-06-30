@@ -13,7 +13,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -60,7 +59,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     @Bind(R.id.toolbar) Toolbar _toolbar;
     @Bind(R.id.btnAddvidTrain) Button _btnAddVidTrain;
     @Bind(R.id.pbProgressAction) View _pbProgessAction;
-    @Bind(R.id.vpPreview) ViewPager _vpPreview;
+    @Bind(R.id.vpPreview) ViewPager _viewPager;
     @Bind(R.id.swipeContainer) SwipeRefreshLayout _swipeContainer;
 
     public static final String VIDTRAIN_KEY = "vidTrain";
@@ -265,19 +264,10 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                 public void onVideoCompletionMainThread() {
                     if (position < _videos.size()) {
                         ivThumbnail.setVisibility(View.VISIBLE);
-                        _vpPreview.setCurrentItem(_vpPreview.getCurrentItem() + 1, true);
+                        _viewPager.setCurrentItem(_viewPager.getCurrentItem() + 1, true);
                     }
                 }
             });
-            if (position == _videoPagerAdapter.getCount() - 1) {
-                // restart from beginning on click
-                ivThumbnail.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        _vpPreview.setCurrentItem(0, true);
-                    }
-                });
-            }
             VideoPlayer.playVideo(vvPreview, _videos.get(position).getVideoFile().getUrl());
         }
     }
@@ -333,14 +323,14 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         });
 
         _videoPagerAdapter =  new VideoPagerAdapter(getBaseContext(), _vidTrain.getVideos());
-        _vpPreview.setAdapter(_videoPagerAdapter);
-        _vpPreview.setClipChildren(false);
+        _viewPager.setAdapter(_videoPagerAdapter);
+        _viewPager.setClipChildren(false);
         int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20 * 2,
                 getResources().getDisplayMetrics());
-        _vpPreview.setPageMargin(-margin);
+        _viewPager.setPageMargin(-margin);
         playVideoAtPosition(0);
 
-        _vpPreview.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        _viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(final int position) {
                 playVideoAtPosition(position);
