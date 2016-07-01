@@ -31,7 +31,7 @@ import android.widget.ImageView;
 import com.franklinho.vidtrain_android.R;
 import com.viewpagerindicator.PageIndicator;
 
-import static android.view.ViewGroup.LayoutParams.FILL_PARENT;
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
@@ -55,7 +55,7 @@ public class VideoPageIndicator extends HorizontalScrollView implements PageIndi
         setHorizontalScrollBarEnabled(false);
 
         mIconsLayout = new IcsLinearLayout(context, com.viewpagerindicator.R.attr.vpiIconPageIndicatorStyle);
-        addView(mIconsLayout, new LayoutParams(WRAP_CONTENT, FILL_PARENT, Gravity.CENTER));
+        addView(mIconsLayout, new LayoutParams(WRAP_CONTENT, MATCH_PARENT, Gravity.CENTER));
     }
 
     private void animateToIcon(final int position) {

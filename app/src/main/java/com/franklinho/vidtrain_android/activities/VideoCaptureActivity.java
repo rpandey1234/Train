@@ -72,7 +72,6 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
     private CameraPreview _cameraPreview;
     private MediaRecorder _mediaRecorder;
     private boolean _isRecording = false;
-    private boolean _isPauseCalled = false;
     private int _cameraId = CameraInfo.CAMERA_FACING_BACK;
     // Create the Handler object (on the main thread by default)
     private Handler _handler = new Handler();
@@ -350,7 +349,6 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         super.onPause();
         releaseMediaRecorder();       // if you are using MediaRecorder, release it first
         releaseCamera();              // release the camera immediately on pause event
-        _isPauseCalled = true;
     }
 
     private void releaseMediaRecorder() {
