@@ -1,6 +1,7 @@
 package com.franklinho.vidtrain_android.activities;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -11,7 +12,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -20,14 +21,12 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
-import com.franklinho.vidtrain_android.adapters.VideoPagerAdapter;
-import com.franklinho.vidtrain_android.models.DynamicVideoPlayerView;
+import com.franklinho.vidtrain_android.adapters.VideoFragmentPagerAdapter;
+import com.franklinho.vidtrain_android.fragments.VideoPageFragment.VideoFinishedListener;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
-import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.Utility;
-import com.franklinho.vidtrain_android.utilities.VideoPlayer;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -37,7 +36,6 @@ import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import com.volokh.danylo.video_player_manager.ui.SimpleMainThreadMediaPlayerListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,7 +47,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class VidTrainDetailActivity extends AppCompatActivity {
+public class VidTrainDetailActivity extends AppCompatActivity implements VideoFinishedListener {
 
     @Bind(R.id.ivCollaborators) ImageView _ivCollaborators;
     @Bind(R.id.tvVideoCount) TextView _tvVideoCount;
@@ -65,15 +63,14 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     public static final int VIDEO_CAPTURE = 101;
     private ProgressDialog _progress;
     private VidTrain _vidTrain;
-    private VideoPagerAdapter _videoPagerAdapter;
     private List<Video> _videos;
+    private VideoFragmentPagerAdapter _videoFragmentPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vid_train_detail);
         ButterKnife.bind(this);
-        VideoPlayer.makeNewVideoPlayer();
 
         setSupportActionBar(_toolbar);
         ActionBar supportActionBar = getSupportActionBar();
@@ -99,7 +96,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     @OnClick(R.id.btnAddvidTrain)
     public void showCreateFlow(View view) {
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
-            VideoPlayer.makeNewVideoPlayer();
             Intent intent = new Intent(getBaseContext(), VideoCaptureActivity.class);
             intent.putExtra(MainActivity.UNIQUE_ID_INTENT, Long.toString(System.currentTimeMillis()));
             intent.putExtra(MainActivity.SHOW_CONFIRM, true);
@@ -125,12 +121,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         if (requestCode != VIDEO_CAPTURE) {
             return;
         }
-        if (data == null) {
-            Log.d(VidtrainApplication.TAG, "intent data is null");
-            Toast.makeText(this, "Intent data is null.",  Toast.LENGTH_LONG).show();
-            return;
-        }
-        if (resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK && data != null) {
             _progress = ProgressDialog
                     .show(this, "Adding your video", "Just a moment please!", true);
             // data.getData().toString() is the following:
@@ -247,26 +238,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         });
     }
 
-    private void playVideoAtPosition(final int position) {
-        setProfileImageUrlAtIndex(position);
-        View pagerView = _videoPagerAdapter.getView(position);
-        if (pagerView != null) {
-            final DynamicVideoPlayerView vvPreview = (DynamicVideoPlayerView) pagerView.findViewById(R.id.vvPreview);
-            final ImageView ivThumbnail = (ImageView) pagerView.findViewById(R.id.ivThumbnail);
-            ivThumbnail.setVisibility(View.GONE);
-            vvPreview.addMediaPlayerListener(new SimpleMainThreadMediaPlayerListener() {
-                @Override
-                public void onVideoCompletionMainThread() {
-                    if (position < _videos.size()) {
-                        ivThumbnail.setVisibility(View.VISIBLE);
-                        _viewPager.setCurrentItem(_viewPager.getCurrentItem() + 1, true);
-                    }
-                }
-            });
-            VideoPlayer.playVideo(vvPreview, _videos.get(position).getVideoFile().getUrl());
-        }
-    }
-
     public void showProgressBar() {
         // Show _progress item
         _pbProgessAction.setVisibility(View.VISIBLE);
@@ -277,7 +248,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         _pbProgessAction.setVisibility(View.GONE);
     }
 
-    void requestVidTrain() {
+    public void requestVidTrain() {
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
         query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
         query.whereEqualTo("objectId", getVidtrainId());
@@ -315,19 +286,27 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                 _tvAuthor.setText(_vidTrain.getUser().getName());
             }
         });
-
-        _videoPagerAdapter =  new VideoPagerAdapter(getBaseContext(), _vidTrain.getVideos());
-        _viewPager.setAdapter(_videoPagerAdapter);
+        _videoFragmentPagerAdapter =  new VideoFragmentPagerAdapter(
+                getSupportFragmentManager(),
+                getBaseContext(),
+                _vidTrain.getVideos());
+        _viewPager.setAdapter(_videoFragmentPagerAdapter);
         _viewPager.setClipChildren(false);
         int margin = getResources().getDimensionPixelOffset(R.dimen.view_pager_margin);
         _viewPager.setPageMargin(-margin);
-        playVideoAtPosition(0);
+        // TODO(rahul): need to play first video on load (without page swipe)
+        setProfileImageUrlAtIndex(0);
         _viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(final int position) {
-                playVideoAtPosition(position);
+                setProfileImageUrlAtIndex(position);
             }
         });
+    }
+
+    @Override
+    public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
+        return super.onCreateView(parent, name, context, attrs);
     }
 
     public void sendVidtrainUpdatedNotification(ParseUser user, VidTrain vidtrain) {
@@ -351,5 +330,13 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         push.setQuery(pushQuery);
         push.setData(data);
         push.sendInBackground();
+    }
+
+    @Override
+    public void onVideoCompleted() {
+        int currentIndex = _viewPager.getCurrentItem();
+        if (currentIndex < _videos.size()) {
+            _viewPager.setCurrentItem(currentIndex + 1, true);
+        }
     }
 }

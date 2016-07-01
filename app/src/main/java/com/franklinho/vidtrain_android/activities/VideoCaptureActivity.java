@@ -13,6 +13,8 @@ import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.Size;
 import android.media.CamcorderProfile;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,12 +33,10 @@ import com.desmond.squarecamera.ImageParameters;
 import com.desmond.squarecamera.ResizeAnimation;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.models.DynamicHeightImageView;
-import com.franklinho.vidtrain_android.models.DynamicVideoPlayerView;
+import com.franklinho.vidtrain_android.models.DynamicVideoView;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.CameraPreview;
 import com.franklinho.vidtrain_android.utilities.Utility;
-import com.franklinho.vidtrain_android.utilities.VideoPlayer;
-import com.volokh.danylo.video_player_manager.ui.SimpleMainThreadMediaPlayerListener;
 
 import java.io.File;
 import java.io.IOException;
@@ -180,16 +180,16 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
             View itemView = getLayoutInflater().inflate(R.layout.pager_item_video, null);
             itemView.setPadding(itemView.getPaddingLeft(), itemView.getPaddingTop() + 10,
                     itemView.getPaddingRight(), itemView.getPaddingBottom());
-            final DynamicVideoPlayerView vvPreview = (DynamicVideoPlayerView) itemView.findViewById(
-                    R.id.vvPreview);
+            final DynamicVideoView vvPreview = (DynamicVideoView) itemView.findViewById(R.id.vvPreview);
             vvPreview.setHeightRatio(1);
             final DynamicHeightImageView ivThumbnail = (DynamicHeightImageView) itemView.findViewById(R.id.ivThumbnail);
             ivThumbnail.setHeightRatio(1);
             ivThumbnail.setImageBitmap(Utility.getImageBitmap(videoPath));
+            vvPreview.setVideoPath(videoPath);
             vvPreview.setVisibility(View.GONE);
-            vvPreview.addMediaPlayerListener(new SimpleMainThreadMediaPlayerListener() {
+            vvPreview.setOnCompletionListener(new OnCompletionListener() {
                 @Override
-                public void onVideoCompletionMainThread() {
+                public void onCompletion(MediaPlayer mp) {
                     vvPreview.setVisibility(View.GONE);
                     ivThumbnail.setVisibility(View.VISIBLE);
                 }
@@ -199,7 +199,9 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
                 public void onClick(View v) {
                     ivThumbnail.setVisibility(View.GONE);
                     vvPreview.setVisibility(View.VISIBLE);
-                    VideoPlayer.playVideo(vvPreview, videoPath);
+                    vvPreview.setZOrderOnTop(true);
+                    vvPreview.requestFocus();
+                    vvPreview.start();
                 }
             });
             AlertDialog.Builder builder = new Builder(this)
@@ -234,8 +236,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
     }
 
     private boolean checkCameraHardware(Context context) {
-        // this device has a camera
-// no camera on this device
+        // this device has a camera or not
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
     }
 

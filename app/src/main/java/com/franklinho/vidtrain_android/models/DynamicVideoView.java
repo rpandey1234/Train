@@ -2,22 +2,17 @@ package com.franklinho.vidtrain_android.models;
 
 import android.content.Context;
 import android.util.AttributeSet;
-
-import com.volokh.danylo.video_player_manager.ui.VideoPlayerView;
+import android.widget.VideoView;
 
 /**
  * An {@link android.widget.ImageView} layout that maintains a consistent width to height aspect ratio.
  */
-public class DynamicVideoPlayerView extends VideoPlayerView {
+public class DynamicVideoView extends VideoView {
 
     private double _heightRatio;
 
-    public DynamicVideoPlayerView(Context context, AttributeSet attrs) {
+    public DynamicVideoView(Context context, AttributeSet attrs) {
         super(context, attrs);
-    }
-
-    public DynamicVideoPlayerView(Context context) {
-        super(context);
     }
 
     public void setHeightRatio(double ratio) {
@@ -27,21 +22,17 @@ public class DynamicVideoPlayerView extends VideoPlayerView {
         }
     }
 
-    public double getHeightRatio() {
-        return _heightRatio;
-    }
-
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        // TODO(rahul): need better way to display video
+        // reference: https://www.jayway.com/2012/12/12/creating-custom-android-views-part-4-measuring-and-how-to-force-a-view-to-be-square/
         if (_heightRatio > 0.0) {
             // set the image views size
             int width = MeasureSpec.getSize(widthMeasureSpec);
             int height = (int) (width * _heightRatio);
             setMeasuredDimension(width, height);
-        }
-        else {
+        } else {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
     }
-
 }

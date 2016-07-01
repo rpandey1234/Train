@@ -6,7 +6,6 @@ import com.facebook.FacebookSdk;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
-import com.franklinho.vidtrain_android.utilities.VideoPlayer;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
@@ -26,7 +25,6 @@ public class VidtrainApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        VideoPlayer.makeNewVideoPlayer();
         ParseObject.registerSubclass(Video.class);
         ParseObject.registerSubclass(User.class);
         ParseObject.registerSubclass(VidTrain.class);
