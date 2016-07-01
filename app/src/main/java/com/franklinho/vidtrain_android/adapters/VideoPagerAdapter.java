@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.models.DynamicHeightImageView;
 import com.franklinho.vidtrain_android.models.Video;
+import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -59,9 +61,13 @@ public class VideoPagerAdapter extends PagerAdapter {
         // Add the page to the container
         container.addView(itemView);
         ParseFile thumbnail = _videos.get(position).getThumbnail();
-        thumbnail.getDataInBackground(new GetDataCallback() {
+         thumbnail.getDataInBackground(new GetDataCallback() {
             @Override
             public void done(byte[] data, ParseException e) {
+                if (e != null) {
+                    Log.d(VidtrainApplication.TAG, e.toString());
+                    return;
+                }
                 Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
                 ivThumbnail.setImageBitmap(bitmap);
             }
