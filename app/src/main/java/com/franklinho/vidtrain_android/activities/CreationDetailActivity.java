@@ -184,10 +184,6 @@ public class CreationDetailActivity extends AppCompatActivity {
     }
 
     public void submitVidTrain(View view) {
-        if (_etTitle.getText().toString().trim().length() == 0) {
-            Toast.makeText(this, "Please enter a title", Toast.LENGTH_SHORT).show();
-            return;
-        }
         final ParseFile parseFile = Utility.createParseFile(_videoPath);
         if (parseFile == null) {
             Toast.makeText(this, "Was unable to create file for video.",  Toast.LENGTH_LONG).show();
