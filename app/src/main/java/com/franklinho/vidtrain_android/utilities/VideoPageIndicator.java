@@ -39,12 +39,12 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
  * across different configurations or circumstances.
  */
 public class VideoPageIndicator extends HorizontalScrollView implements PageIndicator {
-    public final IcsLinearLayout mIconsLayout;
+    public final IcsLinearLayout _iconsLayout;
 
-    private ViewPager mViewPager;
-    private OnPageChangeListener mListener;
-    private Runnable mIconSelector;
-    private int mSelectedIndex;
+    private ViewPager _viewPager;
+    private OnPageChangeListener _listener;
+    private Runnable _iconSelector;
+    private int _selectedIndex;
 
     public VideoPageIndicator(Context context) {
         this(context, null);
@@ -54,17 +54,17 @@ public class VideoPageIndicator extends HorizontalScrollView implements PageIndi
         super(context, attrs);
         setHorizontalScrollBarEnabled(false);
 
-        mIconsLayout = new IcsLinearLayout(context, com.viewpagerindicator.R.attr.vpiIconPageIndicatorStyle);
-        addView(mIconsLayout, new LayoutParams(WRAP_CONTENT, MATCH_PARENT, Gravity.CENTER));
+        _iconsLayout = new IcsLinearLayout(context, com.viewpagerindicator.R.attr.vpiIconPageIndicatorStyle);
+        addView(_iconsLayout, new LayoutParams(WRAP_CONTENT, MATCH_PARENT, Gravity.CENTER));
     }
 
     private void animateToIcon(final int position) {
-        final View iconView = mIconsLayout.getChildAt(position);
+        final View iconView = _iconsLayout.getChildAt(position);
 
-        for (int i = 0; i < mIconsLayout.getChildCount(); i++) {
+        for (int i = 0; i < _iconsLayout.getChildCount(); i++) {
             View opacityView
-                    = mIconsLayout.getChildAt(i);
-            if (i != mSelectedIndex) {
+                    = _iconsLayout.getChildAt(i);
+            if (i != _selectedIndex) {
                 opacityView.setAlpha(0.50f);
                 opacityView.setBackgroundColor(Color.WHITE);
             } else {
@@ -74,78 +74,78 @@ public class VideoPageIndicator extends HorizontalScrollView implements PageIndi
         }
 
 
-        if (mIconSelector != null) {
-            removeCallbacks(mIconSelector);
+        if (_iconSelector != null) {
+            removeCallbacks(_iconSelector);
         }
-        mIconSelector = new Runnable() {
+        _iconSelector = new Runnable() {
             public void run() {
                 final int scrollPos = iconView.getLeft() - (getWidth() - iconView.getWidth()) / 2;
                 smoothScrollTo(scrollPos, 0);
-                mIconSelector = null;
+                _iconSelector = null;
             }
         };
-        post(mIconSelector);
+        post(_iconSelector);
     }
 
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        if (mIconSelector != null) {
+        if (_iconSelector != null) {
             // Re-post the selector we saved
-            post(mIconSelector);
+            post(_iconSelector);
         }
     }
 
     @Override
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if (mIconSelector != null) {
-            removeCallbacks(mIconSelector);
+        if (_iconSelector != null) {
+            removeCallbacks(_iconSelector);
         }
     }
 
     @Override
     public void onPageScrollStateChanged(int arg0) {
-        if (mListener != null) {
-            mListener.onPageScrollStateChanged(arg0);
+        if (_listener != null) {
+            _listener.onPageScrollStateChanged(arg0);
         }
     }
 
     @Override
     public void onPageScrolled(int arg0, float arg1, int arg2) {
-        if (mListener != null) {
-            mListener.onPageScrolled(arg0, arg1, arg2);
+        if (_listener != null) {
+            _listener.onPageScrolled(arg0, arg1, arg2);
         }
     }
 
     @Override
     public void onPageSelected(int arg0) {
         setCurrentItem(arg0);
-        if (mListener != null) {
-            mListener.onPageSelected(arg0);
+        if (_listener != null) {
+            _listener.onPageSelected(arg0);
         }
     }
 
     @Override
     public void setViewPager(ViewPager view) {
-        if (mViewPager == view) {
+        if (_viewPager == view) {
             return;
         }
-        if (mViewPager != null) {
-            mViewPager.setOnPageChangeListener(null);
+        if (_viewPager != null) {
+            _viewPager.setOnPageChangeListener(null);
         }
         PagerAdapter adapter = view.getAdapter();
         if (adapter == null) {
             throw new IllegalStateException("ViewPager does not have adapter instance.");
         }
-        mViewPager = view;
+        _viewPager = view;
         view.setOnPageChangeListener(this);
         notifyDataSetChanged();
     }
 
     public void notifyDataSetChanged() {
-        mIconsLayout.removeAllViews();
-        VideoIconPagerAdapter iconAdapter = (VideoIconPagerAdapter) mViewPager.getAdapter();
+        _iconsLayout.removeAllViews();
+        VideoIconPagerAdapter iconAdapter = (VideoIconPagerAdapter) _viewPager.getAdapter();
         int count = iconAdapter.getCount();
         for (int i = 0; i < count; i++) {
             ImageView view = new ImageView(getContext(), null, com.viewpagerindicator.R.attr.vpiIconPageIndicatorStyle);
@@ -156,19 +156,19 @@ public class VideoPageIndicator extends HorizontalScrollView implements PageIndi
             view.setAdjustViewBounds(true);
             view.setMaxHeight(dpOfImage);
             view.setMaxWidth(dpOfImage);
-            if (i != mSelectedIndex) {
+            if (i != _selectedIndex) {
                 view.setAlpha(0.50f);
                 view.setBackgroundColor(Color.WHITE);
             } else {
                 view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.bluePrimary));
             }
             view.setImageBitmap(iconAdapter.getIconBitMap(i));
-            mIconsLayout.addView(view);
+            _iconsLayout.addView(view);
         }
-        if (mSelectedIndex > count) {
-            mSelectedIndex = count - 1;
+        if (_selectedIndex > count) {
+            _selectedIndex = count - 1;
         }
-        setCurrentItem(mSelectedIndex);
+        setCurrentItem(_selectedIndex);
         requestLayout();
     }
 
@@ -180,15 +180,15 @@ public class VideoPageIndicator extends HorizontalScrollView implements PageIndi
 
     @Override
     public void setCurrentItem(int item) {
-        if (mViewPager == null) {
+        if (_viewPager == null) {
             throw new IllegalStateException("ViewPager has not been bound.");
         }
-        mSelectedIndex = item;
-        mViewPager.setCurrentItem(item);
+        _selectedIndex = item;
+        _viewPager.setCurrentItem(item);
 
-        int tabCount = mIconsLayout.getChildCount();
+        int tabCount = _iconsLayout.getChildCount();
         for (int i = 0; i < tabCount; i++) {
-            View child = mIconsLayout.getChildAt(i);
+            View child = _iconsLayout.getChildAt(i);
             boolean isSelected = (i == item);
             child.setSelected(isSelected);
             if (isSelected) {
@@ -199,6 +199,6 @@ public class VideoPageIndicator extends HorizontalScrollView implements PageIndi
 
     @Override
     public void setOnPageChangeListener(OnPageChangeListener listener) {
-        mListener = listener;
+        _listener = listener;
     }
 }
