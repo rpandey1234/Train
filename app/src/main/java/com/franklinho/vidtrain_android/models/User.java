@@ -18,12 +18,7 @@ public class User extends ParseUser implements Serializable {
             = "http://graph.facebook.com/%s/picture?height=160&width=160";
 
     public static final String NAME = "name";
-    public static final String USER_NAME = "username";
-    public static final String PASSWORD = "password";
-    public static final String EMAIL = "email";
     public static final String FBID = "fbid";
-    public static final String LIKES = "likes";
-    public static final String FOLLOWING = "following";
     public static final String VIDEOS = "videos";
     public static final String VIDTRAINS = "vidtrains";
     public static final String PROFILE_IMAGE_URL = "profileImageUrl";

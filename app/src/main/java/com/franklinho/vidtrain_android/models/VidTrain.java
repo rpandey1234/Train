@@ -24,15 +24,12 @@ public class VidTrain extends ParseObject implements Serializable {
 
     public static final String USER_KEY = "user";
     public static final String TITLE_KEY = "title";
-    public static final String DESCRIPTION_KEY = "description";
     public static final String VIDEOS_KEY = "videos";
-    public static final String COMMENTS_KEY = "comments";
     public static final String READ_PRIVACY_KEY = "readPrivacy";
     public static final String WRITE_PRIVACY_KEY = "writePrivacy";
     public static final String LL_KEY = "ll";
     public static final String THUMBNAIL_KEY = "thumbnail";
     public static final String COLLABORATORS = "collaborators";
-    public static final String LIKES_KEY = "likeCount";
 
     public VidTrain() {}
 
@@ -42,10 +39,6 @@ public class VidTrain extends ParseObject implements Serializable {
 
     public void setTitle(String title) {
         put(TITLE_KEY, title);
-    }
-
-    public void setDescription(String description) {
-        put(DESCRIPTION_KEY, description);
     }
 
     public void setVideos(List<Video> videos) {
@@ -60,12 +53,10 @@ public class VidTrain extends ParseObject implements Serializable {
         return getVideos().size();
     }
 
-    public void setComments(List<Comment> comments) {
-        put(COMMENTS_KEY, comments);
-    }
     public void setReadPrivacy(Boolean readPrivacy) {
         put(READ_PRIVACY_KEY, readPrivacy);
     }
+
     public void setWritePrivacy(Boolean writePrivacy) {
         put(WRITE_PRIVACY_KEY, writePrivacy);
     }
