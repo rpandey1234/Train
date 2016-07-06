@@ -11,29 +11,29 @@ import android.view.WindowManager;
 import java.io.IOException;
 
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
-    private SurfaceHolder mHolder;
-    private Camera mCamera;
+    private SurfaceHolder _holder;
+    private Camera _camera;
 
     public CameraPreview(Context context, Camera camera) {
         super(context);
-        mCamera = camera;
-        mCamera.setDisplayOrientation(90);
+        _camera = camera;
+        _camera.setDisplayOrientation(90);
 
         // Install a SurfaceHolder.Callback so we get notified when the
         // underlying surface is created and destroyed.
-        mHolder = getHolder();
-        mHolder.addCallback(this);
+        _holder = getHolder();
+        _holder.addCallback(this);
         // deprecated setting, but required on Android versions prior to 3.0
-        mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        _holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
     }
 
     public void surfaceCreated(SurfaceHolder holder) {
         // The Surface has been created, now tell the camera where to draw the preview.
         try {
-            if(mCamera != null) {
-                mCamera.setDisplayOrientation(90);
-                mCamera.setPreviewDisplay(holder);
-                mCamera.startPreview();
+            if(_camera != null) {
+                _camera.setDisplayOrientation(90);
+                _camera.setPreviewDisplay(holder);
+                _camera.startPreview();
             }
         } catch (IOException e) {
             //     Log.d(TAG, "Error setting camera preview: " + e.getMessage());
@@ -48,14 +48,14 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         // If your preview can change or rotate, take care of those events here.
         // Make sure to stop the preview before resizing or reformatting it.
 
-        if (mHolder.getSurface() == null) {
+        if (_holder.getSurface() == null) {
             // preview surface does not exist
             return;
         }
 
         // stop preview before making changes
         try {
-            mCamera.stopPreview();
+            _camera.stopPreview();
         } catch (Exception e) {
             // ignore: tried to stop a non-existent preview
         }
@@ -65,10 +65,10 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
         // start preview with new settings
         try {
-            setCameraDisplayOrientation(mCamera);
-            mCamera.setDisplayOrientation(90);
-            mCamera.setPreviewDisplay(mHolder);
-            mCamera.startPreview();
+            setCameraDisplayOrientation(_camera);
+            _camera.setDisplayOrientation(90);
+            _camera.setPreviewDisplay(_holder);
+            _camera.startPreview();
 
         } catch (Exception e) {
             //       Log.d(TAG, "Error starting camera preview: " + e.getMessage());
