@@ -96,7 +96,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/vpPreview"
-                        android:background="@android:color/black"
                         android:transitionName="viewer"
                         />
                     <com.franklinho.vidtrain_android.utilities.VideoPageIndicator
