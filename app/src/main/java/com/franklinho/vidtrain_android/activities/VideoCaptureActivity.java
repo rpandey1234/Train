@@ -55,8 +55,6 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
     @Bind(R.id.timer) View _timerView;
     @Bind(R.id.vTop) View _vTop;
     @Bind(R.id.vBottom) View _vBottom;
-//    @Bind(R.id.button_ChangeCamera) ImageButton switchCamera;
-
 
     public static final int MAX_TIME = 5000;
     public static final int UPDATE_FREQUENCY = 50;
