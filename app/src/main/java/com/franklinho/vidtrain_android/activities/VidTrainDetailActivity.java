@@ -11,7 +11,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -326,11 +325,9 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         _videoPagerAdapter =  new VideoPagerAdapter(getBaseContext(), _vidTrain.getVideos());
         _viewPager.setAdapter(_videoPagerAdapter);
         _viewPager.setClipChildren(false);
-        int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20 * 2,
-                getResources().getDisplayMetrics());
+        int margin = getResources().getDimensionPixelOffset(R.dimen.view_pager_margin);
         _viewPager.setPageMargin(-margin);
         playVideoAtPosition(0);
-
         _viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(final int position) {
