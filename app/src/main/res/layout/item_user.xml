@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical|left"
         android:textColor="@android:color/black"
-        android:layout_toRightOf="@id/ivProfileImage"
+        android:layout_toEndOf="@id/ivProfileImage"
         android:layout_alignTop="@id/ivProfileImage"
         android:layout_alignBottom="@id/ivProfileImage"
         />

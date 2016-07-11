@@ -23,6 +23,7 @@
         android:layout_height="200dp"
         android:id="@+id/ivLogo"
         android:src="@drawable/icon_vidtrain"
+        android:contentDescription="@string/app_logo"
         android:layout_below="@+id/tvVidTrain"
         android:layout_marginTop="60dp"
         android:layout_centerHorizontal="true"
@@ -42,7 +43,7 @@
         android:layout_marginTop="60dp"
         android:background="@drawable/button_standard"
         android:foreground="?android:attr/selectableItemBackground"
-        android:drawableLeft="@drawable/fb_logo"
+        android:drawableStart="@drawable/fb_logo"
         android:drawablePadding="8dp"
         />
 

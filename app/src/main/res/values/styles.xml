@@ -28,8 +28,8 @@
     </style>
 
     <style name="AppTheme.ActionBarTheme" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="colorControlActivated">#FFffffff</item>
-        <item name="android:titleTextColor">#FFffffff</item>
+        <item name="colorControlActivated">#FFffff</item>
+        <!--<item name="android:titleTextColor">#FFffff</item>-->
     </style>
 
     <style name="section_item_divider">
@@ -48,7 +48,7 @@
 
     <style name="Widget.Toolbar" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:titleTextColor">#FFffffff</item>
+        <!--<item name="android:titleTextColor">#FFffff</item>-->
         <!--<item name="contentInsetStart">0dp</item>-->
     </style>
 

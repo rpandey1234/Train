@@ -30,9 +30,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/video_count"
-            android:layout_toRightOf="@+id/conversation_title"
+            android:layout_toEndOf="@+id/conversation_title"
             android:layout_alignBottom="@+id/conversation_title"
-            android:paddingLeft="4dp"
+            android:paddingStart="4dp"
             android:textSize="14sp"
             />
 
@@ -49,8 +49,8 @@
             android:id="@+id/participants_rv"
             android:layout_below="@+id/conversation_title"
             android:layout_marginBottom="8dp"
-            android:layout_toLeftOf="@+id/image_preview"
-            android:layout_alignParentLeft="true"
+            android:layout_toStartOf="@+id/image_preview"
+            android:layout_alignParentStart="true"
             />
 
         <ImageView
@@ -58,6 +58,7 @@
             android:layout_height="76dp"
             android:id="@+id/image_preview"
             android:layout_alignParentEnd="true"
+            android:contentDescription="@string/image_preview"
             android:layout_below="@+id/timestamp"
             android:scaleType="centerCrop"
             />

@@ -195,6 +195,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
                                     public void done(ParseException e) {
                                         layoutVidTrain();
                                         sendNotifications(_vidTrain);
+                                        assert user != null;
                                         user.put("vidtrains", user.maybeInitAndAdd(_vidTrain));
                                         user.put("videos", user.maybeInitAndAdd(video));
                                         user.saveInBackground(new SaveCallback() {

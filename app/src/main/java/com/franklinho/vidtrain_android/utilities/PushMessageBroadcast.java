@@ -29,7 +29,7 @@ public class PushMessageBroadcast extends ParsePushBroadcastReceiver {
 
 
            String vidTrainId = getVidtrainFromData(parseData);
-           String userId = getUserIdFromData(parseData);
+           //String userId = getUserIdFromData(parseData);
 
 
            if (!vidTrainId.equals("")){

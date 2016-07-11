@@ -107,6 +107,7 @@ public class LogInActivity extends AppCompatActivity {
 
     private void logUser() {
         User currentUser = User.getCurrentUser();
+        assert currentUser != null;
         Crashlytics.setUserName(currentUser.getName());
     }
 

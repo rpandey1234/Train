@@ -231,6 +231,7 @@ public class CreationDetailActivity extends AppCompatActivity {
                             public void done(ParseException e) {
                                 video.setVidTrain(vidTrain);
                                 video.saveInBackground();
+                                assert user != null;
                                 user.put("vidtrains", user.maybeInitAndAdd(vidTrain));
                                 user.put("videos", user.maybeInitAndAdd(video));
                                 user.saveInBackground(new SaveCallback() {

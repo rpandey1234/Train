@@ -39,7 +39,7 @@
         android:hint="@string/autocomplete_hint"
         android:completionThreshold="1"
         android:singleLine="true"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         />
 
     <LinearLayout
@@ -48,7 +48,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_below="@+id/etCollaborators"
-        android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"
         />
 

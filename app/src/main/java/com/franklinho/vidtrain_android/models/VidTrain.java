@@ -1,18 +1,16 @@
 package com.franklinho.vidtrain_android.models;
 
 import android.util.Log;
-import com.google.android.gms.maps.model.LatLng;
 
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.Utility;
+import com.google.android.gms.maps.model.LatLng;
 import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
-
-import org.w3c.dom.Comment;
 
 import java.io.File;
 import java.io.Serializable;

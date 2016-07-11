@@ -76,7 +76,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     }
 
     public void setCameraDisplayOrientation(android.hardware.Camera camera) {
-        Camera.Parameters parameters = camera.getParameters();
+        //Camera.Parameters parameters = camera.getParameters();
 
         android.hardware.Camera.CameraInfo camInfo =
                 new android.hardware.Camera.CameraInfo();

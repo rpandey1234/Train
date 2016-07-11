@@ -268,7 +268,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         _mediaRecorder = new MediaRecorder();
 
         final List<Size> supportedVideoSizes = mCamera.getParameters().getSupportedVideoSizes();
-        Size smallestSize = getSmallestSize(supportedVideoSizes);
+        //Size smallestSize = getSmallestSize(supportedVideoSizes);
 
         // Step 1: Unlock and set camera to MediaRecorder
         mCamera.unlock();

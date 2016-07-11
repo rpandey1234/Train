@@ -54,6 +54,10 @@
     <string name="unfollow">Unfollow</string>
     <string name="logout">Logout</string>
     <string name="not_following_users">Not Following Any Users</string>
+    <string name="app_logo">logo</string>
+    <string name="image_preview">preview</string>
+    <string name="image_placeholder">placeholder</string>
+    <string name="switch_camera">switch camera</string>
 
     <string-array name="privacy_states">
         <item>Public</item>
