@@ -46,7 +46,7 @@ dependencies {
     compile 'com.parse:parseinterceptors:0.0.2'
     compile 'com.parse.bolts:bolts-android:1.+'
     compile 'com.parse:parsefacebookutils-v4-android:1.10.3@aar'
-    compile 'com.facebook.android:facebook-android-sdk:4.+'
+    compile 'com.facebook.android:facebook-android-sdk:4.13.2'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.android.support:recyclerview-v7:23.3.0'
     compile 'com.android.support:design:23.1.1'
