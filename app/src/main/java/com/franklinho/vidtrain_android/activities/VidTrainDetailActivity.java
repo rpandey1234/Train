@@ -157,6 +157,7 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
         query.whereEqualTo("objectId", getVidtrainId());
         query.include("user");
+        query.include("videos");
         query.getFirstInBackground(new GetCallback<VidTrain>() {
             @Override
             public void done(VidTrain object, ParseException e) {

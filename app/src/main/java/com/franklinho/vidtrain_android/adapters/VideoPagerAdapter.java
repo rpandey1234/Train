@@ -61,7 +61,7 @@ public class VideoPagerAdapter extends PagerAdapter {
         // Add the page to the container
         container.addView(itemView);
         ParseFile thumbnail = _videos.get(position).getThumbnail();
-         thumbnail.getDataInBackground(new GetDataCallback() {
+        thumbnail.getDataInBackground(new GetDataCallback() {
             @Override
             public void done(byte[] data, ParseException e) {
                 if (e != null) {
