@@ -83,7 +83,7 @@ public class CreationDetailActivity extends AppCompatActivity {
                 new GraphRequest.Callback() {
                     @Override
                     public void onCompleted(GraphResponse response) {
-                        _friendsUsingApp = Utility.getFacebookFriends(response);
+                        _friendsUsingApp = Utility.getFacebookFriends(response, "name");
                     }
                 }
         ).executeAsync();

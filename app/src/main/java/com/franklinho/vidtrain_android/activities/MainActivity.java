@@ -63,6 +63,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
             return true;
+        } else if (id == R.id.actionFriendList) {
+            System.out.println("hello world");
+            Intent intent = new Intent(getApplicationContext(), FriendListActivity.class);
+            startActivity(intent);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

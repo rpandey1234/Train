@@ -53,6 +53,7 @@
     <string name="follow">Follow</string>
     <string name="unfollow">Unfollow</string>
     <string name="logout">Logout</string>
+    <string name="friendList">Friend List</string>
     <string name="not_following_users">Not Following Any Users</string>
     <string name="app_logo">logo</string>
     <string name="image_preview">preview</string>

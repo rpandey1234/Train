@@ -4,6 +4,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/actionFriendList"
+        android:title="@string/friendList"
+        app:showAsAction="never"
+        />
+
+    <item
         android:id="@+id/actionLogout"
         android:title="@string/logout"
         app:showAsAction="never"

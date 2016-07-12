@@ -171,6 +171,10 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             />
+        <activity
+            android:name=".activities.FriendListActivity"
+            android:configChanges="orientation|keyboardHidden"
+            />
 
         <service android:name="com.parse.PushService"/>
 

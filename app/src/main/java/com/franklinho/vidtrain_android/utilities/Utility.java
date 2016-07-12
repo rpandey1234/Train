@@ -121,7 +121,7 @@ public class Utility {
         return false;
     }
 
-    public static List<String> getFacebookFriends(GraphResponse response) {
+    public static List<String> getFacebookFriends(GraphResponse response, String key) {
         List<String> friends = new ArrayList<>();
         JSONObject jsonObject = response.getJSONObject();
         try {
@@ -129,7 +129,7 @@ public class Utility {
             JSONArray data = jsonObject.getJSONArray("data");
             for (int i = 0; i < data.length(); i++) {
                 JSONObject friendData = data.getJSONObject(i);
-                friends.add(friendData.getString("name"));
+                friends.add(friendData.getString(key));
             }
         } catch (JSONException e) {
             e.printStackTrace();
