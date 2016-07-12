@@ -64,9 +64,7 @@ public class MainActivity extends AppCompatActivity {
             });
             return true;
         } else if (id == R.id.actionFriendList) {
-            System.out.println("hello world");
-            Intent intent = new Intent(getApplicationContext(), FriendListActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(getApplicationContext(), FriendListActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -82,13 +80,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (data == null) {
-            Log.d(VidtrainApplication.TAG, "intent data is null");
-            Toast.makeText(this, "Intent data is null.",  Toast.LENGTH_LONG).show();
-            return;
-        }
         if (requestCode == VIDEO_CAPTURE) {
-            if (resultCode == RESULT_OK) {
+            if (resultCode == RESULT_OK && data != null) {
                 String uid = data.getStringExtra(UNIQUE_ID_INTENT);
                 Intent i = new Intent(this, CreationDetailActivity.class);
                 i.putExtra("videoPath", Utility.getOutputMediaFile(uid).getPath());

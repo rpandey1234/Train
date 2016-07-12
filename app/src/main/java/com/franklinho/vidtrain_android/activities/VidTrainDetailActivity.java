@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -76,8 +77,11 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         VideoPlayer.makeNewVideoPlayer();
 
         setSupportActionBar(_toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        _toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.setDisplayShowTitleEnabled(false);
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+        }
         _toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

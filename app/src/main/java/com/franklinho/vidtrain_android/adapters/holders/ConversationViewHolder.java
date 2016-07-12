@@ -97,7 +97,7 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements O
     }
 
     public class ParticipantViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
-        @Bind(R.id.user_image) RoundedImageView userImage;
+        @Bind(R.id.user_image) RoundedImageView _userImage;
 
         public ParticipantViewHolder(View itemView) {
             super(itemView);
@@ -106,8 +106,8 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements O
         }
 
         public void bind(User user) {
-            userImage.setOval(true);
-            Glide.with(_context).load(user.getProfileImageUrl()).into(userImage);
+            _userImage.setOval(true);
+            Glide.with(_context).load(user.getProfileImageUrl()).into(_userImage);
         }
 
         @Override

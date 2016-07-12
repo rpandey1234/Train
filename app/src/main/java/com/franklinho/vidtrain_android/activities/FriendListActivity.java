@@ -3,9 +3,11 @@ package com.franklinho.vidtrain_android.activities;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,19 +37,32 @@ import butterknife.ButterKnife;
  */
 public class FriendListActivity extends AppCompatActivity {
 
-    @Bind(R.id.friendListTitle) TextView friendListTitle;
-    @Bind(R.id.friendsRecyclerView) RecyclerView friendsRecyclerView;
+    @Bind(R.id.friendListTitle) TextView _friendsTitle;
+    @Bind(R.id.friendsRecyclerView) RecyclerView _friendsRecyclerView;
+    @Bind(R.id.toolbar) Toolbar _toolbar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.friends_list);
         ButterKnife.bind(this);
+        setSupportActionBar(_toolbar);
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.setDisplayShowTitleEnabled(false);
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+        }
+        _toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         final List<User> friends = new ArrayList<>();
         final FriendsAdapter friendsAdapter = new FriendsAdapter(this, friends);
-        friendsRecyclerView.setAdapter(friendsAdapter);
-        friendsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        _friendsRecyclerView.setAdapter(friendsAdapter);
+        _friendsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         new GraphRequest(
                 AccessToken.getCurrentAccessToken(),
                 "/me/friends",
@@ -59,7 +74,6 @@ public class FriendListActivity extends AppCompatActivity {
                         List<String> facebookFriends = Utility.getFacebookFriends(response, "id");
                         ParseQuery<User> userQuery = ParseQuery.getQuery("_User");
                         userQuery.whereContainedIn("fbid", facebookFriends)
-                                .setLimit(4)
                                 .findInBackground(new FindCallback<User>() {
                                     public void done(List<User> objects, ParseException e) {
                                         if (e == null) {
