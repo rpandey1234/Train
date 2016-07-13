@@ -13,6 +13,7 @@ import com.google.common.io.Files;
 
 import com.facebook.GraphResponse;
 import com.franklinho.vidtrain_android.models.User;
+import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.parse.ParseFile;
 
@@ -119,6 +120,17 @@ public class Utility {
             }
         }
         return false;
+    }
+
+    public static List<VidTrain> filterVisibleVidtrains(List<VidTrain> vidtrains) {
+        List<VidTrain> visibleVidtrains = new ArrayList<>();
+        User user = User.getCurrentUser();
+        for (VidTrain vidtrain : vidtrains) {
+            if (contains(vidtrain.getCollaborators(), user)) {
+                visibleVidtrains.add(vidtrain);
+            }
+        }
+        return visibleVidtrains;
     }
 
     public static List<String> getFacebookFriends(GraphResponse response, String key) {
