@@ -60,7 +60,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
     @Bind(R.id.btnAddvidTrain) Button _btnAddVidTrain;
     @Bind(R.id.pbProgressAction) View _pbProgessAction;
     @Bind(R.id.vpPreview) ViewPager _viewPager;
-    @Bind(R.id.swipeContainer) SwipeRefreshLayout _swipeContainer;
 
     public static final String VIDTRAIN_KEY = "vidTrain";
     public static final int VIDEO_CAPTURE = 101;
@@ -90,14 +89,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         });
 
         requestVidTrain();
-
-        _swipeContainer.setColorSchemeResources(R.color.bluePrimary);
-        _swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                requestVidTrain();
-            }
-        });
     }
 
     public void invalidVidtrain() {
@@ -165,7 +156,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         query.getFirstInBackground(new GetCallback<VidTrain>() {
             @Override
             public void done(VidTrain object, ParseException e) {
-                _swipeContainer.setRefreshing(false);
                 if (e != null) {
                     invalidVidtrain();
                     return;
@@ -296,7 +286,6 @@ public class VidTrainDetailActivity extends AppCompatActivity {
         query.getFirstInBackground(new GetCallback<VidTrain>() {
             @Override
             public void done(VidTrain object, ParseException e) {
-                _swipeContainer.setRefreshing(false);
                 if (e != null) {
                     invalidVidtrain();
                     return;
