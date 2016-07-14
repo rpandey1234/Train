@@ -1,0 +1,35 @@
+{
+  "project_info": {
+    "project_number": "261101872676",
+    "project_id": "firebase-vidtrain"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:261101872676:android:30d7e48a315bdf3d",
+        "android_client_info": {
+          "package_name": "com.franklinho.vidtrain_android"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRPKBoGnIP7Js9UXHz1UWt8gj3_cDBohc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
