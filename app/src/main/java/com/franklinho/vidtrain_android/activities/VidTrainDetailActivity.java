@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -54,9 +53,7 @@ public class VidTrainDetailActivity extends AppCompatActivity implements VideoFi
     @Bind(R.id.tvAuthor) TextView _tvAuthor;
     @Bind(R.id.tvTitle) TextView _tvTitle;
     @Bind(R.id.tvTime) TextView _tvTime;
-    @Bind(R.id.toolbar) Toolbar _toolbar;
     @Bind(R.id.btnAddvidTrain) Button _btnAddVidTrain;
-    @Bind(R.id.pbProgressAction) View _pbProgessAction;
     @Bind(R.id.vpPreview) ViewPager _viewPager;
 
     public static final String VIDTRAIN_KEY = "vidTrain";
@@ -71,20 +68,6 @@ public class VidTrainDetailActivity extends AppCompatActivity implements VideoFi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vid_train_detail);
         ButterKnife.bind(this);
-
-        setSupportActionBar(_toolbar);
-        ActionBar supportActionBar = getSupportActionBar();
-        if (supportActionBar != null) {
-            supportActionBar.setDisplayShowTitleEnabled(false);
-            supportActionBar.setDisplayHomeAsUpEnabled(true);
-        }
-        _toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
         requestVidTrain();
     }
 
@@ -178,6 +161,7 @@ public class VidTrainDetailActivity extends AppCompatActivity implements VideoFi
                                 _vidTrain.saveInBackground(new SaveCallback() {
                                     @Override
                                     public void done(ParseException e) {
+                                        _progress.dismiss();
                                         layoutVidTrain();
                                         sendNotifications(_vidTrain);
                                         assert user != null;
@@ -186,7 +170,6 @@ public class VidTrainDetailActivity extends AppCompatActivity implements VideoFi
                                         user.saveInBackground(new SaveCallback() {
                                             @Override
                                             public void done(ParseException e) {
-                                                _progress.dismiss();
                                                 Toast.makeText(getBaseContext(), "Successfully added video",
                                                         Toast.LENGTH_SHORT).show();
                                             }
@@ -219,33 +202,24 @@ public class VidTrainDetailActivity extends AppCompatActivity implements VideoFi
         }
     }
 
-    public void setProfileImageUrlAtIndex(int index) {
+    public void updateForVideoAtPosition(int index) {
         List<Video> videos = _vidTrain.getVideos();
         final Video video = videos.get(index);
+        _tvTime.setText(Utility.getRelativeTime(video.getCreatedAt().getTime()));
         video.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
             @Override
             public void done(ParseObject object, ParseException e) {
                 final User user = video.getUser();
-                user.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+                user.fetchIfNeededInBackground(new GetCallback<ParseUser>() {
                     @Override
-                    public void done(ParseObject object, ParseException e) {
-                        String profileImageUrl = video.getUser().getProfileImageUrl();
-                        Glide.with(getBaseContext()).load(profileImageUrl).into(_ivCollaborators);
-                        _tvAuthor.setText(video.getUser().getName());
+                    public void done(ParseUser fetchedUser, ParseException e) {
+                        Glide.with(getBaseContext()).load(user.getProfileImageUrl()).into(
+                                _ivCollaborators);
+                        _tvAuthor.setText(user.getName());
                     }
                 });
             }
         });
-    }
-
-    public void showProgressBar() {
-        // Show _progress item
-        _pbProgessAction.setVisibility(View.VISIBLE);
-    }
-
-    public void hideProgressBar() {
-        // Hide progress item
-        _pbProgessAction.setVisibility(View.GONE);
     }
 
     public void requestVidTrain() {
@@ -274,32 +248,19 @@ public class VidTrainDetailActivity extends AppCompatActivity implements VideoFi
         }
         _tvTitle.setText(_vidTrain.getTitle());
         _videos = _vidTrain.getVideos();
-        int videosCount = _vidTrain.getVideosCount();
-        _tvVideoCount.setText(String.valueOf(videosCount));
-        _tvTime.setText(Utility.getRelativeTime(_vidTrain.getCreatedAt().getTime()));
-        _vidTrain.getUser().fetchIfNeededInBackground(new GetCallback<ParseObject>() {
-            @Override
-            public void done(ParseObject object, ParseException e) {
-                String profileImageUrl = _vidTrain.getUser().getProfileImageUrl();
-                Glide.with(getBaseContext()).load(profileImageUrl).placeholder(
-                        R.drawable.profile_icon).into(_ivCollaborators);
-                _tvAuthor.setText(_vidTrain.getUser().getName());
-            }
-        });
+        _tvVideoCount.setText(String.valueOf(_vidTrain.getVideosCount()));
         _videoFragmentPagerAdapter =  new VideoFragmentPagerAdapter(
-                getSupportFragmentManager(),
-                getBaseContext(),
-                _vidTrain.getVideos());
+                getSupportFragmentManager(), getBaseContext(), _vidTrain.getVideos());
         _viewPager.setAdapter(_videoFragmentPagerAdapter);
         _viewPager.setClipChildren(false);
         int margin = getResources().getDimensionPixelOffset(R.dimen.view_pager_margin);
         _viewPager.setPageMargin(-margin);
         // TODO(rahul): need to play first video on load (without page swipe)
-        setProfileImageUrlAtIndex(0);
+        updateForVideoAtPosition(0);
         _viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(final int position) {
-                setProfileImageUrlAtIndex(position);
+                updateForVideoAtPosition(position);
             }
         });
     }

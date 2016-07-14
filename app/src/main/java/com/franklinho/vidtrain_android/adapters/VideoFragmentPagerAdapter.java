@@ -1,10 +1,8 @@
 package com.franklinho.vidtrain_android.adapters;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.view.LayoutInflater;
 
 import com.franklinho.vidtrain_android.fragments.VideoPageFragment;
 import com.franklinho.vidtrain_android.models.Video;
@@ -17,15 +15,12 @@ import java.util.List;
  */
 public class VideoFragmentPagerAdapter extends FragmentPagerAdapter {
 
-    Context _context;
-    LayoutInflater _layoutInflater;
-    List<Video> _videos = new ArrayList<>();
+    private Context _context;
+    private List<Video> _videos = new ArrayList<>();
 
-    public VideoFragmentPagerAdapter(FragmentManager fm,
-            Context context, List<Video> videos) {
+    public VideoFragmentPagerAdapter(FragmentManager fm, Context context, List<Video> videos) {
         super(fm);
         _context = context;
-        _layoutInflater = LayoutInflater.from(_context);
         _videos = videos;
     }
 

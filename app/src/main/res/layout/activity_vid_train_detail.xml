@@ -4,19 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppBaseLightTheme">
-
-        <include
-            layout="@layout/toolbar_main"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|enterAlways" />
-    </android.support.design.widget.AppBarLayout>
-
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -38,7 +25,7 @@
                 android:layout_marginBottom="20dp"
                 android:layout_marginStart="20dp"
                 android:src="@drawable/profile_icon"
-                android:layout_marginTop="44dp"
+                android:layout_marginTop="20dp"
                 android:transitionName="collaboratorImage"
                 />
 
@@ -77,14 +64,6 @@
                 android:layout_height="300dp"
                 android:layout_below="@+id/ivCollaborators"
                 android:orientation="vertical">
-                <ProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
-                    style="?android:attr/progressBarStyleLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_centerHorizontal="true"
-                    android:visibility="gone"
-                    android:id="@+id/pbProgressAction" />
                 <android.support.v4.view.ViewPager
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
