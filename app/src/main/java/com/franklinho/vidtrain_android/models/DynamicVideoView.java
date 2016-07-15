@@ -25,11 +25,11 @@ public class DynamicVideoView extends VideoView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         // TODO(rahul): need better way to display video
-        // reference: https://www.jayway.com/2012/12/12/creating-custom-android-views-part-4-measuring-and-how-to-force-a-view-to-be-square/
+        // https://www.jayway.com/2012/12/12/creating-custom-android-views-part-4-measuring-and-how-to-force-a-view-to-be-square/
         if (_heightRatio > 0.0) {
             // set the image views size
-            int width = MeasureSpec.getSize(widthMeasureSpec);
-            int height = (int) (width * _heightRatio);
+            int height = MeasureSpec.getSize(heightMeasureSpec);
+            int width = (int) (height * _heightRatio);
             setMeasuredDimension(width, height);
         } else {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
