@@ -48,11 +48,8 @@ import butterknife.OnClick;
 
 public class VidTrainDetailActivity extends AppCompatActivity implements VideoFinishedListener {
 
-    @Bind(R.id.ivCollaborators) ImageView _ivCollaborators;
     @Bind(R.id.tvVideoCount) TextView _tvVideoCount;
-    @Bind(R.id.tvAuthor) TextView _tvAuthor;
     @Bind(R.id.tvTitle) TextView _tvTitle;
-    @Bind(R.id.tvTime) TextView _tvTime;
     @Bind(R.id.btnAddVidTrain) Button _btnAddVidTrain;
     @Bind(R.id.viewPager) ViewPager _viewPager;
 
@@ -202,26 +199,6 @@ public class VidTrainDetailActivity extends AppCompatActivity implements VideoFi
         }
     }
 
-    public void updateForVideoAtPosition(int index) {
-        List<Video> videos = _vidTrain.getVideos();
-        final Video video = videos.get(index);
-        _tvTime.setText(Utility.getRelativeTime(video.getCreatedAt().getTime()));
-        video.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
-            @Override
-            public void done(ParseObject object, ParseException e) {
-                final User user = video.getUser();
-                user.fetchIfNeededInBackground(new GetCallback<ParseUser>() {
-                    @Override
-                    public void done(ParseUser fetchedUser, ParseException e) {
-                        Glide.with(getBaseContext()).load(user.getProfileImageUrl()).into(
-                                _ivCollaborators);
-                        _tvAuthor.setText(user.getName());
-                    }
-                });
-            }
-        });
-    }
-
     public void requestVidTrain() {
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
         query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
@@ -258,8 +235,7 @@ public class VidTrainDetailActivity extends AppCompatActivity implements VideoFi
         final SimpleOnPageChangeListener pageChangeListener = new SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(final int position) {
-                updateForVideoAtPosition(position);
-                // Null checks are for only for instant run
+                // Null checks are for only needed for instant run
                 VideoPageFragment lastFragment =
                         _videoFragmentPagerAdapter.getFragment(_lastPosition);
                 if (lastFragment != null) {
@@ -281,11 +257,6 @@ public class VidTrainDetailActivity extends AppCompatActivity implements VideoFi
             }
         });
         pageChangeListener.onPageSelected(0);
-    }
-
-    @Override
-    public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
-        return super.onCreateView(parent, name, context, attrs);
     }
 
     public void sendVidtrainUpdatedNotification(ParseUser user, VidTrain vidtrain) {
