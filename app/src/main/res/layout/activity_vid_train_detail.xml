@@ -7,8 +7,6 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
         android:fillViewport="true">
 
         <RelativeLayout
@@ -64,10 +62,11 @@
                 android:layout_height="300dp"
                 android:layout_below="@+id/ivCollaborators"
                 android:orientation="vertical">
+
                 <android.support.v4.view.ViewPager
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/vpPreview"
+                    android:id="@+id/viewPager"
                     android:transitionName="viewer"
                     />
             </RelativeLayout>
@@ -76,10 +75,10 @@
                 android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/videoContainer"
+                android:layout_above="@+id/btnAddVidTrain"
                 android:layout_marginTop="20dp"
-                android:layout_alignParentStart="true"
                 android:layout_marginStart="20dp"
+                android:layout_alignParentStart="true"
                 android:gravity="center_vertical"
                 android:layout_toStartOf="@+id/tvVideoCount"
                 android:textSize="20sp"
@@ -89,24 +88,23 @@
                 android:id="@+id/tvVideoCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/videoContainer"
+                android:layout_above="@+id/btnAddVidTrain"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_alignParentEnd="true"
-                android:gravity="center_vertical"
                 android:textSize="20sp"
                 android:drawablePadding="10dp"
                 android:drawableStart="@drawable/icon_vidtrain_small"
                 />
 
             <Button
-                android:id="@+id/btnAddvidTrain"
+                android:id="@+id/btnAddVidTrain"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_below="@id/tvVideoCount"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="20dp"
-                android:text="@string/add_to_vidtrain"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="8dp"
+                android:text="@string/add"
+                android:textAllCaps="false"
                 android:textColor="@android:color/white"
                 android:background="@color/bluePrimary"
                 android:foreground="?android:attr/selectableItemBackground"

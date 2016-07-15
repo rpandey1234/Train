@@ -11,7 +11,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -21,11 +20,11 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.adapters.VideoFragmentPagerAdapter;
+import com.franklinho.vidtrain_android.fragments.VideoPageFragment;
 import com.franklinho.vidtrain_android.fragments.VideoPageFragment.VideoFinishedListener;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
-import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.Utility;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -54,8 +53,8 @@ public class VidTrainDetailActivity extends AppCompatActivity implements VideoFi
     @Bind(R.id.tvAuthor) TextView _tvAuthor;
     @Bind(R.id.tvTitle) TextView _tvTitle;
     @Bind(R.id.tvTime) TextView _tvTime;
-    @Bind(R.id.btnAddvidTrain) Button _btnAddVidTrain;
-    @Bind(R.id.vpPreview) ViewPager _viewPager;
+    @Bind(R.id.btnAddVidTrain) Button _btnAddVidTrain;
+    @Bind(R.id.viewPager) ViewPager _viewPager;
 
     public static final String VIDTRAIN_KEY = "vidTrain";
     public static final int VIDEO_CAPTURE = 101;
@@ -77,7 +76,7 @@ public class VidTrainDetailActivity extends AppCompatActivity implements VideoFi
         this.finish();
     }
 
-    @OnClick(R.id.btnAddvidTrain)
+    @OnClick(R.id.btnAddVidTrain)
     public void showCreateFlow(View view) {
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
             Intent intent = new Intent(getBaseContext(), VideoCaptureActivity.class);
@@ -260,8 +259,16 @@ public class VidTrainDetailActivity extends AppCompatActivity implements VideoFi
             @Override
             public void onPageSelected(final int position) {
                 updateForVideoAtPosition(position);
-                _videoFragmentPagerAdapter.getFragment(_lastPosition).stopVideo();
-                _videoFragmentPagerAdapter.getFragment(position).playVideo();
+                // Null checks are for only for instant run
+                VideoPageFragment lastFragment =
+                        _videoFragmentPagerAdapter.getFragment(_lastPosition);
+                if (lastFragment != null) {
+                    lastFragment.stopVideo();
+                }
+                VideoPageFragment fragment = _videoFragmentPagerAdapter.getFragment(position);
+                if (fragment != null) {
+                    fragment.playVideo();
+                }
                 _lastPosition = position;
             }
         };
