@@ -64,27 +64,28 @@ public class VideoPageFragment extends Fragment {
         return v;
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
+    public void playVideo() {
         if (getView() == null) {
-            return;
+            throw new IllegalStateException("calling playVideo when view is not ready!");
         }
-        if (isVisibleToUser) {
-            _videoView.setVisibility(View.VISIBLE);
-            _ivThumbnail.setVisibility(View.GONE);
-            _videoView.start();
-            _videoView.setOnCompletionListener(new OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    _listener.onVideoCompleted();
-                }
-            });
-        } else {
-            _videoView.stopPlayback();
-            _ivThumbnail.setVisibility(View.VISIBLE);
-            _videoView.setVisibility(View.GONE);
+        _videoView.setVisibility(View.VISIBLE);
+        _ivThumbnail.setVisibility(View.GONE);
+        _videoView.start();
+        _videoView.setOnCompletionListener(new OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                _listener.onVideoCompleted();
+            }
+        });
+    }
+
+    public void stopVideo() {
+        if (getView() == null) {
+            throw new IllegalStateException("calling playVideo when view is not ready!");
         }
+        _videoView.stopPlayback();
+        _ivThumbnail.setVisibility(View.VISIBLE);
+        _videoView.setVisibility(View.GONE);
     }
 
     public interface VideoFinishedListener {

@@ -8,10 +8,10 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
+import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -25,6 +25,7 @@ import com.franklinho.vidtrain_android.fragments.VideoPageFragment.VideoFinished
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
+import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.Utility;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -61,7 +62,7 @@ public class VidTrainDetailActivity extends AppCompatActivity implements VideoFi
     private ProgressDialog _progress;
     private VidTrain _vidTrain;
     private List<Video> _videos;
-    private VideoFragmentPagerAdapter _videoFragmentPagerAdapter;
+    private int _lastPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -249,20 +250,30 @@ public class VidTrainDetailActivity extends AppCompatActivity implements VideoFi
         _tvTitle.setText(_vidTrain.getTitle());
         _videos = _vidTrain.getVideos();
         _tvVideoCount.setText(String.valueOf(_vidTrain.getVideosCount()));
-        _videoFragmentPagerAdapter =  new VideoFragmentPagerAdapter(
+        final VideoFragmentPagerAdapter _videoFragmentPagerAdapter =  new VideoFragmentPagerAdapter(
                 getSupportFragmentManager(), getBaseContext(), _vidTrain.getVideos());
         _viewPager.setAdapter(_videoFragmentPagerAdapter);
         _viewPager.setClipChildren(false);
         int margin = getResources().getDimensionPixelOffset(R.dimen.view_pager_margin);
         _viewPager.setPageMargin(-margin);
-        // TODO(rahul): need to play first video on load (without page swipe)
-        updateForVideoAtPosition(0);
-        _viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        final SimpleOnPageChangeListener pageChangeListener = new SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(final int position) {
                 updateForVideoAtPosition(position);
+                _videoFragmentPagerAdapter.getFragment(_lastPosition).stopVideo();
+                _videoFragmentPagerAdapter.getFragment(position).playVideo();
+                _lastPosition = position;
+            }
+        };
+        // Make sure view pager fragment is already instantiated
+        // http://stackoverflow.com/questions/11794269/
+        _viewPager.post(new Runnable() {
+            @Override
+            public void run() {
+                _viewPager.addOnPageChangeListener(pageChangeListener);
             }
         });
+        pageChangeListener.onPageSelected(0);
     }
 
     @Override
