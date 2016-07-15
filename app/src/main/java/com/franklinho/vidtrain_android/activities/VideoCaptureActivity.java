@@ -177,7 +177,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         _handler.removeCallbacks(_runnableCode);
         if (showConfirm) {
             final String videoPath = Utility.getOutputMediaFile(uniqueId).getPath();
-            View itemView = getLayoutInflater().inflate(R.layout.pager_item_video, null);
+            View itemView = getLayoutInflater().inflate(R.layout.image_video_overlay, null);
             itemView.setPadding(itemView.getPaddingLeft(), itemView.getPaddingTop() + 10,
                     itemView.getPaddingRight(), itemView.getPaddingBottom());
             final DynamicVideoView vvPreview = (DynamicVideoView) itemView.findViewById(R.id.vvPreview);

@@ -54,7 +54,7 @@ public class VideoPageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.pager_item_video, container, false);
+        View v = inflater.inflate(R.layout.vidtrain_pager, container, false);
         ButterKnife.bind(this, v);
         Glide.with(getContext()).load(_videoThumbnailUrl).into(_ivThumbnail);
         _videoView.setVideoPath(_videoUrl);
