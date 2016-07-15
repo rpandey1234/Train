@@ -21,26 +21,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/conversation_title"
-            android:text="hello world from vidtrain"
             android:textSize="20sp"
+            android:layout_marginEnd="88dp"
             android:layout_marginBottom="8dp"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/video_count"
-            android:layout_toEndOf="@+id/conversation_title"
-            android:layout_alignBottom="@+id/conversation_title"
-            android:paddingStart="4dp"
-            android:textSize="14sp"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/timestamp"
-            android:layout_alignParentEnd="true"
             />
 
         <android.support.v7.widget.RecyclerView
@@ -49,18 +32,36 @@
             android:id="@+id/participants_rv"
             android:layout_below="@+id/conversation_title"
             android:layout_marginBottom="8dp"
+            android:layout_marginEnd="88dp"
             android:layout_toStartOf="@+id/image_preview"
             android:layout_alignParentStart="true"
             />
 
-        <ImageView
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/video_count"
+            android:layout_below="@+id/participants_rv"
+            android:textSize="14sp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/timestamp"
+            android:layout_below="@id/video_count"
+            />
+
+        <com.makeramen.roundedimageview.RoundedImageView
             android:layout_width="76dp"
             android:layout_height="76dp"
             android:id="@+id/image_preview"
             android:layout_alignParentEnd="true"
             android:contentDescription="@string/image_preview"
-            android:layout_below="@+id/timestamp"
+            app:riv_corner_radius="4dp"
             android:scaleType="centerCrop"
+            android:layout_centerInParent="true"
+            android:layout_marginEnd="4dp"
             />
     </RelativeLayout>
 </android.support.v7.widget.CardView>
