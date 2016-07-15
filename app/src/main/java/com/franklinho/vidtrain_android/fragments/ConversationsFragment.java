@@ -12,7 +12,7 @@ public class ConversationsFragment extends VidTrainListFragment {
 
     public static final int PAGE_SIZE = 10;
     // If true, this will fetch all vidtrains regardless of whether the viewer is involved in it
-    public static final boolean DISREGARD_PRIVACY = false;
+    public static final boolean DISREGARD_PRIVACY = true;
 
     public static ConversationsFragment newInstance() {
         return new ConversationsFragment();
