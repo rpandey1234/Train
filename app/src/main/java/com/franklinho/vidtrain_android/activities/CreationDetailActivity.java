@@ -29,12 +29,11 @@ import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.adapters.UsersAdapter;
-import com.franklinho.vidtrain_android.models.DynamicVideoPlayerView;
+import com.franklinho.vidtrain_android.models.DynamicVideoView;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
 import com.franklinho.vidtrain_android.utilities.Utility;
-import com.franklinho.vidtrain_android.utilities.VideoPlayer;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -57,7 +56,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class CreationDetailActivity extends AppCompatActivity {
-    @Bind(R.id.vvPreview) DynamicVideoPlayerView _vvPreview;
+    @Bind(R.id.vvPreview) DynamicVideoView _vvPreview;
     @Bind(R.id.vvThumbnail) ImageView _vvThumbnail;
     @Bind(R.id.btnSubmit) Button _btnSubmit;
     @Bind(R.id.etTitle) EditText _etTitle;
@@ -106,13 +105,15 @@ public class CreationDetailActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     _vvThumbnail.setVisibility(View.GONE);
-                    VideoPlayer.playVideo(_vvPreview, _videoPath);
+                    _vvPreview.setVideoPath(_videoPath);
+                    _vvPreview.start();
                 }
             });
             _vvPreview.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    VideoPlayer.playVideo(_vvPreview, _videoPath);
+                    _vvPreview.setVideoPath(_videoPath);
+                    _vvPreview.start();
                 }
             });
         }

@@ -17,11 +17,11 @@
         android:contentDescription="@string/video_thumbnail"
         />
 
-    <com.franklinho.vidtrain_android.models.DynamicVideoPlayerView
+    <com.franklinho.vidtrain_android.models.DynamicVideoView
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:background="@color/bluePrimary"
         android:id="@+id/vvPreview"
+        android:background="@color/facebookBlue"
         />
 
 </LinearLayout>
