@@ -52,7 +52,7 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements O
         int videoCount = _vidTrain.getVideosCount();
         _videoCount.setText(_context.getResources()
                 .getQuantityString(R.plurals.videos_count, videoCount, videoCount));
-        _timestamp.setText(Utility.getRelativeTime(vidTrain.getCreatedAt().getTime()));
+        _timestamp.setText(Utility.getRelativeTime(vidTrain.getUpdatedAt().getTime()));
         _rvParticipants.setLayoutManager(new LinearLayoutManager(_context, LinearLayoutManager.HORIZONTAL, false));
         _rvParticipants.setAdapter(new ParticipantsAdapter());
         List<Video> videos = _vidTrain.getVideos();
