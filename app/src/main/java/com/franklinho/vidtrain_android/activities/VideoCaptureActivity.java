@@ -56,7 +56,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
     @Bind(R.id.vTop) View _vTop;
     @Bind(R.id.vBottom) View _vBottom;
 
-    public static final int MAX_TIME = 5000;
+    public static final int MAX_TIME = 7000;
     public static final int UPDATE_FREQUENCY = 50;
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
@@ -281,7 +281,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         _mediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
 
         // Step 3: Set a CamcorderProfile (requires API Level 8 or higher)
-        _mediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_720P));
+        _mediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_480P));
 
         // Step 4: Set output file
         _mediaRecorder.setOutputFile(getOutputMediaFile(MEDIA_TYPE_VIDEO).toString());
@@ -290,7 +290,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         _mediaRecorder.setPreviewDisplay(_cameraPreview.getHolder().getSurface());
         _mediaRecorder.setOrientationHint(VideoCaptureActivity.orientation);
 //        _mediaRecorder.setVideoFrameRate(24);
-        _mediaRecorder.setVideoEncodingBitRate(5000000);
+        _mediaRecorder.setVideoEncodingBitRate(500000);
 //        _mediaRecorder.setVideoSize(smallestSize.width, smallestSize.height);
         _mediaRecorder.setMaxFileSize(8000000); // max parse file size is 10485760 bytes
         _mediaRecorder.setMaxDuration(MAX_TIME);
