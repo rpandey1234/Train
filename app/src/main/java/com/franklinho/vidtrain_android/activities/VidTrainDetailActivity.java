@@ -6,9 +6,9 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -34,7 +34,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class VidTrainDetailActivity extends AppCompatActivity implements VideoFinishedListener {
+public class VidTrainDetailActivity extends FragmentActivity implements VideoFinishedListener {
 
     @Bind(R.id.tvVideoCount) TextView _tvVideoCount;
     @Bind(R.id.tvTitle) TextView _tvTitle;
@@ -153,7 +153,8 @@ public class VidTrainDetailActivity extends AppCompatActivity implements VideoFi
                                         user.saveInBackground(new SaveCallback() {
                                             @Override
                                             public void done(ParseException e) {
-                                                Toast.makeText(getBaseContext(), "Successfully added video",
+                                                Toast.makeText(getBaseContext(),
+                                                        "Successfully added video",
                                                         Toast.LENGTH_SHORT).show();
                                             }
                                         });
@@ -172,7 +173,7 @@ public class VidTrainDetailActivity extends AppCompatActivity implements VideoFi
         query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
         query.whereEqualTo("objectId", getVidtrainId());
         query.include("user");
-        query.include("videos");
+        query.include("videos.user");
         query.getFirstInBackground(new GetCallback<VidTrain>() {
             @Override
             public void done(VidTrain object, ParseException e) {
@@ -197,9 +198,6 @@ public class VidTrainDetailActivity extends AppCompatActivity implements VideoFi
         final VideoFragmentPagerAdapter _videoFragmentPagerAdapter =  new VideoFragmentPagerAdapter(
                 getSupportFragmentManager(), getBaseContext(), _vidTrain.getVideos());
         _viewPager.setAdapter(_videoFragmentPagerAdapter);
-        _viewPager.setClipChildren(false);
-        int margin = getResources().getDimensionPixelOffset(R.dimen.view_pager_margin);
-        _viewPager.setPageMargin(-margin);
         final SimpleOnPageChangeListener pageChangeListener = new SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(final int position) {

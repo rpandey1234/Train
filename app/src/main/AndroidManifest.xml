@@ -105,6 +105,7 @@
         </activity>
         <activity
             android:name=".activities.VidTrainDetailActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:configChanges="orientation|keyboardHidden"
             android:parentActivityName=".activities.MainActivity"
             android:screenOrientation="portrait">

@@ -1,6 +1,7 @@
 package com.franklinho.vidtrain_android.fragments;
 
 import android.content.Context;
+import android.graphics.PixelFormat;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
@@ -10,22 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.models.DynamicHeightImageView;
 import com.franklinho.vidtrain_android.models.DynamicVideoView;
-import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.Video;
 import com.franklinho.vidtrain_android.utilities.Utility;
-import com.parse.GetCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
-
-import org.w3c.dom.Text;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -38,15 +32,14 @@ public class VideoPageFragment extends Fragment {
     @Bind(R.id.ivThumbnail) DynamicHeightImageView _ivThumbnail;
     @Bind(R.id.vvPreview) DynamicVideoView _videoView;
     @Bind(R.id.ivAuthor) ImageView _ivAuthor;
-    @Bind(R.id.tvAuthor) TextView _tvAuthor;
     @Bind(R.id.tvTime) TextView _tvTime;
+    @Bind(R.id.videoInformation) RelativeLayout _videoInformation;
 
     private String _videoUrl;
     private String _videoThumbnailUrl;
     private VideoFinishedListener _listener;
-    private String _videoUserId;
     private String _videoTime;
-    private User _user;
+    private String _userUrl;
 
     public static VideoPageFragment newInstance(Video video) {
         VideoPageFragment videoPageFragment = new VideoPageFragment();
@@ -54,7 +47,7 @@ public class VideoPageFragment extends Fragment {
         args.putString("videoUrl", video.getVideoFile().getUrl());
         args.putString("videoThumbnailUrl", video.getThumbnail().getUrl());
         args.putString("videoTime", Utility.getRelativeTime(video.getCreatedAt().getTime()));
-        args.putString("videoUserId", video.getUser().getObjectId());
+        args.putString("videoUserUrl", video.getUser().getProfileImageUrl());
         videoPageFragment.setArguments(args);
         return videoPageFragment;
     }
@@ -67,7 +60,7 @@ public class VideoPageFragment extends Fragment {
             _videoUrl = arguments.getString("videoUrl");
             _videoThumbnailUrl = arguments.getString("videoThumbnailUrl");
             _videoTime = arguments.getString("videoTime");
-            _videoUserId = arguments.getString("videoUserId");
+            _userUrl = arguments.getString("videoUserUrl");
         }
     }
 
@@ -79,22 +72,12 @@ public class VideoPageFragment extends Fragment {
         ButterKnife.bind(this, v);
         Glide.with(getContext()).load(_videoThumbnailUrl).into(_ivThumbnail);
         _videoView.setVideoPath(_videoUrl);
-        _videoView.setHeightRatio(0.9);
-        _videoView.setZOrderOnTop(true);
-        _videoView.requestFocus();
+//        _videoView.setHeightRatio(0.9);
+        _videoView.getHolder().setFormat(PixelFormat.TRANSPARENT);
+        _videoView.setZOrderMediaOverlay(true);
 
         _tvTime.setText(_videoTime);
-        ParseUser.getQuery()
-                .whereEqualTo("objectId", _videoUserId)
-                .getFirstInBackground(new GetCallback<ParseUser>() {
-            @Override
-            public void done(ParseUser object, ParseException e) {
-                _user = (User) object;
-                Glide.with(getContext()).load(_user.getProfileImageUrl()).into(_ivAuthor);
-                _tvAuthor.setText(_user.getName());
-            }
-        });
-
+        Glide.with(getContext()).load(_userUrl).into(_ivAuthor);
         return v;
     }
 
@@ -111,6 +94,7 @@ public class VideoPageFragment extends Fragment {
                 _listener.onVideoCompleted();
             }
         });
+        _videoInformation.bringToFront();
     }
 
     public void stopVideo() {

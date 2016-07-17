@@ -41,10 +41,9 @@ public class VideoFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        VideoPageFragment videoPageFragment = (VideoPageFragment) super.instantiateItem(container,
-                position);
-        _fragmentMap.put(position, videoPageFragment);
-        return videoPageFragment;
+        VideoPageFragment fragment = (VideoPageFragment) super.instantiateItem(container, position);
+        _fragmentMap.put(position, fragment);
+        return fragment;
     }
 
     // Need to get a reference to the fragment

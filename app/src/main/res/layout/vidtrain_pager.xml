@@ -1,16 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="@dimen/view_pager_padding"
-    android:paddingRight="@dimen/view_pager_padding">
+    android:layout_height="match_parent">
+
+    <com.franklinho.vidtrain_android.models.DynamicHeightImageView
+        android:layout_width="match_parent"
+        android:layout_height="520dp"
+        android:id="@+id/ivThumbnail"
+        android:background="@color/bluePrimary"
+        android:scaleType="centerCrop"
+        android:src="@drawable/placeholder_video"
+        android:contentDescription="@string/video_thumbnail"
+        />
+
+    <com.franklinho.vidtrain_android.models.DynamicVideoView
+        android:layout_width="match_parent"
+        android:layout_height="520dp"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/vvPreview"
+        android:visibility="gone"
+        />
 
     <RelativeLayout
+        android:id="@+id/videoInformation"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="20dp">
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/ivAuthor"
@@ -21,53 +41,27 @@
             android:layout_alignParentTop="true"
             android:layout_marginBottom="12dp"
             android:src="@drawable/profile_icon"
-            android:layout_marginTop="20dp"
             />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tvAuthor"
-            android:layout_alignTop="@id/ivAuthor"
-            android:layout_alignBottom="@id/ivAuthor"
-            android:gravity="center_vertical|left"
-            android:textSize="16sp"
-            android:layout_toEndOf="@id/ivAuthor"
-            android:layout_marginStart="8dp"
-            android:layout_toStartOf="@+id/tvTime"
-            android:maxLines="2"
-            android:ellipsize="end"
-            />
-
-        <TextView
             android:id="@+id/tvTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/ivAuthor"
             android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@+id/ivAuthor"
             android:layout_alignTop="@id/ivAuthor"
-            android:layout_marginStart="4dp"
-            android:gravity="center_vertical|end"
-            android:textSize="16sp"
+            android:layout_alignBottom="@id/ivAuthor"
+            android:gravity="center_vertical|right"
+            android:textSize="14sp"
+            android:layout_marginStart="8dp"
+            android:maxLines="2"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:ellipsize="end"
+            android:shadowColor="@android:color/black"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="1.2"
             />
     </RelativeLayout>
-
-    <com.franklinho.vidtrain_android.models.DynamicHeightImageView
-        android:layout_width="match_parent"
-        android:layout_height="360dp"
-        android:id="@+id/ivThumbnail"
-        android:background="@color/bluePrimary"
-        android:scaleType="centerCrop"
-        android:src="@drawable/placeholder_video"
-        android:contentDescription="@string/video_thumbnail"
-        />
-
-    <com.franklinho.vidtrain_android.models.DynamicVideoView
-        android:layout_width="match_parent"
-        android:layout_height="360dp"
-        android:layout_gravity="center_horizontal"
-        android:id="@+id/vvPreview"
-        android:background="@color/facebookBlue"
-        android:visibility="gone"
-        />
-</LinearLayout>
+</FrameLayout>
