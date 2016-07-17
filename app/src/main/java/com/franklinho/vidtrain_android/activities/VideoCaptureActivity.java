@@ -11,7 +11,6 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
-import android.hardware.Camera.Size;
 import android.media.CamcorderProfile;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -40,9 +39,6 @@ import com.franklinho.vidtrain_android.utilities.Utility;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -122,7 +118,6 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         initializeCamera();
     }
 
-
     protected void initializeCamera(){
         // Create an instance of Camera
         mCamera = getCameraInstance();
@@ -151,7 +146,6 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
                                 // Start the initial runnable task by posting through the handler
                                 _handler.post(_runnableCode);
                                 // inform the user that recording has started
-                                //setCaptureButtonText("Stop");
                                 _isRecording = true;
 
                             } else {
@@ -172,7 +166,6 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         mCamera.lock();         // take camera access back from MediaRecorder
 
         // inform the user that recording has stopped
-        //setCaptureButtonText("Capture");
         _isRecording = false;
         _handler.removeCallbacks(_runnableCode);
         if (showConfirm) {
@@ -268,9 +261,6 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         }
         _mediaRecorder = new MediaRecorder();
 
-        final List<Size> supportedVideoSizes = mCamera.getParameters().getSupportedVideoSizes();
-        //Size smallestSize = getSmallestSize(supportedVideoSizes);
-
         // Step 1: Unlock and set camera to MediaRecorder
         mCamera.unlock();
         //mCamera.setDisplayOrientation(90);
@@ -291,7 +281,6 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         _mediaRecorder.setOrientationHint(VideoCaptureActivity.orientation);
 //        _mediaRecorder.setVideoFrameRate(24);
         _mediaRecorder.setVideoEncodingBitRate(500000);
-//        _mediaRecorder.setVideoSize(smallestSize.width, smallestSize.height);
         _mediaRecorder.setMaxFileSize(8000000); // max parse file size is 10485760 bytes
         _mediaRecorder.setMaxDuration(MAX_TIME);
         _mediaRecorder.setOnInfoListener(this);
@@ -308,31 +297,6 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
             return false;
         }
         return true;
-    }
-
-    private Size getSmallestSize(List<Size> supportedVideoSizes) {
-        Log.d(VidtrainApplication.TAG, "Num supported sizes: " + supportedVideoSizes.size());
-        Collections.sort(supportedVideoSizes, new Comparator<Size>() {
-            @Override
-            public int compare(Size lhs, Size rhs) {
-                double avg1 = (lhs.height + lhs.width) / 2.0;
-                double avg2 = (rhs.height + rhs.width) / 2.0;
-                if (avg1 < avg2) {
-                    return -1;
-                } else if (avg1 > avg2) {
-                    return 1;
-                } else {
-                    return 0;
-                }
-            }
-        });
-        Size smallestSize = supportedVideoSizes.get(0);
-        Log.d(VidtrainApplication.TAG,
-                "smallest video size: " + smallestSize.width + " " + smallestSize.height);
-        Log.d(VidtrainApplication.TAG,
-                "2nd smallest video size: " + supportedVideoSizes.get(1).width + " "
-                        + supportedVideoSizes.get(1).height);
-        return smallestSize;
     }
 
     @Override
@@ -442,10 +406,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
                _imageParameters.mCoverWidth = _imageParameters.mCoverHeight
                        = _imageParameters.calculateCoverWidthHeight();
 
-//                    Log.d(TAG, "parameters: " + _imageParameters.getStringValues());
-//                    Log.d(TAG, "cover height " + topCoverView.getHeight());
                resizeTopAndBtmCover(_vTop, _vBottom);
-
                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                    _preview.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                } else {
@@ -455,7 +416,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
        });
    }
 
-    private void resizeTopAndBtmCover( final View topCover, final View bottomCover) {
+    private void resizeTopAndBtmCover(final View topCover, final View bottomCover) {
         ResizeAnimation resizeTopAnimation
                 = new ResizeAnimation(topCover, _imageParameters);
         resizeTopAnimation.setDuration(800);
