@@ -181,24 +181,6 @@ public class VidTrainDetailActivity extends AppCompatActivity implements VideoFi
         });
     }
 
-    private void sendNotifications(final VidTrain vidtrain) {
-        List<Video> collabvideos = vidtrain.getVideos();
-        final List<ParseUser> notificationsSent = new ArrayList<>();
-        for (final Video collabVideo : collabvideos) {
-            collabVideo.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
-                @Override
-                public void done(ParseObject object, ParseException e) {
-                    if (!collabVideo.getUser().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
-                        if (!notificationsSent.contains(collabVideo.getUser())) {
-                            sendVidtrainUpdatedNotification(collabVideo.getUser(), vidtrain);
-                            notificationsSent.add(collabVideo.getUser());
-                        }
-                    }
-                }
-            });
-        }
-    }
-
     public void requestVidTrain() {
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
         query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
@@ -259,34 +241,40 @@ public class VidTrainDetailActivity extends AppCompatActivity implements VideoFi
         pageChangeListener.onPageSelected(0);
     }
 
-    public void sendVidtrainUpdatedNotification(ParseUser user, VidTrain vidtrain) {
-        ParseQuery pushQuery = ParseInstallation.getQuery();
-        pushQuery.whereEqualTo("user", user.getObjectId());
-//        pushQuery.whereEqualTo("channels", vidtrain.getObjectId()); // Set the channel
-        pushQuery.whereNotEqualTo("objectId", ParseInstallation.getCurrentInstallation().getObjectId());
-        String currentUserName = ParseUser.getCurrentUser().getString("name");
-        String alertString = currentUserName + " has just updated the Vidtrain: " + vidtrain.getTitle();
-        JSONObject data = new JSONObject();
-
-        try {
-            data.put("alert", alertString);
-            data.put("title", "Vidtrain");
-            data.put("vidTrain", vidtrain.getObjectId());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        ParsePush push = new ParsePush();
-        push.setQuery(pushQuery);
-        push.setData(data);
-        push.sendInBackground();
-    }
-
     @Override
     public void onVideoCompleted() {
         int currentIndex = _viewPager.getCurrentItem();
         if (currentIndex < _videos.size()) {
             _viewPager.setCurrentItem(currentIndex + 1, true);
         }
+    }
+
+    private void sendNotifications(final VidTrain vidtrain) {
+        List<User> collaborators = vidtrain.getCollaborators();
+        for (User user : collaborators) {
+            if (!user.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
+                sendVidtrainUpdatedNotification(user, vidtrain);
+            }
+        }
+    }
+
+    public void sendVidtrainUpdatedNotification(ParseUser user, VidTrain vidtrain) {
+        String currentUserName = ParseUser.getCurrentUser().getString("name");
+        String alert = currentUserName + " has just updated the Vidtrain: " + vidtrain.getTitle();
+        JSONObject data = new JSONObject();
+        try {
+            data.put("alert", alert);
+            data.put("title", "Vidtrain");
+            data.put("vidTrain", vidtrain.getObjectId());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        ParseQuery<ParseInstallation> pushQuery = ParseInstallation.getQuery()
+                .whereEqualTo("user", user.getObjectId());
+        ParsePush push = new ParsePush();
+        push.setQuery(pushQuery);
+        push.setData(data);
+        push.sendInBackground();
     }
 }

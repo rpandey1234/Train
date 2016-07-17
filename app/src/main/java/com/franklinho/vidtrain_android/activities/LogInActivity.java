@@ -19,6 +19,7 @@ import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 
 import org.json.JSONObject;
@@ -88,6 +89,10 @@ public class LogInActivity extends AppCompatActivity {
                             Log.d(VidtrainApplication.TAG, "User cancelled the Facebook login.");
                             Toast.makeText(LogInActivity.this, "Failed to log into Facebook", Toast.LENGTH_SHORT).show();
                         } else {
+                            // Save user to this installation (device)
+                            ParseInstallation install = ParseInstallation.getCurrentInstallation();
+                            install.put("user", user.getObjectId());
+                            install.saveInBackground();
                             showProgressBar();
                             updateUserInfo(user);
                             goMainActivity();

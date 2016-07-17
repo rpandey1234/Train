@@ -177,11 +177,12 @@
             />
 
         <service android:name="com.parse.PushService"/>
-
-        <receiver android:name="com.parse.ParseBroadcastReceiver">
+        <receiver android:name="com.parse.ParsePushBroadcastReceiver"
+                  android:exported="false">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <action android:name="android.intent.action.USER_PRESENT"/>
+                <action android:name="com.parse.push.intent.RECEIVE" />
+                <action android:name="com.parse.push.intent.DELETE" />
+                <action android:name="com.parse.push.intent.OPEN" />
             </intent-filter>
         </receiver>
         <receiver
@@ -205,11 +206,6 @@
                 <category android:name="com.franklinho.vidtrain_android"/>
             </intent-filter>
         </receiver>
-
-        <meta-data
-            android:name="com.parse.push.notification_icon"
-            android:resource="@drawable/icon_vidtrain"
-            />
 
         <activity android:name=".activities.MainActivity">
         </activity>

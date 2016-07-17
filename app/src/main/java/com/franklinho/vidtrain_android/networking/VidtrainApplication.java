@@ -11,11 +11,9 @@ import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParsePush;
-import com.parse.SaveCallback;
 
 /**
- * Created by franklinho on 3/1/16.
- * mongodb://vidtrain:vidtrain@ds017514.mlab.com:17514/vidtrain
+ * Database: mongodb://vidtrain:vidtrain@ds017514.mlab.com:17514/vidtrain
  */
 public class VidtrainApplication extends Application {
 
@@ -29,14 +27,6 @@ public class VidtrainApplication extends Application {
         ParseObject.registerSubclass(User.class);
         ParseObject.registerSubclass(VidTrain.class);
 
-        // set applicationId and server based on the values in the Heroku settings.
-        // any network interceptors must be added with the Configuration Builder given this syntax
-        //Heroku Configuration
-//        Parse.initialize(new Parse.Configuration.Builder(this)
-//                .applicationId("vidtrain") // should correspond to APP_ID env variable
-//                .addNetworkInterceptor(new ParseLogInterceptor())
-//                .server("https://vidtrain.herokuapp.com/parse/").build());
-
         //Normal Parse Configuration
         FacebookSdk.sdkInitialize(getApplicationContext());
         Parse.initialize(this, "0y0WMVmGrDXEfgMgVNzA32ryMuM2gdanfMhH0NMY",
@@ -44,12 +34,6 @@ public class VidtrainApplication extends Application {
         ParseFacebookUtils.initialize(getApplicationContext());
 
         ParseInstallation.getCurrentInstallation().saveInBackground();
-
-        ParsePush.subscribeInBackground("", new SaveCallback() {
-            @Override
-            public void done(com.parse.ParseException arg0) {
-
-            }
-        });
+        ParsePush.subscribeInBackground("");
     }
 }

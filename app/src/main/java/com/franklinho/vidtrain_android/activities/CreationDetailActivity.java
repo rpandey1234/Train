@@ -238,20 +238,12 @@ public class CreationDetailActivity extends AppCompatActivity {
                                 user.saveInBackground(new SaveCallback() {
                                     @Override
                                     public void done(ParseException e) {
-                                        successfullySavedVidtrain();
-                                        if (_collaborators != null) {
-                                            for (ParseUser collaborator : _collaborators) {
-                                                if (!collaborator.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
-                                                    sendCollaboratorNotification(collaborator, vidTrain);
-                                                }
+                                        for (ParseUser collaborator : _collaborators) {
+                                            if (!collaborator.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
+                                                sendCollaboratorNotification(collaborator, vidTrain);
                                             }
                                         }
-
-                                        ParsePush.subscribeInBackground(vidTrain.getObjectId(), new SaveCallback() {
-                                            @Override
-                                            public void done(com.parse.ParseException arg0) {}
-                                        });
-
+                                        successfullySavedVidtrain();
                                     }
                                 });
                             }
@@ -269,30 +261,23 @@ public class CreationDetailActivity extends AppCompatActivity {
     }
 
     public void sendCollaboratorNotification(ParseUser user, VidTrain vidtrain) {
-        ParseQuery pushQuery = ParseInstallation.getQuery();
-        pushQuery.whereEqualTo("user", user.getObjectId());
         String currentUserName = ParseUser.getCurrentUser().getString("name");
-        String alertString = currentUserName + " has added you to the Vidtrain: " + vidtrain.getTitle();
+        String alert = currentUserName + " has added you to the Vidtrain: " + vidtrain.getTitle();
         JSONObject data = new JSONObject();
-
         try {
-            data.put("alert", alertString);
+            data.put("alert", alert);
             data.put("title", "Vidtrain");
             data.put("vidTrain", vidtrain.getObjectId());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
+        ParseQuery<ParseInstallation> pushQuery = ParseInstallation.getQuery()
+                .whereEqualTo("user", user.getObjectId());
         ParsePush push = new ParsePush();
+        System.out.println("hello");
         push.setQuery(pushQuery);
         push.setData(data);
-        push.sendInBackground(new SendCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e != null) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        push.sendInBackground();
     }
 }
