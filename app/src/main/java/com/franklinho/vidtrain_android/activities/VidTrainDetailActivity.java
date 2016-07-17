@@ -109,7 +109,7 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
         query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
         query.whereEqualTo("objectId", getVidtrainId());
         query.include("user");
-        query.include("videos");
+        query.include("videos.user");
         query.getFirstInBackground(new GetCallback<VidTrain>() {
             @Override
             public void done(VidTrain object, ParseException e) {
@@ -147,6 +147,7 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
                                         _progress.dismiss();
                                         layoutVidTrain();
                                         Utility.sendNotifications(_vidTrain);
+                                        // TODO(rahul): add this video to unseen list for all users on the thread
                                         assert user != null;
                                         user.put("vidtrains", user.maybeInitAndAdd(_vidTrain));
                                         user.put("videos", user.maybeInitAndAdd(video));
