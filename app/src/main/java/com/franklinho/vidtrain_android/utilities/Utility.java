@@ -16,6 +16,9 @@ import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.parse.ParseFile;
+import com.parse.ParseInstallation;
+import com.parse.ParsePush;
+import com.parse.ParseQuery;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -159,5 +162,32 @@ public class Utility {
             }
         }
         return candidates;
+    }
+
+    public static void sendNotifications(VidTrain vidtrain) {
+        List<User> collaborators = vidtrain.getCollaborators();
+        for (User user : collaborators) {
+            if (!user.getObjectId().equals(User.getCurrentUser().getObjectId())) {
+                Utility.sendNotifications(user, vidtrain);
+            }
+        }
+    }
+
+    public static void sendNotifications(User user, VidTrain vidtrain) {
+        JSONObject data = new JSONObject();
+        try {
+            data.put("alert", User.getCurrentUser().getName() + " sent you a Vidtrain!");
+            data.put("title", "Vidtrain");
+            data.put("vidTrain", vidtrain.getObjectId());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        ParseQuery<ParseInstallation> pushQuery =
+                ParseInstallation.getQuery().whereEqualTo("user", user.getObjectId());
+        ParsePush push = new ParsePush();
+        push.setQuery(pushQuery);
+        push.setData(data);
+        push.sendInBackground();
     }
 }

@@ -1,21 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-          package="com.franklinho.vidtrain_android"
-    >
-
-    <permission
-        android:name="com.franklinho.vidtrain_android.permission.MAPS_RECEIVE"
-        android:protectionLevel="signature"
-        />
-    <permission
-        android:name="android.permission.ACCESS_FINE_LOCATION"
-        android:protectionLevel="dangerous"
-        />
-    <permission
-        android:name="android.permission.ACCESS_COARSE_LOCATION"
-        android:protectionLevel="dangerous"
-        />
+          package="com.franklinho.vidtrain_android">
 
     <uses-permission
         android:name="android.permission.FLASHLIGHT"
@@ -31,11 +17,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="com.franklinho.vidtrain_android.permission.MAPS_RECEIVE"/>
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
@@ -47,8 +30,6 @@
         />
 
     <uses-permission android:name="com.franklinho.vidtrain_android.permission.C2D_MESSAGE"/>
-
-    <uses-library android:name="com.google.android.maps"/>
 
     <application
         android:name=".networking.VidtrainApplication"
@@ -62,8 +43,7 @@
         <activity
             android:name=".activities.LogInActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -107,30 +87,10 @@
             android:name="io.fabric.ApiKey"
             android:value="9ba9282424d60bca2b371ddeb7921c49f7582043"
             />
-
         <activity
-            android:name=".activities.ProfileActivity"
+            android:name=".activities.MainActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:parentActivityName=".activities.HomeActivity"
-            android:screenOrientation="portrait"
-            >
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-
-                <data
-                    android:host="profile"
-                    android:scheme="vidtrain"
-                    />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".activities.HomeActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -146,9 +106,8 @@
         <activity
             android:name=".activities.VidTrainDetailActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:parentActivityName=".activities.HomeActivity"
-            android:screenOrientation="portrait"
-            >
+            android:parentActivityName=".activities.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -206,9 +165,6 @@
                 <category android:name="com.franklinho.vidtrain_android"/>
             </intent-filter>
         </receiver>
-
-        <activity android:name=".activities.MainActivity">
-        </activity>
     </application>
 
 </manifest>

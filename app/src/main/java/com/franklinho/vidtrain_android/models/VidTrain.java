@@ -128,8 +128,4 @@ public class VidTrain extends ParseObject implements Serializable {
         }
         return localVideoFiles;
     }
-
-    public void setRankingValue(float rankingValue) {
-        put("rankingValue", rankingValue);
-    }
 }

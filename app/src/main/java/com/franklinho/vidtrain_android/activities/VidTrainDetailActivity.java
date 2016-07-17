@@ -1,7 +1,6 @@
 package com.franklinho.vidtrain_android.activities;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -10,14 +9,11 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
-import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.adapters.VideoFragmentPagerAdapter;
 import com.franklinho.vidtrain_android.fragments.VideoPageFragment;
@@ -29,17 +25,9 @@ import com.franklinho.vidtrain_android.utilities.Utility;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseInstallation;
-import com.parse.ParseObject;
-import com.parse.ParsePush;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -104,10 +92,8 @@ public class VidTrainDetailActivity extends AppCompatActivity implements VideoFi
         if (resultCode == RESULT_OK && data != null) {
             _progress = ProgressDialog
                     .show(this, "Adding your video", "Just a moment please!", true);
-            // data.getData().toString() is the following:
-            // "file:///storage/emulated/0/Movies/VidTrainApp/VID_CAPTURED.mp4"
-            // below is where data is stored:
-            // "/storage/emulated/0/Movies/VidTrainApp/VID_CAPTURED.mp4"
+            // data.getData().toString() is file://<path>, file is stored at
+            // <path> which is /storage/emulated/0/Movies/VidTrainApp/VID_CAPTURED.mp4
             String videoPath = Utility.getOutputMediaFile(
                     data.getStringExtra(MainActivity.UNIQUE_ID_INTENT)).getPath();
             addVideoToVidtrain(videoPath);
@@ -160,7 +146,7 @@ public class VidTrainDetailActivity extends AppCompatActivity implements VideoFi
                                     public void done(ParseException e) {
                                         _progress.dismiss();
                                         layoutVidTrain();
-                                        sendNotifications(_vidTrain);
+                                        Utility.sendNotifications(_vidTrain);
                                         assert user != null;
                                         user.put("vidtrains", user.maybeInitAndAdd(_vidTrain));
                                         user.put("videos", user.maybeInitAndAdd(video));
@@ -247,34 +233,5 @@ public class VidTrainDetailActivity extends AppCompatActivity implements VideoFi
         if (currentIndex < _videos.size()) {
             _viewPager.setCurrentItem(currentIndex + 1, true);
         }
-    }
-
-    private void sendNotifications(final VidTrain vidtrain) {
-        List<User> collaborators = vidtrain.getCollaborators();
-        for (User user : collaborators) {
-            if (!user.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
-                sendVidtrainUpdatedNotification(user, vidtrain);
-            }
-        }
-    }
-
-    public void sendVidtrainUpdatedNotification(ParseUser user, VidTrain vidtrain) {
-        String currentUserName = ParseUser.getCurrentUser().getString("name");
-        String alert = currentUserName + " has just updated the Vidtrain: " + vidtrain.getTitle();
-        JSONObject data = new JSONObject();
-        try {
-            data.put("alert", alert);
-            data.put("title", "Vidtrain");
-            data.put("vidTrain", vidtrain.getObjectId());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        ParseQuery<ParseInstallation> pushQuery = ParseInstallation.getQuery()
-                .whereEqualTo("user", user.getObjectId());
-        ParsePush push = new ParsePush();
-        push.setQuery(pushQuery);
-        push.setData(data);
-        push.sendInBackground();
     }
 }

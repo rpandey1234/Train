@@ -3,8 +3,6 @@ package com.franklinho.vidtrain_android.activities;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -38,16 +36,8 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseGeoPoint;
-import com.parse.ParseInstallation;
-import com.parse.ParsePush;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import com.parse.SendCallback;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -217,16 +207,6 @@ public class CreationDetailActivity extends AppCompatActivity {
                         }
                         vidTrain.setReadPrivacy(false);
                         vidTrain.setLatestVideo(parseFile);
-                        LocationManager lm = (LocationManager) getSystemService(
-                                Context.LOCATION_SERVICE);
-                        if (lm != null) {
-                            Location lc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                            if (lc != null) {
-                                vidTrain.setLL(new ParseGeoPoint(lc.getLatitude(), lc.getLongitude()));
-                            }
-                        }
-                        vidTrain.setRankingValue(((float) System.currentTimeMillis() / (float) 1000 - (float) 1134028003) / (float) 45000 + 1);
-
                         vidTrain.saveInBackground(new SaveCallback() {
                             @Override
                             public void done(ParseException e) {
@@ -238,12 +218,12 @@ public class CreationDetailActivity extends AppCompatActivity {
                                 user.saveInBackground(new SaveCallback() {
                                     @Override
                                     public void done(ParseException e) {
-                                        for (ParseUser collaborator : _collaborators) {
-                                            if (!collaborator.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
-                                                sendCollaboratorNotification(collaborator, vidTrain);
-                                            }
-                                        }
-                                        successfullySavedVidtrain();
+                                        Utility.sendNotifications(vidTrain);
+                                        _progressDialog.dismiss();
+                                        Toast.makeText(getBaseContext(),
+                                                "Successfully saved Vidtrain!", Toast.LENGTH_SHORT)
+                                                .show();
+                                        finish();
                                     }
                                 });
                             }
@@ -252,32 +232,5 @@ public class CreationDetailActivity extends AppCompatActivity {
                 });
             }
         });
-    }
-
-    public void successfullySavedVidtrain() {
-        _progressDialog.dismiss();
-        Toast.makeText(getBaseContext(), "Successfully saved Vidtrain!", Toast.LENGTH_SHORT).show();
-        this.finish();
-    }
-
-    public void sendCollaboratorNotification(ParseUser user, VidTrain vidtrain) {
-        String currentUserName = ParseUser.getCurrentUser().getString("name");
-        String alert = currentUserName + " has added you to the Vidtrain: " + vidtrain.getTitle();
-        JSONObject data = new JSONObject();
-        try {
-            data.put("alert", alert);
-            data.put("title", "Vidtrain");
-            data.put("vidTrain", vidtrain.getObjectId());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        ParseQuery<ParseInstallation> pushQuery = ParseInstallation.getQuery()
-                .whereEqualTo("user", user.getObjectId());
-        ParsePush push = new ParsePush();
-        System.out.println("hello");
-        push.setQuery(pushQuery);
-        push.setData(data);
-        push.sendInBackground();
     }
 }
