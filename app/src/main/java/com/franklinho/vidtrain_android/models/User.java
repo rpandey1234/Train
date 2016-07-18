@@ -1,6 +1,7 @@
 package com.franklinho.vidtrain_android.models;
 
 import com.facebook.GraphResponse;
+import com.franklinho.vidtrain_android.utilities.Utility;
 import com.parse.ParseClassName;
 import com.parse.ParseUser;
 
@@ -70,7 +71,7 @@ public class User extends ParseUser implements Serializable {
         if (vidTrains == null) {
             vidTrains = new ArrayList<>();
         }
-        if (!vidTrains.contains(vidTrain)) {
+        if (Utility.indexOf(vidTrains, vidTrain) == -1) {
             vidTrains.add(vidTrain);
         }
         return vidTrains;
@@ -81,9 +82,7 @@ public class User extends ParseUser implements Serializable {
         if (videos == null) {
             videos = new ArrayList<>();
         }
-        // TODO: This contains (along with above) check always fails on ParseObjects,
-        // need  to use Utility.indexOf
-        if (!videos.contains(video)) {
+        if (Utility.indexOf(videos, video) == -1) {
             videos.add(video);
         }
         return videos;

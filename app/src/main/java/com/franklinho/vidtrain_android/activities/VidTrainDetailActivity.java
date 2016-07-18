@@ -87,7 +87,7 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
                         int unseenIndex;
                         if (unseenList.isEmpty()) {
                             // This should not happen (only for older vidtrains)
-                            unseenIndex = _vidTrain.getVideosCount() - 1;
+                            unseenIndex = -1;
                         } else {
                             unseenIndex = unseenList.get(0).getUnseenIndex();
                             Log.d(VidtrainApplication.TAG, "go directly to index: " + unseenIndex);
