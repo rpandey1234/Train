@@ -3,6 +3,7 @@ package com.franklinho.vidtrain_android.networking;
 import android.app.Application;
 
 import com.facebook.FacebookSdk;
+import com.franklinho.vidtrain_android.models.Unseen;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
@@ -26,6 +27,7 @@ public class VidtrainApplication extends Application {
         ParseObject.registerSubclass(Video.class);
         ParseObject.registerSubclass(User.class);
         ParseObject.registerSubclass(VidTrain.class);
+        ParseObject.registerSubclass(Unseen.class);
 
         //Normal Parse Configuration
         FacebookSdk.sdkInitialize(getApplicationContext());

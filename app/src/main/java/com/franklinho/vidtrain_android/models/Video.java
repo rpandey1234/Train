@@ -8,8 +8,10 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+import java.io.Serializable;
+
 @ParseClassName("Video")
-public class Video extends ParseObject {
+public class Video extends ParseObject implements Serializable {
     public static final String USER_KEY = "user";
     public static final String LIKES_KEY = "likeCount";
     public static final String VIDEO_FILE_KEY = "videoFile";

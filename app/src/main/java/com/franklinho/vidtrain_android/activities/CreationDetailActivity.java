@@ -153,7 +153,7 @@ public class CreationDetailActivity extends AppCompatActivity {
                 // Clear the text field
                 _etCollaborators.clearListSelection();
                 _etCollaborators.setText("");
-                if (Utility.contains(_collaborators, user)) {
+                if (Utility.indexOf(_collaborators, user) == -1) {
                     Toast.makeText(getApplicationContext(), "You already added this user!",
                             Toast.LENGTH_SHORT).show();
                     return;
@@ -206,7 +206,7 @@ public class CreationDetailActivity extends AppCompatActivity {
                             vidTrain.setCollaborators(_collaborators);
                         }
                         vidTrain.setReadPrivacy(false);
-                        vidTrain.setLatestVideo(parseFile);
+                        vidTrain.setThumbnail(parseFile);
                         vidTrain.saveInBackground(new SaveCallback() {
                             @Override
                             public void done(ParseException e) {

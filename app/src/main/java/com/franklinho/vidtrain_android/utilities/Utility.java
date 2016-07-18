@@ -17,6 +17,7 @@ import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.parse.ParseFile;
 import com.parse.ParseInstallation;
+import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
 
@@ -112,24 +113,27 @@ public class Utility {
         return ThumbnailUtils.createVideoThumbnail(filePath, Thumbnails.MINI_KIND);
     }
 
-    // Equality check on ParseUser fails, so we need this helper method :(
-    public static boolean contains(List<User> users, User user) {
-        if (users == null || user == null) {
-            return false;
+    /**
+     *  Equality checks on ParseObject fails, so we need this helper method :(
+     *  Returns the index of the contained object, or -1 if not found.
+     */
+    public static int indexOf(List<? extends ParseObject> objects, ParseObject object) {
+        if (objects == null || object == null) {
+            return -1;
         }
-        for (User pUser : users) {
-            if (user.getObjectId().equals(pUser.getObjectId())) {
-                return true;
+        for (int i = 0; i < objects.size(); i++) {
+            if (object.getObjectId().equals(objects.get(i).getObjectId())) {
+                return i;
             }
         }
-        return false;
+        return -1;
     }
 
     public static List<VidTrain> filterVisibleVidtrains(List<VidTrain> vidtrains) {
         List<VidTrain> visibleVidtrains = new ArrayList<>();
         User user = User.getCurrentUser();
         for (VidTrain vidtrain : vidtrains) {
-            if (contains(vidtrain.getCollaborators(), user)) {
+            if (indexOf(vidtrain.getCollaborators(), user) != -1) {
                 visibleVidtrains.add(vidtrain);
             }
         }

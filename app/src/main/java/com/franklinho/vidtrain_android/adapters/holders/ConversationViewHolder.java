@@ -55,8 +55,7 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements O
         _timestamp.setText(Utility.getRelativeTime(vidTrain.getUpdatedAt().getTime()));
         _rvParticipants.setLayoutManager(new LinearLayoutManager(_context, LinearLayoutManager.HORIZONTAL, false));
         _rvParticipants.setAdapter(new ParticipantsAdapter());
-        List<Video> videos = _vidTrain.getVideos();
-        Video lastVideo = videos.get(videos.size() - 1);
+        Video lastVideo = _vidTrain.getLatestVideo();
         Glide.with(_context).load(lastVideo.getThumbnail().getUrl()).into(_videoImagePreview);
     }
 

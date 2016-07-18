@@ -1,10 +1,10 @@
 package com.franklinho.vidtrain_android.models;
 
 import android.util.Log;
+import com.google.android.gms.maps.model.LatLng;
 
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.Utility;
-import com.google.android.gms.maps.model.LatLng;
 import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -67,12 +67,12 @@ public class VidTrain extends ParseObject implements Serializable {
         put(LL_KEY, geoPoint);
     }
 
-    public void setLatestVideo(ParseFile file) {
+    public void setThumbnail(ParseFile file) {
         put(THUMBNAIL_KEY, file);
     }
 
-    public ParseFile getLatestVideo() {
-        return getParseFile(THUMBNAIL_KEY);
+    public Video getLatestVideo() {
+        return getVideos().get(getVideosCount() - 1);
     }
 
     public User getUser() {

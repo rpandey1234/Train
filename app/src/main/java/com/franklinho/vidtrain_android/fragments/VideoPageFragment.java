@@ -40,6 +40,7 @@ public class VideoPageFragment extends Fragment {
     private VideoFinishedListener _listener;
     private String _videoTime;
     private String _userUrl;
+    private Video _video;
 
     public static VideoPageFragment newInstance(Video video) {
         VideoPageFragment videoPageFragment = new VideoPageFragment();
@@ -48,6 +49,7 @@ public class VideoPageFragment extends Fragment {
         args.putString("videoThumbnailUrl", video.getThumbnail().getUrl());
         args.putString("videoTime", Utility.getRelativeTime(video.getCreatedAt().getTime()));
         args.putString("videoUserUrl", video.getUser().getProfileImageUrl());
+        args.putSerializable("video", video);
         videoPageFragment.setArguments(args);
         return videoPageFragment;
     }
@@ -57,6 +59,7 @@ public class VideoPageFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
         if (arguments != null) {
+            _video = (Video) arguments.getSerializable("video");
             _videoUrl = arguments.getString("videoUrl");
             _videoThumbnailUrl = arguments.getString("videoThumbnailUrl");
             _videoTime = arguments.getString("videoTime");
@@ -91,10 +94,9 @@ public class VideoPageFragment extends Fragment {
         _videoView.setOnCompletionListener(new OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                _listener.onVideoCompleted();
+                _listener.onVideoCompleted(_video);
             }
         });
-        _videoInformation.bringToFront();
     }
 
     public void stopVideo() {
@@ -108,7 +110,7 @@ public class VideoPageFragment extends Fragment {
 
     public interface VideoFinishedListener {
 
-        void onVideoCompleted();
+        void onVideoCompleted(Video video);
     }
 
     @Override
