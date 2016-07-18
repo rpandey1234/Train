@@ -3,6 +3,8 @@ package com.franklinho.vidtrain_android.adapters.holders;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -33,6 +35,7 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements O
     @Bind(R.id.timestamp) TextView _timestamp;
     @Bind(R.id.participants_rv) RecyclerView _rvParticipants;
     @Bind(R.id.image_preview) ImageView _videoImagePreview;
+    @Bind(R.id.card_view) CardView _cardView;
 
     private final Activity _activity;
     private Context _context;
@@ -46,14 +49,18 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements O
         view.setOnClickListener(this);
     }
 
-    public void bind(VidTrain vidTrain) {
+    public void bind(VidTrain vidTrain, int numUnseen) {
+        int colorId = R.color.white;
+        if (numUnseen > 0) {
+            colorId = R.color.cardBackground;
+        }
+        _cardView.setCardBackgroundColor(_context.getResources().getColor(colorId));
         _vidTrain = vidTrain;
         _conversationTitle.setText(vidTrain.getTitle());
-        int videoCount = _vidTrain.getVideosCount();
-        _videoCount.setText(_context.getResources()
-                .getQuantityString(R.plurals.videos_count, videoCount, videoCount));
+        _videoCount.setText(_context.getString(R.string.unseen, numUnseen));
         _timestamp.setText(Utility.getRelativeTime(vidTrain.getUpdatedAt().getTime()));
-        _rvParticipants.setLayoutManager(new LinearLayoutManager(_context, LinearLayoutManager.HORIZONTAL, false));
+        _rvParticipants.setLayoutManager(
+                new LinearLayoutManager(_context, LinearLayoutManager.HORIZONTAL, false));
         _rvParticipants.setAdapter(new ParticipantsAdapter());
         Video lastVideo = _vidTrain.getLatestVideo();
         Glide.with(_context).load(lastVideo.getThumbnail().getUrl()).into(_videoImagePreview);

@@ -25,7 +25,6 @@ public class Unseen extends ParseObject {
     public static final String USER_KEY = "user";
     public static final String VIDTRAIN_KEY = "vidTrain";
     public static final String VIDEOS_KEY = "videos";
-    private int _unseenIndex;
 
     public Unseen() {}
 
@@ -108,6 +107,15 @@ public class Unseen extends ParseObject {
                 unseen.saveInBackground();
             }
         });
+    }
+
+    public static Unseen getUnseenWithVidtrain(List<Unseen> unseenList, VidTrain vidtrain) {
+        for (Unseen unseen : unseenList) {
+            if (unseen.getVidtrain().getObjectId().equals(vidtrain.getObjectId())) {
+                return unseen;
+            }
+        }
+        return null;
     }
 
     public List<Video> getUnseenVideos() {

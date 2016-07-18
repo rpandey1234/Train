@@ -1,6 +1,11 @@
 package com.franklinho.vidtrain_android.fragments;
 
+import android.util.Log;
+
+import com.franklinho.vidtrain_android.models.Unseen;
+import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
+import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.Utility;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -40,15 +45,29 @@ public class ConversationsFragment extends VidTrainListFragment {
             @Override
             public void done(List<VidTrain> objects, ParseException e) {
                 _swipeContainer.setRefreshing(false);
-                if (e == null) {
-                    List<VidTrain> visibleVidtrains = objects;
-                    if (!DISREGARD_PRIVACY) {
-                        // TODO: really should be using ACLs for this
-                        visibleVidtrains = Utility.filterVisibleVidtrains(objects);
-                    }
-                    _vidTrains.addAll(visibleVidtrains);
-                    _aVidTrains.notifyDataSetChanged();
+                if (e != null) {
+                    Log.e(VidtrainApplication.TAG, e.toString());
                 }
+                List<VidTrain> visibleVidtrains = objects;
+                if (!DISREGARD_PRIVACY) {
+                    // TODO: really should be using ACLs for this
+                    visibleVidtrains = Utility.filterVisibleVidtrains(objects);
+                }
+                ParseQuery<Unseen> unseenQuery = ParseQuery.getQuery("Unseen");
+                unseenQuery.whereEqualTo("user", User.getCurrentUser());
+                unseenQuery.addDescendingOrder("updatedAt");
+                final List<VidTrain> finalVisibleVidtrains = visibleVidtrains;
+                unseenQuery.findInBackground(new FindCallback<Unseen>() {
+                    @Override
+                    public void done(List<Unseen> unseens, ParseException e) {
+                        if (e != null) {
+                            Log.d(VidtrainApplication.TAG, e.toString());
+                        }
+                        _unseenList.addAll(unseens);
+                        _vidTrains.addAll(finalVisibleVidtrains);
+                        _aVidTrains.notifyDataSetChanged();
+                    }
+                });
                 hideProgressBar();
             }
         });
