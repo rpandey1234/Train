@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.adapters.holders.ConversationViewHolder;
+import com.franklinho.vidtrain_android.models.Unseen;
 import com.franklinho.vidtrain_android.models.VidTrain;
 
 import java.util.List;
@@ -16,11 +17,14 @@ import java.util.List;
 public class VidTrainArrayAdapter extends RecyclerView.Adapter<ConversationViewHolder> {
 
     private List<VidTrain> _vidTrains;
+    private final List<Unseen> _unseenList;
     private Context _context;
     private Activity _activity;
 
-    public VidTrainArrayAdapter( List<VidTrain> vidTrains, Context context, Activity activity) {
+    public VidTrainArrayAdapter(List<VidTrain> vidTrains, List<Unseen> unseenList, Context context,
+            Activity activity) {
         _vidTrains = vidTrains;
+        _unseenList = unseenList;
         _context = context;
         _activity = activity;
     }
@@ -34,7 +38,14 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<ConversationViewH
     @Override
     public void onBindViewHolder(final ConversationViewHolder holder, int position) {
         VidTrain vidTrain = _vidTrains.get(position);
-        holder.bind(vidTrain);
+        Unseen unseen = Unseen.getUnseenWithVidtrain(_unseenList, vidTrain);
+        int unread;
+        if (unseen == null) {
+            unread = 0;
+        } else {
+            unread = unseen.getUnseenVideos().size();
+        }
+        holder.bind(vidTrain, unread);
     }
 
     @Override

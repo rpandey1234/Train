@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.adapters.VidTrainArrayAdapter;
+import com.franklinho.vidtrain_android.models.Unseen;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.utilities.EndlessRecyclerViewScrollListener;
 
@@ -29,6 +30,7 @@ public class VidTrainListFragment extends Fragment {
     @Bind(R.id.tvNotFollowingLabel) TextView _tvNotFollowingLabel;
 
     List<VidTrain> _vidTrains;
+    List<Unseen> _unseenList;
     VidTrainArrayAdapter _aVidTrains;
     LinearLayoutManager _linearLayoutManager;
 
@@ -40,8 +42,10 @@ public class VidTrainListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         _vidTrains = new ArrayList<>();
+        _unseenList = new ArrayList<>();
         //Construct the adapter
-        _aVidTrains = new VidTrainArrayAdapter(_vidTrains, getContext(), getActivity());
+        _aVidTrains = new VidTrainArrayAdapter(_vidTrains, _unseenList, getContext(),
+                getActivity());
     }
 
     @Override

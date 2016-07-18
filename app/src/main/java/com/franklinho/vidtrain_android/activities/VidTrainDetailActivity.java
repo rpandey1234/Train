@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -18,14 +19,18 @@ import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.adapters.VideoFragmentPagerAdapter;
 import com.franklinho.vidtrain_android.fragments.VideoPageFragment;
 import com.franklinho.vidtrain_android.fragments.VideoPageFragment.VideoFinishedListener;
+import com.franklinho.vidtrain_android.models.Unseen;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
+import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.Utility;
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.util.List;
@@ -41,19 +46,57 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
     @Bind(R.id.btnAddVidTrain) Button _btnAddVidTrain;
     @Bind(R.id.viewPager) ViewPager _viewPager;
 
+    private static final boolean MARK_SEEN_VIDEOS = false;
     public static final String VIDTRAIN_KEY = "vidTrain";
     public static final int VIDEO_CAPTURE = 101;
     private ProgressDialog _progress;
     private VidTrain _vidTrain;
-    private List<Video> _videos;
-    private int _lastPosition;
+    private int _lastPosition = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vid_train_detail);
         ButterKnife.bind(this);
-        requestVidTrain();
+        ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
+        query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        query.whereEqualTo("objectId", getVidtrainId());
+        query.include("user");
+        query.include("videos.user");
+        query.include("collaborators");
+        query.getFirstInBackground(new GetCallback<VidTrain>() {
+            @Override
+            public void done(VidTrain object, ParseException e) {
+                if (e != null) {
+                    invalidVidtrain();
+                    return;
+                }
+                _vidTrain = object;
+                ParseQuery<Unseen> query = ParseQuery.getQuery("Unseen");
+                query.whereEqualTo(Unseen.USER_KEY, ParseUser.getCurrentUser());
+                query.whereEqualTo(Unseen.VIDTRAIN_KEY, _vidTrain);
+                query.include("vidTrain.videos");
+                query.include(Unseen.VIDEOS_KEY);
+                query.findInBackground(new FindCallback<Unseen>() {
+                    @Override
+                    public void done(List<Unseen> unseenList, ParseException e) {
+                        if (e != null) {
+                            Log.e(VidtrainApplication.TAG, e.toString());
+                            return;
+                        }
+                        int unseenIndex;
+                        if (unseenList.isEmpty()) {
+                            // This should not happen (only for older vidtrains)
+                            unseenIndex = _vidTrain.getVideosCount() - 1;
+                        } else {
+                            unseenIndex = unseenList.get(0).getUnseenIndex();
+                            Log.d(VidtrainApplication.TAG, "go directly to index: " + unseenIndex);
+                        }
+                        layoutVidTrain(unseenIndex);
+                    }
+                });
+            }
+        });
     }
 
     public void invalidVidtrain() {
@@ -110,6 +153,7 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
         query.whereEqualTo("objectId", getVidtrainId());
         query.include("user");
         query.include("videos.user");
+        query.include("collaborators");
         query.getFirstInBackground(new GetCallback<VidTrain>() {
             @Override
             public void done(VidTrain object, ParseException e) {
@@ -139,15 +183,15 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
                         video.saveInBackground(new SaveCallback() {
                             @Override
                             public void done(ParseException e) {
-                                _vidTrain.setLatestVideo(parseFile);
+                                _vidTrain.setThumbnail(parseFile);
                                 _vidTrain.setVideos(_vidTrain.maybeInitAndAdd(video));
                                 _vidTrain.saveInBackground(new SaveCallback() {
                                     @Override
                                     public void done(ParseException e) {
                                         _progress.dismiss();
-                                        layoutVidTrain();
+                                        layoutVidTrain(_vidTrain.getVideosCount() - 1);
                                         Utility.sendNotifications(_vidTrain);
-                                        // TODO(rahul): add this video to unseen list for all users on the thread
+                                        Unseen.addUnseen(_vidTrain);
                                         assert user != null;
                                         user.put("vidtrains", user.maybeInitAndAdd(_vidTrain));
                                         user.put("videos", user.maybeInitAndAdd(video));
@@ -169,67 +213,48 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
         });
     }
 
-    public void requestVidTrain() {
-        ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
-        query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
-        query.whereEqualTo("objectId", getVidtrainId());
-        query.include("user");
-        query.include("videos.user");
-        query.getFirstInBackground(new GetCallback<VidTrain>() {
-            @Override
-            public void done(VidTrain object, ParseException e) {
-                if (e != null) {
-                    invalidVidtrain();
-                    return;
-                }
-                _vidTrain = object;
-                layoutVidTrain();
-            }
-        });
-    }
-
-    void layoutVidTrain() {
-        if (!_vidTrain.getWritePrivacy() ||
-                Utility.contains(_vidTrain.getCollaborators(), User.getCurrentUser())) {
-            _btnAddVidTrain.setVisibility(View.VISIBLE);
+    void layoutVidTrain(int initialIndex) {
+        boolean shouldPlayVideo = true;
+        if (initialIndex == -1) {
+            // The user has seen all the videos. They can only swipe through the pics now, start
+            // them at the last video
+            shouldPlayVideo = false;
+            initialIndex = _vidTrain.getVideosCount() - 1;
         }
         _tvTitle.setText(_vidTrain.getTitle());
-        _videos = _vidTrain.getVideos();
         _tvVideoCount.setText(String.valueOf(_vidTrain.getVideosCount()));
         final VideoFragmentPagerAdapter _videoFragmentPagerAdapter =  new VideoFragmentPagerAdapter(
                 getSupportFragmentManager(), getBaseContext(), _vidTrain.getVideos());
         _viewPager.setAdapter(_videoFragmentPagerAdapter);
-        final SimpleOnPageChangeListener pageChangeListener = new SimpleOnPageChangeListener() {
+        final boolean finalShouldPlayVideo = shouldPlayVideo;
+        _viewPager.addOnPageChangeListener(new SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(final int position) {
-                // Null checks are for only needed for instant run
-                VideoPageFragment lastFragment =
-                        _videoFragmentPagerAdapter.getFragment(_lastPosition);
-                if (lastFragment != null) {
-                    lastFragment.stopVideo();
-                }
-                VideoPageFragment fragment = _videoFragmentPagerAdapter.getFragment(position);
-                if (fragment != null) {
-                    fragment.playVideo();
+                if (finalShouldPlayVideo) {
+                    // Null checks are only needed for instant run
+                    VideoPageFragment lastFragment =
+                            _videoFragmentPagerAdapter.getFragment(_lastPosition);
+                    if (lastFragment != null) {
+                        lastFragment.stopVideo();
+                    }
+                    VideoPageFragment fragment = _videoFragmentPagerAdapter.getFragment(position);
+                    if (fragment != null) {
+                        fragment.playVideo();
+                    }
                 }
                 _lastPosition = position;
             }
-        };
-        // Make sure view pager fragment is already instantiated
-        // http://stackoverflow.com/questions/11794269/
-        _viewPager.post(new Runnable() {
-            @Override
-            public void run() {
-                _viewPager.addOnPageChangeListener(pageChangeListener);
-            }
         });
-        pageChangeListener.onPageSelected(0);
+        _viewPager.setCurrentItem(initialIndex);
     }
 
     @Override
-    public void onVideoCompleted() {
+    public void onVideoCompleted(Video video) {
+        if (MARK_SEEN_VIDEOS) {
+            Unseen.removeUnseen(_vidTrain, User.getCurrentUser(), video);
+        }
         int currentIndex = _viewPager.getCurrentItem();
-        if (currentIndex < _videos.size()) {
+        if (currentIndex < _vidTrain.getVideos().size()) {
             _viewPager.setCurrentItem(currentIndex + 1, true);
         }
     }

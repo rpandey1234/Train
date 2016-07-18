@@ -6,6 +6,7 @@
     <string name="profile">Profile</string>
     <string name="compose">Create</string>
     <string name="tagline">tagline</string>
+    <string name="unseen">%d unseen</string>
     <plurals name="videos_count">
         <item quantity="one">%d video</item>
         <item quantity="other">%d videos</item>

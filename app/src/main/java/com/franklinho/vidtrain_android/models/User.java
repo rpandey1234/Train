@@ -81,6 +81,8 @@ public class User extends ParseUser implements Serializable {
         if (videos == null) {
             videos = new ArrayList<>();
         }
+        // TODO: This contains (along with above) check always fails on ParseObjects,
+        // need  to use Utility.indexOf
         if (!videos.contains(video)) {
             videos.add(video);
         }

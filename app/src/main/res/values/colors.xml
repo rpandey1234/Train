@@ -6,6 +6,7 @@
     <color name="facebookBlue">#3b5998</color>
     <color name="facebookAccent">#8b9dc3</color>
 
+    <color name="cardBackground">#5555DFD0</color>
     <color name="bluePrimary">#2DAB9E</color>
     <color name="bluePrimaryDark">#0B9D8E</color>
     <color name="blueAccent">#16CFBB</color>
