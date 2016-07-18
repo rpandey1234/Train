@@ -201,11 +201,9 @@ public class CreationDetailActivity extends AppCompatActivity {
                         ArrayList<Video> videos = new ArrayList<>();
                         videos.add(video);
                         vidTrain.setVideos(videos);
-                        vidTrain.setWritePrivacy(true);
                         if (!_collaborators.isEmpty()) {
                             vidTrain.setCollaborators(_collaborators);
                         }
-                        vidTrain.setReadPrivacy(false);
                         vidTrain.setThumbnail(parseFile);
                         vidTrain.saveInBackground(new SaveCallback() {
                             @Override
