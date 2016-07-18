@@ -31,35 +31,24 @@
             />
     </LinearLayout>
 
-    <AutoCompleteTextView
-        android:id="@+id/etCollaborators"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/videoContainer"
-        android:hint="@string/autocomplete_hint"
-        android:completionThreshold="1"
-        android:singleLine="true"
-        android:layout_marginStart="10dp"
-        />
-
-    <LinearLayout
-        android:id="@+id/containerCollab"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_below="@+id/etCollaborators"
-        android:layout_marginStart="20dp"
-        />
-
     <EditText
         android:id="@+id/etTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_below="@+id/containerCollab"
+        android:layout_margin="12dp"
+        android:layout_below="@+id/videoContainer"
         android:singleLine="true"
         android:hint="@string/title_prompt"
         android:inputType="textCapSentences"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/friendsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/etTitle"
+        android:scrollbars="vertical"
+        android:layout_margin="8dp"
         />
 
     <Button
@@ -67,11 +56,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/submit"
+        android:textColor="@android:color/white"
+        android:textAllCaps="false"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/etTitle"
-        android:onClick="submitVidTrain"
+        android:layout_below="@id/friendsRecyclerView"
         android:background="@color/bluePrimary"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="12dp"
         />
 
 </RelativeLayout>

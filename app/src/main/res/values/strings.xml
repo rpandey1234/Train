@@ -38,7 +38,7 @@
     <string name="camera_error">This device doesn\'t support Camera2 API.</string>
     <string name="stop">Stop</string>
     <string name="heart">heart</string>
-    <string name="title_prompt">Enter title</string>
+    <string name="title_prompt">Enter a title</string>
     <string name="collabs">Collaborators</string>
     <string name="submit">Submit</string>
     <string name="autocomplete_hint">Add friends here</string>
@@ -60,6 +60,7 @@
     <string name="image_preview">preview</string>
     <string name="image_placeholder">placeholder</string>
     <string name="switch_camera">switch camera</string>
+    <string name="friends_using">Friends using Vidtrain</string>
 
     <string-array name="privacy_states">
         <item>Public</item>

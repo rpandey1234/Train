@@ -103,7 +103,8 @@ public class LogInActivity extends AppCompatActivity {
 
     private void goMainActivity() {
         logUser();
-        Intent i = new Intent(getBaseContext(), MainActivity.class);
+//        Intent i = new Intent(getBaseContext(), MainActivity.class);
+        Intent i = new Intent(getBaseContext(), CreationDetailActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
         finish();

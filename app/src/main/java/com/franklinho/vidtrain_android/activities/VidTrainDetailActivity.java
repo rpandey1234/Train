@@ -46,7 +46,7 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
     @Bind(R.id.btnAddVidTrain) Button _btnAddVidTrain;
     @Bind(R.id.viewPager) ViewPager _viewPager;
 
-    private static final boolean MARK_SEEN_VIDEOS = false;
+    private static final boolean MARK_SEEN_VIDEOS = true;
     public static final String VIDTRAIN_KEY = "vidTrain";
     public static final int VIDEO_CAPTURE = 101;
     private ProgressDialog _progress;
