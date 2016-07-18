@@ -133,7 +133,7 @@ public class Unseen extends ParseObject {
     public int getUnseenIndex() {
         List<Video> unseenVideos = getUnseenVideos();
         if (unseenVideos.isEmpty()) {
-            return 0;
+            return -1;
         }
         List<Video> allVideos = getVidtrain().getVideos();
         int unseenIndex = Utility.indexOf(allVideos, unseenVideos.get(0));

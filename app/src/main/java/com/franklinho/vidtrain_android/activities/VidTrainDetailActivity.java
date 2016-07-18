@@ -51,7 +51,6 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
     public static final int VIDEO_CAPTURE = 101;
     private ProgressDialog _progress;
     private VidTrain _vidTrain;
-    private List<Video> _videos;
     private int _lastPosition = -1;
 
     @Override
@@ -87,7 +86,8 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
                         }
                         int unseenIndex;
                         if (unseenList.isEmpty()) {
-                            unseenIndex = 0;
+                            // This should not happen (only for older vidtrains)
+                            unseenIndex = _vidTrain.getVideosCount() - 1;
                         } else {
                             unseenIndex = unseenList.get(0).getUnseenIndex();
                             Log.d(VidtrainApplication.TAG, "go directly to index: " + unseenIndex);
@@ -191,7 +191,6 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
                                         _progress.dismiss();
                                         layoutVidTrain(_vidTrain.getVideosCount() - 1);
                                         Utility.sendNotifications(_vidTrain);
-                                        // TODO(rahul): add this video to unseen list for all users on the thread
                                         Unseen.addUnseen(_vidTrain);
                                         assert user != null;
                                         user.put("vidtrains", user.maybeInitAndAdd(_vidTrain));
@@ -214,41 +213,39 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
         });
     }
 
-    void layoutVidTrain(final int initialIndex) {
+    void layoutVidTrain(int initialIndex) {
+        boolean shouldPlayVideo = true;
+        if (initialIndex == -1) {
+            // The user has seen all the videos. They can only swipe through the pics now, start
+            // them at the last video
+            shouldPlayVideo = false;
+            initialIndex = _vidTrain.getVideosCount() - 1;
+        }
         _tvTitle.setText(_vidTrain.getTitle());
-        _videos = _vidTrain.getVideos();
         _tvVideoCount.setText(String.valueOf(_vidTrain.getVideosCount()));
-        // TODO: by doing this, we've lost access to all the earlier videos
-        List<Video> unseenVideos = _vidTrain.getVideos().subList(initialIndex,
-                _vidTrain.getVideosCount());
         final VideoFragmentPagerAdapter _videoFragmentPagerAdapter =  new VideoFragmentPagerAdapter(
-                getSupportFragmentManager(), getBaseContext(), unseenVideos);
+                getSupportFragmentManager(), getBaseContext(), _vidTrain.getVideos());
         _viewPager.setAdapter(_videoFragmentPagerAdapter);
-        final SimpleOnPageChangeListener pageChangeListener = new SimpleOnPageChangeListener() {
+        final boolean finalShouldPlayVideo = shouldPlayVideo;
+        _viewPager.addOnPageChangeListener(new SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(final int position) {
-                // Null checks are only needed for instant run
-                VideoPageFragment lastFragment =
-                        _videoFragmentPagerAdapter.getFragment(_lastPosition);
-                if (lastFragment != null) {
-                    lastFragment.stopVideo();
-                }
-                VideoPageFragment fragment = _videoFragmentPagerAdapter.getFragment(position);
-                if (fragment != null) {
-                    fragment.playVideo();
+                if (finalShouldPlayVideo) {
+                    // Null checks are only needed for instant run
+                    VideoPageFragment lastFragment =
+                            _videoFragmentPagerAdapter.getFragment(_lastPosition);
+                    if (lastFragment != null) {
+                        lastFragment.stopVideo();
+                    }
+                    VideoPageFragment fragment = _videoFragmentPagerAdapter.getFragment(position);
+                    if (fragment != null) {
+                        fragment.playVideo();
+                    }
                 }
                 _lastPosition = position;
             }
-        };
-        // Make sure view pager fragment is already instantiated
-        // http://stackoverflow.com/questions/11794269/
-        _viewPager.post(new Runnable() {
-            @Override
-            public void run() {
-                _viewPager.addOnPageChangeListener(pageChangeListener);
-            }
         });
-        pageChangeListener.onPageSelected(0);
+        _viewPager.setCurrentItem(initialIndex);
     }
 
     @Override
@@ -257,7 +254,7 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
             Unseen.removeUnseen(_vidTrain, User.getCurrentUser(), video);
         }
         int currentIndex = _viewPager.getCurrentItem();
-        if (currentIndex < _videos.size()) {
+        if (currentIndex < _vidTrain.getVideos().size()) {
             _viewPager.setCurrentItem(currentIndex + 1, true);
         }
     }
