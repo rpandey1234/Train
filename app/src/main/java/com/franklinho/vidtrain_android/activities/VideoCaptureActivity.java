@@ -404,20 +404,16 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
                _imageParameters.mPreviewWidth = _preview.getWidth();
                _imageParameters.mPreviewHeight = _preview.getHeight();
 
-               _imageParameters.mCoverWidth = _imageParameters.mCoverHeight
-                       = _imageParameters.calculateCoverWidthHeight();
+               // TODO(rahul): remove this?
+               _imageParameters.mCoverWidth = _imageParameters.mCoverHeight = 0;
 
-               resizeTopAndBtmCover(_vTop, _vBottom);
-               if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                   _preview.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-               } else {
-                   _preview.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-               }
+               resizeTopAndBottomCover(_vTop, _vBottom);
+               _preview.getViewTreeObserver().removeOnGlobalLayoutListener(this);
            }
        });
    }
 
-    private void resizeTopAndBtmCover(final View topCover, final View bottomCover) {
+    private void resizeTopAndBottomCover(final View topCover, final View bottomCover) {
         ResizeAnimation resizeTopAnimation
                 = new ResizeAnimation(topCover, _imageParameters);
         resizeTopAnimation.setDuration(800);
