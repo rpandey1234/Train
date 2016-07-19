@@ -183,7 +183,6 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
                         video.saveInBackground(new SaveCallback() {
                             @Override
                             public void done(ParseException e) {
-                                _vidTrain.setThumbnail(parseFile);
                                 _vidTrain.setVideos(_vidTrain.maybeInitAndAdd(video));
                                 _vidTrain.saveInBackground(new SaveCallback() {
                                     @Override

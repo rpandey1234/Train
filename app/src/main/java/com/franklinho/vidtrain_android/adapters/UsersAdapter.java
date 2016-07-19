@@ -50,8 +50,8 @@ public class UsersAdapter extends ArrayAdapter<User> {
 
     // View lookup cache
     static class ViewHolder {
-        @Bind(R.id.tvName) TextView _tvName;
-        @Bind(R.id.ivProfileImage) RoundedImageView _ivProfileImage;
+        @Bind(R.id.friendName) TextView _tvName;
+        @Bind(R.id.friendImage) RoundedImageView _ivProfileImage;
 
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);

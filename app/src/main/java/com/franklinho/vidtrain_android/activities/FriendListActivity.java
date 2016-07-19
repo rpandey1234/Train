@@ -48,7 +48,7 @@ public class FriendListActivity extends AppCompatActivity {
         });
 
         final List<User> friends = new ArrayList<>();
-        final FriendsAdapter friendsAdapter = new FriendsAdapter(this, friends);
+        final FriendsAdapter friendsAdapter = new FriendsAdapter(this, friends, false);
         _friendsRecyclerView.setAdapter(friendsAdapter);
         _friendsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         FacebookUtility.getFacebookFriendsUsingApp(new FriendLoaderCallback() {

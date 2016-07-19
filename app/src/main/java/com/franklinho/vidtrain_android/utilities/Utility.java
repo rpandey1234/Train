@@ -93,6 +93,9 @@ public class Utility {
     }
 
     public static ParseFile createParseFile(String path) {
+        if (path == null) {
+            return null;
+        }
         try {
             byte[] videoFileData = Files.toByteArray(new File(path));
             return new ParseFile(FILENAME, videoFileData);

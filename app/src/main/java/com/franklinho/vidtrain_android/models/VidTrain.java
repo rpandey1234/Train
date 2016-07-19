@@ -21,7 +21,6 @@ public class VidTrain extends ParseObject implements Serializable {
     public static final String USER_KEY = "user";
     public static final String TITLE_KEY = "title";
     public static final String VIDEOS_KEY = "videos";
-    public static final String THUMBNAIL_KEY = "thumbnail";
     public static final String COLLABORATORS = "collaborators";
 
     public VidTrain() {}
@@ -44,10 +43,6 @@ public class VidTrain extends ParseObject implements Serializable {
 
     public int getVideosCount() {
         return getVideos().size();
-    }
-
-    public void setThumbnail(ParseFile file) {
-        put(THUMBNAIL_KEY, file);
     }
 
     public Video getLatestVideo() {

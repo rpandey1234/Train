@@ -8,23 +8,24 @@
     <com.makeramen.roundedimageview.RoundedImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:id="@+id/ivProfileImage"
+        android:id="@+id/friendImage"
         app:riv_corner_radius="20dp"
         app:riv_border_width="2dp"
         app:riv_border_color="@android:color/white"
         android:layout_margin="4dp"
         android:src="@drawable/profile_icon"
         />
-
-    <TextView
-        android:id="@+id/tvName"
-        android:layout_width="wrap_content"
+    
+    <CheckedTextView
+        android:id="@+id/friendName"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical|left"
+        android:gravity="center_vertical|right"
+        android:layout_toEndOf="@id/friendImage"
+        android:layout_alignTop="@id/friendImage"
+        android:layout_alignBottom="@id/friendImage"
+        android:checkMark="?android:attr/listChoiceIndicatorMultiple"
         android:textColor="@android:color/black"
-        android:layout_toEndOf="@id/ivProfileImage"
-        android:layout_alignTop="@id/ivProfileImage"
-        android:layout_alignBottom="@id/ivProfileImage"
         />
 
 </RelativeLayout>

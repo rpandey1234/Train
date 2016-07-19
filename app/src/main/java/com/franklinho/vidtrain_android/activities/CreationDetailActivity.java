@@ -40,9 +40,9 @@ public class CreationDetailActivity extends AppCompatActivity {
     @Bind(R.id.etTitle) EditText _etTitle;
     @Bind(R.id.friendsRecyclerView) RecyclerView _friendsRecyclerView;
 
-    ProgressDialog _progressDialog;
-    String _videoPath;
-    List<User> _collaborators;
+    private ProgressDialog _progressDialog;
+    private String _videoPath;
+    private FriendsAdapter _friendsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,28 +50,23 @@ public class CreationDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_creation_detail);
         ButterKnife.bind(this);
         final List<User> friends = new ArrayList<>();
-        final FriendsAdapter friendsAdapter = new FriendsAdapter(this, friends);
-        _friendsRecyclerView.setAdapter(friendsAdapter);
+        _friendsAdapter = new FriendsAdapter(this, friends, true);
+        _friendsRecyclerView.setAdapter(_friendsAdapter);
         _friendsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        _friendsRecyclerView.setHasFixedSize(true);
         FacebookUtility.getFacebookFriendsUsingApp(new FriendLoaderCallback() {
             @Override
             public void setUsers(List<User> users) {
                 friends.addAll(users);
-                friendsAdapter.notifyDataSetChanged();
+                _friendsAdapter.notifyDataSetChanged();
             }
         });
-
 
         Bundle extras = getIntent().getExtras();
         if (extras == null) {
             _videoPath = null;
         } else {
             _videoPath = extras.getString("videoPath");
-        }
-        _collaborators = new ArrayList<>();
-        final User currentUser = User.getCurrentUser();
-        if (currentUser != null) {
-            _collaborators.add(currentUser);
         }
 
         _vvPreview.setHeightRatio(1);
@@ -97,46 +92,52 @@ public class CreationDetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.btnSubmit)
     public void submitVidTrain(View view) {
-        if (true) {
-            Toast.makeText(this, "Testing now, won't work",  Toast.LENGTH_LONG).show();
-            return;
-        }
         final ParseFile parseFile = Utility.createParseFile(_videoPath);
         if (parseFile == null) {
-            Toast.makeText(this, "Was unable to create file for video.",  Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Unable to create a video file.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        final String titleText = _etTitle.getText().toString();
+        if (titleText.isEmpty()) {
+            Toast.makeText(this, "Please add a title.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        final User user = User.getCurrentUser();
+        if (user == null) {
+            Toast.makeText(this, "Sign in to create a Vidtrain.", Toast.LENGTH_LONG).show();
             return;
         }
         _progressDialog = ProgressDialog.show(this, "Saving", "Just a moment please!", true);
         final Video video = new Video();
         final VidTrain vidTrain = new VidTrain();
 
+        final List<User> collaborators = new ArrayList<>();
+        // collaborators is never empty since it always contains the current user
+        collaborators.add(user);
+        collaborators.addAll(_friendsAdapter.getCollaborators());
+
         Bitmap thumbnailBitmap = Utility.getImageBitmap(_videoPath);
         final ParseFile parseThumbnail = Utility.createParseFileFromBitmap(thumbnailBitmap);
         parseFile.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                final User user = User.getCurrentUser();
                 video.setUser(user);
                 video.setVideoFile(parseFile);
                 video.setThumbnail(parseThumbnail);
                 video.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
-                        vidTrain.setTitle(_etTitle.getText().toString());
+                        vidTrain.setTitle(titleText);
                         vidTrain.setUser(user);
                         ArrayList<Video> videos = new ArrayList<>();
                         videos.add(video);
                         vidTrain.setVideos(videos);
-                        if (!_collaborators.isEmpty()) {
-                            vidTrain.setCollaborators(_collaborators);
-                        }
-                        vidTrain.setThumbnail(parseFile);
+                        vidTrain.setCollaborators(collaborators);
                         vidTrain.saveInBackground(new SaveCallback() {
                             @Override
                             public void done(ParseException e) {
                                 video.setVidTrain(vidTrain);
                                 video.saveInBackground();
-                                assert user != null;
                                 user.put("vidtrains", user.maybeInitAndAdd(vidTrain));
                                 user.put("videos", user.maybeInitAndAdd(video));
                                 user.saveInBackground(new SaveCallback() {
