@@ -61,14 +61,7 @@ public class CreationDetailActivity extends AppCompatActivity {
                 _friendsAdapter.notifyDataSetChanged();
             }
         });
-
-        Bundle extras = getIntent().getExtras();
-        if (extras == null) {
-            _videoPath = null;
-        } else {
-            _videoPath = extras.getString("videoPath");
-        }
-
+        _videoPath = getIntent().getStringExtra(MainActivity.VIDEO_PATH);
         _vvPreview.setHeightRatio(1);
         if (_videoPath != null) {
             _vvThumbnail.setImageBitmap(Utility.getImageBitmap(_videoPath));

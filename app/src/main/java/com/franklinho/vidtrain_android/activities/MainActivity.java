@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,7 +13,6 @@ import android.widget.Toast;
 
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.fragments.ConversationsFragment;
-import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.Utility;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
@@ -29,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int VIDEO_CAPTURE = 101;
     public static final String UNIQUE_ID_INTENT = "UNIQUE_ID";
     public static final String SHOW_CONFIRM = "SHOW_CONFIRM";
+    public static final String VIDEO_PATH = "VIDEO_PATH";
 
     @Bind(R.id.toolbar) Toolbar _toolbar;
     @Bind(R.id.conversations_fragment) FrameLayout _conversationsFragment;
@@ -46,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
@@ -84,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK && data != null) {
                 String uid = data.getStringExtra(UNIQUE_ID_INTENT);
                 Intent i = new Intent(this, CreationDetailActivity.class);
-                i.putExtra("videoPath", Utility.getOutputMediaFile(uid).getPath());
+                i.putExtra(VIDEO_PATH, Utility.getOutputMediaFile(uid).getPath());
                 startActivity(i);
             } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, "Video recording cancelled.",  Toast.LENGTH_LONG).show();
