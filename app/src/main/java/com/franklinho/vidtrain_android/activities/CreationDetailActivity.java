@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.adapters.FriendsAdapter;
 import com.franklinho.vidtrain_android.models.DynamicVideoView;
+import com.franklinho.vidtrain_android.models.Unseen;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
@@ -131,6 +132,7 @@ public class CreationDetailActivity extends AppCompatActivity {
                             public void done(ParseException e) {
                                 video.setVidTrain(vidTrain);
                                 video.saveInBackground();
+                                Unseen.addUnseen(vidTrain);
                                 user.put("vidtrains", user.maybeInitAndAdd(vidTrain));
                                 user.put("videos", user.maybeInitAndAdd(video));
                                 user.saveInBackground(new SaveCallback() {

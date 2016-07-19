@@ -25,13 +25,19 @@ public class Unseen extends ParseObject {
     public static final String USER_KEY = "user";
     public static final String VIDTRAIN_KEY = "vidTrain";
     public static final String VIDEOS_KEY = "videos";
+    private static final boolean ADD_UNSEEN_FOR_OWN_VIDEO = true;
 
     public Unseen() {}
 
     public static void addUnseen(VidTrain vidtrain) {
         List<User> collaborators = vidtrain.getCollaborators();
         for (User user : collaborators) {
-            addUnseen(vidtrain, user);
+            if (user.getObjectId().equals(User.getCurrentUser().getObjectId())
+                    && ADD_UNSEEN_FOR_OWN_VIDEO) {
+                addUnseen(vidtrain, user);
+            } else {
+                addUnseen(vidtrain, user);
+            }
         }
     }
 

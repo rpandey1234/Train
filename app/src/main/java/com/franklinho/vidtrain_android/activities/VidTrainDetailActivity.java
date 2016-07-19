@@ -46,7 +46,7 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
     @Bind(R.id.btnAddVidTrain) Button _btnAddVidTrain;
     @Bind(R.id.viewPager) ViewPager _viewPager;
 
-    private static final boolean MARK_SEEN_VIDEOS = true;
+    private static final boolean MARK_SEEN_VIDEOS = false;
     public static final String VIDTRAIN_KEY = "vidTrain";
     public static final int VIDEO_CAPTURE = 101;
     private ProgressDialog _progress;
@@ -122,7 +122,7 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
             Uri uri = intent.getData();
             return uri.getQueryParameter(VIDTRAIN_KEY);
         } else {
-            return getIntent().getExtras().getString(VIDTRAIN_KEY);
+            return intent.getStringExtra(VIDTRAIN_KEY);
         }
     }
 
@@ -213,23 +213,21 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
     }
 
     void layoutVidTrain(int initialIndex) {
-        boolean shouldPlayVideo = true;
         if (initialIndex == -1) {
             // The user has seen all the videos. They can only swipe through the pics now, start
             // them at the last video
-            shouldPlayVideo = false;
             initialIndex = _vidTrain.getVideosCount() - 1;
         }
+        final int finalInitialIndex = initialIndex;
         _tvTitle.setText(_vidTrain.getTitle());
         _tvVideoCount.setText(String.valueOf(_vidTrain.getVideosCount()));
         final VideoFragmentPagerAdapter _videoFragmentPagerAdapter =  new VideoFragmentPagerAdapter(
                 getSupportFragmentManager(), getBaseContext(), _vidTrain.getVideos());
         _viewPager.setAdapter(_videoFragmentPagerAdapter);
-        final boolean finalShouldPlayVideo = shouldPlayVideo;
-        _viewPager.addOnPageChangeListener(new SimpleOnPageChangeListener() {
+        final SimpleOnPageChangeListener pageChangeListener = new SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(final int position) {
-                if (finalShouldPlayVideo) {
+                if (finalInitialIndex != -1) {
                     // Null checks are only needed for instant run
                     VideoPageFragment lastFragment =
                             _videoFragmentPagerAdapter.getFragment(_lastPosition);
@@ -243,8 +241,15 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
                 }
                 _lastPosition = position;
             }
-        });
+        };
+        _viewPager.addOnPageChangeListener(pageChangeListener);
         _viewPager.setCurrentItem(initialIndex);
+        _viewPager.post(new Runnable() {
+            @Override
+            public void run() {
+                pageChangeListener.onPageSelected(finalInitialIndex);
+            }
+        });
     }
 
     @Override
