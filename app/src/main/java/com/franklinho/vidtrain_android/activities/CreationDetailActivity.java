@@ -20,6 +20,7 @@ import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
 import com.franklinho.vidtrain_android.utilities.FacebookUtility;
+import com.franklinho.vidtrain_android.utilities.FriendLoaderCallback;
 import com.franklinho.vidtrain_android.utilities.Utility;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -27,7 +28,6 @@ import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -44,20 +44,6 @@ public class CreationDetailActivity extends AppCompatActivity {
     String _videoPath;
     List<User> _collaborators;
 
-    public class FriendCallable implements Callable<Integer> {
-
-        private List<User> _users;
-
-        public void setUsers(List<User> users) {
-            _users = users;
-        }
-
-        @Override
-        public Integer call() throws Exception {
-            return null;
-        }
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,20 +53,15 @@ public class CreationDetailActivity extends AppCompatActivity {
         final FriendsAdapter friendsAdapter = new FriendsAdapter(this, friends);
         _friendsRecyclerView.setAdapter(friendsAdapter);
         _friendsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        FacebookUtility.getFacebookFriendsUsingApp(new FriendCallable() {
-            List<User> _users;
-
-            public void setUsers(List<User> users) {
-                _users = users;
-            }
-
+        FacebookUtility.getFacebookFriendsUsingApp(new FriendLoaderCallback() {
             @Override
-            public Integer call() throws Exception {
-                friends.addAll(_users);
+            public void setUsers(List<User> users) {
+                friends.addAll(users);
                 friendsAdapter.notifyDataSetChanged();
-                return null;
             }
         });
+
+
         Bundle extras = getIntent().getExtras();
         if (extras == null) {
             _videoPath = null;

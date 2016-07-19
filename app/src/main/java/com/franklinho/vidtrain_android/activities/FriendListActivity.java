@@ -9,17 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.facebook.AccessToken;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.HttpMethod;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.adapters.FriendsAdapter;
 import com.franklinho.vidtrain_android.models.User;
-import com.franklinho.vidtrain_android.utilities.Utility;
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseQuery;
+import com.franklinho.vidtrain_android.utilities.FacebookUtility;
+import com.franklinho.vidtrain_android.utilities.FriendLoaderCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,30 +51,12 @@ public class FriendListActivity extends AppCompatActivity {
         final FriendsAdapter friendsAdapter = new FriendsAdapter(this, friends);
         _friendsRecyclerView.setAdapter(friendsAdapter);
         _friendsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        new GraphRequest(
-                AccessToken.getCurrentAccessToken(),
-                "/me/friends",
-                null,
-                HttpMethod.GET,
-                new GraphRequest.Callback() {
-                    @Override
-                    public void onCompleted(GraphResponse response) {
-                        List<String> facebookFriends = Utility.getFacebookFriends(response, "id");
-                        ParseQuery<User> userQuery = ParseQuery.getQuery("_User");
-                        userQuery.whereContainedIn("fbid", facebookFriends)
-                                .findInBackground(new FindCallback<User>() {
-                                    public void done(List<User> objects, ParseException e) {
-                                        if (e == null) {
-                                            friends.addAll(objects);
-                                            friendsAdapter.notifyDataSetChanged();
-                                        } else {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                });
-                        friendsAdapter.notifyDataSetChanged();
-                    }
-                }
-        ).executeAsync();
+        FacebookUtility.getFacebookFriendsUsingApp(new FriendLoaderCallback() {
+            @Override
+            public void setUsers(List<User> users) {
+                friends.addAll(users);
+                friendsAdapter.notifyDataSetChanged();
+            }
+        });
     }
 }
