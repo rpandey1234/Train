@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.adapters.VideoFragmentPagerAdapter;
+import com.franklinho.vidtrain_android.fragments.SwipeViewPager;
 import com.franklinho.vidtrain_android.fragments.VideoPageFragment;
 import com.franklinho.vidtrain_android.fragments.VideoPageFragment.VideoFinishedListener;
 import com.franklinho.vidtrain_android.models.Unseen;
@@ -46,7 +47,7 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
     @Bind(R.id.tvVideoCount) TextView _tvVideoCount;
     @Bind(R.id.tvTitle) TextView _tvTitle;
     @Bind(R.id.btnAddVidTrain) Button _btnAddVidTrain;
-    @Bind(R.id.viewPager) ViewPager _viewPager;
+    @Bind(R.id.viewPager) SwipeViewPager _viewPager;
 
     private static final boolean MARK_SEEN_VIDEOS = false;
     public static final String VIDTRAIN_KEY = "vidTrain";
@@ -218,21 +219,30 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
     }
 
     void layoutVidTrain(int initialIndex) {
+        final boolean shouldPlayVideos;
+        List<Video> videos = _vidTrain.getVideos();
         if (initialIndex == -1) {
             // The user has seen all the videos. They can only swipe through the pics now, start
             // them at the last video
             initialIndex = _vidTrain.getVideosCount() - 1;
+            shouldPlayVideos = false;
+        } else {
+            // Reduce the size of videos list to only the unseen ones, and start the viewpager
+            // at the beginning of this new list
+            videos = _vidTrain.getVideos().subList(initialIndex, _vidTrain.getVideosCount());
+            initialIndex = 0;
+            shouldPlayVideos = true;
         }
-        final int finalInitialIndex = initialIndex;
         _tvTitle.setText(_vidTrain.getTitle());
         _tvVideoCount.setText(String.valueOf(_vidTrain.getVideosCount()));
-        final VideoFragmentPagerAdapter _videoFragmentPagerAdapter =  new VideoFragmentPagerAdapter(
-                getSupportFragmentManager(), getBaseContext(), _vidTrain.getVideos());
+        final VideoFragmentPagerAdapter _videoFragmentPagerAdapter = new VideoFragmentPagerAdapter(
+                getSupportFragmentManager(), getBaseContext(), videos);
         _viewPager.setAdapter(_videoFragmentPagerAdapter);
         final SimpleOnPageChangeListener pageChangeListener = new SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(final int position) {
-                if (finalInitialIndex != -1) {
+                if (shouldPlayVideos) {
+                    _viewPager.setPagingEnabled(false);
                     // Null checks are only needed for instant run
                     VideoPageFragment lastFragment =
                             _videoFragmentPagerAdapter.getFragment(_lastPosition);
@@ -249,6 +259,7 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
         };
         _viewPager.addOnPageChangeListener(pageChangeListener);
         _viewPager.setCurrentItem(initialIndex);
+        final int finalInitialIndex = initialIndex;
         _viewPager.post(new Runnable() {
             @Override
             public void run() {
@@ -262,9 +273,7 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
         if (MARK_SEEN_VIDEOS) {
             Unseen.removeUnseen(_vidTrain, User.getCurrentUser(), video);
         }
-        int currentIndex = _viewPager.getCurrentItem();
-        if (currentIndex < _vidTrain.getVideos().size()) {
-            _viewPager.setCurrentItem(currentIndex + 1, true);
-        }
+        // View pager takes care of not allowing OOB issues.
+        _viewPager.setCurrentItem(_viewPager.getCurrentItem() + 1, true);
     }
 }
