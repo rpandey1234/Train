@@ -15,7 +15,6 @@ import android.media.CamcorderProfile;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaRecorder;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -25,6 +24,8 @@ import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewTreeObserver;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.RelativeLayout;
 
@@ -91,7 +92,6 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
 
     @OnClick(R.id.button_change_camera)
     public void switchCamera(View view) {
-        Log.d(VidtrainApplication.TAG, "switch camera clicked!");
         releaseCameraAndPreview();
         if (_cameraId == CameraInfo.CAMERA_FACING_BACK) {
             _cameraId = CameraInfo.CAMERA_FACING_FRONT;
@@ -108,7 +108,9 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.video_capture);
         ButterKnife.bind(this);
         uniqueId = getIntent().getStringExtra(MainActivity.UNIQUE_ID_INTENT);
