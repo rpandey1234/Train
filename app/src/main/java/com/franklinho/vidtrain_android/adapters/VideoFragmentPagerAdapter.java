@@ -31,7 +31,7 @@ public class VideoFragmentPagerAdapter extends FragmentPagerAdapter {
         super(fm);
         _context = context;
         _vidTrain = vidTrain;
-                _videos = videos;
+        _videos = videos;
         _fragmentMap = new HashMap<>();
     }
 

@@ -27,6 +27,7 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -36,7 +37,7 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
 
     @Bind(R.id.viewPager) SwipeViewPager _viewPager;
 
-    private static final boolean MARK_SEEN_VIDEOS = true;
+    private static final boolean MARK_SEEN_VIDEOS = false;
     public static final String VIDTRAIN_KEY = "vidTrain";
     private VidTrain _vidTrain;
     private int _lastPosition = -1;
@@ -49,6 +50,7 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_vid_train_detail);
         ButterKnife.bind(this);
+        _viewPager.setPagingEnabled(false);
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
         query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
         query.whereEqualTo("objectId", getVidtrainId());
@@ -105,30 +107,20 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
         }
     }
 
-    void layoutVidTrain(int initialIndex) {
-        final boolean shouldPlayVideos;
-        List<Video> videos = _vidTrain.getVideos();
-        if (initialIndex == -1) {
-            // The user has seen all the videos. They can only swipe through the pics now, start
-            // them at the last video
-            initialIndex = _vidTrain.getVideosCount() - 1;
-            shouldPlayVideos = false;
+    void layoutVidTrain(int position) {
+        final List<Video> videos;
+        if (position == -1) {
+            // User has seen all the videos. They only get to see the final landing page.
+            videos = new ArrayList<>();
         } else {
-            // Reduce the size of videos list to only the unseen ones, and start the viewpager
-            // at the beginning of this new list
-            videos = _vidTrain.getVideos().subList(initialIndex, _vidTrain.getVideosCount());
-            initialIndex = 0;
-            shouldPlayVideos = true;
-            _viewPager.setPagingEnabled(false);
-            final List<Video> finalVideos = videos;
+            // User can view the videos starting at this position.
+            videos = _vidTrain.getVideos().subList(position, _vidTrain.getVideosCount());
             _viewPager.setNextVideoListener(new NextVideoListener() {
                 @Override
                 public void onNextVideo(int position) {
-                    if (MARK_SEEN_VIDEOS) {
-                        Unseen.removeUnseen(
-                                _vidTrain, User.getCurrentUser(), finalVideos.get(position));
+                    if (position < videos.size()) {
+                        goNextVideo(videos.get(position));
                     }
-                    _viewPager.setCurrentItem(_viewPager.getCurrentItem() + 1, true);
                 }
             });
         }
@@ -138,36 +130,37 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
         final SimpleOnPageChangeListener pageChangeListener = new SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(final int position) {
-                if (shouldPlayVideos) {
-                    // Null checks are only needed for instant run
-                    VideoPageFragment lastFragment =
-                            _videoFragmentPagerAdapter.getFragment(_lastPosition);
-                    if (lastFragment != null) {
-                        lastFragment.stopVideo();
-                    }
-                    VideoPageFragment fragment = _videoFragmentPagerAdapter.getFragment(position);
-                    if (fragment != null) {
-                        fragment.playVideo();
-                    }
+                // Null checks are only needed for instant run
+                VideoPageFragment lastFragment =
+                        _videoFragmentPagerAdapter.getFragment(_lastPosition);
+                if (lastFragment != null) {
+                    lastFragment.stopVideo();
+                }
+                VideoPageFragment fragment = _videoFragmentPagerAdapter.getFragment(position);
+                if (fragment != null) {
+                    fragment.playVideo();
                 }
                 _lastPosition = position;
             }
         };
         _viewPager.addOnPageChangeListener(pageChangeListener);
-        _viewPager.setCurrentItem(initialIndex);
-        final int finalInitialIndex = initialIndex;
+        _viewPager.setCurrentItem(0);
         _viewPager.post(new Runnable() {
             @Override
             public void run() {
-                pageChangeListener.onPageSelected(finalInitialIndex);
+                pageChangeListener.onPageSelected(0);
             }
         });
     }
 
     @Override
     public void onVideoCompleted(Video video) {
+        goNextVideo(video);
+    }
+
+    private void goNextVideo(Video currentVideo) {
         if (MARK_SEEN_VIDEOS) {
-            Unseen.removeUnseen(_vidTrain, User.getCurrentUser(), video);
+            Unseen.removeUnseen(_vidTrain, User.getCurrentUser(), currentVideo);
         }
         // View pager takes care of not allowing OOB issues.
         _viewPager.setCurrentItem(_viewPager.getCurrentItem() + 1, true);
