@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.adapters.VideoFragmentPagerAdapter;
 import com.franklinho.vidtrain_android.fragments.SwipeViewPager;
+import com.franklinho.vidtrain_android.fragments.SwipeViewPager.NextVideoListener;
 import com.franklinho.vidtrain_android.fragments.VideoPageFragment;
 import com.franklinho.vidtrain_android.fragments.VideoPageFragment.VideoFinishedListener;
 import com.franklinho.vidtrain_android.models.Unseen;
@@ -232,6 +233,18 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
             videos = _vidTrain.getVideos().subList(initialIndex, _vidTrain.getVideosCount());
             initialIndex = 0;
             shouldPlayVideos = true;
+            _viewPager.setPagingEnabled(false);
+            final List<Video> finalVideos = videos;
+            _viewPager.setNextVideoListener(new NextVideoListener() {
+                @Override
+                public void onNextVideo(int position) {
+                    if (MARK_SEEN_VIDEOS) {
+                        Unseen.removeUnseen(
+                                _vidTrain, User.getCurrentUser(), finalVideos.get(position));
+                    }
+                    _viewPager.setCurrentItem(_viewPager.getCurrentItem() + 1, true);
+                }
+            });
         }
         _tvTitle.setText(_vidTrain.getTitle());
         _tvVideoCount.setText(String.valueOf(_vidTrain.getVideosCount()));
@@ -242,7 +255,6 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
             @Override
             public void onPageSelected(final int position) {
                 if (shouldPlayVideos) {
-                    _viewPager.setPagingEnabled(false);
                     // Null checks are only needed for instant run
                     VideoPageFragment lastFragment =
                             _videoFragmentPagerAdapter.getFragment(_lastPosition);
