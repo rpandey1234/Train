@@ -30,7 +30,7 @@ import butterknife.ButterKnife;
 public class VideoPageFragment extends Fragment {
 
     @Bind(R.id.ivThumbnail) DynamicHeightImageView _ivThumbnail;
-    @Bind(R.id.vvPreview) DynamicVideoView _videoView;
+    @Bind(R.id.videoView) DynamicVideoView _videoView;
     @Bind(R.id.ivAuthor) ImageView _ivAuthor;
     @Bind(R.id.tvTime) TextView _tvTime;
     @Bind(R.id.videoInformation) RelativeLayout _videoInformation;
@@ -75,7 +75,6 @@ public class VideoPageFragment extends Fragment {
         ButterKnife.bind(this, v);
         Glide.with(getContext()).load(_videoThumbnailUrl).into(_ivThumbnail);
         _videoView.setVideoPath(_videoUrl);
-//        _videoView.setHeightRatio(0.9);
         _videoView.getHolder().setFormat(PixelFormat.TRANSPARENT);
         _videoView.setZOrderMediaOverlay(true);
 

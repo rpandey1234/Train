@@ -35,7 +35,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class CreationDetailActivity extends AppCompatActivity {
-    @Bind(R.id.vvPreview) DynamicVideoView _vvPreview;
+    @Bind(R.id.videoView) DynamicVideoView _vvPreview;
     @Bind(R.id.vvThumbnail) ImageView _vvThumbnail;
     @Bind(R.id.btnSubmit) Button _btnSubmit;
     @Bind(R.id.etTitle) EditText _etTitle;

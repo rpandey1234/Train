@@ -175,7 +175,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
             View itemView = getLayoutInflater().inflate(R.layout.image_video_overlay, null);
             itemView.setPadding(itemView.getPaddingLeft(), itemView.getPaddingTop() + 10,
                     itemView.getPaddingRight(), itemView.getPaddingBottom());
-            final DynamicVideoView vvPreview = (DynamicVideoView) itemView.findViewById(R.id.vvPreview);
+            final DynamicVideoView vvPreview = (DynamicVideoView) itemView.findViewById(R.id.videoView);
             vvPreview.setHeightRatio(1);
             final DynamicHeightImageView ivThumbnail = (DynamicHeightImageView) itemView.findViewById(R.id.ivThumbnail);
             ivThumbnail.setHeightRatio(1);

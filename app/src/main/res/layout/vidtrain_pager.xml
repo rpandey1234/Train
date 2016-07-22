@@ -8,7 +8,7 @@
 
     <com.franklinho.vidtrain_android.models.DynamicHeightImageView
         android:layout_width="match_parent"
-        android:layout_height="520dp"
+        android:layout_height="match_parent"
         android:id="@+id/ivThumbnail"
         android:background="@color/bluePrimary"
         android:scaleType="centerCrop"
@@ -18,9 +18,9 @@
 
     <com.franklinho.vidtrain_android.models.DynamicVideoView
         android:layout_width="match_parent"
-        android:layout_height="520dp"
+        android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
-        android:id="@+id/vvPreview"
+        android:id="@+id/videoView"
         android:visibility="gone"
         />
 

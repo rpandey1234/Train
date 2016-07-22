@@ -27,7 +27,7 @@
         <com.franklinho.vidtrain_android.models.DynamicVideoView
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:id="@+id/vvPreview"
+            android:id="@+id/videoView"
             />
     </LinearLayout>
 
