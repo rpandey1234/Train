@@ -61,6 +61,7 @@
     <string name="image_placeholder">placeholder</string>
     <string name="switch_camera">switch camera</string>
     <string name="friends_using">Friends using Vidtrain</string>
+    <string name="all_seen">You\'ve seen all the videos here!</string>
 
     <string-array name="privacy_states">
         <item>Public</item>

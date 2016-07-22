@@ -110,6 +110,8 @@ public class VideoPageFragment extends Fragment {
 
     public interface VideoFinishedListener {
 
+        // TODO: may need to pass in video id here instead, since parse objects internals are not
+        // passed in through serializable.
         void onVideoCompleted(Video video);
     }
 

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:paddingBottom="8dp">
+    android:background="@color/white">
 
     <com.franklinho.vidtrain_android.fragments.SwipeViewPager
         android:layout_width="match_parent"
@@ -12,47 +11,4 @@
         android:id="@+id/viewPager"
         android:transitionName="viewer"
         />
-
-    <TextView
-        android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btnAddVidTrain"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="20dp"
-        android:layout_alignParentStart="true"
-        android:gravity="center_vertical"
-        android:layout_toStartOf="@+id/tvVideoCount"
-        android:textColor="@android:color/black"
-        android:textSize="20sp"
-        />
-
-    <TextView
-        android:id="@+id/tvVideoCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btnAddVidTrain"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="20dp"
-        android:layout_alignParentEnd="true"
-        android:textSize="20sp"
-        android:drawablePadding="8dp"
-        android:drawableStart="@drawable/icon_vidtrain_small"
-        android:textColor="@android:color/black"
-        />
-
-    <Button
-        android:id="@+id/btnAddVidTrain"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:padding="8dp"
-        android:layout_margin="8dp"
-        android:text="@string/add"
-        android:textAllCaps="false"
-        android:textSize="20sp"
-        android:textColor="@android:color/white"
-        android:background="@color/bluePrimary"
-        android:foreground="?android:attr/selectableItemBackground"
-        />
-</RelativeLayout>
+</LinearLayout>
