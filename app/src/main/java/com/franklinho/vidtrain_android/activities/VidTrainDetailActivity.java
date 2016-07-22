@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
 import android.util.Log;
 import android.view.View;
@@ -50,7 +49,7 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
     @Bind(R.id.btnAddVidTrain) Button _btnAddVidTrain;
     @Bind(R.id.viewPager) SwipeViewPager _viewPager;
 
-    private static final boolean MARK_SEEN_VIDEOS = false;
+    private static final boolean MARK_SEEN_VIDEOS = true;
     public static final String VIDTRAIN_KEY = "vidTrain";
     public static final int VIDEO_CAPTURE = 101;
     private ProgressDialog _progress;
@@ -196,7 +195,7 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
                                     public void done(ParseException e) {
                                         _progress.dismiss();
                                         layoutVidTrain(_vidTrain.getVideosCount() - 1);
-                                        Utility.sendNotifications(_vidTrain);
+                                        Utility.sendNotification(_vidTrain);
                                         Unseen.addUnseen(_vidTrain);
                                         assert user != null;
                                         user.put("vidtrains", user.maybeInitAndAdd(_vidTrain));

@@ -34,8 +34,5 @@ public class VidtrainApplication extends Application {
         Parse.initialize(this, "0y0WMVmGrDXEfgMgVNzA32ryMuM2gdanfMhH0NMY",
                 "MnKZ0GQhxkAblowrw4xVzftapFBT27yeEt4RKd7b");
         ParseFacebookUtils.initialize(getApplicationContext());
-
-        ParseInstallation.getCurrentInstallation().saveInBackground();
-        ParsePush.subscribeInBackground("");
     }
 }

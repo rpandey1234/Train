@@ -138,7 +138,7 @@ public class CreationDetailActivity extends AppCompatActivity {
                                 user.saveInBackground(new SaveCallback() {
                                     @Override
                                     public void done(ParseException e) {
-                                        Utility.sendNotifications(vidTrain);
+                                        Utility.sendNotification(vidTrain);
                                         _progressDialog.dismiss();
                                         Toast.makeText(getBaseContext(),
                                                 "Successfully saved Vidtrain!", Toast.LENGTH_SHORT)

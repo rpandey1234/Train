@@ -171,16 +171,16 @@ public class Utility {
         return candidates;
     }
 
-    public static void sendNotifications(VidTrain vidtrain) {
+    public static void sendNotification(VidTrain vidtrain) {
         List<User> collaborators = vidtrain.getCollaborators();
         for (User user : collaborators) {
             if (!user.getObjectId().equals(User.getCurrentUser().getObjectId())) {
-                Utility.sendNotifications(user, vidtrain);
+                Utility.sendNotification(user, vidtrain);
             }
         }
     }
 
-    public static void sendNotifications(User user, VidTrain vidtrain) {
+    public static void sendNotification(User user, VidTrain vidtrain) {
         JSONObject data = new JSONObject();
         try {
             data.put("alert", User.getCurrentUser().getName() + " sent you a Vidtrain!");
@@ -190,8 +190,8 @@ public class Utility {
             e.printStackTrace();
         }
 
-        ParseQuery<ParseInstallation> pushQuery =
-                ParseInstallation.getQuery().whereEqualTo("user", user.getObjectId());
+        ParseQuery<ParseInstallation> pushQuery = ParseInstallation.getQuery()
+                .whereEqualTo("user", user.getObjectId());
         ParsePush push = new ParsePush();
         push.setQuery(pushQuery);
         push.setData(data);

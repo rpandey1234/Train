@@ -136,18 +136,7 @@
             />
 
         <service android:name="com.parse.PushService"/>
-        <receiver android:name="com.parse.ParsePushBroadcastReceiver"
-                  android:exported="false">
-            <intent-filter>
-                <action android:name="com.parse.push.intent.RECEIVE" />
-                <action android:name="com.parse.push.intent.DELETE" />
-                <action android:name="com.parse.push.intent.OPEN" />
-            </intent-filter>
-        </receiver>
-        <receiver
-            android:name=".utilities.PushMessageBroadcast"
-            android:exported="false"
-            >
+        <receiver android:name=".utilities.PushMessageBroadcast" android:exported="false">
             <intent-filter>
                 <action android:name="com.parse.push.intent.RECEIVE"/>
                 <action android:name="com.parse.push.intent.DELETE"/>

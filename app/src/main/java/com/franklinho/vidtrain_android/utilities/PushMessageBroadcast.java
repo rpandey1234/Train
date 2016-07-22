@@ -9,7 +9,6 @@ import android.util.Log;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.activities.LogInActivity;
 import com.franklinho.vidtrain_android.activities.MainActivity;
-import com.franklinho.vidtrain_android.activities.VidTrainDetailActivity;
 import com.parse.ParseAnalytics;
 import com.parse.ParsePushBroadcastReceiver;
 import com.parse.ParseUser;
@@ -26,14 +25,8 @@ public class PushMessageBroadcast extends ParsePushBroadcastReceiver {
             String parseData = intent.getExtras().getString("com.parse.Data");
             // Here is data you sent
             Log.i("ParsePush", parseData);
-            String vidTrainId = getVidtrainFromData(parseData);
-            if (vidTrainId != null) {
-                i = new Intent(context, VidTrainDetailActivity.class);
-                i.putExtra(VidTrainDetailActivity.VIDTRAIN_KEY, vidTrainId);
-            } else {
-                i = new Intent(context, MainActivity.class);
-                i.putExtras(intent.getExtras());
-            }
+            i = new Intent(context, MainActivity.class);
+            i.putExtras(intent.getExtras());
         } else {
             i = new Intent(context, LogInActivity.class);
         }
@@ -64,12 +57,9 @@ public class PushMessageBroadcast extends ParsePushBroadcastReceiver {
     private String getVidtrainFromData(String jsonData) {
         // Parse JSON Data
         try {
-            System.out.println("JSON Data ["+jsonData+"]");
             JSONObject obj = new JSONObject(jsonData);
-
             return obj.getString("vidTrain");
-        }
-        catch(JSONException jse) {
+        } catch(JSONException jse) {
             jse.printStackTrace();
         }
         return null;
