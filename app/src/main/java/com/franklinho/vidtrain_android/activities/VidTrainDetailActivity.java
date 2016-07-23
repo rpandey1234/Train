@@ -102,9 +102,8 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
         if (Intent.ACTION_VIEW.equals(intent.getAction())) {
             Uri uri = intent.getData();
             return uri.getQueryParameter(VIDTRAIN_KEY);
-        } else {
-            return intent.getStringExtra(VIDTRAIN_KEY);
         }
+        return intent.getStringExtra(VIDTRAIN_KEY);
     }
 
     void layoutVidTrain(int position) {
@@ -115,28 +114,27 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
         } else {
             // User can view the videos starting at this position.
             videos = _vidTrain.getVideos().subList(position, _vidTrain.getVideosCount());
-            _viewPager.setNextVideoListener(new NextVideoListener() {
-                @Override
-                public void onNextVideo(int position) {
-                    if (position < videos.size()) {
-                        goNextVideo(videos.get(position));
-                    }
-                }
-            });
         }
-        final VideoFragmentPagerAdapter _videoFragmentPagerAdapter = new VideoFragmentPagerAdapter(
-                getSupportFragmentManager(), getBaseContext(), videos, _vidTrain);
-        _viewPager.setAdapter(_videoFragmentPagerAdapter);
+        _viewPager.setNextVideoListener(new NextVideoListener() {
+            @Override
+            public void onNextVideo(int position) {
+                if (position < videos.size()) {
+                    goNextVideo(videos.get(position));
+                }
+            }
+        });
+        final VideoFragmentPagerAdapter _videoPagerAdapter =
+                new VideoFragmentPagerAdapter(getSupportFragmentManager(), videos, _vidTrain);
+        _viewPager.setAdapter(_videoPagerAdapter);
         final SimpleOnPageChangeListener pageChangeListener = new SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(final int position) {
                 // Null checks are only needed for instant run
-                VideoPageFragment lastFragment =
-                        _videoFragmentPagerAdapter.getFragment(_lastPosition);
+                VideoPageFragment lastFragment = _videoPagerAdapter.getFragment(_lastPosition);
                 if (lastFragment != null) {
                     lastFragment.stopVideo();
                 }
-                VideoPageFragment fragment = _videoFragmentPagerAdapter.getFragment(position);
+                VideoPageFragment fragment = _videoPagerAdapter.getFragment(position);
                 if (fragment != null) {
                     fragment.playVideo();
                 }

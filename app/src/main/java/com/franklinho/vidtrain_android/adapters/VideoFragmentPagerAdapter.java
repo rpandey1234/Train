@@ -17,19 +17,17 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The fragment-backed pager which handles stopping/playing video.
+ * The fragment-backed pager which handles stopping/playing video, and adds
+ * a summary page at the end from which to add videos.
  */
 public class VideoFragmentPagerAdapter extends FragmentPagerAdapter {
 
-    private Context _context;
     private VidTrain _vidTrain;
     private List<Video> _videos = new ArrayList<>();
     private Map<Integer, VideoPageFragment> _fragmentMap;
 
-    public VideoFragmentPagerAdapter(FragmentManager fm, Context context, List<Video> videos,
-            VidTrain vidTrain) {
+    public VideoFragmentPagerAdapter(FragmentManager fm, List<Video> videos, VidTrain vidTrain) {
         super(fm);
-        _context = context;
         _vidTrain = vidTrain;
         _videos = videos;
         _fragmentMap = new HashMap<>();

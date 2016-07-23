@@ -100,7 +100,7 @@ public class VideoPageFragment extends Fragment {
 
     public void stopVideo() {
         if (getView() == null) {
-            throw new IllegalStateException("calling playVideo when view is not ready!");
+            throw new IllegalStateException("calling stopPlayback when view is not ready!");
         }
         _videoView.stopPlayback();
         _ivThumbnail.setVisibility(View.VISIBLE);
