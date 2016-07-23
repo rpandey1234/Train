@@ -10,6 +10,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.franklinho.vidtrain_android.BuildConfig;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.adapters.VideoFragmentPagerAdapter;
 import com.franklinho.vidtrain_android.fragments.SwipeViewPager;
@@ -37,7 +38,6 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
 
     @Bind(R.id.viewPager) SwipeViewPager _viewPager;
 
-    private static final boolean MARK_SEEN_VIDEOS = false;
     public static final String VIDTRAIN_KEY = "vidTrain";
     private VidTrain _vidTrain;
     private int _lastPosition = -1;
@@ -78,7 +78,9 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
                             return;
                         }
                         int unseenIndex;
-                        if (unseenList.isEmpty()) {
+                        if (BuildConfig.VIEW_ALL_VIDEOS) {
+                            unseenIndex = 0;
+                        } else if (unseenList.isEmpty()) {
                             // This should not happen (only for older vidtrains)
                             unseenIndex = -1;
                         } else {
@@ -157,7 +159,7 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
     }
 
     private void goNextVideo(Video currentVideo) {
-        if (MARK_SEEN_VIDEOS) {
+        if (BuildConfig.MARK_SEEN_VIDEOS) {
             Unseen.removeUnseen(_vidTrain, User.getCurrentUser(), currentVideo);
         }
         // View pager takes care of not allowing OOB issues.

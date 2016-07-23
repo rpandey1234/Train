@@ -2,6 +2,7 @@ package com.franklinho.vidtrain_android.models;
 
 import android.util.Log;
 
+import com.franklinho.vidtrain_android.BuildConfig;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.Utility;
 import com.parse.FindCallback;
@@ -25,7 +26,6 @@ public class Unseen extends ParseObject {
     public static final String USER_KEY = "user";
     public static final String VIDTRAIN_KEY = "vidTrain";
     public static final String VIDEOS_KEY = "videos";
-    private static final boolean ADD_UNSEEN_FOR_OWN_VIDEO = true;
 
     public Unseen() {}
 
@@ -33,7 +33,7 @@ public class Unseen extends ParseObject {
         List<User> collaborators = vidtrain.getCollaborators();
         for (User user : collaborators) {
             if (user.getObjectId().equals(User.getCurrentUser().getObjectId())
-                    && ADD_UNSEEN_FOR_OWN_VIDEO) {
+                    && BuildConfig.ADD_UNSEEN_FOR_OWN_VIDEO) {
                 addUnseen(vidtrain, user);
             } else {
                 addUnseen(vidtrain, user);

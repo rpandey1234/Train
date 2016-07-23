@@ -30,7 +30,22 @@ android {
         multiDexEnabled true
     }
     buildTypes {
+        debug {
+            // If true, this will make the API call to mark a video as seen
+            buildConfigField "boolean", "MARK_SEEN_VIDEOS", "false"
+            // If true, this will fetch all vidtrains regardless of whether
+            // the current user is included
+            buildConfigField "boolean", "DISREGARD_PRIVACY", "true"
+            // If true, this will add a user's recordings to their unseen list
+            buildConfigField "boolean", "ADD_UNSEEN_FOR_OWN_VIDEO", "true"
+            // If true, will play videos from the beginning of any vidtrain
+            buildConfigField "boolean", "VIEW_ALL_VIDEOS", "false"
+        }
         release {
+            buildConfigField "boolean", "MARK_SEEN_VIDEOS", "true"
+            buildConfigField "boolean", "DISREGARD_PRIVACY", "false"
+            buildConfigField "boolean", "ADD_UNSEEN_FOR_OWN_VIDEO", "false"
+            buildConfigField "boolean", "VIEW_ALL_VIDEOS", "false"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

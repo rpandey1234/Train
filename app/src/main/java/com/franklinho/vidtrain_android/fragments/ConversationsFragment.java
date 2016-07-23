@@ -2,6 +2,7 @@ package com.franklinho.vidtrain_android.fragments;
 
 import android.util.Log;
 
+import com.franklinho.vidtrain_android.BuildConfig;
 import com.franklinho.vidtrain_android.models.Unseen;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
@@ -16,8 +17,6 @@ import java.util.List;
 public class ConversationsFragment extends VidTrainListFragment {
 
     public static final int PAGE_SIZE = 10;
-    // If true, this will fetch all vidtrains regardless of whether the viewer is involved in it
-    public static final boolean DISREGARD_PRIVACY = false;
 
     public static ConversationsFragment newInstance() {
         return new ConversationsFragment();
@@ -49,7 +48,7 @@ public class ConversationsFragment extends VidTrainListFragment {
                     Log.e(VidtrainApplication.TAG, e.toString());
                 }
                 List<VidTrain> visibleVidtrains = objects;
-                if (!DISREGARD_PRIVACY) {
+                if (!BuildConfig.DISREGARD_PRIVACY) {
                     // TODO: really should be using ACLs for this
                     visibleVidtrains = Utility.filterVisibleVidtrains(objects);
                 }
