@@ -113,9 +113,7 @@ public class VidtrainLandingFragment extends Fragment {
 
     @OnClick(R.id.btnAddVidTrain)
     public void showCreateFlow(View view) {
-        // TODO: should we also check for back camera?
-        if (getContext().getPackageManager().hasSystemFeature(
-                PackageManager.FEATURE_CAMERA_FRONT)) {
+        if (getContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
             Intent intent = new Intent(getContext(), VideoCaptureActivity.class);
             intent.putExtra(MainActivity.UNIQUE_ID_INTENT,
                     Long.toString(System.currentTimeMillis()));

@@ -1,9 +1,7 @@
 package com.franklinho.vidtrain_android.activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.media.CamcorderProfile;
@@ -66,9 +64,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
             Display display = getWindowManager().getDefaultDisplay();
             int width = display.getWidth();
             double fraction = UPDATE_FREQUENCY / (float) MAX_TIME;
-            // TODO(rahul): adding 2 pixels is a hack to ensure we get to the end of the screen
-            // due to issues with rounding
-            int widthToAdd = (int) (fraction * width) + 2;
+            int widthToAdd = (int) (fraction * width);
             int resultWidth = _timerView.getWidth() + widthToAdd;
             LayoutParams layoutParams = _timerView.getLayoutParams();
             layoutParams.width = resultWidth;
@@ -181,11 +177,6 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         _btnSend.setVisibility(View.VISIBLE);
     }
 
-    private boolean checkCameraHardware(Context context) {
-        // this device has a camera or not
-        return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
-    }
-
     /**
      * A safe way to get an instance of the Camera object.
      */
@@ -286,19 +277,15 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
     }
 
     private void releaseCameraAndPreview() {
-        //_cameraPreview.setCamera(null);
         if (mCamera != null) {
             mCamera.release();
             mCamera = null;
         }
     }
 
-    public static void setCameraDisplayOrientation(Activity activity,
-                                                   int cameraId, android.hardware.Camera camera) {
-
-        android.hardware.Camera.CameraInfo info =
-                new android.hardware.Camera.CameraInfo();
-
+    public static void setCameraDisplayOrientation(
+            Activity activity, int cameraId, android.hardware.Camera camera) {
+        android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
         android.hardware.Camera.getCameraInfo(cameraId, info);
 
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
@@ -320,7 +307,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         } else {  // back-facing
             result = (info.orientation - degrees + 360) % 360;
         }
-        VideoCaptureActivity.orientation=result;
+        VideoCaptureActivity.orientation = result;
         camera.setDisplayOrientation(result);
     }
 
