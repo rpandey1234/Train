@@ -48,9 +48,14 @@ public class VidtrainLandingFragment extends Fragment {
     @Bind(R.id.tvTitle) TextView _tvTitle;
     @Bind(R.id.ivThumbnail1) ImageView _ivThumbnail1;
     @Bind(R.id.ivThumbnail2) ImageView _ivThumbnail2;
+    @Bind(R.id.ivThumbnail3) ImageView _ivThumbnail3;
 
     public static final int VIDEO_CAPTURE = 101;
     public static final int MAX_THUMBNAILS = 3;
+    public static final String VIDTRAIN_ID = "VIDTRAIN_ID";
+    public static final String VIDTRAIN_TITLE = "VIDTRAIN_TITLE";
+    public static final String VIDEO_COUNT = "VIDEO_COUNT";
+    public static final String THUMBNAILS = "THUMBNAILS";
 
     private ProgressDialog _progress;
     private String _vidtrainId;
@@ -61,15 +66,15 @@ public class VidtrainLandingFragment extends Fragment {
     public static Fragment newInstance(VidTrain vidtrain) {
         VidtrainLandingFragment vidtrainLandingFragment = new VidtrainLandingFragment();
         Bundle args = new Bundle();
-        args.putString("vidtrainId", vidtrain.getObjectId());
-        args.putString("vidtrainTitle", vidtrain.getTitle());
-        args.putInt("videoCount", vidtrain.getVideosCount());
+        args.putString(VIDTRAIN_ID, vidtrain.getObjectId());
+        args.putString(VIDTRAIN_TITLE, vidtrain.getTitle());
+        args.putInt(VIDEO_COUNT, vidtrain.getVideosCount());
         ArrayList<String> thumbnails = new ArrayList<>();
         int numShown = Math.min(MAX_THUMBNAILS, vidtrain.getVideosCount());
         for (int i = 0; i < numShown; i++) {
             thumbnails.add(vidtrain.getVideos().get(i).getThumbnail().getUrl());
         }
-        args.putStringArrayList("thumbnails", thumbnails);
+        args.putStringArrayList(THUMBNAILS, thumbnails);
         vidtrainLandingFragment.setArguments(args);
         return vidtrainLandingFragment;
     }
@@ -79,10 +84,10 @@ public class VidtrainLandingFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
         if (arguments != null) {
-            _vidtrainId = arguments.getString("vidtrainId");
-            _vidtrainTitle = arguments.getString("vidtrainTitle");
-            _videoCount = arguments.getInt("videoCount");
-            _thumbnails = arguments.getStringArrayList("thumbnails");
+            _vidtrainId = arguments.getString(VIDTRAIN_ID);
+            _vidtrainTitle = arguments.getString(VIDTRAIN_TITLE);
+            _videoCount = arguments.getInt(VIDEO_COUNT);
+            _thumbnails = arguments.getStringArrayList(THUMBNAILS);
         }
     }
 
@@ -99,6 +104,9 @@ public class VidtrainLandingFragment extends Fragment {
         Glide.with(context).load(_thumbnails.get(0)).into(_ivThumbnail1);
         if (_thumbnails.size() > 1) {
             Glide.with(context).load(_thumbnails.get(1)).into(_ivThumbnail2);
+        }
+        if (_thumbnails.size() > 2) {
+            Glide.with(context).load(_thumbnails.get(2)).into(_ivThumbnail3);
         }
         return v;
     }

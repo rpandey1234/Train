@@ -43,6 +43,14 @@
             android:contentDescription="@string/video_thumbnail"
             android:layout_margin="4dp"
             />
+
+        <ImageView
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/ivThumbnail3"
+            android:contentDescription="@string/video_thumbnail"
+            android:layout_margin="4dp"
+            />
     </LinearLayout>
 
     <RelativeLayout

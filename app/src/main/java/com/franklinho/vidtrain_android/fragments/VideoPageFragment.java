@@ -35,6 +35,12 @@ public class VideoPageFragment extends Fragment {
     @Bind(R.id.tvTime) TextView _tvTime;
     @Bind(R.id.videoInformation) RelativeLayout _videoInformation;
 
+    public static final String VIDEO_URL = "VIDEO_URL";
+    public static final String VIDEO_THUMBNAIL_URL = "VIDEO_THUMBNAIL_URL";
+    public static final String VIDEO_TIME = "VIDEO_TIME";
+    public static final String VIDEO_USER_URL = "VIDEO_USER_URL";
+    public static final String VIDEO = "VIDEO";
+
     private String _videoUrl;
     private String _videoThumbnailUrl;
     private VideoFinishedListener _listener;
@@ -45,11 +51,11 @@ public class VideoPageFragment extends Fragment {
     public static VideoPageFragment newInstance(Video video) {
         VideoPageFragment videoPageFragment = new VideoPageFragment();
         Bundle args = new Bundle();
-        args.putString("videoUrl", video.getVideoFile().getUrl());
-        args.putString("videoThumbnailUrl", video.getThumbnail().getUrl());
-        args.putString("videoTime", Utility.getRelativeTime(video.getCreatedAt().getTime()));
-        args.putString("videoUserUrl", video.getUser().getProfileImageUrl());
-        args.putSerializable("video", video);
+        args.putString(VIDEO_URL, video.getVideoFile().getUrl());
+        args.putString(VIDEO_THUMBNAIL_URL, video.getThumbnail().getUrl());
+        args.putString(VIDEO_TIME, Utility.getRelativeTime(video.getCreatedAt().getTime()));
+        args.putString(VIDEO_USER_URL, video.getUser().getProfileImageUrl());
+        args.putSerializable(VIDEO, video);
         videoPageFragment.setArguments(args);
         return videoPageFragment;
     }
@@ -59,11 +65,11 @@ public class VideoPageFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
         if (arguments != null) {
-            _video = (Video) arguments.getSerializable("video");
-            _videoUrl = arguments.getString("videoUrl");
-            _videoThumbnailUrl = arguments.getString("videoThumbnailUrl");
-            _videoTime = arguments.getString("videoTime");
-            _userUrl = arguments.getString("videoUserUrl");
+            _video = (Video) arguments.getSerializable(VIDEO);
+            _videoUrl = arguments.getString(VIDEO_URL);
+            _videoThumbnailUrl = arguments.getString(VIDEO_THUMBNAIL_URL);
+            _videoTime = arguments.getString(VIDEO_TIME);
+            _userUrl = arguments.getString(VIDEO_USER_URL);
         }
     }
 
