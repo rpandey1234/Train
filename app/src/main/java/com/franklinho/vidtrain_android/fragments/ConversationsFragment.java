@@ -28,6 +28,7 @@ public class ConversationsFragment extends VidTrainListFragment {
         final int currentSize;
         if (newTimeline) {
             _vidTrains.clear();
+            _aVidTrains.notifyDataSetChanged();
             currentSize = 0;
         } else {
             currentSize = _vidTrains.size();
