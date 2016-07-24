@@ -15,9 +15,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/rvVidTrains" />
-
-
     </android.support.v4.widget.SwipeRefreshLayout>
+
     <ProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
@@ -31,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/not_following_users"
+        android:text="@string/conversations_none"
         android:id="@+id/tvNotFollowingLabel"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"

@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/actionFriendList"
-        android:title="@string/friendList"
+        android:title="@string/friend_list"
         app:showAsAction="never"
         />
 

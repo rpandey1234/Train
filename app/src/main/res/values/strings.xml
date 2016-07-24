@@ -1,70 +1,30 @@
 <resources>
     <string name="app_name">Vidtrain</string>
     <string name="facebook_app_id">184379281936418</string>
-    <string name="popular_trains">Popular trains</string>
     <string name="loading">Loading…</string>
-    <string name="profile">Profile</string>
-    <string name="compose">Create</string>
-    <string name="tagline">tagline</string>
     <string name="unseen">%d unseen</string>
     <plurals name="videos_count">
         <item quantity="one">%d video</item>
         <item quantity="other">%d videos</item>
     </plurals>
-
-    <plurals name="likes_count">
-        <item quantity="zero">%d likes</item>
-        <item quantity="one">%d like</item>
-        <item quantity="other">%d likes</item>
-    </plurals>
-    <plurals name="profile_videos_count">
-        <item quantity="one">Made %d video</item>
-        <item quantity="other">Made %d videos</item>
-    </plurals>
-    <plurals name="vidtrains_count">
-        <item quantity="one">Started %d Vidtrains</item>
-        <item quantity="other">Started %d Vidtrains</item>
-    </plurals>
-    <string name="name">Name</string>
     <string name="profile_image">Profile Image</string>
     <string name="fb_login">Log In With Facebook</string>
-    <string name="likes">0 likes</string>
-    <string name="leave_a_comment">Leave a comment</string>
-    <string name="username">Username</string>
-    <string name="comment_text">Comment Text</string>
     <string name="record">Record</string>
-    <string name="request_permission">This sample needs camera permission.</string>
-    <string name="permission_request">This sample needs permission for camera and audio recording.</string>
     <string name="camera_error">This device doesn\'t support Camera2 API.</string>
     <string name="stop">Stop</string>
-    <string name="heart">heart</string>
     <string name="title_prompt">Enter a title</string>
-    <string name="collabs">Collaborators</string>
     <string name="submit">Submit</string>
-    <string name="autocomplete_hint">Add friends here</string>
     <string name="video_thumbnail">video thumbnail</string>
-    <string name="publicCollaborator">Public</string>
-    <string name="friends">Friends Only</string>
     <string name="add">Add</string>
-    <string name="view_x_videos">View x Videos</string>
-    <string name="zero">0</string>
-    <string name="redo_search">Redo search here</string>
     <string name="capture">Capture</string>
-    <string name="swtich_camera">Switch Camera</string>
-    <string name="follow">Follow</string>
-    <string name="unfollow">Unfollow</string>
+    <string name="switch_camera">Switch Camera</string>
     <string name="logout">Logout</string>
-    <string name="friendList">Friend List</string>
-    <string name="not_following_users">Not Following Any Users</string>
+    <string name="friend_list">Friend List</string>
+    <string name="conversations_none">You\'re not in any conversations</string>
     <string name="app_logo">logo</string>
     <string name="image_preview">preview</string>
     <string name="image_placeholder">placeholder</string>
-    <string name="switch_camera">switch camera</string>
     <string name="friends_using">Friends using Vidtrain</string>
-    <string name="all_seen">You\'ve seen all the videos here!</string>
-
-    <string-array name="privacy_states">
-        <item>Public</item>
-        <item>Private</item>
-    </string-array>
+    <string name="all_seen">You\'ve seen all the videos!</string>
+    <string name="conversation_sample">Here\'s a taste of the conversation.</string>
 </resources>
