@@ -119,7 +119,6 @@ public class VidtrainLandingFragment extends Fragment {
             Intent intent = new Intent(getContext(), VideoCaptureActivity.class);
             intent.putExtra(MainActivity.UNIQUE_ID_INTENT,
                     Long.toString(System.currentTimeMillis()));
-            intent.putExtra(MainActivity.SHOW_CONFIRM, true);
             startActivityForResult(intent, VIDEO_CAPTURE);
         } else {
             Toast.makeText(getContext(), "No camera on device", Toast.LENGTH_LONG).show();

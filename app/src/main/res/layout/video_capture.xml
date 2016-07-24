@@ -4,28 +4,11 @@
     android:layout_height="fill_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/camera_preview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_alignParentTop="true"
-        android:id="@+id/vTop"
-        android:background="@android:color/darker_gray"
-        android:alpha="0.5"
-        />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_alignParentBottom="true"
-        android:id="@+id/vBottom"
-        android:background="@android:color/darker_gray"
-        android:alpha="0.5"
+        android:orientation="vertical"
         />
 
     <ImageButton
@@ -45,7 +28,7 @@
         android:id="@+id/timer"
         android:layout_width="0dp"
         android:layout_height="10dp"
-        android:layout_above="@id/vBottom"
+        android:layout_alignParentBottom="true"
         android:background="@color/bluePrimary"
         />
 
@@ -59,5 +42,19 @@
         android:src="@drawable/icon_vidtrain_white"
         android:layout_marginBottom="30dp"
         app:fabSize="normal"
+        />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/button_send"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="@string/send"
+        android:src="@drawable/icon_send"
+        android:layout_marginBottom="30dp"
+        android:layout_marginRight="30dp"
+        app:fabSize="normal"
+        android:visibility="gone"
         />
 </RelativeLayout>

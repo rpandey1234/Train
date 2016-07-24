@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int VIDEO_CAPTURE = 101;
     public static final String UNIQUE_ID_INTENT = "UNIQUE_ID";
-    public static final String SHOW_CONFIRM = "SHOW_CONFIRM";
     public static final String VIDEO_PATH = "VIDEO_PATH";
 
     @Bind(R.id.toolbar) Toolbar _toolbar;
@@ -72,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
     public void startCreateFlow(View view) {
         Intent intent = new Intent(getBaseContext(), VideoCaptureActivity.class);
         intent.putExtra(UNIQUE_ID_INTENT, Long.toString(System.currentTimeMillis()));
-        intent.putExtra(SHOW_CONFIRM, false);
         startActivityForResult(intent, VIDEO_CAPTURE);
     }
 

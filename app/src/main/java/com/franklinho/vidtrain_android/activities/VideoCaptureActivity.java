@@ -1,14 +1,9 @@
 package com.franklinho.vidtrain_android.activities;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.media.CamcorderProfile;
@@ -20,25 +15,21 @@ import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
-import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.RelativeLayout;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.VideoView;
 
-import com.desmond.squarecamera.ImageParameters;
-import com.desmond.squarecamera.ResizeAnimation;
 import com.franklinho.vidtrain_android.R;
-import com.franklinho.vidtrain_android.models.DynamicHeightImageView;
-import com.franklinho.vidtrain_android.models.DynamicVideoView;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.CameraPreview;
 import com.franklinho.vidtrain_android.utilities.Utility;
 
-import java.io.File;
 import java.io.IOException;
 
 import butterknife.Bind;
@@ -47,23 +38,20 @@ import butterknife.OnClick;
 
 public class VideoCaptureActivity extends Activity implements MediaRecorder.OnInfoListener {
 
-    @Bind(R.id.camera_preview) RelativeLayout _preview;
+    @Bind(R.id.camera_preview) LinearLayout _preview;
     @Bind(R.id.button_capture) FloatingActionButton _captureButton;
+    @Bind(R.id.button_change_camera) ImageButton _btnChangeCamera;
+    @Bind(R.id.button_send) ImageButton _btnSend;
     @Bind(R.id.timer) View _timerView;
-    @Bind(R.id.vTop) View _vTop;
-    @Bind(R.id.vBottom) View _vBottom;
 
     public static final int MAX_TIME = 7000;
     public static final int UPDATE_FREQUENCY = 50;
-    public static final int MEDIA_TYPE_IMAGE = 1;
-    public static final int MEDIA_TYPE_VIDEO = 2;
 
-    private static boolean showConfirm;
     private static String uniqueId;
     private static Camera mCamera = null;
     public static int orientation;
 
-    private ImageParameters _imageParameters;
+    private VideoView _videoView;
     private CameraPreview _cameraPreview;
     private MediaRecorder _mediaRecorder;
     private boolean _isRecording = false;
@@ -74,8 +62,6 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
     final Runnable _runnableCode = new Runnable() {
         @Override
         public void run() {
-            // Do something here on the main thread
-            // Repeat this the same runnable code block again another 2 seconds
             _handler.postDelayed(_runnableCode, UPDATE_FREQUENCY);
             Display display = getWindowManager().getDefaultDisplay();
             int width = display.getWidth();
@@ -89,6 +75,26 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
             _timerView.setLayoutParams(layoutParams);
         }
     };
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.video_capture);
+        ButterKnife.bind(this);
+        _videoView = new VideoView(getApplicationContext());
+        // TODO(rahul): this doesn't center it
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        layoutParams.gravity = Gravity.CENTER_VERTICAL;
+        _videoView.setLayoutParams(layoutParams);
+
+        uniqueId = getIntent().getStringExtra(MainActivity.UNIQUE_ID_INTENT);
+        Log.d(VidtrainApplication.TAG, "uniqueId: " + uniqueId);
+        initializeCamera();
+    }
 
     @OnClick(R.id.button_change_camera)
     public void switchCamera(View view) {
@@ -105,60 +111,45 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         setCameraDisplayOrientation(this, _cameraId, mCamera);
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.video_capture);
-        ButterKnife.bind(this);
-        uniqueId = getIntent().getStringExtra(MainActivity.UNIQUE_ID_INTENT);
-        showConfirm = getIntent().getBooleanExtra(MainActivity.SHOW_CONFIRM, false);
-        Log.d(VidtrainApplication.TAG, "show confirm? " + showConfirm);
-        Log.d(VidtrainApplication.TAG, "uniqueId: " + uniqueId);
-        initializeCamera();
+    @OnClick(R.id.button_capture)
+    public void toggleRecording(View view) {
+        if (_isRecording) {
+            finishRecording();
+        } else {
+            // initialize video camera
+            if (prepareVideoRecorder()) {
+                // Camera is available and unlocked, MediaRecorder is prepared,
+                // now you can start recording
+                _mediaRecorder.start();
+                _captureButton.setImageDrawable(getResources().getDrawable(
+                        R.drawable.icon_square_white));
+                // Start the initial runnable task by posting through the handler
+                _handler.post(_runnableCode);
+                // inform the user that recording has started
+                _isRecording = true;
+
+            } else {
+                // prepare didn't work, release the camera
+                releaseMediaRecorder();
+                // inform user
+            }
+        }
     }
 
-    protected void initializeCamera(){
+    @OnClick(R.id.button_send)
+    public void proceedCreationFlow(View view) {
+        Intent dataBack = new Intent();
+        dataBack.putExtra(MainActivity.UNIQUE_ID_INTENT, uniqueId);
+        setResult(Activity.RESULT_OK, dataBack);
+        finish();
+    }
+
+    protected void initializeCamera() {
         // Create an instance of Camera
         mCamera = getCameraInstance();
-
         // Create our Preview view and set it as the content of our activity.
         _cameraPreview = new CameraPreview(this, mCamera);
         _preview.addView(_cameraPreview);
-
-        _imageParameters = new ImageParameters();
-        relayoutCovers();
-
-        _captureButton.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (_isRecording) {
-                            finishRecording();
-                        } else {
-                            // initialize video camera
-                            if (prepareVideoRecorder()) {
-                                // Camera is available and unlocked, MediaRecorder is prepared,
-                                // now you can start recording
-                                _mediaRecorder.start();
-                                _captureButton.setImageDrawable(getResources().getDrawable(
-                                        R.drawable.icon_square_white));
-                                // Start the initial runnable task by posting through the handler
-                                _handler.post(_runnableCode);
-                                // inform the user that recording has started
-                                _isRecording = true;
-
-                            } else {
-                                // prepare didn't work, release the camera
-                                releaseMediaRecorder();
-                                // inform user
-                            }
-                        }
-                    }
-                }
-        );
     }
 
     private void finishRecording() {
@@ -170,64 +161,24 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         // inform the user that recording has stopped
         _isRecording = false;
         _handler.removeCallbacks(_runnableCode);
-        if (showConfirm) {
-            final String videoPath = Utility.getOutputMediaFile(uniqueId).getPath();
-            View itemView = getLayoutInflater().inflate(R.layout.image_video_overlay, null);
-            itemView.setPadding(itemView.getPaddingLeft(), itemView.getPaddingTop() + 10,
-                    itemView.getPaddingRight(), itemView.getPaddingBottom());
-            final DynamicVideoView vvPreview = (DynamicVideoView) itemView.findViewById(R.id.videoView);
-            vvPreview.setHeightRatio(1);
-            final DynamicHeightImageView ivThumbnail = (DynamicHeightImageView) itemView.findViewById(R.id.ivThumbnail);
-            ivThumbnail.setHeightRatio(1);
-            ivThumbnail.setImageBitmap(Utility.getImageBitmap(videoPath));
-            vvPreview.setVideoPath(videoPath);
-            vvPreview.setVisibility(View.GONE);
-            vvPreview.setOnCompletionListener(new OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    vvPreview.setVisibility(View.GONE);
-                    ivThumbnail.setVisibility(View.VISIBLE);
-                }
-            });
-            ivThumbnail.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ivThumbnail.setVisibility(View.GONE);
-                    vvPreview.setVisibility(View.VISIBLE);
-                    vvPreview.setZOrderOnTop(true);
-                    vvPreview.requestFocus();
-                    vvPreview.start();
-                }
-            });
-            AlertDialog.Builder builder = new Builder(this)
-                    .setTitle("Add to Vidtrain?")
-                    .setView(itemView)
-                    .setPositiveButton("Yes", new OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Log.d(VidtrainApplication.TAG, "yes clicked!!");
-                            Intent dataBack = new Intent();
-                            dataBack.putExtra(MainActivity.UNIQUE_ID_INTENT, uniqueId);
-                            setResult(Activity.RESULT_OK, dataBack);
-                            finish();
-                        }
-                    })
-                    .setNegativeButton("Cancel", new OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Log.d(VidtrainApplication.TAG, "Cancel clicked!!");
-                            setResult(Activity.RESULT_CANCELED);
-                            finish();
-                        }
-                    });
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
-        } else {
-            Intent dataBack = new Intent();
-            dataBack.putExtra(MainActivity.UNIQUE_ID_INTENT, uniqueId);
-            setResult(Activity.RESULT_OK, dataBack);
-            finish();
-        }
+        // hide the UI elements
+        _captureButton.setVisibility(View.GONE);
+        _timerView.setVisibility(View.GONE);
+        _btnChangeCamera.setVisibility(View.GONE);
+        // play (and repeat) the video
+        _preview.removeAllViews();
+        _videoView.setVideoPath(Utility.getOutputMediaFile(uniqueId).getPath());
+        _videoView.start();
+        _videoView.setOnCompletionListener(new OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                _videoView.start();
+            }
+        });
+        _preview.addView(_videoView);
+        // Show the "send" button
+        // Credit: http://www.flaticon.com/free-icon/send-button_60525
+        _btnSend.setVisibility(View.VISIBLE);
     }
 
     private boolean checkCameraHardware(Context context) {
@@ -276,7 +227,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         _mediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_480P));
 
         // Step 4: Set output file
-        _mediaRecorder.setOutputFile(getOutputMediaFile(MEDIA_TYPE_VIDEO).toString());
+        _mediaRecorder.setOutputFile(Utility.getOutputMediaFile(uniqueId).toString());
 
         // Step 5: Set the preview output
         _mediaRecorder.setPreviewDisplay(_cameraPreview.getHolder().getSurface());
@@ -334,10 +285,6 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         }
     }
 
-    private static File getOutputMediaFile(int type) {
-        return Utility.getOutputMediaFile(uniqueId);
-    }
-
     private void releaseCameraAndPreview() {
         //_cameraPreview.setCamera(null);
         if (mCamera != null) {
@@ -393,40 +340,4 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         super.onBackPressed();
         _handler.removeCallbacks(_runnableCode);
     }
-
-   void relayoutCovers() {
-       _imageParameters.mIsPortrait =
-               getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
-
-
-       ViewTreeObserver observer = _preview.getViewTreeObserver();
-       observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-           @Override
-           public void onGlobalLayout() {
-               _imageParameters.mPreviewWidth = _preview.getWidth();
-               _imageParameters.mPreviewHeight = _preview.getHeight();
-
-               // TODO(rahul): remove this?
-               _imageParameters.mCoverWidth = _imageParameters.mCoverHeight = 0;
-
-               resizeTopAndBottomCover(_vTop, _vBottom);
-               _preview.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-           }
-       });
-   }
-
-    private void resizeTopAndBottomCover(final View topCover, final View bottomCover) {
-        ResizeAnimation resizeTopAnimation
-                = new ResizeAnimation(topCover, _imageParameters);
-        resizeTopAnimation.setDuration(800);
-        resizeTopAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
-        topCover.startAnimation(resizeTopAnimation);
-
-        ResizeAnimation resizeBtmAnimation
-                = new ResizeAnimation(bottomCover, _imageParameters);
-        resizeBtmAnimation.setDuration(800);
-        resizeBtmAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
-        bottomCover.startAnimation(resizeBtmAnimation);
-    }
 }
-
