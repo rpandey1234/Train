@@ -19,7 +19,31 @@
         android:layout_height="wrap_content"
         android:text="@string/conversation_sample"
         android:gravity="center_horizontal"
+        android:layout_marginBottom="12dp"
         />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:gravity="center_horizontal">
+
+        <ImageView
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/ivThumbnail1"
+            android:contentDescription="@string/video_thumbnail"
+            android:layout_margin="4dp"
+            />
+
+        <ImageView
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/ivThumbnail2"
+            android:contentDescription="@string/video_thumbnail"
+            android:layout_margin="4dp"
+            />
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="wrap_content"

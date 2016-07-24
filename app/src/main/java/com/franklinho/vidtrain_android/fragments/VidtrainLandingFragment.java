@@ -2,6 +2,7 @@ package com.franklinho.vidtrain_android.fragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -12,9 +13,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.activities.MainActivity;
 import com.franklinho.vidtrain_android.activities.VideoCaptureActivity;
@@ -30,6 +33,8 @@ import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
+import java.util.ArrayList;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -41,13 +46,17 @@ public class VidtrainLandingFragment extends Fragment {
 
     @Bind(R.id.tvVideoCount) TextView _tvVideoCount;
     @Bind(R.id.tvTitle) TextView _tvTitle;
+    @Bind(R.id.ivThumbnail1) ImageView _ivThumbnail1;
+    @Bind(R.id.ivThumbnail2) ImageView _ivThumbnail2;
 
     public static final int VIDEO_CAPTURE = 101;
+    public static final int MAX_THUMBNAILS = 3;
 
     private ProgressDialog _progress;
     private String _vidtrainId;
     private String _vidtrainTitle;
     private int _videoCount;
+    private ArrayList<String> _thumbnails;
 
     public static Fragment newInstance(VidTrain vidtrain) {
         VidtrainLandingFragment vidtrainLandingFragment = new VidtrainLandingFragment();
@@ -55,6 +64,12 @@ public class VidtrainLandingFragment extends Fragment {
         args.putString("vidtrainId", vidtrain.getObjectId());
         args.putString("vidtrainTitle", vidtrain.getTitle());
         args.putInt("videoCount", vidtrain.getVideosCount());
+        ArrayList<String> thumbnails = new ArrayList<>();
+        int numShown = Math.min(MAX_THUMBNAILS, vidtrain.getVideosCount());
+        for (int i = 0; i < numShown; i++) {
+            thumbnails.add(vidtrain.getVideos().get(i).getThumbnail().getUrl());
+        }
+        args.putStringArrayList("thumbnails", thumbnails);
         vidtrainLandingFragment.setArguments(args);
         return vidtrainLandingFragment;
     }
@@ -67,6 +82,7 @@ public class VidtrainLandingFragment extends Fragment {
             _vidtrainId = arguments.getString("vidtrainId");
             _vidtrainTitle = arguments.getString("vidtrainTitle");
             _videoCount = arguments.getInt("videoCount");
+            _thumbnails = arguments.getStringArrayList("thumbnails");
         }
     }
 
@@ -77,17 +93,24 @@ public class VidtrainLandingFragment extends Fragment {
         View v = inflater.inflate(R.layout.landing_fragment, container, false);
         ButterKnife.bind(this, v);
 
+        Context context = getContext();
         _tvTitle.setText(_vidtrainTitle);
         _tvVideoCount.setText(String.valueOf(_videoCount));
+        Glide.with(context).load(_thumbnails.get(0)).into(_ivThumbnail1);
+        if (_thumbnails.size() > 1) {
+            Glide.with(context).load(_thumbnails.get(1)).into(_ivThumbnail2);
+        }
         return v;
     }
 
     @OnClick(R.id.btnAddVidTrain)
     public void showCreateFlow(View view) {
         // TODO: should we also check for back camera?
-        if (getContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
+        if (getContext().getPackageManager().hasSystemFeature(
+                PackageManager.FEATURE_CAMERA_FRONT)) {
             Intent intent = new Intent(getContext(), VideoCaptureActivity.class);
-            intent.putExtra(MainActivity.UNIQUE_ID_INTENT, Long.toString(System.currentTimeMillis()));
+            intent.putExtra(MainActivity.UNIQUE_ID_INTENT,
+                    Long.toString(System.currentTimeMillis()));
             intent.putExtra(MainActivity.SHOW_CONFIRM, true);
             startActivityForResult(intent, VIDEO_CAPTURE);
         } else {
