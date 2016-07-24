@@ -123,6 +123,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
                 _handler.post(_runnableCode);
                 // inform the user that recording has started
                 _isRecording = true;
+                _btnChangeCamera.setVisibility(View.GONE);
 
             } else {
                 // prepare didn't work, release the camera

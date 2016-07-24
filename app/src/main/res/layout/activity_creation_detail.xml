@@ -3,52 +3,38 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.franklinho.vidtrain_android.activities.CreationDetailActivity">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:orientation="vertical"
-        android:id="@+id/videoContainer">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:id="@+id/vvThumbnail"
-            android:background="@color/bluePrimary"
-            android:scaleType="centerCrop"
-            android:contentDescription="@string/video_thumbnail"
-            />
-
-        <com.franklinho.vidtrain_android.models.DynamicVideoView
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:id="@+id/videoView"
-            />
-    </LinearLayout>
+    android:orientation="vertical"
+    android:layout_margin="12dp">
 
     <EditText
         android:id="@+id/etTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="12dp"
-        android:layout_below="@+id/videoContainer"
         android:singleLine="true"
         android:hint="@string/title_prompt"
         android:inputType="textCapSentences"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvFriendsInstructions"
+        android:text="@string/add_friends_instructions"
+        android:textStyle="bold"
+        android:layout_marginTop="12dp"
+        android:textSize="20sp"
         />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/friendsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/etTitle"
+        android:layout_marginTop="12dp"
         android:scrollbars="vertical"
-        android:layout_margin="8dp"
         />
 
     <Button
@@ -58,11 +44,9 @@
         android:text="@string/submit"
         android:textColor="@android:color/white"
         android:textAllCaps="false"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/friendsRecyclerView"
         android:background="@color/bluePrimary"
         android:layout_marginTop="12dp"
         />
 
-</RelativeLayout>
+</LinearLayout>
 </android.support.v4.widget.NestedScrollView>

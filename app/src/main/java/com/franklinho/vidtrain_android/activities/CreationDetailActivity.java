@@ -35,8 +35,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class CreationDetailActivity extends AppCompatActivity {
-    @Bind(R.id.videoView) DynamicVideoView _vvPreview;
-    @Bind(R.id.vvThumbnail) ImageView _vvThumbnail;
     @Bind(R.id.btnSubmit) Button _btnSubmit;
     @Bind(R.id.etTitle) EditText _etTitle;
     @Bind(R.id.friendsRecyclerView) RecyclerView _friendsRecyclerView;
@@ -63,25 +61,6 @@ public class CreationDetailActivity extends AppCompatActivity {
             }
         });
         _videoPath = getIntent().getStringExtra(MainActivity.VIDEO_PATH);
-        _vvPreview.setHeightRatio(1);
-        if (_videoPath != null) {
-            _vvThumbnail.setImageBitmap(Utility.getImageBitmap(_videoPath));
-            _vvThumbnail.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    _vvThumbnail.setVisibility(View.GONE);
-                    _vvPreview.setVideoPath(_videoPath);
-                    _vvPreview.start();
-                }
-            });
-            _vvPreview.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    _vvPreview.setVideoPath(_videoPath);
-                    _vvPreview.start();
-                }
-            });
-        }
     }
 
     @OnClick(R.id.btnSubmit)
