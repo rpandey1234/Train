@@ -105,6 +105,20 @@ public class Utility {
         }
     }
 
+    public static boolean deleteFile(String path) {
+        if (path == null) {
+            return false;
+        }
+        File file = new File(path);
+        boolean deleted = file.delete();
+        if (deleted) {
+            Log.d(VidtrainApplication.TAG, "local video deleted");
+        } else {
+            Log.d(VidtrainApplication.TAG, "not deleted");
+        }
+        return deleted;
+    }
+
     public static ParseFile createParseFileFromBitmap(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);

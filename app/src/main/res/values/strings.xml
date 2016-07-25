@@ -26,7 +26,7 @@
     <string name="image_preview">preview</string>
     <string name="image_placeholder">placeholder</string>
     <string name="friends_using">Friends using Vidtrain</string>
-    <string name="all_seen">You\'ve seen all the videos!</string>
+    <string name="all_seen">You\'ve seen everything!</string>
     <string name="conversation_sample">Here\'s a taste of the conversation.</string>
     <string name="add_friends_instructions">Create a group:</string>
 </resources>

@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,6 @@ import com.franklinho.vidtrain_android.models.Unseen;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
-import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.utilities.Utility;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -62,6 +60,7 @@ public class VidtrainLandingFragment extends Fragment {
     private String _vidtrainTitle;
     private int _videoCount;
     private ArrayList<String> _thumbnails;
+    private String _videoPath;
 
     public static Fragment newInstance(VidTrain vidtrain) {
         VidtrainLandingFragment vidtrainLandingFragment = new VidtrainLandingFragment();
@@ -126,7 +125,6 @@ public class VidtrainLandingFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(VidtrainApplication.TAG, "in fragment onActivityResult!");
         if (requestCode != VIDEO_CAPTURE) {
             return;
         }
@@ -135,9 +133,9 @@ public class VidtrainLandingFragment extends Fragment {
                     .show(getContext(), "Adding your video", "Just a moment please!", true);
             // data.getData().toString() is file://<path>, file is stored at
             // <path> which is /storage/emulated/0/Movies/VidTrainApp/VID_CAPTURED.mp4
-            String videoPath = Utility.getOutputMediaFile(
+            _videoPath = Utility.getOutputMediaFile(
                     data.getStringExtra(MainActivity.UNIQUE_ID_INTENT)).getPath();
-            addVideoToVidtrain(videoPath);
+            addVideoToVidtrain();
         } else if (resultCode == Activity.RESULT_CANCELED) {
             Toast.makeText(getContext(), "Video recording cancelled.", Toast.LENGTH_LONG).show();
         } else {
@@ -145,7 +143,7 @@ public class VidtrainLandingFragment extends Fragment {
         }
     }
 
-    private void addVideoToVidtrain(final String videoPath) {
+    private void addVideoToVidtrain() {
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
         query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
         query.whereEqualTo("objectId", _vidtrainId);
@@ -165,11 +163,11 @@ public class VidtrainLandingFragment extends Fragment {
                 _tvVideoCount.setText(String.valueOf(videosCount + 1));
                 final Video video = new Video();
                 final User user = User.getCurrentUser();
-                final ParseFile parseFile = Utility.createParseFile(videoPath);
+                final ParseFile parseFile = Utility.createParseFile(_videoPath);
                 if (parseFile == null) {
                     return;
                 }
-                Bitmap thumbnailBitmap = Utility.getImageBitmap(videoPath);
+                Bitmap thumbnailBitmap = Utility.getImageBitmap(_videoPath);
                 final ParseFile parseThumbnail = Utility.createParseFileFromBitmap(thumbnailBitmap);
                 parseFile.saveInBackground(new SaveCallback() {
                     @Override
@@ -199,6 +197,7 @@ public class VidtrainLandingFragment extends Fragment {
                                                 Toast.makeText(getContext(),
                                                         "Successfully added video",
                                                         Toast.LENGTH_SHORT).show();
+                                                getActivity().onBackPressed();
                                             }
                                         });
                                     }
@@ -209,5 +208,11 @@ public class VidtrainLandingFragment extends Fragment {
                 });
             }
         });
+    }
+
+    @Override
+    public void onStop() {
+        Utility.deleteFile(_videoPath);
+        super.onStop();
     }
 }

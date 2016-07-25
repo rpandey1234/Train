@@ -7,15 +7,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.adapters.FriendsAdapter;
-import com.franklinho.vidtrain_android.models.DynamicVideoView;
 import com.franklinho.vidtrain_android.models.Unseen;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
@@ -131,5 +128,11 @@ public class CreationDetailActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    @Override
+    protected void onStop() {
+        Utility.deleteFile(_videoPath);
+        super.onStop();
     }
 }
