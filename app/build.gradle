@@ -32,12 +32,13 @@ android {
     buildTypes {
         debug {
             // If true, this will make the API call to mark a video as seen
-            buildConfigField "boolean", "MARK_SEEN_VIDEOS", "false"
+            buildConfigField "boolean", "MARK_SEEN_VIDEOS", "true"
             // If true, this will fetch all vidtrains regardless of whether
             // the current user is included
-            buildConfigField "boolean", "DISREGARD_PRIVACY", "true"
+
+            buildConfigField "boolean", "DISREGARD_PRIVACY", "false"
             // If true, this will add a user's recordings to their unseen list
-            buildConfigField "boolean", "ADD_UNSEEN_FOR_OWN_VIDEO", "true"
+            buildConfigField "boolean", "ADD_UNSEEN_FOR_OWN_VIDEO", "false"
             // If true, will play videos from the beginning of any vidtrain
             buildConfigField "boolean", "VIEW_ALL_VIDEOS", "false"
         }

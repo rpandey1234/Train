@@ -28,6 +28,7 @@ public class ConversationsFragment extends VidTrainListFragment {
         final int currentSize;
         if (newTimeline) {
             _vidTrains.clear();
+            _unseenList.clear();
             _aVidTrains.notifyDataSetChanged();
             currentSize = 0;
         } else {
@@ -71,5 +72,11 @@ public class ConversationsFragment extends VidTrainListFragment {
                 hideProgressBar();
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        requestVidTrains(true);
+        super.onResume();
     }
 }
