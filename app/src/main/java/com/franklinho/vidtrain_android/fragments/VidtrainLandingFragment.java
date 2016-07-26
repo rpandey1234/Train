@@ -54,12 +54,14 @@ public class VidtrainLandingFragment extends Fragment {
     public static final String VIDTRAIN_TITLE = "VIDTRAIN_TITLE";
     public static final String VIDEO_COUNT = "VIDEO_COUNT";
     public static final String THUMBNAILS = "THUMBNAILS";
+    public static final String USER_URLS = "USER_URLS";
 
     private ProgressDialog _progress;
     private String _vidtrainId;
     private String _vidtrainTitle;
     private int _videoCount;
     private ArrayList<String> _thumbnails;
+    private ArrayList<String> _userUrls;
     private String _videoPath;
 
     public static Fragment newInstance(VidTrain vidtrain) {
@@ -70,11 +72,15 @@ public class VidtrainLandingFragment extends Fragment {
         int videosCount = vidtrain.getVideosCount();
         args.putInt(VIDEO_COUNT, videosCount);
         ArrayList<String> thumbnails = new ArrayList<>();
+        ArrayList<String> userUrls = new ArrayList<>();
         int numShown = Math.min(MAX_THUMBNAILS, videosCount);
         for (int i = 0; i < numShown; i++) {
-            thumbnails.add(vidtrain.getVideos().get(videosCount - i - 1).getThumbnail().getUrl());
+            Video video = vidtrain.getVideos().get(videosCount - i - 1);
+            thumbnails.add(video.getThumbnail().getUrl());
+            userUrls.add(video.getUser().getProfileImageUrl());
         }
         args.putStringArrayList(THUMBNAILS, thumbnails);
+        args.putStringArrayList(USER_URLS, userUrls);
         vidtrainLandingFragment.setArguments(args);
         return vidtrainLandingFragment;
     }
@@ -88,6 +94,7 @@ public class VidtrainLandingFragment extends Fragment {
             _vidtrainTitle = arguments.getString(VIDTRAIN_TITLE);
             _videoCount = arguments.getInt(VIDEO_COUNT);
             _thumbnails = arguments.getStringArrayList(THUMBNAILS);
+            _userUrls = arguments.getStringArrayList(USER_URLS);
         }
     }
 

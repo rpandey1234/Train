@@ -1,102 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="@string/all_seen"
-        android:gravity="center_horizontal"
-        android:textSize="24sp"
-        />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/conversation_sample"
-        android:gravity="center_horizontal"
-        android:layout_marginBottom="12dp"
-        />
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="240dp"
-        android:gravity="center_horizontal">
-
-        <ImageView
-            android:layout_width="140dp"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/ivThumbnail1"
-            android:contentDescription="@string/video_thumbnail"
-            android:layout_margin="4dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/all_seen"
+            android:gravity="center_horizontal"
+            android:textSize="18sp"
             />
 
-        <ImageView
-            android:layout_width="140dp"
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/ivThumbnail2"
-            android:contentDescription="@string/video_thumbnail"
-            android:layout_margin="4dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp">
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@+id/tvVideoCount"
+                android:textSize="20sp"
+                />
+
+            <TextView
+                android:id="@+id/tvVideoCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:textSize="20sp"
+                android:layout_alignParentEnd="true"
+                android:drawablePadding="8dp"
+                android:drawableStart="@drawable/icon_vidtrain_small"
+                />
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/btnAddVidTrain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/add"
+            android:textAllCaps="false"
+            android:textSize="20sp"
+            android:textColor="@android:color/white"
+            android:background="@color/bluePrimary"
+            android:foreground="?android:attr/selectableItemBackground"
             />
 
-        <ImageView
-            android:layout_width="140dp"
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/ivThumbnail3"
-            android:contentDescription="@string/video_thumbnail"
-            android:layout_margin="4dp"
-            />
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="16dp">
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                app:riv_corner_radius="70dp"
+                android:id="@+id/ivThumbnail1"
+                android:contentDescription="@string/video_thumbnail"
+                android:layout_margin="4dp"
+                android:scaleType="centerCrop"
+                />
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                app:riv_corner_radius="70dp"
+                android:id="@+id/ivThumbnail2"
+                android:contentDescription="@string/video_thumbnail"
+                android:layout_margin="4dp"
+                android:scaleType="centerCrop"
+                />
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                app:riv_corner_radius="70dp"
+                android:id="@+id/ivThumbnail3"
+                android:contentDescription="@string/video_thumbnail"
+                android:layout_margin="4dp"
+                android:scaleType="centerCrop"
+                />
+        </LinearLayout>
     </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
-        android:layout_marginBottom="8dp">
-
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="20dp"
-            android:layout_alignParentStart="true"
-            android:layout_toStartOf="@+id/tvVideoCount"
-            android:textColor="@android:color/black"
-            android:textSize="20sp"
-            />
-
-        <TextView
-            android:id="@+id/tvVideoCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="20dp"
-            android:textSize="20sp"
-            android:layout_alignParentEnd="true"
-            android:drawablePadding="8dp"
-            android:drawableStart="@drawable/icon_vidtrain_small"
-            android:textColor="@android:color/black"
-            />
-
-    </RelativeLayout>
-
-    <Button
-        android:id="@+id/btnAddVidTrain"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:layout_margin="8dp"
-        android:text="@string/add"
-        android:textAllCaps="false"
-        android:textSize="20sp"
-        android:textColor="@android:color/white"
-        android:background="@color/bluePrimary"
-        android:foreground="?android:attr/selectableItemBackground"
-        />
-</LinearLayout>
+</ScrollView>
