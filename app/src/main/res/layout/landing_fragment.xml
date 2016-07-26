@@ -79,36 +79,25 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center_horizontal"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp">
 
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:layout_width="140dp"
-                android:layout_height="140dp"
-                app:riv_corner_radius="70dp"
-                android:id="@+id/ivThumbnail1"
-                android:contentDescription="@string/video_thumbnail"
-                android:layout_margin="4dp"
-                android:scaleType="centerCrop"
+            <com.franklinho.vidtrain_android.ui.ImageAttribution
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageAttribution1"
                 />
 
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:layout_width="140dp"
-                android:layout_height="140dp"
-                app:riv_corner_radius="70dp"
-                android:id="@+id/ivThumbnail2"
-                android:contentDescription="@string/video_thumbnail"
-                android:layout_margin="4dp"
-                android:scaleType="centerCrop"
+            <com.franklinho.vidtrain_android.ui.ImageAttribution
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageAttribution2"
                 />
 
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:layout_width="140dp"
-                android:layout_height="140dp"
-                app:riv_corner_radius="70dp"
-                android:id="@+id/ivThumbnail3"
-                android:contentDescription="@string/video_thumbnail"
-                android:layout_margin="4dp"
-                android:scaleType="centerCrop"
+            <com.franklinho.vidtrain_android.ui.ImageAttribution
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageAttribution3"
                 />
         </LinearLayout>
     </LinearLayout>

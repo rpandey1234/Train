@@ -12,11 +12,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.activities.MainActivity;
 import com.franklinho.vidtrain_android.activities.VideoCaptureActivity;
@@ -24,6 +22,7 @@ import com.franklinho.vidtrain_android.models.Unseen;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
+import com.franklinho.vidtrain_android.ui.ImageAttribution;
 import com.franklinho.vidtrain_android.utilities.Utility;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -44,9 +43,9 @@ public class VidtrainLandingFragment extends Fragment {
 
     @Bind(R.id.tvVideoCount) TextView _tvVideoCount;
     @Bind(R.id.tvTitle) TextView _tvTitle;
-    @Bind(R.id.ivThumbnail1) ImageView _ivThumbnail1;
-    @Bind(R.id.ivThumbnail2) ImageView _ivThumbnail2;
-    @Bind(R.id.ivThumbnail3) ImageView _ivThumbnail3;
+    @Bind(R.id.imageAttribution1) ImageAttribution _imageAttribution1;
+    @Bind(R.id.imageAttribution2) ImageAttribution _imageAttribution2;
+    @Bind(R.id.imageAttribution3) ImageAttribution _imageAttribution3;
 
     public static final int VIDEO_CAPTURE = 101;
     public static final int MAX_THUMBNAILS = 3;
@@ -108,12 +107,12 @@ public class VidtrainLandingFragment extends Fragment {
         Context context = getContext();
         _tvTitle.setText(_vidtrainTitle);
         _tvVideoCount.setText(String.valueOf(_videoCount));
-        Glide.with(context).load(_thumbnails.get(0)).into(_ivThumbnail1);
+        _imageAttribution1.bind(_thumbnails.get(0), _userUrls.get(0));
         if (_thumbnails.size() > 1) {
-            Glide.with(context).load(_thumbnails.get(1)).into(_ivThumbnail2);
+            _imageAttribution2.bind(_thumbnails.get(1), _userUrls.get(1));
         }
         if (_thumbnails.size() > 2) {
-            Glide.with(context).load(_thumbnails.get(2)).into(_ivThumbnail3);
+            _imageAttribution3.bind(_thumbnails.get(2), _userUrls.get(2));
         }
         return v;
     }
