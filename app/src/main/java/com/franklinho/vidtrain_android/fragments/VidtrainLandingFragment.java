@@ -67,11 +67,12 @@ public class VidtrainLandingFragment extends Fragment {
         Bundle args = new Bundle();
         args.putString(VIDTRAIN_ID, vidtrain.getObjectId());
         args.putString(VIDTRAIN_TITLE, vidtrain.getTitle());
-        args.putInt(VIDEO_COUNT, vidtrain.getVideosCount());
+        int videosCount = vidtrain.getVideosCount();
+        args.putInt(VIDEO_COUNT, videosCount);
         ArrayList<String> thumbnails = new ArrayList<>();
-        int numShown = Math.min(MAX_THUMBNAILS, vidtrain.getVideosCount());
+        int numShown = Math.min(MAX_THUMBNAILS, videosCount);
         for (int i = 0; i < numShown; i++) {
-            thumbnails.add(vidtrain.getVideos().get(i).getThumbnail().getUrl());
+            thumbnails.add(vidtrain.getVideos().get(videosCount - i - 1).getThumbnail().getUrl());
         }
         args.putStringArrayList(THUMBNAILS, thumbnails);
         vidtrainLandingFragment.setArguments(args);
