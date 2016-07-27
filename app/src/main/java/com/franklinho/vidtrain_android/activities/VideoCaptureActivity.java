@@ -13,7 +13,6 @@ import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.Display;
-import android.view.Gravity;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -40,6 +39,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
     @Bind(R.id.button_capture) FloatingActionButton _captureButton;
     @Bind(R.id.button_change_camera) ImageButton _btnChangeCamera;
     @Bind(R.id.button_send) ImageButton _btnSend;
+    @Bind(R.id.videoView) VideoView _videoView;
     @Bind(R.id.timer) View _timerView;
 
     public static final int MAX_TIME = 7000;
@@ -49,7 +49,6 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
     private static Camera mCamera = null;
     public static int orientation;
 
-    private VideoView _videoView;
     private CameraPreview _cameraPreview;
     private MediaRecorder _mediaRecorder;
     private boolean _isRecording = false;
@@ -80,13 +79,6 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.video_capture);
         ButterKnife.bind(this);
-        _videoView = new VideoView(getApplicationContext());
-        // TODO(rahul): this doesn't center it
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        layoutParams.gravity = Gravity.CENTER_VERTICAL;
-        _videoView.setLayoutParams(layoutParams);
-
         uniqueId = getIntent().getStringExtra(MainActivity.UNIQUE_ID_INTENT);
         Log.d(VidtrainApplication.TAG, "uniqueId: " + uniqueId);
         initializeCamera();
@@ -162,8 +154,8 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         _captureButton.setVisibility(View.GONE);
         _timerView.setVisibility(View.GONE);
         _btnChangeCamera.setVisibility(View.GONE);
-        // play (and repeat) the video
         _preview.removeAllViews();
+        // play (and repeat) the video
         _videoView.setVideoPath(Utility.getOutputMediaFile(uniqueId).getPath());
         _videoView.start();
         _videoView.setOnCompletionListener(new OnCompletionListener() {
@@ -172,9 +164,9 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
                 _videoView.start();
             }
         });
-        _preview.addView(_videoView);
+        _videoView.setVisibility(View.VISIBLE);
         // Show the "send" button
-        // Credit: http://www.flaticon.com/free-icon/send-button_60525
+        // Logo credit: http://www.flaticon.com/free-icon/send-button_60525
         _btnSend.setVisibility(View.VISIBLE);
     }
 
