@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.franklinho.vidtrain_android.models.DynamicHeightImageView
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/ivThumbnail"
@@ -14,14 +14,22 @@
         android:scaleType="centerCrop"
         android:src="@drawable/placeholder_video"
         android:contentDescription="@string/video_thumbnail"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
         />
 
-    <com.franklinho.vidtrain_android.models.DynamicVideoView
+    <VideoView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:id="@+id/videoView"
         android:visibility="gone"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
         />
 
     <RelativeLayout
@@ -64,4 +72,4 @@
             android:shadowRadius="1.2"
             />
     </RelativeLayout>
-</FrameLayout>
+</RelativeLayout>

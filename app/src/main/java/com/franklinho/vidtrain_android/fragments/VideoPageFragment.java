@@ -13,11 +13,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
-import com.franklinho.vidtrain_android.models.DynamicHeightImageView;
-import com.franklinho.vidtrain_android.models.DynamicVideoView;
 import com.franklinho.vidtrain_android.models.Video;
 import com.franklinho.vidtrain_android.utilities.Utility;
 
@@ -29,8 +28,8 @@ import butterknife.ButterKnife;
  */
 public class VideoPageFragment extends Fragment {
 
-    @Bind(R.id.ivThumbnail) DynamicHeightImageView _ivThumbnail;
-    @Bind(R.id.videoView) DynamicVideoView _videoView;
+    @Bind(R.id.ivThumbnail) ImageView _ivThumbnail;
+    @Bind(R.id.videoView) VideoView _videoView;
     @Bind(R.id.ivAuthor) ImageView _ivAuthor;
     @Bind(R.id.tvTime) TextView _tvTime;
     @Bind(R.id.videoInformation) RelativeLayout _videoInformation;

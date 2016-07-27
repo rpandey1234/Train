@@ -50,6 +50,10 @@
         android:id="@+id/videoView"
         android:visibility="gone"
         android:layout_centerInParent="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
         />
 
     <android.support.design.widget.FloatingActionButton
