@@ -1,11 +1,9 @@
 package com.franklinho.vidtrain_android.utilities;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.provider.MediaStore.Video.Thumbnails;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -45,21 +43,19 @@ public class Utility {
     }
 
     /** Create a File for saving an image or video */
-    public static File getOutputMediaFile(String objectId)
-    {
+    public static File getOutputMediaFile(String objectId) {
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_MOVIES), "VidTrainApp");
         if (!mediaStorageDir.exists()) {
-            // if directory already created, then do nothing
-            // else create directory
+            // create directory if it doesn't exist
             if (!mediaStorageDir.mkdirs()) {
                 Log.d(VidtrainApplication.TAG, "failed to create directory");
                 mediaStorageDir.mkdir();
                 return mediaStorageDir;
-//                return null;
             }
         }
-        return new File(mediaStorageDir.getPath() + File.separator + "VID_CAPTURED" + objectId + ".mp4");
+        return new File(
+                mediaStorageDir.getPath() + File.separator + "VID_CAPTURED" + objectId + ".mp4");
     }
 
     /** Create a file Uri for saving an image or video */
@@ -82,14 +78,6 @@ public class Utility {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static Intent getVideoIntent() {
-        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 5);
-        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, getOutputMediaFileUri());
-        return intent;
     }
 
     public static ParseFile createParseFile(String path) {
