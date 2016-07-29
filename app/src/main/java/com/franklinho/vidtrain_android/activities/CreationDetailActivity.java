@@ -20,6 +20,7 @@ import com.franklinho.vidtrain_android.models.Video;
 import com.franklinho.vidtrain_android.utilities.FacebookUtility;
 import com.franklinho.vidtrain_android.utilities.FriendLoaderCallback;
 import com.franklinho.vidtrain_android.utilities.Utility;
+import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.SaveCallback;
@@ -101,6 +102,12 @@ public class CreationDetailActivity extends AppCompatActivity {
                         vidTrain.setUser(user);
                         ArrayList<Video> videos = new ArrayList<>();
                         videos.add(video);
+                        ParseACL userAcl = new ParseACL();
+                        for (User user : collaborators) {
+                            userAcl.setReadAccess(user.getObjectId(), true);
+                            userAcl.setWriteAccess(user.getObjectId(), true);
+                        }
+                        vidTrain.setACL(userAcl);
                         vidTrain.setVideos(videos);
                         vidTrain.setCollaborators(collaborators);
                         vidTrain.saveInBackground(new SaveCallback() {

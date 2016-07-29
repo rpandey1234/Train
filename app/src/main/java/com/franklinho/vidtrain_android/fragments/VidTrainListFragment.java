@@ -64,21 +64,21 @@ public class VidTrainListFragment extends Fragment {
         _rvVidTrains.addOnScrollListener(new EndlessRecyclerViewScrollListener(_linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
-                requestVidTrains(false);
+                requestVidTrains(totalItemsCount);
             }
         });
 
         _swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                requestVidTrains(true);
+                requestVidTrains(0);
             }
         });
-        requestVidTrains(true);
+        requestVidTrains(0);
         return v;
     }
 
-    public void requestVidTrains(final boolean newTimeline) {}
+    public void requestVidTrains(final int numItems) {}
 
     @Override
     public void onResume() {
