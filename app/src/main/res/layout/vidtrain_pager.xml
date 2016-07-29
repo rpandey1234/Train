@@ -72,4 +72,12 @@
             android:shadowRadius="1.2"
             />
     </RelativeLayout>
+
+    <View
+        android:id="@+id/timer"
+        android:layout_width="0dp"
+        android:layout_height="10dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/bluePrimary"
+        />
 </RelativeLayout>

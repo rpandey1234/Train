@@ -4,12 +4,16 @@ import android.content.Context;
 import android.graphics.PixelFormat;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -33,12 +37,14 @@ public class VideoPageFragment extends Fragment {
     @Bind(R.id.ivAuthor) ImageView _ivAuthor;
     @Bind(R.id.tvTime) TextView _tvTime;
     @Bind(R.id.videoInformation) RelativeLayout _videoInformation;
+    @Bind(R.id.timer) View _timerView;
 
     public static final String VIDEO_URL = "VIDEO_URL";
     public static final String VIDEO_THUMBNAIL_URL = "VIDEO_THUMBNAIL_URL";
     public static final String VIDEO_TIME = "VIDEO_TIME";
     public static final String VIDEO_USER_URL = "VIDEO_USER_URL";
     public static final String VIDEO = "VIDEO";
+    public static final int UPDATE_FREQUENCY = 50;
 
     private String _videoUrl;
     private String _videoThumbnailUrl;
@@ -46,6 +52,9 @@ public class VideoPageFragment extends Fragment {
     private String _videoTime;
     private String _userUrl;
     private Video _video;
+    private Handler _handler = new Handler();
+    private Runnable _runnableCode;
+    private int _width;
 
     public static VideoPageFragment newInstance(Video video) {
         VideoPageFragment videoPageFragment = new VideoPageFragment();
@@ -85,7 +94,39 @@ public class VideoPageFragment extends Fragment {
 
         _tvTime.setText(_videoTime);
         Glide.with(getContext()).load(_userUrl).into(_ivAuthor);
+
+        _videoView.setOnPreparedListener(new OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                final int duration = mp.getDuration();
+                _runnableCode = new Runnable() {
+                    @Override
+                    public void run() {
+                        _handler.postDelayed(_runnableCode, UPDATE_FREQUENCY);
+                        double fraction = UPDATE_FREQUENCY / (double) duration;
+                        double widthToAdd = fraction * _width;
+                        double resultWidth = _timerView.getWidth() + widthToAdd;
+                        LayoutParams layoutParams = _timerView.getLayoutParams();
+                        layoutParams.width = Math.round((long) resultWidth);
+                        _timerView.setLayoutParams(layoutParams);
+                    }
+                };
+                _handler.post(_runnableCode);
+            }
+        });
         return v;
+    }
+
+    @Override
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        view.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                _width = view.getWidth();
+                view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
     }
 
     public void playVideo() {
@@ -107,6 +148,7 @@ public class VideoPageFragment extends Fragment {
         if (getView() == null) {
             throw new IllegalStateException("calling stopPlayback when view is not ready!");
         }
+        _handler.removeCallbacks(_runnableCode);
         _videoView.stopPlayback();
         _ivThumbnail.setVisibility(View.VISIBLE);
         _videoView.setVisibility(View.GONE);
