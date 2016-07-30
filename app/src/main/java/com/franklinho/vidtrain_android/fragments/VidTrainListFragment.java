@@ -30,7 +30,7 @@ public class VidTrainListFragment extends Fragment {
     @Bind(R.id.tvNotFollowingLabel) TextView _tvNotFollowingLabel;
 
     List<VidTrain> _vidTrains;
-    List<Unseen> _unseenList;
+    List<Unseen> _unseens;
     VidTrainArrayAdapter _aVidTrains;
     LinearLayoutManager _linearLayoutManager;
 
@@ -42,15 +42,12 @@ public class VidTrainListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         _vidTrains = new ArrayList<>();
-        _unseenList = new ArrayList<>();
-        // Construct the adapter
-        _aVidTrains = new VidTrainArrayAdapter(_vidTrains, _unseenList, getContext(),
-                getActivity());
+        _unseens = new ArrayList<>();
+        _aVidTrains = new VidTrainArrayAdapter(_vidTrains, _unseens, getContext());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
-        // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_conversations, container, false);
         ButterKnife.bind(this, v);
 
@@ -61,12 +58,13 @@ public class VidTrainListFragment extends Fragment {
         _swipeContainer.setColorSchemeResources(R.color.bluePrimary);
         showProgressBar();
 
-        _rvVidTrains.addOnScrollListener(new EndlessRecyclerViewScrollListener(_linearLayoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount) {
-                requestVidTrains(totalItemsCount);
-            }
-        });
+        _rvVidTrains.addOnScrollListener(
+                new EndlessRecyclerViewScrollListener(_linearLayoutManager) {
+                    @Override
+                    public void onLoadMore(int page, int totalItemsCount) {
+                        requestVidTrains(totalItemsCount);
+                    }
+                });
 
         _swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -87,12 +85,10 @@ public class VidTrainListFragment extends Fragment {
     }
 
     public void showProgressBar() {
-        // Show progress item
         _pbProgressAction.setVisibility(View.VISIBLE);
     }
 
     public void hideProgressBar() {
-        // Hide progress item
         _pbProgressAction.setVisibility(View.GONE);
     }
 }

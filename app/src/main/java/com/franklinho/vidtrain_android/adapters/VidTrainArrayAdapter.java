@@ -1,6 +1,5 @@
 package com.franklinho.vidtrain_android.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,40 +15,38 @@ import java.util.List;
 
 public class VidTrainArrayAdapter extends RecyclerView.Adapter<ConversationViewHolder> {
 
-    private List<VidTrain> _vidTrains;
-    private final List<Unseen> _unseenList;
+    private List<VidTrain> _vidtrains;
+    private final List<Unseen> _unseens;
     private Context _context;
-    private Activity _activity;
 
-    public VidTrainArrayAdapter(List<VidTrain> vidTrains, List<Unseen> unseenList, Context context,
-            Activity activity) {
-        _vidTrains = vidTrains;
-        _unseenList = unseenList;
+    public VidTrainArrayAdapter(List<VidTrain> vidtrains, List<Unseen> unseens, Context context) {
+        _vidtrains = vidtrains;
+        _unseens = unseens;
         _context = context;
-        _activity = activity;
     }
 
     @Override
     public ConversationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(_context).inflate(R.layout.conversation_vidtrain_preview, parent, false);
-        return new ConversationViewHolder(view, _activity);
+        View view = LayoutInflater.from(_context).inflate(R.layout.conversation_vidtrain_preview,
+                parent, false);
+        return new ConversationViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ConversationViewHolder holder, int position) {
-        VidTrain vidTrain = _vidTrains.get(position);
-        Unseen unseen = Unseen.getUnseenWithVidtrain(_unseenList, vidTrain);
+        VidTrain vidtrain = _vidtrains.get(position);
+        Unseen unseen = Unseen.getUnseenWithVidtrain(_unseens, vidtrain);
         int unread;
         if (unseen == null) {
             unread = 0;
         } else {
             unread = unseen.getUnseenVideos().size();
         }
-        holder.bind(vidTrain, unread);
+        holder.bind(vidtrain, unread);
     }
 
     @Override
     public int getItemCount() {
-        return _vidTrains.size();
+        return _vidtrains.size();
     }
 }

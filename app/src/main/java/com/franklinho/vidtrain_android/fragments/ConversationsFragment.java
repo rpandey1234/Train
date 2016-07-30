@@ -24,7 +24,7 @@ public class ConversationsFragment extends VidTrainListFragment {
     public void requestVidTrains(final int numItems) {
         if (numItems == 0) {
             _vidTrains.clear();
-            _unseenList.clear();
+            _unseens.clear();
             _aVidTrains.notifyDataSetChanged();
         }
 
@@ -37,7 +37,7 @@ public class ConversationsFragment extends VidTrainListFragment {
         query.setLimit(PAGE_SIZE);
         query.findInBackground(new FindCallback<VidTrain>() {
             @Override
-            public void done(List<VidTrain> vidtrains, ParseException e) {
+            public void done(final List<VidTrain> vidtrains, ParseException e) {
                 _swipeContainer.setRefreshing(false);
                 if (e != null) {
                     Log.e(VidtrainApplication.TAG, e.toString());
@@ -45,15 +45,14 @@ public class ConversationsFragment extends VidTrainListFragment {
                 ParseQuery<Unseen> unseenQuery = ParseQuery.getQuery("Unseen");
                 unseenQuery.whereEqualTo("user", User.getCurrentUser());
                 unseenQuery.addDescendingOrder("updatedAt");
-                final List<VidTrain> finalVisibleVidtrains = vidtrains;
                 unseenQuery.findInBackground(new FindCallback<Unseen>() {
                     @Override
                     public void done(List<Unseen> unseens, ParseException e) {
                         if (e != null) {
                             Log.d(VidtrainApplication.TAG, e.toString());
                         }
-                        _unseenList.addAll(unseens);
-                        _vidTrains.addAll(finalVisibleVidtrains);
+                        _unseens.addAll(unseens);
+                        _vidTrains.addAll(vidtrains);
                         _aVidTrains.notifyDataSetChanged();
                     }
                 });

@@ -36,15 +36,13 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements O
     @Bind(R.id.image_preview) ImageView _videoImagePreview;
     @Bind(R.id.card_view) CardView _cardView;
 
-    private final Activity _activity;
     private Context _context;
     public VidTrain _vidTrain;
 
-    public ConversationViewHolder(View view, Activity activity) {
+    public ConversationViewHolder(View view) {
         super(view);
         ButterKnife.bind(this, view);
         _context = view.getContext();
-        _activity = activity;
         view.setOnClickListener(this);
     }
 
