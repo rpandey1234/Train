@@ -2,7 +2,6 @@ package com.franklinho.vidtrain_android.fragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -103,8 +102,6 @@ public class VidtrainLandingFragment extends Fragment {
             @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.landing_fragment, container, false);
         ButterKnife.bind(this, v);
-
-        Context context = getContext();
         _tvTitle.setText(_vidtrainTitle);
         _tvVideoCount.setText(String.valueOf(_videoCount));
         _imageAttribution1.bind(_thumbnails.get(0), _userUrls.get(0));

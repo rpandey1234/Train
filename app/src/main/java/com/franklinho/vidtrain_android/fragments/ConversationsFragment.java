@@ -23,9 +23,9 @@ public class ConversationsFragment extends VidTrainListFragment {
     @Override
     public void requestVidTrains(final int numItems) {
         if (numItems == 0) {
-            _vidTrains.clear();
+            _vidtrains.clear();
             _unseens.clear();
-            _aVidTrains.notifyDataSetChanged();
+            _aVidtrains.notifyDataSetChanged();
         }
 
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
@@ -52,8 +52,8 @@ public class ConversationsFragment extends VidTrainListFragment {
                             Log.d(VidtrainApplication.TAG, e.toString());
                         }
                         _unseens.addAll(unseens);
-                        _vidTrains.addAll(vidtrains);
-                        _aVidTrains.notifyDataSetChanged();
+                        _vidtrains.addAll(vidtrains);
+                        _aVidtrains.notifyDataSetChanged();
                     }
                 });
                 hideProgressBar();

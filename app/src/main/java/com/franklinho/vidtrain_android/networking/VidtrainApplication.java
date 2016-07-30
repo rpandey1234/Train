@@ -9,9 +9,7 @@ import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
-import com.parse.ParseInstallation;
 import com.parse.ParseObject;
-import com.parse.ParsePush;
 
 /**
  * Database: mongodb://vidtrain:vidtrain@ds017514.mlab.com:17514/vidtrain

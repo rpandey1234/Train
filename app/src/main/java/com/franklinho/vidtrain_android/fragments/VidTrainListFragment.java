@@ -29,9 +29,9 @@ public class VidTrainListFragment extends Fragment {
     @Bind(R.id.progressBar) View _pbProgressAction;
     @Bind(R.id.tvNotFollowingLabel) TextView _tvNotFollowingLabel;
 
-    List<VidTrain> _vidTrains;
+    List<VidTrain> _vidtrains;
     List<Unseen> _unseens;
-    VidTrainArrayAdapter _aVidTrains;
+    VidTrainArrayAdapter _aVidtrains;
     LinearLayoutManager _linearLayoutManager;
 
     public VidTrainListFragment() {
@@ -41,9 +41,9 @@ public class VidTrainListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        _vidTrains = new ArrayList<>();
+        _vidtrains = new ArrayList<>();
         _unseens = new ArrayList<>();
-        _aVidTrains = new VidTrainArrayAdapter(_vidTrains, _unseens, getContext());
+        _aVidtrains = new VidTrainArrayAdapter(_vidtrains, _unseens, getContext());
     }
 
     @Override
@@ -52,7 +52,7 @@ public class VidTrainListFragment extends Fragment {
         ButterKnife.bind(this, v);
 
         _linearLayoutManager = new LinearLayoutManager(getContext());
-        _rvVidTrains.setAdapter(_aVidTrains);
+        _rvVidTrains.setAdapter(_aVidtrains);
         _rvVidTrains.setLayoutManager(_linearLayoutManager);
         _rvVidTrains.setHasFixedSize(true);
         _swipeContainer.setColorSchemeResources(R.color.bluePrimary);
@@ -81,7 +81,7 @@ public class VidTrainListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        _aVidTrains.notifyDataSetChanged();
+        _aVidtrains.notifyDataSetChanged();
     }
 
     public void showProgressBar() {
