@@ -17,6 +17,7 @@
         android:singleLine="true"
         android:hint="@string/title_prompt"
         android:inputType="textCapSentences"
+        android:maxLength="60"
         />
 
     <TextView

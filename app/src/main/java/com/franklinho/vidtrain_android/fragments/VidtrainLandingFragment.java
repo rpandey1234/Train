@@ -54,7 +54,7 @@ public class VidtrainLandingFragment extends Fragment {
     @Bind(R.id.previews) LinearLayout _previews;
 
     public static final int VIDEO_CAPTURE = 101;
-    public static final int MAX_VIDEOS_SHOWN = 3;
+    public static final int MAX_VIDEOS_SHOWN = 100;
     private static final String USERS_ALL_SEEN = "-1";
     private static final String USERS_NONE_SEEN = "-2";
     public static final String VIDTRAIN_MODEL_KEY = "VIDTRAIN_MODEL_KEY";
@@ -136,6 +136,10 @@ public class VidtrainLandingFragment extends Fragment {
         List<User> usersNoneSeen = new ArrayList<>();
         for (Unseen unseen : unseens) {
             User user = unseen.getUser();
+            if (User.getCurrentUser().getObjectId().equals(user.getObjectId())) {
+                usersAllSeen.add(user);
+                continue;
+            }
             List<Video> unseenVideos = unseen.getUnseenVideos();
             if (unseenVideos.isEmpty()) {
                 usersAllSeen.add(user);

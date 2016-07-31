@@ -1,11 +1,14 @@
 package com.franklinho.vidtrain_android.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckedTextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
@@ -26,15 +29,18 @@ import butterknife.OnClick;
  */
 public class FriendsAdapter extends RecyclerView.Adapter<FriendViewHolder> {
 
+    private final Activity _activity;
     private Context _context;
     private boolean _showCheckbox;
     // All friends
     private List<User> _friends;
     // Selected friends
     private List<User> _collaborators;
+    public static final int MAX_NUM_COLLABORATORS = 6;
 
-    public FriendsAdapter(Context context, List<User> friends, boolean showCheckbox) {
-        _context = context;
+    public FriendsAdapter(Activity activity, List<User> friends, boolean showCheckbox) {
+        _context = activity.getApplicationContext();
+        _activity = activity;
         _friends = friends;
         _showCheckbox = showCheckbox;
         _collaborators = new ArrayList<>();
@@ -68,13 +74,11 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendViewHolder> {
         @Bind(R.id.friendImage) RoundedImageView _friendImage;
         @Bind(R.id.friendName) CheckedTextView _friendName;
 
-        private Context _context;
         private int _position;
 
         public FriendViewHolder(View view, boolean showCheckbox) {
             super(view);
             ButterKnife.bind(this, view);
-            _context = view.getContext();
             if (!showCheckbox) {
                 _friendName.setCheckMarkDrawable(null);
             }
@@ -90,15 +94,34 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendViewHolder> {
 
         @OnClick(R.id.friendName)
         public void checkboxClicked(View view) {
-            _friendName.toggle();
+            // dismiss the soft keyboard
+            View currentFocus = _activity.getCurrentFocus();
+            if (currentFocus != null) {
+                InputMethodManager imm = (InputMethodManager) _activity.getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+            }
+            boolean isValid = true;
             User user = _friends.get(_position);
             if (_friendName.isChecked()) {
-                // Add it
-                _collaborators.add(user);
-            } else {
                 // Remove it
                 int userIndex = Utility.indexOf(_collaborators, user);
                 _collaborators.remove(userIndex);
+            } else {
+                // Attempt to add it
+                if (_collaborators.size() < MAX_NUM_COLLABORATORS) {
+                    _collaborators.add(user);
+                } else {
+                    Toast.makeText(
+                            _context,
+                            "Sorry! The group limit is " + MAX_NUM_COLLABORATORS,
+                            Toast.LENGTH_SHORT)
+                            .show();
+                    isValid = false;
+                }
+            }
+            if (isValid) {
+                _friendName.toggle();
             }
         }
     }
