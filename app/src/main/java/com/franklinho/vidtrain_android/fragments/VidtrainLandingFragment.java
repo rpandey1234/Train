@@ -141,6 +141,7 @@ public class VidtrainLandingFragment extends Fragment {
                 // map video id to list of users who have NOT seen this video as first
                 Map<String, List<User>> firstUnseenMap = new HashMap<>();
                 List<User> usersAllSeen = new ArrayList<>();
+                List<User> usersNoneSeen = new ArrayList<>();
                 for (int i = 0; i < unseens.size(); i++) {
                     Unseen unseen = unseens.get(i);
                     User user = unseen.getUser();
@@ -149,6 +150,9 @@ public class VidtrainLandingFragment extends Fragment {
                         usersAllSeen.add(user);
                     } else {
                         Video firstUnseen = unseenVideos.get(0);
+                        if (!_videoIds.contains(firstUnseen.getObjectId())) {
+                            usersNoneSeen.add(user);
+                        }
                         List<User> users;
                         if (firstUnseenMap.containsKey(firstUnseen.getObjectId())) {
                             users = firstUnseenMap.get(firstUnseen.getObjectId());
@@ -166,8 +170,11 @@ public class VidtrainLandingFragment extends Fragment {
                 if (_videoIds.size() > 1 && firstUnseenMap.containsKey(_videoIds.get(1))) {
                     _imageAttribution2.showUnseenUsers(firstUnseenMap.get(_videoIds.get(1)));
                 }
-                if (_videoIds.size() > 2 && firstUnseenMap.containsKey(_videoIds.get(2))) {
-                    _imageAttribution3.showUnseenUsers(firstUnseenMap.get(_videoIds.get(2)));
+                if (_videoIds.size() > 2) {
+                    if (firstUnseenMap.containsKey(_videoIds.get(2))) {
+                        usersNoneSeen.addAll(firstUnseenMap.get(_videoIds.get(2)));
+                    }
+                    _imageAttribution3.showUnseenUsers(usersNoneSeen);
                 }
             }
         });
