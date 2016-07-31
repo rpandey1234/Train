@@ -55,11 +55,14 @@ public class VidtrainLandingFragment extends Fragment {
 
     public static final int VIDEO_CAPTURE = 101;
     public static final int MAX_VIDEOS_SHOWN = 3;
+    private static final String USERS_ALL_SEEN = "-1";
+    private static final String USERS_NONE_SEEN = "-2";
     public static final String VIDTRAIN_MODEL_KEY = "VIDTRAIN_MODEL_KEY";
 
     private ProgressDialog _progress;
     private String _videoPath;
     private VidtrainModel _vidtrainModel;
+    private List<VideoPreview> _videoPreviews;
 
     public static Fragment newInstance(VidTrain vidtrain) {
         VidtrainLandingFragment vidtrainLandingFragment = new VidtrainLandingFragment();
@@ -74,6 +77,11 @@ public class VidtrainLandingFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
         _vidtrainModel = arguments.getParcelable(VIDTRAIN_MODEL_KEY);
+        _videoPreviews = new ArrayList<>();
+        for (VideoModel video : _vidtrainModel.getVideoModelsToShow()) {
+            VideoPreview videoPreview = new VideoPreview(getContext());
+            _videoPreviews.add(videoPreview);
+        }
     }
 
     @Nullable
@@ -85,12 +93,10 @@ public class VidtrainLandingFragment extends Fragment {
         _tvTitle.setText(_vidtrainModel.getTitle());
         _tvVideoCount.setText(String.valueOf(_vidtrainModel.getVideoCount()));
         final List<VideoModel> videosShown = _vidtrainModel.getVideoModelsToShow();
-        final List<VideoPreview> videoPreviews = new ArrayList<>();
-        for (VideoModel video : videosShown) {
-            VideoPreview videoPreview = new VideoPreview(getContext());
-            videoPreview.bind(video);
-            videoPreviews.add(videoPreview);
-            _previews.addView(videoPreview);
+        for (int i = 0; i < videosShown.size(); i++) {
+            VideoModel video = videosShown.get(i);
+            _videoPreviews.get(i).bind(video);
+            _previews.addView(_videoPreviews.get(i));
         }
 
         ParseQuery<Unseen> query = ParseQuery.getQuery("Unseen");
@@ -107,39 +113,51 @@ public class VidtrainLandingFragment extends Fragment {
                     Log.d(VidtrainApplication.TAG, "Could not get unseen data: " + e.toString());
                     return;
                 }
-                // map video id to list of users for which this is FIRST unseen video
-                Map<String, List<User>> unseenMap = new HashMap<>();
-                List<User> usersAllSeen = new ArrayList<>();
-                List<User> usersNoneSeen = new ArrayList<>();
-                for (Unseen unseen : unseens) {
-                    User user = unseen.getUser();
-                    List<Video> unseenVideos = unseen.getUnseenVideos();
-                    if (unseenVideos.isEmpty()) {
-                        usersAllSeen.add(user);
-                    } else {
-                        Video firstUnseen = unseenVideos.get(0);
-                        if (!_vidtrainModel.containsVideo(firstUnseen.getObjectId())) {
-                            usersNoneSeen.add(user);
-                        }
-                        List<User> users;
-                        if (unseenMap.containsKey(firstUnseen.getObjectId())) {
-                            users = unseenMap.get(firstUnseen.getObjectId());
-                        } else {
-                            users = new ArrayList<>();
-                        }
-                        users.add(user);
-                        unseenMap.put(firstUnseen.getObjectId(), users);
-                    }
-                }
-                videoPreviews.get(0).addSeenUsers(usersAllSeen);
-                for (int i = 0; i < videoPreviews.size(); i++) {
-                    VideoPreview videoPreview = videoPreviews.get(i);
+                Map<String, List<User>> unseenMap = generateUnseenMap(unseens);
+                _videoPreviews.get(0).addSeenUsers(unseenMap.get(USERS_ALL_SEEN));
+                for (int i = 0; i < _videoPreviews.size(); i++) {
+                    VideoPreview videoPreview = _videoPreviews.get(i);
                     videoPreview.addUnseenUsers(unseenMap.get(videosShown.get(i).getId()));
                 }
-                videoPreviews.get(videoPreviews.size() - 1).addUnseenUsers(usersNoneSeen);
+                _videoPreviews.get(_videoPreviews.size() - 1)
+                        .addUnseenUsers(unseenMap.get(USERS_NONE_SEEN));
             }
         });
         return v;
+    }
+
+    /**
+     * This method generates a map, with key of video id and value of a list
+     * of users for which this is FIRST unseen video.
+     */
+    public Map<String, List<User>> generateUnseenMap(List<Unseen> unseens) {
+        Map<String, List<User>> unseenMap = new HashMap<>();
+        List<User> usersAllSeen = new ArrayList<>();
+        List<User> usersNoneSeen = new ArrayList<>();
+        for (Unseen unseen : unseens) {
+            User user = unseen.getUser();
+            List<Video> unseenVideos = unseen.getUnseenVideos();
+            if (unseenVideos.isEmpty()) {
+                usersAllSeen.add(user);
+            } else {
+                Video firstUnseen = unseenVideos.get(0);
+                if (!_vidtrainModel.containsVideo(firstUnseen.getObjectId())) {
+                    usersNoneSeen.add(user);
+                }
+                List<User> users;
+                if (unseenMap.containsKey(firstUnseen.getObjectId())) {
+                    users = unseenMap.get(firstUnseen.getObjectId());
+                } else {
+                    users = new ArrayList<>();
+                }
+                users.add(user);
+                unseenMap.put(firstUnseen.getObjectId(), users);
+            }
+        }
+        // two special cases
+        unseenMap.put(USERS_ALL_SEEN, usersAllSeen);
+        unseenMap.put(USERS_NONE_SEEN, usersNoneSeen);
+        return unseenMap;
     }
 
     @OnClick(R.id.btnAddVidTrain)
