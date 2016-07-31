@@ -22,6 +22,8 @@ import com.franklinho.vidtrain_android.models.Unseen;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
+import com.franklinho.vidtrain_android.models.VideoModel;
+import com.franklinho.vidtrain_android.models.VidtrainModel;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.ui.ImageAttribution;
 import com.franklinho.vidtrain_android.utilities.Utility;
@@ -54,42 +56,24 @@ public class VidtrainLandingFragment extends Fragment {
 
     public static final int VIDEO_CAPTURE = 101;
     public static final int MAX_THUMBNAILS = 3;
-    public static final String VIDTRAIN_ID = "VIDTRAIN_ID";
-    public static final String VIDTRAIN_TITLE = "VIDTRAIN_TITLE";
-    public static final String VIDEO_COUNT = "VIDEO_COUNT";
-    public static final String THUMBNAILS = "THUMBNAILS";
-    public static final String USER_URLS = "USER_URLS";
-    public static final String VIDEO_IDS = "VIDEO_IDS";
+    public static final String VIDTRAIN_MODEL_KEY = "VIDTRAIN_MODEL_KEY";
 
     private ProgressDialog _progress;
-    private String _vidtrainId;
-    private String _vidtrainTitle;
-    private int _videoCount;
-    private ArrayList<String> _thumbnails;
-    private ArrayList<String> _userUrls;
-    private ArrayList<String> _videoIds;
     private String _videoPath;
+    private VidtrainModel _vidtrainModel;
 
     public static Fragment newInstance(VidTrain vidtrain) {
         VidtrainLandingFragment vidtrainLandingFragment = new VidtrainLandingFragment();
         Bundle args = new Bundle();
-        args.putString(VIDTRAIN_ID, vidtrain.getObjectId());
-        args.putString(VIDTRAIN_TITLE, vidtrain.getTitle());
+        VidtrainModel vidtrainModel = new VidtrainModel(vidtrain);
+        args.putParcelable(VIDTRAIN_MODEL_KEY, vidtrainModel);
         int videosCount = vidtrain.getVideosCount();
-        args.putInt(VIDEO_COUNT, videosCount);
-        ArrayList<String> thumbnails = new ArrayList<>();
-        ArrayList<String> userUrls = new ArrayList<>();
         ArrayList<String> videoIds = new ArrayList<>();
         int numShown = Math.min(MAX_THUMBNAILS, videosCount);
         for (int i = 0; i < numShown; i++) {
             Video video = vidtrain.getVideos().get(videosCount - i - 1);
-            thumbnails.add(video.getThumbnail().getUrl());
-            userUrls.add(video.getUser().getProfileImageUrl());
             videoIds.add(video.getObjectId());
         }
-        args.putStringArrayList(THUMBNAILS, thumbnails);
-        args.putStringArrayList(USER_URLS, userUrls);
-        args.putStringArrayList(VIDEO_IDS, videoIds);
         vidtrainLandingFragment.setArguments(args);
         return vidtrainLandingFragment;
     }
@@ -98,15 +82,7 @@ public class VidtrainLandingFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
-        if (arguments == null) {
-            return;
-        }
-        _vidtrainId = arguments.getString(VIDTRAIN_ID);
-        _vidtrainTitle = arguments.getString(VIDTRAIN_TITLE);
-        _videoCount = arguments.getInt(VIDEO_COUNT);
-        _thumbnails = arguments.getStringArrayList(THUMBNAILS);
-        _userUrls = arguments.getStringArrayList(USER_URLS);
-        _videoIds = arguments.getStringArrayList(VIDEO_IDS);
+        _vidtrainModel = arguments.getParcelable(VIDTRAIN_MODEL_KEY);
     }
 
     @Nullable
@@ -115,19 +91,26 @@ public class VidtrainLandingFragment extends Fragment {
             @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.landing_fragment, container, false);
         ButterKnife.bind(this, v);
-        _tvTitle.setText(_vidtrainTitle);
-        _tvVideoCount.setText(String.valueOf(_videoCount));
-        _imageAttribution1.bind(_thumbnails.get(0), _userUrls.get(0));
-        if (_thumbnails.size() > 1) {
-            _imageAttribution2.bind(_thumbnails.get(1), _userUrls.get(1));
+        _tvTitle.setText(_vidtrainModel.getTitle());
+        _tvVideoCount.setText(String.valueOf(_vidtrainModel.getVideoCount()));
+        final List<VideoModel> videosShown = _vidtrainModel.getVideoModelsToShow();
+        _imageAttribution1.bind(
+                videosShown.get(0).getThumbnailUrl(),
+                videosShown.get(0).getUserUrl());
+        if (videosShown.size() > 1) {
+            _imageAttribution2.bind(
+                    videosShown.get(1).getThumbnailUrl(),
+                    videosShown.get(1).getUserUrl());
         }
-        if (_thumbnails.size() > 2) {
-            _imageAttribution3.bind(_thumbnails.get(2), _userUrls.get(2));
+        if (videosShown.size() > 2) {
+            _imageAttribution3.bind(
+                    videosShown.get(2).getThumbnailUrl(),
+                    videosShown.get(2).getUserUrl());
         }
         ParseQuery<Unseen> query = ParseQuery.getQuery("Unseen");
         // need to wrap in vidtrain object because pointer field needs a pointer value
         VidTrain vidtrain = new VidTrain();
-        vidtrain.setObjectId(_vidtrainId);
+        vidtrain.setObjectId(_vidtrainModel.getId());
         query.whereEqualTo(Unseen.VIDTRAIN_KEY, vidtrain);
         query.include(Unseen.USER_KEY);
         query.include(Unseen.VIDEOS_KEY);
@@ -150,7 +133,7 @@ public class VidtrainLandingFragment extends Fragment {
                         usersAllSeen.add(user);
                     } else {
                         Video firstUnseen = unseenVideos.get(0);
-                        if (!_videoIds.contains(firstUnseen.getObjectId())) {
+                        if (!_vidtrainModel.containsVideo(firstUnseen.getObjectId())) {
                             usersNoneSeen.add(user);
                         }
                         List<User> users;
@@ -164,15 +147,15 @@ public class VidtrainLandingFragment extends Fragment {
                     }
                 }
                 _imageAttribution1.showSeenUsers(usersAllSeen);
-                if (firstUnseenMap.containsKey(_videoIds.get(0))) {
-                    _imageAttribution1.showUnseenUsers(firstUnseenMap.get(_videoIds.get(0)));
+                if (firstUnseenMap.containsKey(_vidtrainModel.getVideoIdRecent(0))) {
+                    _imageAttribution1.showUnseenUsers(firstUnseenMap.get(_vidtrainModel.getVideoIdRecent(0)));
                 }
-                if (_videoIds.size() > 1 && firstUnseenMap.containsKey(_videoIds.get(1))) {
-                    _imageAttribution2.showUnseenUsers(firstUnseenMap.get(_videoIds.get(1)));
+                if (videosShown.size() > 1 && firstUnseenMap.containsKey(_vidtrainModel.getVideoIdRecent(1))) {
+                    _imageAttribution2.showUnseenUsers(firstUnseenMap.get(_vidtrainModel.getVideoIdRecent(1)));
                 }
-                if (_videoIds.size() > 2) {
-                    if (firstUnseenMap.containsKey(_videoIds.get(2))) {
-                        usersNoneSeen.addAll(firstUnseenMap.get(_videoIds.get(2)));
+                if (videosShown.size() > 2) {
+                    if (firstUnseenMap.containsKey(_vidtrainModel.getVideoIdRecent(2))) {
+                        usersNoneSeen.addAll(firstUnseenMap.get(_vidtrainModel.getVideoIdRecent(2)));
                     }
                     _imageAttribution3.showUnseenUsers(usersNoneSeen);
                 }
@@ -217,7 +200,7 @@ public class VidtrainLandingFragment extends Fragment {
     private void addVideoToVidtrain() {
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
         query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
-        query.whereEqualTo("objectId", _vidtrainId);
+        query.whereEqualTo("objectId", _vidtrainModel.getId());
         query.include("user");
         query.include("videos.user");
         query.include("collaborators");
