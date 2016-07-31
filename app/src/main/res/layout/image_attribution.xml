@@ -22,7 +22,27 @@
         app:riv_corner_radius="20dp"
         android:id="@+id/ivUserPic"
         android:contentDescription="@string/profile_image"
-        android:layout_margin="4dp"
+        android:layout_marginLeft="100dp"
+        android:layout_gravity="bottom"
+        />
+
+    <!-- Only used for the first video to indicate users who have seen everything -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/usersSeen"
+        android:orientation="horizontal"
+        android:layout_gravity="top|right"
+        android:layout_marginLeft="200dp"
+        android:visibility="gone"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/usersUnseen"
+        android:orientation="horizontal"
         android:layout_gravity="bottom|right"
+        android:layout_marginLeft="200dp"
         />
 </FrameLayout>

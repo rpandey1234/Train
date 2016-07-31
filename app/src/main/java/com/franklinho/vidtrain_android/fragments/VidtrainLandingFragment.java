@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +22,10 @@ import com.franklinho.vidtrain_android.models.Unseen;
 import com.franklinho.vidtrain_android.models.User;
 import com.franklinho.vidtrain_android.models.VidTrain;
 import com.franklinho.vidtrain_android.models.Video;
+import com.franklinho.vidtrain_android.networking.VidtrainApplication;
 import com.franklinho.vidtrain_android.ui.ImageAttribution;
 import com.franklinho.vidtrain_android.utilities.Utility;
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -30,6 +33,9 @@ import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -53,6 +59,7 @@ public class VidtrainLandingFragment extends Fragment {
     public static final String VIDEO_COUNT = "VIDEO_COUNT";
     public static final String THUMBNAILS = "THUMBNAILS";
     public static final String USER_URLS = "USER_URLS";
+    public static final String VIDEO_IDS = "VIDEO_IDS";
 
     private ProgressDialog _progress;
     private String _vidtrainId;
@@ -60,6 +67,7 @@ public class VidtrainLandingFragment extends Fragment {
     private int _videoCount;
     private ArrayList<String> _thumbnails;
     private ArrayList<String> _userUrls;
+    private ArrayList<String> _videoIds;
     private String _videoPath;
 
     public static Fragment newInstance(VidTrain vidtrain) {
@@ -71,14 +79,17 @@ public class VidtrainLandingFragment extends Fragment {
         args.putInt(VIDEO_COUNT, videosCount);
         ArrayList<String> thumbnails = new ArrayList<>();
         ArrayList<String> userUrls = new ArrayList<>();
+        ArrayList<String> videoIds = new ArrayList<>();
         int numShown = Math.min(MAX_THUMBNAILS, videosCount);
         for (int i = 0; i < numShown; i++) {
             Video video = vidtrain.getVideos().get(videosCount - i - 1);
             thumbnails.add(video.getThumbnail().getUrl());
             userUrls.add(video.getUser().getProfileImageUrl());
+            videoIds.add(video.getObjectId());
         }
         args.putStringArrayList(THUMBNAILS, thumbnails);
         args.putStringArrayList(USER_URLS, userUrls);
+        args.putStringArrayList(VIDEO_IDS, videoIds);
         vidtrainLandingFragment.setArguments(args);
         return vidtrainLandingFragment;
     }
@@ -87,13 +98,15 @@ public class VidtrainLandingFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
-        if (arguments != null) {
-            _vidtrainId = arguments.getString(VIDTRAIN_ID);
-            _vidtrainTitle = arguments.getString(VIDTRAIN_TITLE);
-            _videoCount = arguments.getInt(VIDEO_COUNT);
-            _thumbnails = arguments.getStringArrayList(THUMBNAILS);
-            _userUrls = arguments.getStringArrayList(USER_URLS);
+        if (arguments == null) {
+            return;
         }
+        _vidtrainId = arguments.getString(VIDTRAIN_ID);
+        _vidtrainTitle = arguments.getString(VIDTRAIN_TITLE);
+        _videoCount = arguments.getInt(VIDEO_COUNT);
+        _thumbnails = arguments.getStringArrayList(THUMBNAILS);
+        _userUrls = arguments.getStringArrayList(USER_URLS);
+        _videoIds = arguments.getStringArrayList(VIDEO_IDS);
     }
 
     @Nullable
@@ -111,6 +124,53 @@ public class VidtrainLandingFragment extends Fragment {
         if (_thumbnails.size() > 2) {
             _imageAttribution3.bind(_thumbnails.get(2), _userUrls.get(2));
         }
+        ParseQuery<Unseen> query = ParseQuery.getQuery("Unseen");
+        // need to wrap in vidtrain object because pointer field needs a pointer value
+        VidTrain vidtrain = new VidTrain();
+        vidtrain.setObjectId(_vidtrainId);
+        query.whereEqualTo(Unseen.VIDTRAIN_KEY, vidtrain);
+        query.include(Unseen.USER_KEY);
+        query.include(Unseen.VIDEOS_KEY);
+        query.findInBackground(new FindCallback<Unseen>() {
+            @Override
+            public void done(List<Unseen> unseens, ParseException e) {
+                if (e != null) {
+                    Log.d(VidtrainApplication.TAG, "Could not get unseen data: " + e.toString());
+                    return;
+                }
+                // map video id to list of users who have NOT seen this video as first
+                Map<String, List<User>> firstUnseenMap = new HashMap<>();
+                List<User> usersAllSeen = new ArrayList<>();
+                for (int i = 0; i < unseens.size(); i++) {
+                    Unseen unseen = unseens.get(i);
+                    User user = unseen.getUser();
+                    List<Video> unseenVideos = unseen.getUnseenVideos();
+                    if (unseenVideos.isEmpty()) {
+                        usersAllSeen.add(user);
+                    } else {
+                        Video firstUnseen = unseenVideos.get(0);
+                        List<User> users;
+                        if (firstUnseenMap.containsKey(firstUnseen.getObjectId())) {
+                            users = firstUnseenMap.get(firstUnseen.getObjectId());
+                        } else {
+                            users = new ArrayList<>();
+                        }
+                        users.add(user);
+                        firstUnseenMap.put(firstUnseen.getObjectId(), users);
+                    }
+                }
+                _imageAttribution1.showSeenUsers(usersAllSeen);
+                if (firstUnseenMap.containsKey(_videoIds.get(0))) {
+                    _imageAttribution1.showUnseenUsers(firstUnseenMap.get(_videoIds.get(0)));
+                }
+                if (_videoIds.size() > 1 && firstUnseenMap.containsKey(_videoIds.get(1))) {
+                    _imageAttribution2.showUnseenUsers(firstUnseenMap.get(_videoIds.get(1)));
+                }
+                if (_videoIds.size() > 2 && firstUnseenMap.containsKey(_videoIds.get(2))) {
+                    _imageAttribution3.showUnseenUsers(firstUnseenMap.get(_videoIds.get(2)));
+                }
+            }
+        });
         return v;
     }
 

@@ -132,6 +132,10 @@ public class Unseen extends ParseObject {
         return (VidTrain) get(VIDTRAIN_KEY);
     }
 
+    public User getUser() {
+        return (User) get(USER_KEY);
+    }
+
     /**
      * Get the index of the first video the user has not seen in this vidtrain. If the user has
      * seen all videos, return 0.

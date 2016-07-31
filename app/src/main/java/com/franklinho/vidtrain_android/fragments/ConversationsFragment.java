@@ -43,7 +43,7 @@ public class ConversationsFragment extends VidTrainListFragment {
                     Log.e(VidtrainApplication.TAG, e.toString());
                 }
                 ParseQuery<Unseen> unseenQuery = ParseQuery.getQuery("Unseen");
-                unseenQuery.whereEqualTo("user", User.getCurrentUser());
+                unseenQuery.whereEqualTo(Unseen.USER_KEY, User.getCurrentUser());
                 unseenQuery.addDescendingOrder("updatedAt");
                 unseenQuery.findInBackground(new FindCallback<Unseen>() {
                     @Override
