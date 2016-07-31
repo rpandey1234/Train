@@ -51,6 +51,7 @@ public class VidtrainModel implements Parcelable {
         return _videoModels;
     }
 
+    // Reverse ordering of videos (newest first), and only containing the number of videos to show
     public List<VideoModel> getVideoModelsToShow() {
         return _videoModelsToShow;
     }
@@ -63,11 +64,6 @@ public class VidtrainModel implements Parcelable {
             }
         }
         return false;
-    }
-
-    // Gets the most recent video ID in the vidtrain:, i.e. 0 means most recent video.
-    public String getVideoIdRecent(int position) {
-        return _videoModelsToShow.get(position).getId();
     }
 
     protected VidtrainModel(Parcel in) {

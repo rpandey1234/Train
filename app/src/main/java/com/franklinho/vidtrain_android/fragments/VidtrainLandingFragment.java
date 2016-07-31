@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,9 +51,7 @@ public class VidtrainLandingFragment extends Fragment {
 
     @Bind(R.id.tvVideoCount) TextView _tvVideoCount;
     @Bind(R.id.tvTitle) TextView _tvTitle;
-    @Bind(R.id.imageAttribution1) VideoPreview _videoPreview1;
-    @Bind(R.id.imageAttribution2) VideoPreview _videoPreview2;
-    @Bind(R.id.imageAttribution3) VideoPreview _videoPreview3;
+    @Bind(R.id.previews) LinearLayout _previews;
 
     public static final int VIDEO_CAPTURE = 101;
     public static final int MAX_VIDEOS_SHOWN = 3;
@@ -86,13 +85,14 @@ public class VidtrainLandingFragment extends Fragment {
         _tvTitle.setText(_vidtrainModel.getTitle());
         _tvVideoCount.setText(String.valueOf(_vidtrainModel.getVideoCount()));
         final List<VideoModel> videosShown = _vidtrainModel.getVideoModelsToShow();
-        _videoPreview1.bind(videosShown.get(0));
-        if (videosShown.size() > 1) {
-            _videoPreview2.bind(videosShown.get(1));
+        final List<VideoPreview> videoPreviews = new ArrayList<>();
+        for (VideoModel video : videosShown) {
+            VideoPreview videoPreview = new VideoPreview(getContext());
+            videoPreview.bind(video);
+            videoPreviews.add(videoPreview);
+            _previews.addView(videoPreview);
         }
-        if (videosShown.size() > 2) {
-            _videoPreview3.bind(videosShown.get(2));
-        }
+
         ParseQuery<Unseen> query = ParseQuery.getQuery("Unseen");
         // need to wrap in vidtrain object because pointer field needs a pointer value
         VidTrain vidtrain = new VidTrain();
@@ -107,12 +107,11 @@ public class VidtrainLandingFragment extends Fragment {
                     Log.d(VidtrainApplication.TAG, "Could not get unseen data: " + e.toString());
                     return;
                 }
-                // map video id to list of users who have NOT seen this video as first
-                Map<String, List<User>> firstUnseenMap = new HashMap<>();
+                // map video id to list of users for which this is FIRST unseen video
+                Map<String, List<User>> unseenMap = new HashMap<>();
                 List<User> usersAllSeen = new ArrayList<>();
                 List<User> usersNoneSeen = new ArrayList<>();
-                for (int i = 0; i < unseens.size(); i++) {
-                    Unseen unseen = unseens.get(i);
+                for (Unseen unseen : unseens) {
                     User user = unseen.getUser();
                     List<Video> unseenVideos = unseen.getUnseenVideos();
                     if (unseenVideos.isEmpty()) {
@@ -123,28 +122,21 @@ public class VidtrainLandingFragment extends Fragment {
                             usersNoneSeen.add(user);
                         }
                         List<User> users;
-                        if (firstUnseenMap.containsKey(firstUnseen.getObjectId())) {
-                            users = firstUnseenMap.get(firstUnseen.getObjectId());
+                        if (unseenMap.containsKey(firstUnseen.getObjectId())) {
+                            users = unseenMap.get(firstUnseen.getObjectId());
                         } else {
                             users = new ArrayList<>();
                         }
                         users.add(user);
-                        firstUnseenMap.put(firstUnseen.getObjectId(), users);
+                        unseenMap.put(firstUnseen.getObjectId(), users);
                     }
                 }
-                _videoPreview1.showSeenUsers(usersAllSeen);
-                if (firstUnseenMap.containsKey(_vidtrainModel.getVideoIdRecent(0))) {
-                    _videoPreview1.showUnseenUsers(firstUnseenMap.get(_vidtrainModel.getVideoIdRecent(0)));
+                videoPreviews.get(0).addSeenUsers(usersAllSeen);
+                for (int i = 0; i < videoPreviews.size(); i++) {
+                    VideoPreview videoPreview = videoPreviews.get(i);
+                    videoPreview.addUnseenUsers(unseenMap.get(videosShown.get(i).getId()));
                 }
-                if (videosShown.size() > 1 && firstUnseenMap.containsKey(_vidtrainModel.getVideoIdRecent(1))) {
-                    _videoPreview2.showUnseenUsers(firstUnseenMap.get(_vidtrainModel.getVideoIdRecent(1)));
-                }
-                if (videosShown.size() > 2) {
-                    if (firstUnseenMap.containsKey(_vidtrainModel.getVideoIdRecent(2))) {
-                        usersNoneSeen.addAll(firstUnseenMap.get(_vidtrainModel.getVideoIdRecent(2)));
-                    }
-                    _videoPreview3.showUnseenUsers(usersNoneSeen);
-                }
+                videoPreviews.get(videoPreviews.size() - 1).addUnseenUsers(usersNoneSeen);
             }
         });
         return v;

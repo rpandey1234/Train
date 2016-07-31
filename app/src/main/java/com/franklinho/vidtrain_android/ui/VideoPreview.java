@@ -55,7 +55,10 @@ public class VideoPreview extends FrameLayout {
         Glide.with(_context).load(videoModel.getUserUrl()).into(_ivUserPic);
     }
 
-    public void showUnseenUsers(List<User> users) {
+    public void addUnseenUsers(List<User> users) {
+        if (users == null) {
+            return;
+        }
         for (User user : users) {
             View profileImage = LayoutInflater.from(_context)
                     .inflate(R.layout.profile_image, this, false);
@@ -66,7 +69,10 @@ public class VideoPreview extends FrameLayout {
         }
     }
 
-    public void showSeenUsers(List<User> users) {
+    public void addSeenUsers(List<User> users) {
+        if (users == null) {
+            return;
+        }
         for (User user : users) {
             View profileImage = LayoutInflater.from(_context)
                     .inflate(R.layout.profile_image, this, false);
@@ -75,6 +81,8 @@ public class VideoPreview extends FrameLayout {
             Glide.with(_context).load(user.getProfileImageUrl()).into(ivUserPic);
             _usersSeen.addView(profileImage);
         }
-        _usersSeen.setVisibility(VISIBLE);
+        if (!users.isEmpty()) {
+            _usersSeen.setVisibility(VISIBLE);
+        }
     }
 }
