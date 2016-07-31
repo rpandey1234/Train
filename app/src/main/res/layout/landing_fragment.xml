@@ -67,19 +67,19 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp">
 
-            <com.franklinho.vidtrain_android.ui.ImageAttribution
+            <com.franklinho.vidtrain_android.ui.VideoPreview
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/imageAttribution1"
                 />
 
-            <com.franklinho.vidtrain_android.ui.ImageAttribution
+            <com.franklinho.vidtrain_android.ui.VideoPreview
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/imageAttribution2"
                 />
 
-            <com.franklinho.vidtrain_android.ui.ImageAttribution
+            <com.franklinho.vidtrain_android.ui.VideoPreview
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/imageAttribution3"

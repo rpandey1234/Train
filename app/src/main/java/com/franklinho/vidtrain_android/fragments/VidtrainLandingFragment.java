@@ -25,7 +25,7 @@ import com.franklinho.vidtrain_android.models.Video;
 import com.franklinho.vidtrain_android.models.VideoModel;
 import com.franklinho.vidtrain_android.models.VidtrainModel;
 import com.franklinho.vidtrain_android.networking.VidtrainApplication;
-import com.franklinho.vidtrain_android.ui.ImageAttribution;
+import com.franklinho.vidtrain_android.ui.VideoPreview;
 import com.franklinho.vidtrain_android.utilities.Utility;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
@@ -50,12 +50,12 @@ public class VidtrainLandingFragment extends Fragment {
 
     @Bind(R.id.tvVideoCount) TextView _tvVideoCount;
     @Bind(R.id.tvTitle) TextView _tvTitle;
-    @Bind(R.id.imageAttribution1) ImageAttribution _imageAttribution1;
-    @Bind(R.id.imageAttribution2) ImageAttribution _imageAttribution2;
-    @Bind(R.id.imageAttribution3) ImageAttribution _imageAttribution3;
+    @Bind(R.id.imageAttribution1) VideoPreview _videoPreview1;
+    @Bind(R.id.imageAttribution2) VideoPreview _videoPreview2;
+    @Bind(R.id.imageAttribution3) VideoPreview _videoPreview3;
 
     public static final int VIDEO_CAPTURE = 101;
-    public static final int MAX_THUMBNAILS = 3;
+    public static final int MAX_VIDEOS_SHOWN = 3;
     public static final String VIDTRAIN_MODEL_KEY = "VIDTRAIN_MODEL_KEY";
 
     private ProgressDialog _progress;
@@ -65,15 +65,7 @@ public class VidtrainLandingFragment extends Fragment {
     public static Fragment newInstance(VidTrain vidtrain) {
         VidtrainLandingFragment vidtrainLandingFragment = new VidtrainLandingFragment();
         Bundle args = new Bundle();
-        VidtrainModel vidtrainModel = new VidtrainModel(vidtrain);
-        args.putParcelable(VIDTRAIN_MODEL_KEY, vidtrainModel);
-        int videosCount = vidtrain.getVideosCount();
-        ArrayList<String> videoIds = new ArrayList<>();
-        int numShown = Math.min(MAX_THUMBNAILS, videosCount);
-        for (int i = 0; i < numShown; i++) {
-            Video video = vidtrain.getVideos().get(videosCount - i - 1);
-            videoIds.add(video.getObjectId());
-        }
+        args.putParcelable(VIDTRAIN_MODEL_KEY, new VidtrainModel(vidtrain, MAX_VIDEOS_SHOWN));
         vidtrainLandingFragment.setArguments(args);
         return vidtrainLandingFragment;
     }
@@ -94,18 +86,12 @@ public class VidtrainLandingFragment extends Fragment {
         _tvTitle.setText(_vidtrainModel.getTitle());
         _tvVideoCount.setText(String.valueOf(_vidtrainModel.getVideoCount()));
         final List<VideoModel> videosShown = _vidtrainModel.getVideoModelsToShow();
-        _imageAttribution1.bind(
-                videosShown.get(0).getThumbnailUrl(),
-                videosShown.get(0).getUserUrl());
+        _videoPreview1.bind(videosShown.get(0));
         if (videosShown.size() > 1) {
-            _imageAttribution2.bind(
-                    videosShown.get(1).getThumbnailUrl(),
-                    videosShown.get(1).getUserUrl());
+            _videoPreview2.bind(videosShown.get(1));
         }
         if (videosShown.size() > 2) {
-            _imageAttribution3.bind(
-                    videosShown.get(2).getThumbnailUrl(),
-                    videosShown.get(2).getUserUrl());
+            _videoPreview3.bind(videosShown.get(2));
         }
         ParseQuery<Unseen> query = ParseQuery.getQuery("Unseen");
         // need to wrap in vidtrain object because pointer field needs a pointer value
@@ -146,18 +132,18 @@ public class VidtrainLandingFragment extends Fragment {
                         firstUnseenMap.put(firstUnseen.getObjectId(), users);
                     }
                 }
-                _imageAttribution1.showSeenUsers(usersAllSeen);
+                _videoPreview1.showSeenUsers(usersAllSeen);
                 if (firstUnseenMap.containsKey(_vidtrainModel.getVideoIdRecent(0))) {
-                    _imageAttribution1.showUnseenUsers(firstUnseenMap.get(_vidtrainModel.getVideoIdRecent(0)));
+                    _videoPreview1.showUnseenUsers(firstUnseenMap.get(_vidtrainModel.getVideoIdRecent(0)));
                 }
                 if (videosShown.size() > 1 && firstUnseenMap.containsKey(_vidtrainModel.getVideoIdRecent(1))) {
-                    _imageAttribution2.showUnseenUsers(firstUnseenMap.get(_vidtrainModel.getVideoIdRecent(1)));
+                    _videoPreview2.showUnseenUsers(firstUnseenMap.get(_vidtrainModel.getVideoIdRecent(1)));
                 }
                 if (videosShown.size() > 2) {
                     if (firstUnseenMap.containsKey(_vidtrainModel.getVideoIdRecent(2))) {
                         usersNoneSeen.addAll(firstUnseenMap.get(_vidtrainModel.getVideoIdRecent(2)));
                     }
-                    _imageAttribution3.showUnseenUsers(usersNoneSeen);
+                    _videoPreview3.showUnseenUsers(usersNoneSeen);
                 }
             }
         });

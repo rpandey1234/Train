@@ -18,9 +18,8 @@ public class VidtrainModel implements Parcelable {
     private final List<VideoModel> _videoModels;
     // Reverse ordering of videos (newest first)
     private final List<VideoModel> _videoModelsToShow;
-    public static final int NUM_VIDEOS_SHOWN = 3;
 
-    public VidtrainModel(VidTrain vidTrain) {
+    public VidtrainModel(VidTrain vidTrain, int numVideosShown) {
         _vidTrainId = vidTrain.getObjectId();
         _title = vidTrain.getTitle();
         _videoCount = vidTrain.getVideosCount();
@@ -28,7 +27,7 @@ public class VidtrainModel implements Parcelable {
         _videoModels = new ArrayList<>();
         _videoModelsToShow = new ArrayList<>();
         for (int i = 0; i < videos.size(); i++) {
-            if (i < NUM_VIDEOS_SHOWN) {
+            if (i < numVideosShown) {
                 Video video = videos.get(videos.size() - 1 - i);
                 _videoModelsToShow.add(new VideoModel(video));
             }

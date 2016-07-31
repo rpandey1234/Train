@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import com.bumptech.glide.Glide;
 import com.franklinho.vidtrain_android.R;
 import com.franklinho.vidtrain_android.models.User;
+import com.franklinho.vidtrain_android.models.VideoModel;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
@@ -21,7 +22,7 @@ import butterknife.ButterKnife;
 /**
  * A view with an image and the author's profile picture in the bottom right.
  */
-public class ImageAttribution extends FrameLayout {
+public class VideoPreview extends FrameLayout {
 
     @Bind(R.id.ivThumbnail) ImageView _ivThumbnail;
     @Bind(R.id.ivUserPic) ImageView _ivUserPic;
@@ -30,28 +31,28 @@ public class ImageAttribution extends FrameLayout {
 
     private Context _context;
 
-    public ImageAttribution(Context context) {
+    public VideoPreview(Context context) {
         this(context, null);
     }
 
-    public ImageAttribution(Context context, AttributeSet attrs) {
+    public VideoPreview(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public ImageAttribution(Context context, AttributeSet attrs, int defStyleAttr) {
+    public VideoPreview(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     private void init() {
         _context = getContext();
-        LayoutInflater.from(_context).inflate(R.layout.image_attribution, this, true);
+        LayoutInflater.from(_context).inflate(R.layout.video_preview, this, true);
         ButterKnife.bind(this);
     }
 
-    public void bind(String imageUrl, String userUrl) {
-        Glide.with(_context).load(imageUrl).into(_ivThumbnail);
-        Glide.with(_context).load(userUrl).into(_ivUserPic);
+    public void bind(VideoModel videoModel) {
+        Glide.with(_context).load(videoModel.getThumbnailUrl()).into(_ivThumbnail);
+        Glide.with(_context).load(videoModel.getUserUrl()).into(_ivUserPic);
     }
 
     public void showUnseenUsers(List<User> users) {
