@@ -1,8 +1,8 @@
-# Vidtrain
+# Train
 
 ## About the app
 
-Vidtrain is a video messaging app for groups. Each participant in a vidtrain conversation can only view the video once. 
+Train is video messaging for groups. Each participant in the train can only view the video once. 
 
 ## Contact
 
