@@ -18,13 +18,19 @@ repositories {
 }
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'AndroidKey'
+            keyPassword 'stanfordandroid'
+            storeFile file('/Users/rahul/keystores/android.jks')
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
-
     defaultConfig {
-        applicationId "com.franklinho.vidtrain_android"
-        minSdkVersion 21
-        targetSdkVersion 22
+        applicationId "com.trainapp"
+        minSdkVersion 16
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -66,7 +72,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-appindexing:8.4.0'
     compile 'com.github.bumptech.glide:glide:3.5.2'
     compile 'com.android.support:percent:23.1.1'
-    compile "com.android.support:support-v13:23.1.0"
+    compile 'com.android.support:support-v13:23.1.0'
     compile 'com.google.guava:guava:19.0'
     compile 'commons-io:commons-io:2.4'
     compile 'com.google.android.gms:play-services:8.4.0'

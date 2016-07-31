@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:background="@color/white">
 
-    <com.franklinho.vidtrain_android.fragments.SwipeViewPager
+    <com.trainapp.fragments.SwipeViewPager
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/viewPager"

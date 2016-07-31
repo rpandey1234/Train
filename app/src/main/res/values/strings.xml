@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Vidtrain</string>
+    <string name="app_name">Train</string>
     <string name="facebook_app_id">184379281936418</string>
     <string name="loading">Loading…</string>
     <string name="unseen">%d unseen</string>
@@ -25,7 +25,7 @@
     <string name="app_logo">logo</string>
     <string name="image_preview">preview</string>
     <string name="image_placeholder">placeholder</string>
-    <string name="friends_using">Friends using Vidtrain</string>
+    <string name="friends_using">Friends using Train</string>
     <string name="all_seen">You\'ve seen everything!</string>
     <string name="conversation_sample">Here\'s a taste of the conversation.</string>
     <string name="add_friends_instructions">Create a group:</string>
