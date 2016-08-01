@@ -179,6 +179,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
             c = Camera.open(); // attempt to get a Camera instance
         } catch (Exception e) {
             // Camera is not available (in use or does not exist)
+            Log.e(VidtrainApplication.TAG, e.toString());
         }
         return c; // returns null if camera is unavailable
     }

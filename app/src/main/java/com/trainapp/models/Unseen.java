@@ -32,9 +32,10 @@ public class Unseen extends ParseObject {
     public static void addUnseen(VidTrain vidtrain) {
         List<User> collaborators = vidtrain.getCollaborators();
         for (User user : collaborators) {
-            if (user.getObjectId().equals(User.getCurrentUser().getObjectId())
-                    && BuildConfig.ADD_UNSEEN_FOR_OWN_VIDEO) {
-                addUnseen(vidtrain, user);
+            if (user.getObjectId().equals(User.getCurrentUser().getObjectId())) {
+                if (BuildConfig.ADD_UNSEEN_FOR_OWN_VIDEO) {
+                    addUnseen(vidtrain, user);
+                }
             } else {
                 addUnseen(vidtrain, user);
             }

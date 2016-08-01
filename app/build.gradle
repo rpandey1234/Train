@@ -23,6 +23,13 @@ android {
             keyAlias 'AndroidKey'
             keyPassword 'stanfordandroid'
             storeFile file('/Users/rahul/keystores/android.jks')
+            storePassword 'codepathtrain'
+        }
+        release {
+            keyAlias 'AndroidKey'
+            keyPassword 'stanfordandroid'
+            storeFile file('/Users/rahul/keystores/android.jks')
+            storePassword 'codepathtrain'
         }
     }
     compileSdkVersion 23
@@ -30,7 +37,7 @@ android {
     defaultConfig {
         applicationId "com.trainapp"
         minSdkVersion 16
-        targetSdkVersion 23
+        targetSdkVersion 22 // bypass the new permissions model at runtime in API 23
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -50,6 +57,8 @@ android {
             buildConfigField "boolean", "VIEW_ALL_VIDEOS", "false"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable true
+            signingConfig signingConfigs.release
         }
     }
 }
