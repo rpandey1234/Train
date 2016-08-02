@@ -78,8 +78,10 @@ public class VidtrainLandingFragment extends Fragment {
         Bundle arguments = getArguments();
         _vidtrainModel = arguments.getParcelable(VIDTRAIN_MODEL_KEY);
         _videoPreviews = new ArrayList<>();
+        String currentUserId = User.getCurrentUser().getObjectId();
         for (VideoModel video : _vidtrainModel.getVideoModelsToShow()) {
             VideoPreview videoPreview = new VideoPreview(getContext());
+            videoPreview.setFromCurrentUser(currentUserId.equals(video.getUserId()));
             _videoPreviews.add(videoPreview);
         }
     }

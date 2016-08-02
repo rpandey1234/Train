@@ -7,12 +7,13 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.trainapp.R;
 import com.trainapp.models.User;
 import com.trainapp.models.VideoModel;
-import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
 
@@ -83,6 +84,26 @@ public class VideoPreview extends FrameLayout {
         }
         if (!users.isEmpty()) {
             _usersSeen.setVisibility(VISIBLE);
+        }
+    }
+
+    public void setFromCurrentUser(boolean fromCurrentUser) {
+        RelativeLayout.LayoutParams layoutIvThumbnail =
+                (RelativeLayout.LayoutParams) _ivThumbnail.getLayoutParams();
+        RelativeLayout.LayoutParams layoutSeen =
+                (RelativeLayout.LayoutParams) _usersSeen.getLayoutParams();
+        RelativeLayout.LayoutParams layoutUnseen =
+                (RelativeLayout.LayoutParams) _usersUnseen.getLayoutParams();
+        if (fromCurrentUser) {
+            layoutIvThumbnail.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            // remove existing rule
+            layoutIvThumbnail.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
+
+            layoutSeen.addRule(RelativeLayout.LEFT_OF, R.id.ivThumbnail);
+            layoutSeen.addRule(RelativeLayout.RIGHT_OF, 0);
+
+            layoutUnseen.addRule(RelativeLayout.LEFT_OF, R.id.ivThumbnail);
+            layoutUnseen.addRule(RelativeLayout.RIGHT_OF, 0);
         }
     }
 }

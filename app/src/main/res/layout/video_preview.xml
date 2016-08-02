@@ -5,7 +5,9 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="16dp">
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginBottom="20dp">
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:layout_width="140dp"
@@ -13,8 +15,8 @@
         app:riv_corner_radius="70dp"
         android:id="@+id/ivThumbnail"
         android:contentDescription="@string/video_thumbnail"
-        android:layout_margin="4dp"
         android:scaleType="centerCrop"
+        android:layout_alignParentLeft="true"
         />
 
     <com.makeramen.roundedimageview.RoundedImageView

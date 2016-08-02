@@ -10,10 +10,12 @@ public class VideoModel implements Parcelable {
 
     private final String _videoId;
     private final String _userUrl;
+    private final String _userId;
     private final String _thumbnailUrl;
 
     public VideoModel(Video video) {
         _videoId = video.getObjectId();
+        _userId = video.getUser().getObjectId();
         _userUrl = video.getUser().getProfileImageUrl();
         _thumbnailUrl = video.getThumbnail().getUrl();
     }
@@ -26,6 +28,10 @@ public class VideoModel implements Parcelable {
         return _userUrl;
     }
 
+    public String getUserId() {
+        return _userId;
+    }
+
     public String getThumbnailUrl() {
         return _thumbnailUrl;
     }
@@ -33,6 +39,7 @@ public class VideoModel implements Parcelable {
     protected VideoModel(Parcel in) {
         _videoId = in.readString();
         _userUrl = in.readString();
+        _userId = in.readString();
         _thumbnailUrl = in.readString();
     }
 
@@ -45,6 +52,7 @@ public class VideoModel implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(_videoId);
         dest.writeString(_userUrl);
+        dest.writeString(_userId);
         dest.writeString(_thumbnailUrl);
     }
 
