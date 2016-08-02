@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +50,7 @@ import butterknife.OnClick;
  */
 public class VidtrainLandingFragment extends Fragment {
 
+    @Bind(R.id.scrollView) ScrollView _scrollView;
     @Bind(R.id.tvVideoCount) TextView _tvVideoCount;
     @Bind(R.id.tvTitle) TextView _tvTitle;
     @Bind(R.id.previews) LinearLayout _previews;
@@ -95,11 +97,19 @@ public class VidtrainLandingFragment extends Fragment {
         _tvTitle.setText(_vidtrainModel.getTitle());
         _tvVideoCount.setText(String.valueOf(_vidtrainModel.getVideoCount()));
         final List<VideoModel> videosShown = _vidtrainModel.getVideoModelsToShow();
-        for (int i = 0; i < videosShown.size(); i++) {
+        int size = videosShown.size();
+        for (int i = size - 1; i >= 0; i--) {
             VideoModel video = videosShown.get(i);
             _videoPreviews.get(i).bind(video);
             _previews.addView(_videoPreviews.get(i));
         }
+        // Scroll to the bottom
+        _scrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                _scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+            }
+        });
 
         ParseQuery<Unseen> query = ParseQuery.getQuery("Unseen");
         // need to wrap in vidtrain object because pointer field needs a pointer value
