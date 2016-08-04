@@ -26,6 +26,6 @@
         android:layout_alignBottom="@id/friendImage"
         android:checkMark="?android:attr/listChoiceIndicatorMultiple"
         android:textColor="@android:color/black"
-        />
+        android:layout_toRightOf="@id/friendImage" />
 
 </RelativeLayout>
