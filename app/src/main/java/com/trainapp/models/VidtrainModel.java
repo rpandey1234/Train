@@ -71,13 +71,13 @@ public class VidtrainModel implements Parcelable {
         _vidTrainId = in.readString();
         _title = in.readString();
         if (in.readByte() == 0x01) {
-            _videoModels = new ArrayList<VideoModel>();
+            _videoModels = new ArrayList<>();
             in.readList(_videoModels, VideoModel.class.getClassLoader());
         } else {
             _videoModels = null;
         }
         if (in.readByte() == 0x01) {
-            _videoModelsToShow = new ArrayList<VideoModel>();
+            _videoModelsToShow = new ArrayList<>();
             in.readList(_videoModelsToShow, VideoModel.class.getClassLoader());
         } else {
             _videoModelsToShow = null;

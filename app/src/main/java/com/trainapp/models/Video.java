@@ -13,7 +13,6 @@ import java.io.Serializable;
 @ParseClassName("Video")
 public class Video extends ParseObject implements Serializable {
     public static final String USER_KEY = "user";
-    public static final String LIKES_KEY = "likeCount";
     public static final String VIDEO_FILE_KEY = "videoFile";
     public static final String VIDTRAIN_KEY = "vidTrain";
     public static final String THUMBNAIL_KEY = "thumbnail";
@@ -36,10 +35,6 @@ public class Video extends ParseObject implements Serializable {
 
     public void setVidTrain(ParseObject vidTrain) {
         put(VIDTRAIN_KEY, vidTrain);
-    }
-
-    public void setLikes(int likeCount) {
-        put(LIKES_KEY, likeCount);
     }
 
     public void setThumbnail(ParseFile thumbnail) {
