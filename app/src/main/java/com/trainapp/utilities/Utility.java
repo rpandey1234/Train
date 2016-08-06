@@ -10,14 +10,14 @@ import android.util.Log;
 import com.google.common.io.Files;
 
 import com.facebook.GraphResponse;
-import com.trainapp.models.User;
-import com.trainapp.models.VidTrain;
-import com.trainapp.networking.VidtrainApplication;
 import com.parse.ParseFile;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
+import com.trainapp.models.User;
+import com.trainapp.models.VidTrain;
+import com.trainapp.networking.VidtrainApplication;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -99,11 +99,7 @@ public class Utility {
         }
         File file = new File(path);
         boolean deleted = file.delete();
-        if (deleted) {
-            Log.d(VidtrainApplication.TAG, "local video deleted");
-        } else {
-            Log.d(VidtrainApplication.TAG, "not deleted");
-        }
+        Log.d(VidtrainApplication.TAG, deleted ? "local video deleted" : "local video not deleted");
         return deleted;
     }
 
@@ -134,17 +130,6 @@ public class Utility {
         return -1;
     }
 
-    public static List<VidTrain> filterVisibleVidtrains(List<VidTrain> vidtrains) {
-        List<VidTrain> visibleVidtrains = new ArrayList<>();
-        User user = User.getCurrentUser();
-        for (VidTrain vidtrain : vidtrains) {
-            if (indexOf(vidtrain.getCollaborators(), user) != -1) {
-                visibleVidtrains.add(vidtrain);
-            }
-        }
-        return visibleVidtrains;
-    }
-
     public static List<String> getFacebookFriends(GraphResponse response, String key) {
         List<String> friends = new ArrayList<>();
         JSONObject jsonObject = response.getJSONObject();
@@ -160,17 +145,6 @@ public class Utility {
             return null;
         }
         return friends;
-    }
-
-    public static List<String> getCandidateUsers(List<String> names, String startsWith) {
-        String lowerCasePrefix = startsWith.toLowerCase();
-        List<String> candidates = new ArrayList<>();
-        for (String name : names) {
-            if (name.toLowerCase().startsWith(lowerCasePrefix)) {
-                candidates.add(name);
-            }
-        }
-        return candidates;
     }
 
     public static void sendNotification(VidTrain vidtrain) {
