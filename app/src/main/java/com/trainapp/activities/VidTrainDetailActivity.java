@@ -82,7 +82,7 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
                             unseenIndex = 0;
                         } else if (unseenList.isEmpty()) {
                             // This should not happen (only for older vidtrains)
-                            unseenIndex = -1;
+                            unseenIndex = Unseen.ALL_SEEN_FLAG;
                         } else {
                             unseenIndex = unseenList.get(0).getUnseenIndex();
                             Log.d(VidtrainApplication.TAG, "go directly to index: " + unseenIndex);
@@ -110,7 +110,7 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
 
     void layoutVidTrain(int position) {
         final List<Video> videos;
-        if (position == -1) {
+        if (position == Unseen.ALL_SEEN_FLAG) {
             // User has seen all the videos. They only get to see the final landing page.
             videos = new ArrayList<>();
         } else {

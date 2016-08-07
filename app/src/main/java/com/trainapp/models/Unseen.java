@@ -27,6 +27,8 @@ public class Unseen extends ParseObject {
     public static final String VIDTRAIN_KEY = "vidTrain";
     public static final String VIDEOS_KEY = "videos";
 
+    public static final int ALL_SEEN_FLAG = -1;
+
     public Unseen() {}
 
     public static void addUnseen(VidTrain vidtrain) {
@@ -139,12 +141,12 @@ public class Unseen extends ParseObject {
 
     /**
      * Get the index of the first video the user has not seen in this vidtrain. If the user has
-     * seen all videos, return 0.
+     * seen all videos, return a sentinel
      */
     public int getUnseenIndex() {
         List<Video> unseenVideos = getUnseenVideos();
         if (unseenVideos.isEmpty()) {
-            return -1;
+            return ALL_SEEN_FLAG;
         }
         List<Video> allVideos = getVidtrain().getVideos();
         int unseenIndex = Utility.indexOf(allVideos, unseenVideos.get(0));
