@@ -54,9 +54,9 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
         query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
         query.whereEqualTo("objectId", getVidtrainId());
-        query.include("user");
-        query.include("videos.user");
-        query.include("collaborators");
+        query.include(VidTrain.USER_KEY);
+        query.include(VidTrain.VIDEOS_KEY + "." + Video.USER_KEY);
+        query.include(VidTrain.COLLABORATORS);
         query.getFirstInBackground(new GetCallback<VidTrain>() {
             @Override
             public void done(VidTrain object, ParseException e) {

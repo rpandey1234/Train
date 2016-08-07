@@ -228,9 +228,9 @@ public class VidtrainLandingFragment extends Fragment {
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
         query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
         query.whereEqualTo("objectId", _vidtrainModel.getId());
-        query.include("user");
-        query.include("videos.user");
-        query.include("collaborators");
+        query.include(VidTrain.USER_KEY);
+        query.include(VidTrain.VIDEOS_KEY + "." + Video.USER_KEY);
+        query.include(VidTrain.COLLABORATORS);
         query.getFirstInBackground(new GetCallback<VidTrain>() {
             @Override
             public void done(final VidTrain vidtrain, ParseException e) {

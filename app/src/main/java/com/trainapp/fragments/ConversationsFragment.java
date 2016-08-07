@@ -31,8 +31,8 @@ public class ConversationsFragment extends VidTrainListFragment {
         ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
         query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
         query.addDescendingOrder("updatedAt");
-        query.include("collaborators");
-        query.include("videos");
+        query.include(VidTrain.COLLABORATORS);
+        query.include(VidTrain.VIDEOS_KEY);
         query.setSkip(numItems);
         query.setLimit(PAGE_SIZE);
         query.findInBackground(new FindCallback<VidTrain>() {
