@@ -36,13 +36,8 @@ public class VidTrainArrayAdapter extends RecyclerView.Adapter<ConversationViewH
     public void onBindViewHolder(final ConversationViewHolder holder, int position) {
         VidTrain vidtrain = _vidtrains.get(position);
         Unseen unseen = Unseen.getUnseenWithVidtrain(_unseens, vidtrain);
-        int unread;
-        if (unseen == null) {
-            unread = 0;
-        } else {
-            unread = unseen.getUnseenVideos().size();
-        }
-        holder.bind(vidtrain, unread);
+        int numUnread = unseen == null ? 0 : unseen.getUnseenVideos().size();
+        holder.bind(vidtrain, numUnread);
     }
 
     @Override

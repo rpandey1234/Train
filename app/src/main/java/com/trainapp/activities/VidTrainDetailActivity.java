@@ -68,7 +68,7 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
                 ParseQuery<Unseen> query = ParseQuery.getQuery("Unseen");
                 query.whereEqualTo(Unseen.USER_KEY, ParseUser.getCurrentUser());
                 query.whereEqualTo(Unseen.VIDTRAIN_KEY, _vidTrain);
-                query.include("vidTrain.videos");
+                query.include(Unseen.VIDTRAIN_KEY + "." + Unseen.VIDEOS_KEY);
                 query.include(Unseen.VIDEOS_KEY);
                 query.findInBackground(new FindCallback<Unseen>() {
                     @Override

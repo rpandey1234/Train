@@ -46,7 +46,7 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements O
     }
 
     public void bind(VidTrain vidTrain, int numUnseen) {
-        int colorId = R.color.white;
+        int colorId = android.R.color.white;
         if (numUnseen > 0) {
             colorId = R.color.cardBackground;
         }

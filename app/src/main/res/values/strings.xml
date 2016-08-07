@@ -9,8 +9,6 @@
     </plurals>
     <string name="profile_image">Profile Image</string>
     <string name="fb_login">Log In With Facebook</string>
-    <string name="record">Record</string>
-    <string name="camera_error">This device doesn\'t support Camera2 API.</string>
     <string name="stop">Stop</string>
     <string name="title_prompt">Enter a title</string>
     <string name="submit">Submit</string>
@@ -26,8 +24,6 @@
     <string name="image_preview">preview</string>
     <string name="image_placeholder">placeholder</string>
     <string name="friends_using">Friends using Train</string>
-    <string name="all_seen">You\'ve seen everything!</string>
-    <string name="conversation_sample">Here\'s a taste of the conversation.</string>
     <string name="add_friends_instructions">Create a group:</string>
     <string name="logout_confirm">Are you sure you want to logout?</string>
 </resources>

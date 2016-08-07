@@ -38,7 +38,7 @@ public class PushMessageBroadcast extends ParsePushBroadcastReceiver {
     protected Notification getNotification(Context context, Intent intent) {
         Notification notification = super.getNotification(context, intent);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            notification.color = context.getResources().getColor(R.color.white);
+            notification.color = context.getResources().getColor(android.R.color.white);
         }
         return notification;
     }
