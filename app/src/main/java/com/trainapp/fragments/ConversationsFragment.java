@@ -1,6 +1,7 @@
 package com.trainapp.fragments;
 
 import android.util.Log;
+import android.view.View;
 
 import com.trainapp.models.Unseen;
 import com.trainapp.models.User;
@@ -54,6 +55,11 @@ public class ConversationsFragment extends VidTrainListFragment {
                         _unseens.addAll(unseens);
                         _vidtrains.addAll(vidtrains);
                         _aVidtrains.notifyDataSetChanged();
+                        if (_vidtrains.size() == 0) {
+                            _tvNoConversations.setVisibility(View.VISIBLE);
+                        } else {
+                            _tvNoConversations.setVisibility(View.GONE);
+                        }
                     }
                 });
                 hideProgressBar();
