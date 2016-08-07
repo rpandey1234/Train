@@ -181,13 +181,15 @@ public class Utility {
             case Surface.ROTATION_180: degrees = 180; break;
             case Surface.ROTATION_270: degrees = 270; break;
         }
+        // always seems to be 0
+        Log.d(VidtrainApplication.TAG, "degrees: " + degrees);
 
         int result;
         if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
             result = (info.orientation + degrees) % 360;
             result = (360 - result) % 360;  // compensate the mirror
             // Hack so that the resulting video is straight.
-            result += 180 % 360;
+            result = (result + 180) % 360;
         } else {  // back-facing
             result = (info.orientation - degrees + 360) % 360;
         }

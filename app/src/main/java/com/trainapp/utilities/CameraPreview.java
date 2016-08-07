@@ -3,6 +3,7 @@ package com.trainapp.utilities;
 import android.content.Context;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
+import android.os.Build;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -77,6 +78,11 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         // start preview with new settings
         try {
             _camera.setDisplayOrientation(90);
+            // TODO(rahul): this is a major hack for Nexus 5x devices where camera orientation
+            // is weird. Should be using Camera2 API.
+            if (_cameraId == CameraInfo.CAMERA_FACING_FRONT && Build.MODEL.equals("Nexus 5X")) {
+                _camera.setDisplayOrientation(270);
+            }
             _camera.setPreviewDisplay(_holder);
             _camera.startPreview();
         } catch (Exception e) {
