@@ -8,7 +8,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnScrollListener {
     // The minimum amount of items to have below your current scroll position
     // before loading more.
-    private int _visibleThreshold = 5;
+    private int _visibleThreshold = 20;
     // The current offset index of data you have loaded
     private int _currentPage = 0;
     // The total number of items in the dataset after the last load
@@ -21,16 +21,16 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
     RecyclerView.LayoutManager _layoutManager;
 
     public EndlessRecyclerViewScrollListener(LinearLayoutManager layoutManager) {
-        this._layoutManager = layoutManager;
+        _layoutManager = layoutManager;
     }
 
     public EndlessRecyclerViewScrollListener(GridLayoutManager layoutManager) {
-        this._layoutManager = layoutManager;
+        _layoutManager = layoutManager;
         _visibleThreshold = _visibleThreshold * layoutManager.getSpanCount();
     }
 
     public EndlessRecyclerViewScrollListener(StaggeredGridLayoutManager layoutManager) {
-        this._layoutManager = layoutManager;
+        _layoutManager = layoutManager;
         _visibleThreshold = _visibleThreshold * layoutManager.getSpanCount();
     }
 
@@ -68,10 +68,10 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
         // If the total item count is zero and the previous isn't, assume the
         // list is invalidated and should be reset back to initial state
         if (totalItemCount < _previousTotalItemCount) {
-            this._currentPage = this._startingPageIndex;
-            this._previousTotalItemCount = totalItemCount;
+            _currentPage = _startingPageIndex;
+            _previousTotalItemCount = totalItemCount;
             if (totalItemCount == 0) {
-                this._loading = true;
+                _loading = true;
             }
         }
         // If it’s still loading, we check to see if the dataset count has
