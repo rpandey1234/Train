@@ -11,7 +11,7 @@
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/ivThumbnail"
         android:layout_width="140dp"
-        android:layout_height="140dp"
+        android:layout_height="200dp"
         android:layout_alignParentLeft="true"
         android:contentDescription="@string/video_thumbnail"
         android:scaleType="centerCrop"
