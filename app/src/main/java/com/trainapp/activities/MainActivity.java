@@ -1,10 +1,13 @@
 package com.trainapp.activities;
 
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog.Builder;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -55,13 +58,25 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.actionLogout) {
-            ParseUser.logOutInBackground(new LogOutCallback() {
-                @Override
-                public void done(ParseException e) {
-                    Intent intent = new Intent(getApplicationContext(), LogInActivity.class);
-                    startActivity(intent);
-                }
-            });
+            new Builder(this)
+                    .setTitle(R.string.logout)
+                    .setMessage(getString(R.string.logout_confirm))
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setPositiveButton(android.R.string.yes, new OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ParseUser.logOutInBackground(new LogOutCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    Intent intent = new Intent(getApplicationContext(),
+                                            LogInActivity.class);
+                                    startActivity(intent);
+                                }
+                            });
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, null)
+                    .show();
             return true;
         } else if (id == R.id.actionFriendList) {
             startActivity(new Intent(getApplicationContext(), FriendListActivity.class));

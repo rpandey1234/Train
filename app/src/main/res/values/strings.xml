@@ -29,4 +29,5 @@
     <string name="all_seen">You\'ve seen everything!</string>
     <string name="conversation_sample">Here\'s a taste of the conversation.</string>
     <string name="add_friends_instructions">Create a group:</string>
+    <string name="logout_confirm">Are you sure you want to logout?</string>
 </resources>
