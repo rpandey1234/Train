@@ -3,9 +3,9 @@ package com.trainapp.fragments;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -17,8 +17,13 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseQuery;
+import com.parse.SaveCallback;
 import com.trainapp.R;
-import com.trainapp.activities.MainActivity;
 import com.trainapp.activities.VideoCaptureActivity;
 import com.trainapp.models.Unseen;
 import com.trainapp.models.User;
@@ -28,13 +33,8 @@ import com.trainapp.models.VideoModel;
 import com.trainapp.models.VidtrainModel;
 import com.trainapp.networking.VidtrainApplication;
 import com.trainapp.ui.VideoPreview;
+import com.trainapp.utilities.PermissionHelper;
 import com.trainapp.utilities.Utility;
-import com.parse.FindCallback;
-import com.parse.GetCallback;
-import com.parse.ParseException;
-import com.parse.ParseFile;
-import com.parse.ParseQuery;
-import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,9 +53,8 @@ public class VidtrainLandingFragment extends Fragment {
     @Bind(R.id.scrollView) ScrollView _scrollView;
     @Bind(R.id.tvVideoCount) TextView _tvVideoCount;
     @Bind(R.id.tvTitle) TextView _tvTitle;
-    @Bind(R.id.previews) LinearLayout _previews;
+    @Bind(R.id.previewContainer) LinearLayout _previewContainer;
 
-    public static final int VIDEO_CAPTURE = 101;
     public static final int MAX_VIDEOS_SHOWN = 100;
     private static final String USERS_ALL_SEEN = "-1";
     private static final String USERS_NONE_SEEN = "-2";
@@ -101,7 +100,7 @@ public class VidtrainLandingFragment extends Fragment {
         for (int i = size - 1; i >= 0; i--) {
             VideoModel video = videosShown.get(i);
             _videoPreviews.get(i).bind(video);
-            _previews.addView(_videoPreviews.get(i));
+            _previewContainer.addView(_videoPreviews.get(i));
         }
         // Scroll to the bottom
         _scrollView.post(new Runnable() {
@@ -177,21 +176,37 @@ public class VidtrainLandingFragment extends Fragment {
     }
 
     @OnClick(R.id.btnAddVidTrain)
-    public void showCreateFlow(View view) {
-        if (getContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-            Intent intent = new Intent(getContext(), VideoCaptureActivity.class);
-            intent.putExtra(MainActivity.UNIQUE_ID_INTENT,
-                    Long.toString(System.currentTimeMillis()));
-            startActivityForResult(intent, VIDEO_CAPTURE);
+    public void showCreateFlow() {
+        if (PermissionHelper.allPermissionsAlreadyGranted(getActivity())) {
+            goVideoCapture();
         } else {
-            Toast.makeText(getContext(), "No camera on device", Toast.LENGTH_LONG).show();
+            requestPermissions(PermissionHelper.PERMISSIONS, PermissionHelper.REQUEST_VIDEO);
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(
+            int requestCode,
+            @NonNull String[] permissions,
+            @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PermissionHelper.REQUEST_VIDEO) {
+            if (PermissionHelper.allPermissionsGranted(permissions, grantResults)) {
+                goVideoCapture();
+            }
+        }
+    }
+
+    public void goVideoCapture() {
+        Intent intent = new Intent(getContext(), VideoCaptureActivity.class);
+        intent.putExtra(Utility.UNIQUE_ID_INTENT, Long.toString(System.currentTimeMillis()));
+        startActivityForResult(intent, Utility.VIDEO_CAPTURE);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode != VIDEO_CAPTURE) {
+        if (requestCode != Utility.VIDEO_CAPTURE) {
             return;
         }
         if (resultCode == Activity.RESULT_OK && data != null) {
@@ -200,7 +215,7 @@ public class VidtrainLandingFragment extends Fragment {
             // data.getData().toString() is file://<path>, file is stored at
             // <path> which is /storage/emulated/0/Movies/VidTrainApp/VID_CAPTURED.mp4
             _videoPath = Utility.getOutputMediaFile(
-                    data.getStringExtra(MainActivity.UNIQUE_ID_INTENT)).getPath();
+                    data.getStringExtra(Utility.UNIQUE_ID_INTENT)).getPath();
             addVideoToVidtrain();
         } else if (resultCode == Activity.RESULT_CANCELED) {
             Toast.makeText(getContext(), "Video recording cancelled.", Toast.LENGTH_LONG).show();

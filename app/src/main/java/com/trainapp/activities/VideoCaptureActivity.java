@@ -79,7 +79,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.video_capture);
         ButterKnife.bind(this);
-        uniqueId = getIntent().getStringExtra(MainActivity.UNIQUE_ID_INTENT);
+        uniqueId = getIntent().getStringExtra(Utility.UNIQUE_ID_INTENT);
         Log.d(VidtrainApplication.TAG, "uniqueId: " + uniqueId);
         initializeCamera();
     }
@@ -128,7 +128,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
     @OnClick(R.id.button_send)
     public void proceedCreationFlow(View view) {
         Intent dataBack = new Intent();
-        dataBack.putExtra(MainActivity.UNIQUE_ID_INTENT, uniqueId);
+        dataBack.putExtra(Utility.UNIQUE_ID_INTENT, uniqueId);
         setResult(Activity.RESULT_OK, dataBack);
         finish();
     }

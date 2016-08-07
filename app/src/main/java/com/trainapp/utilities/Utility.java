@@ -2,7 +2,6 @@ package com.trainapp.utilities;
 
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
-import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore.Video.Thumbnails;
 import android.text.format.DateUtils;
@@ -33,6 +32,8 @@ import java.util.List;
 public class Utility {
 
     public static final String FILENAME = "video.mp4";
+    public static final String UNIQUE_ID_INTENT = "UNIQUE_ID";
+    public static final int VIDEO_CAPTURE = 101;
 
     /**
      * Gets the relative time from now for the time passed in
@@ -54,20 +55,7 @@ public class Utility {
                 return mediaStorageDir;
             }
         }
-        return new File(
-                mediaStorageDir.getPath() + File.separator + "VID_CAPTURED" + objectId + ".mp4");
-    }
-
-    /** Create a file Uri for saving an image or video */
-    public static Uri getOutputMediaFileUri()
-    {
-        return Uri.fromFile(getOutputMediaFile());
-    }
-
-    /** Create a File for saving an image or video */
-    public static File getOutputMediaFile()
-    {
-        return getOutputMediaFile("");
+        return new File(mediaStorageDir.getPath() + File.separator + "VID" + objectId + ".mp4");
     }
 
     public static void writeToFile(byte[] data, File file) {
