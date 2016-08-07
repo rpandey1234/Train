@@ -60,10 +60,4 @@ public class ConversationsFragment extends VidTrainListFragment {
             }
         });
     }
-
-    @Override
-    public void onResume() {
-        requestVidTrains(0);
-        super.onResume();
-    }
 }

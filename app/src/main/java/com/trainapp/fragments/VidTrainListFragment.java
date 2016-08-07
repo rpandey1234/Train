@@ -78,12 +78,6 @@ public class VidTrainListFragment extends Fragment {
 
     public void requestVidTrains(final int numItems) {}
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        _aVidtrains.notifyDataSetChanged();
-    }
-
     public void showProgressBar() {
         _pbProgressAction.setVisibility(View.VISIBLE);
     }
