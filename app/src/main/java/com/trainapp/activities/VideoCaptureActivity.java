@@ -13,7 +13,6 @@ import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.Display;
-import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
@@ -80,7 +79,6 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         setContentView(R.layout.video_capture);
         ButterKnife.bind(this);
         uniqueId = getIntent().getStringExtra(Utility.UNIQUE_ID_INTENT);
-        Log.d(VidtrainApplication.TAG, "uniqueId: " + uniqueId);
         initializeCamera();
     }
 
@@ -93,10 +91,10 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
             _cameraId = CameraInfo.CAMERA_FACING_BACK;
         }
         mCamera = Camera.open(_cameraId);
-        _cameraPreview = new CameraPreview(this, mCamera);
+        _cameraPreview = new CameraPreview(this, _cameraId, mCamera);
         _preview.removeAllViews();
         _preview.addView(_cameraPreview);
-        setCameraDisplayOrientation(this, _cameraId, mCamera);
+        Utility.setCameraDisplayOrientation(this.getWindowManager(), _cameraId, mCamera);
     }
 
     @OnClick(R.id.button_capture)
@@ -137,7 +135,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         // Create an instance of Camera
         mCamera = getCameraInstance();
         // Create our Preview view and set it as the content of our activity.
-        _cameraPreview = new CameraPreview(this, mCamera);
+        _cameraPreview = new CameraPreview(this, _cameraId, mCamera);
         _preview.addView(_cameraPreview);
     }
 
@@ -181,7 +179,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
             // Camera is not available (in use or does not exist)
             Log.e(VidtrainApplication.TAG, e.toString());
         }
-        return c; // returns null if camera is unavailable
+        return c;
     }
 
     private boolean prepareVideoRecorder() {
@@ -189,11 +187,11 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
             releaseCameraAndPreview();
             mCamera = Camera.open(_cameraId);
         } catch (Exception e) {
-            Log.e(getString(R.string.app_name), "failed to open Camera");
+            Log.e(VidtrainApplication.TAG, "failed to open Camera");
             e.printStackTrace();
         }
 
-        setCameraDisplayOrientation(this, _cameraId, mCamera);
+        Utility.setCameraDisplayOrientation(this.getWindowManager(), _cameraId, mCamera);
         if (_cameraId == CameraInfo.CAMERA_FACING_FRONT) {
             mCamera.setDisplayOrientation(90);
         }
@@ -227,11 +225,11 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         try {
             _mediaRecorder.prepare();
         } catch (IllegalStateException e) {
-            Log.d("Issue", "IllegalStateException preparing MediaRecorder: " + e.getMessage());
+            Log.d(VidtrainApplication.TAG, "IllegalStateException preparing MediaRecorder: " + e.getMessage());
             releaseMediaRecorder();
             return false;
         } catch (IOException e) {
-            Log.d("Issue 2", "IOException preparing MediaRecorder: " + e.getMessage());
+            Log.d(VidtrainApplication.TAG, "IOException preparing MediaRecorder: " + e.getMessage());
             releaseMediaRecorder();
             return false;
         }
@@ -275,34 +273,6 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
             mCamera.release();
             mCamera = null;
         }
-    }
-
-    public static void setCameraDisplayOrientation(
-            Activity activity, int cameraId, android.hardware.Camera camera) {
-        android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
-        android.hardware.Camera.getCameraInfo(cameraId, info);
-
-        int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
-        int degrees = 0;
-
-        switch (rotation) {
-            case Surface.ROTATION_0: degrees = 0; break;
-            case Surface.ROTATION_90: degrees = 90; break;
-            case Surface.ROTATION_180: degrees = 180; break;
-            case Surface.ROTATION_270: degrees = 270; break;
-        }
-
-        int result;
-        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-            result = (info.orientation + degrees) % 360;
-            result = (360 - result) % 360;  // compensate the mirror
-            // Hack so that the resulting video is straight.
-            result += 180 % 360;
-        } else {  // back-facing
-            result = (info.orientation - degrees + 360) % 360;
-        }
-        VideoCaptureActivity.orientation = result;
-        camera.setDisplayOrientation(result);
     }
 
     @Override

@@ -1,11 +1,15 @@
 package com.trainapp.utilities;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
+import android.hardware.Camera;
 import android.media.ThumbnailUtils;
 import android.os.Environment;
 import android.provider.MediaStore.Video.Thumbnails;
 import android.text.format.DateUtils;
 import android.util.Log;
+import android.view.Surface;
+import android.view.WindowManager;
 import com.google.common.io.Files;
 
 import com.facebook.GraphResponse;
@@ -14,6 +18,7 @@ import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
+import com.trainapp.activities.VideoCaptureActivity;
 import com.trainapp.models.User;
 import com.trainapp.models.VidTrain;
 import com.trainapp.networking.VidtrainApplication;
@@ -160,5 +165,34 @@ public class Utility {
         push.setQuery(pushQuery);
         push.setData(data);
         push.sendInBackground();
+    }
+
+    // Reference: https://developer.android.com/reference/android/hardware/Camera.html#setDisplayOrientation(int)
+    public static void setCameraDisplayOrientation(WindowManager windowManager, int cameraId, Camera camera) {
+        Camera.CameraInfo info = new Camera.CameraInfo();
+        Camera.getCameraInfo(cameraId, info);
+
+        int rotation = windowManager.getDefaultDisplay().getRotation();
+        int degrees = 0;
+
+        switch (rotation) {
+            case Surface.ROTATION_0: degrees = 0; break;
+            case Surface.ROTATION_90: degrees = 90; break;
+            case Surface.ROTATION_180: degrees = 180; break;
+            case Surface.ROTATION_270: degrees = 270; break;
+        }
+
+        int result;
+        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            result = (info.orientation + degrees) % 360;
+            result = (360 - result) % 360;  // compensate the mirror
+            // Hack so that the resulting video is straight.
+            result += 180 % 360;
+        } else {  // back-facing
+            result = (info.orientation - degrees + 360) % 360;
+        }
+        Log.d(VidtrainApplication.TAG, "result: " + result);
+        VideoCaptureActivity.orientation = result;
+        camera.setDisplayOrientation(result);
     }
 }
