@@ -15,7 +15,10 @@
         android:layout_alignParentLeft="true"
         android:contentDescription="@string/video_thumbnail"
         android:scaleType="centerCrop"
-        app:riv_corner_radius="70dp" />
+        android:alpha="0.6"
+        app:riv_border_width="4dp"
+        app:riv_border_color="@color/bluePrimary"
+        app:riv_corner_radius="40dp" />
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/ivUserPic"
