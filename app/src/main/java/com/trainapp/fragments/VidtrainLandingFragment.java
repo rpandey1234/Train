@@ -270,13 +270,13 @@ public class VidtrainLandingFragment extends Fragment {
                                         Utility.sendNotification(vidtrain, getContext());
                                         Unseen.addUnseen(vidtrain);
                                         assert user != null;
-                                        user.put("vidtrains", user.maybeInitAndAdd(vidtrain));
-                                        user.put("videos", user.maybeInitAndAdd(video));
+                                        user.put(User.VIDTRAINS_KEY, user.maybeInitAndAdd(vidtrain));
+                                        user.put(User.VIDEOS_KEY, user.maybeInitAndAdd(video));
                                         user.saveInBackground(new SaveCallback() {
                                             @Override
                                             public void done(ParseException e) {
                                                 Toast.makeText(getContext(),
-                                                        "Successfully added video",
+                                                        R.string.add_success,
                                                         Toast.LENGTH_SHORT).show();
                                                 getActivity().onBackPressed();
                                             }

@@ -108,7 +108,6 @@ public class LogInActivity extends AppCompatActivity {
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
         finish();
-        Log.d(VidtrainApplication.TAG, "Logged in with Facebook");
     }
 
     private void logUser() {

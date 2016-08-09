@@ -43,4 +43,5 @@
     <string name="logout_confirm">Are you sure you want to logout?</string>
     <string name="sent_notification_text">%s sent you a Train!</string>
     <string name="save_success">Successfully saved Train!</string>
+    <string name="add_success">Successfully added video!</string>
 </resources>

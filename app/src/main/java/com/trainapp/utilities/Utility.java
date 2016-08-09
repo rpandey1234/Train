@@ -23,6 +23,7 @@ import com.trainapp.R;
 import com.trainapp.activities.VideoCaptureActivity;
 import com.trainapp.models.User;
 import com.trainapp.models.VidTrain;
+import com.trainapp.models.Video;
 import com.trainapp.networking.VidtrainApplication;
 
 import org.json.JSONArray;
@@ -157,8 +158,8 @@ public class Utility {
             String notficationText = context.getString(R.string.sent_notification_text,
                     User.getCurrentUser().getName());
             data.put("alert", notficationText);
-            data.put("title", "Train");
-            data.put("vidTrain", vidtrain.getObjectId());
+            data.put("title", context.getString(R.string.app_name));
+            data.put(Video.VIDTRAIN_KEY, vidtrain.getObjectId());
         } catch (JSONException e) {
             e.printStackTrace();
         }

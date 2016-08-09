@@ -119,8 +119,8 @@ public class CreationDetailActivity extends AppCompatActivity {
                                 video.setVidTrain(vidTrain);
                                 video.saveInBackground();
                                 Unseen.addUnseen(vidTrain);
-                                user.put("vidtrains", user.maybeInitAndAdd(vidTrain));
-                                user.put("videos", user.maybeInitAndAdd(video));
+                                user.put(User.VIDTRAINS_KEY, user.maybeInitAndAdd(vidTrain));
+                                user.put(User.VIDEOS_KEY, user.maybeInitAndAdd(video));
                                 user.saveInBackground(new SaveCallback() {
                                     @Override
                                     public void done(ParseException e) {

@@ -18,12 +18,12 @@ public class User extends ParseUser implements Serializable {
     public static final String FB_PROFILE_PIC_FORMAT
             = "http://graph.facebook.com/%s/picture?height=160&width=160";
 
-    public static final String NAME = "name";
-    public static final String FBID = "fbid";
-    public static final String VIDEOS = "videos";
-    public static final String VIDTRAINS = "vidtrains";
-    public static final String PROFILE_IMAGE_URL = "profileImageUrl";
-    public static final String FB_LINK = "fbLink";
+    public static final String NAME_KEY = "name";
+    public static final String FBID_KEY = "fbid";
+    public static final String VIDEOS_KEY = "videos";
+    public static final String VIDTRAINS_KEY = "vidtrains";
+    public static final String PROFILE_IMAGE_URL_KEY = "profileImageUrl";
+    public static final String FB_LINK_KEY = "fbLink";
 
     public static void updateFacebookData(ParseUser user, GraphResponse response) {
         if (user == null) {
@@ -36,10 +36,10 @@ public class User extends ParseUser implements Serializable {
             String link = jsonObject.getString("link");
             String email = jsonObject.getString("email");
             String profileImageUrl = String.format(FB_PROFILE_PIC_FORMAT, fbid);
-            user.put(NAME, name);
-            user.put(FBID, fbid);
-            user.put(FB_LINK, link);
-            user.put(PROFILE_IMAGE_URL, profileImageUrl);
+            user.put(NAME_KEY, name);
+            user.put(FBID_KEY, fbid);
+            user.put(FB_LINK_KEY, link);
+            user.put(PROFILE_IMAGE_URL_KEY, profileImageUrl);
             user.setEmail(email);
             user.saveInBackground();
             // TODO: save friend data
@@ -51,19 +51,19 @@ public class User extends ParseUser implements Serializable {
     }
 
     public String getName() {
-        return getString(NAME);
+        return getString(NAME_KEY);
     }
 
     public String getProfileImageUrl() {
-        return getString(PROFILE_IMAGE_URL);
+        return getString(PROFILE_IMAGE_URL_KEY);
     }
 
     public List<Video> getVideos() {
-        return getList(VIDEOS);
+        return getList(VIDEOS_KEY);
     }
 
     public List<VidTrain> getVidTrains() {
-        return getList(VIDTRAINS);
+        return getList(VIDTRAINS_KEY);
     }
 
     public List<VidTrain> maybeInitAndAdd(VidTrain vidTrain) {
