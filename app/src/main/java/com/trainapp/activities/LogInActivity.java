@@ -78,7 +78,7 @@ public class LogInActivity extends AppCompatActivity {
     @OnClick(R.id.login_button)
     public void logInWithFaceBook(View view) {
         if (ParseUser.getCurrentUser() != null) {
-            Log.d("Vidtrain", ParseUser.getCurrentUser().toString());
+            Log.d(VidtrainApplication.TAG, ParseUser.getCurrentUser().toString());
         }
         ParseFacebookUtils.logInWithReadPermissionsInBackground(this,
                 Arrays.asList("user_friends", "email", "public_profile"),
@@ -87,7 +87,8 @@ public class LogInActivity extends AppCompatActivity {
                     public void done(ParseUser user, ParseException e) {
                         if (user == null) {
                             Log.d(VidtrainApplication.TAG, "User cancelled the Facebook login.");
-                            Toast.makeText(LogInActivity.this, "Failed to log into Facebook", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LogInActivity.this, R.string.fb_login_fail,
+                                    Toast.LENGTH_SHORT).show();
                         } else {
                             // Save user to this installation (device)
                             ParseInstallation install = ParseInstallation.getCurrentInstallation();

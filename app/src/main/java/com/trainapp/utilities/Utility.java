@@ -1,6 +1,7 @@
 package com.trainapp.utilities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.media.ThumbnailUtils;
@@ -18,6 +19,7 @@ import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
+import com.trainapp.R;
 import com.trainapp.activities.VideoCaptureActivity;
 import com.trainapp.models.User;
 import com.trainapp.models.VidTrain;
@@ -140,19 +142,21 @@ public class Utility {
         return friends;
     }
 
-    public static void sendNotification(VidTrain vidtrain) {
+    public static void sendNotification(VidTrain vidtrain, Context context) {
         List<User> collaborators = vidtrain.getCollaborators();
         for (User user : collaborators) {
             if (!user.getObjectId().equals(User.getCurrentUser().getObjectId())) {
-                Utility.sendNotification(user, vidtrain);
+                Utility.sendNotification(user, vidtrain, context);
             }
         }
     }
 
-    public static void sendNotification(User user, VidTrain vidtrain) {
+    public static void sendNotification(User user, VidTrain vidtrain, Context context) {
         JSONObject data = new JSONObject();
         try {
-            data.put("alert", User.getCurrentUser().getName() + " sent you a Train!");
+            String notficationText = context.getString(R.string.sent_notification_text,
+                    User.getCurrentUser().getName());
+            data.put("alert", notficationText);
             data.put("title", "Train");
             data.put("vidTrain", vidtrain.getObjectId());
         } catch (JSONException e) {

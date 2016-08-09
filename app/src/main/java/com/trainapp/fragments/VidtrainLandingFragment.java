@@ -267,7 +267,7 @@ public class VidtrainLandingFragment extends Fragment {
                                         _progress.dismiss();
                                         _tvVideoCount.setText(
                                                 String.valueOf(vidtrain.getVideosCount()));
-                                        Utility.sendNotification(vidtrain);
+                                        Utility.sendNotification(vidtrain, getContext());
                                         Unseen.addUnseen(vidtrain);
                                         assert user != null;
                                         user.put("vidtrains", user.maybeInitAndAdd(vidtrain));
