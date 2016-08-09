@@ -95,7 +95,7 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
     }
 
     public void invalidVidtrain() {
-        Toast.makeText(this, "This Train is invalid", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.invalid_train, Toast.LENGTH_SHORT).show();
         this.finish();
     }
 

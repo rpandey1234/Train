@@ -65,20 +65,23 @@ public class CreationDetailActivity extends AppCompatActivity {
     public void submitVidTrain(View view) {
         final ParseFile parseFile = Utility.createParseFile(_videoPath);
         if (parseFile == null) {
-            Toast.makeText(this, "Unable to create a video file.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.video_file_fail, Toast.LENGTH_LONG).show();
             return;
         }
         final String titleText = _etTitle.getText().toString();
         if (titleText.isEmpty()) {
-            Toast.makeText(this, "Please add a title.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.add_title, Toast.LENGTH_LONG).show();
             return;
         }
         final User user = User.getCurrentUser();
         if (user == null) {
-            Toast.makeText(this, "Sign in to create a Vidtrain.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.sign_in_to_create, Toast.LENGTH_LONG).show();
             return;
         }
-        _progressDialog = ProgressDialog.show(this, "Saving", "Just a moment please!", true);
+        _progressDialog = ProgressDialog.show(this,
+                getResources().getString(R.string.saving),
+                getResources().getString(R.string.working_message),
+                true);
         final Video video = new Video();
         final VidTrain vidTrain = new VidTrain();
 

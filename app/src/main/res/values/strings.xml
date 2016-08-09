@@ -10,14 +10,28 @@
     <string name="profile_image">Profile Image</string>
     <string name="fb_login">Log In With Facebook</string>
     <string name="fb_login_fail">Failed to log into Facebook</string>
-    <string name="stop">Stop</string>
+
+    <!-- Creation strings -->
+    <string name="sign_in_to_create">Sign in to create a Train</string>
+    <string name="add_title">Please add a title.</string>
+    <string name="video_file_fail">Unable to create a video file.</string>
+    <string name="saving">Saving</string>
+    <string name="working_message">Just a moment please!</string>
     <string name="title_prompt">Enter a title</string>
-    <string name="submit">Submit</string>
     <string name="video_thumbnail">thumbnail</string>
-    <string name="add">Add</string>
+    <string name="invalid_train">This Train is invalid</string>
+
+    <!-- Recording strings -->
     <string name="capture">Capture</string>
+    <string name="stop">Stop</string>
+    <string name="add">Add</string>
     <string name="send">Send</string>
     <string name="switch_camera">Switch Camera</string>
+    <string name="recording_cancelled">Video recording cancelled</string>
+    <string name="recording_failed">Failed to record video</string>
+    <string name="submit">Submit</string>
+
+
     <string name="logout">Logout</string>
     <string name="friend_list">Friend List</string>
     <string name="conversations_none">You\'re not in any conversations!</string>

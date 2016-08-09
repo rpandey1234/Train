@@ -218,9 +218,9 @@ public class VidtrainLandingFragment extends Fragment {
                     data.getStringExtra(Utility.UNIQUE_ID_INTENT)).getPath();
             addVideoToVidtrain();
         } else if (resultCode == Activity.RESULT_CANCELED) {
-            Toast.makeText(getContext(), "Video recording cancelled.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), R.string.recording_cancelled, Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(getContext(), "Failed to record video", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), R.string.recording_failed, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -235,7 +235,7 @@ public class VidtrainLandingFragment extends Fragment {
             @Override
             public void done(final VidTrain vidtrain, ParseException e) {
                 if (e != null) {
-                    Toast.makeText(getContext(), "This Vidtrain is invalid", Toast.LENGTH_SHORT)
+                    Toast.makeText(getContext(), R.string.invalid_train, Toast.LENGTH_SHORT)
                             .show();
                     return;
                 }

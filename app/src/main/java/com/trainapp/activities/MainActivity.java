@@ -122,9 +122,9 @@ public class MainActivity extends AppCompatActivity {
                 i.putExtra(VIDEO_PATH, Utility.getOutputMediaFile(uid).getPath());
                 startActivity(i);
             } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(this, "Video recording cancelled.",  Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.recording_cancelled,  Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(this, "Failed to record video",  Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.recording_failed,  Toast.LENGTH_LONG).show();
             }
         }
     }
