@@ -117,16 +117,22 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
             // User can view the videos starting at this position.
             videos = _vidTrain.getVideos().subList(position, _vidTrain.getVideosCount());
         }
+        final VideoFragmentPagerAdapter _videoPagerAdapter =
+                new VideoFragmentPagerAdapter(getSupportFragmentManager(), videos, _vidTrain);
         _viewPager.setNextVideoListener(new NextVideoListener() {
             @Override
             public void onNextVideo(int position) {
                 if (position < videos.size()) {
+                    VideoPageFragment fragment = _videoPagerAdapter.getFragment(position);
+                    if (!fragment.isVideoPrepared()) {
+                        Log.d(VidtrainApplication.TAG,
+                                "can't auto-advance while current video is loading");
+                        return;
+                    }
                     goNextVideo(videos.get(position));
                 }
             }
         });
-        final VideoFragmentPagerAdapter _videoPagerAdapter =
-                new VideoFragmentPagerAdapter(getSupportFragmentManager(), videos, _vidTrain);
         _viewPager.setAdapter(_videoPagerAdapter);
         final SimpleOnPageChangeListener pageChangeListener = new SimpleOnPageChangeListener() {
             @Override

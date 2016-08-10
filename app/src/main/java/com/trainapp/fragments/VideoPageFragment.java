@@ -45,6 +45,7 @@ public class VideoPageFragment extends Fragment {
     public static final String VIDEO_USER_URL = "VIDEO_USER_URL";
     public static final String VIDEO = "VIDEO";
     public static final int UPDATE_FREQUENCY = 50;
+    public static final int ADVANCE_DELAY = 400;
 
     private String _videoUrl;
     private String _videoThumbnailUrl;
@@ -55,6 +56,7 @@ public class VideoPageFragment extends Fragment {
     private Handler _handler = new Handler();
     private Runnable _runnableCode;
     private int _width;
+    private boolean _isVideoPrepared;
 
     public static VideoPageFragment newInstance(Video video) {
         VideoPageFragment videoPageFragment = new VideoPageFragment();
@@ -95,10 +97,20 @@ public class VideoPageFragment extends Fragment {
         _tvTime.setText(_videoTime);
         Glide.with(getContext()).load(_userUrl).into(_ivAuthor);
 
+        _isVideoPrepared = false;
         _videoView.setOnPreparedListener(new OnPreparedListener() {
             @Override
-            public void onPrepared(MediaPlayer mp) {
+            public void onPrepared(final MediaPlayer mp) {
+                _videoView.start();
                 final int duration = mp.getDuration();
+                // Wait some time before indicating that video is prepared, so user does not
+                // accidentally click to advance
+                _handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        _isVideoPrepared = true;
+                    }
+                }, ADVANCE_DELAY);
                 _runnableCode = new Runnable() {
                     @Override
                     public void run() {
@@ -112,6 +124,12 @@ public class VideoPageFragment extends Fragment {
                     }
                 };
                 _handler.post(_runnableCode);
+            }
+        });
+        _videoView.setOnCompletionListener(new OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                _listener.onVideoCompleted(_video);
             }
         });
         return v;
@@ -136,12 +154,6 @@ public class VideoPageFragment extends Fragment {
         _videoView.setVisibility(View.VISIBLE);
         _ivThumbnail.setVisibility(View.GONE);
         _videoView.start();
-        _videoView.setOnCompletionListener(new OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                _listener.onVideoCompleted(_video);
-            }
-        });
     }
 
     public void stopVideo() {
@@ -152,6 +164,10 @@ public class VideoPageFragment extends Fragment {
         _videoView.stopPlayback();
         _ivThumbnail.setVisibility(View.VISIBLE);
         _videoView.setVisibility(View.GONE);
+    }
+
+    public boolean isVideoPrepared() {
+        return _isVideoPrepared;
     }
 
     public interface VideoFinishedListener {
