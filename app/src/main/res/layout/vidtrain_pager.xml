@@ -16,7 +16,8 @@
         android:background="@color/bluePrimary"
         android:contentDescription="@string/video_thumbnail"
         android:scaleType="centerCrop"
-        android:src="@drawable/placeholder_video" />
+        android:src="@drawable/placeholder_video"
+        />
 
     <VideoView
         android:id="@+id/videoView"
@@ -27,7 +28,16 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_gravity="center"
-        android:visibility="gone" />
+        android:visibility="gone"
+        />
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_centerInParent="true"
+        />
 
     <RelativeLayout
         android:id="@+id/videoInformation"
@@ -46,7 +56,8 @@
             android:layout_alignParentTop="true"
             android:layout_marginBottom="12dp"
             android:src="@drawable/profile_icon"
-            app:riv_corner_radius="20dp" />
+            app:riv_corner_radius="20dp"
+            />
 
         <TextView
             android:id="@+id/tvTime"
@@ -69,7 +80,8 @@
             android:shadowRadius="1.2"
             android:textColor="@android:color/white"
             android:textSize="14sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            />
     </RelativeLayout>
 
     <View
@@ -77,5 +89,6 @@
         android:layout_width="0dp"
         android:layout_height="10dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/bluePrimary" />
+        android:background="@color/bluePrimary"
+        />
 </RelativeLayout>

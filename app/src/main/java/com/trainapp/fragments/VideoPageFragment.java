@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -34,6 +35,7 @@ public class VideoPageFragment extends Fragment {
 
     @Bind(R.id.ivThumbnail) ImageView _ivThumbnail;
     @Bind(R.id.videoView) VideoView _videoView;
+    @Bind(R.id.progressBar) ProgressBar _progressBar;
     @Bind(R.id.ivAuthor) ImageView _ivAuthor;
     @Bind(R.id.tvTime) TextView _tvTime;
     @Bind(R.id.videoInformation) RelativeLayout _videoInformation;
@@ -45,7 +47,7 @@ public class VideoPageFragment extends Fragment {
     public static final String VIDEO_USER_URL = "VIDEO_USER_URL";
     public static final String VIDEO = "VIDEO";
     public static final int UPDATE_FREQUENCY = 50;
-    public static final int ADVANCE_DELAY = 400;
+    public static final int ADVANCE_DELAY = 500;
 
     private String _videoUrl;
     private String _videoThumbnailUrl;
@@ -90,7 +92,6 @@ public class VideoPageFragment extends Fragment {
         View v = inflater.inflate(R.layout.vidtrain_pager, container, false);
         ButterKnife.bind(this, v);
         Glide.with(getContext()).load(_videoThumbnailUrl).into(_ivThumbnail);
-        _videoView.setVideoPath(_videoUrl);
         _videoView.getHolder().setFormat(PixelFormat.TRANSPARENT);
         _videoView.setZOrderMediaOverlay(true);
 
@@ -101,7 +102,7 @@ public class VideoPageFragment extends Fragment {
         _videoView.setOnPreparedListener(new OnPreparedListener() {
             @Override
             public void onPrepared(final MediaPlayer mp) {
-                _videoView.start();
+                _progressBar.setVisibility(View.GONE);
                 final int duration = mp.getDuration();
                 // Wait some time before indicating that video is prepared, so user does not
                 // accidentally click to advance
@@ -153,6 +154,7 @@ public class VideoPageFragment extends Fragment {
         }
         _videoView.setVisibility(View.VISIBLE);
         _ivThumbnail.setVisibility(View.GONE);
+        _videoView.setVideoPath(_videoUrl);
         _videoView.start();
     }
 
