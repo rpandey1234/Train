@@ -1,11 +1,14 @@
 package com.trainapp.activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog.Builder;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +16,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -36,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.toolbar) Toolbar _toolbar;
     @Bind(R.id.conversations_fragment) FrameLayout _conversationsFragment;
     @Bind(R.id.rootLayout) CoordinatorLayout _rootLayout;
+    @Bind(R.id.fab_create) FloatingActionButton _fabCreate;
+    @Bind(R.id.viewReveal) View _viewReveal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,9 +115,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void goVideoCapture() {
-        Intent intent = new Intent(getBaseContext(), VideoCaptureActivity.class);
-        intent.putExtra(Utility.UNIQUE_ID_INTENT, Long.toString(System.currentTimeMillis()));
-        startActivityForResult(intent, Utility.VIDEO_CAPTURE);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            int cx = (int) _fabCreate.getX() + _fabCreate.getWidth() / 2;
+            int cy = (int) _fabCreate.getY() + _fabCreate.getHeight() / 2;
+            float finalRadius = getWindow().getDecorView().getHeight();
+            Animator animator = ViewAnimationUtils.createCircularReveal(_viewReveal, cx, cy, 0,
+                    finalRadius);
+            animator.setInterpolator(new AccelerateInterpolator());
+            _viewReveal.setVisibility(View.VISIBLE);
+            animator.start();
+            animator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    Intent intent = new Intent(getBaseContext(), VideoCaptureActivity.class);
+                    intent.putExtra(Utility.UNIQUE_ID_INTENT,
+                            Long.toString(System.currentTimeMillis()));
+                    startActivityForResult(intent, Utility.VIDEO_CAPTURE);
+                }
+            });
+        } else {
+            Intent intent = new Intent(getBaseContext(), VideoCaptureActivity.class);
+            intent.putExtra(Utility.UNIQUE_ID_INTENT, Long.toString(System.currentTimeMillis()));
+            startActivityForResult(intent, Utility.VIDEO_CAPTURE);
+        }
     }
 
     @Override
