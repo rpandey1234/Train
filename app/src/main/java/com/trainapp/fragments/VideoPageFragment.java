@@ -102,6 +102,7 @@ public class VideoPageFragment extends Fragment {
         _videoView.setOnPreparedListener(new OnPreparedListener() {
             @Override
             public void onPrepared(final MediaPlayer mp) {
+                _ivThumbnail.setVisibility(View.GONE);
                 _progressBar.setVisibility(View.GONE);
                 final int duration = mp.getDuration();
                 // Wait some time before indicating that video is prepared, so user does not
@@ -153,7 +154,6 @@ public class VideoPageFragment extends Fragment {
             throw new IllegalStateException("calling playVideo when view is not ready!");
         }
         _videoView.setVisibility(View.VISIBLE);
-        _ivThumbnail.setVisibility(View.GONE);
         _videoView.setVideoPath(_videoUrl);
         _videoView.start();
     }
