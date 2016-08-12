@@ -115,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void goVideoCapture() {
+        final Intent intent = new Intent(getBaseContext(), VideoCaptureActivity.class);
+        intent.putExtra(Utility.UNIQUE_ID_INTENT, Long.toString(System.currentTimeMillis()));
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             int cx = (int) _fabCreate.getX() + _fabCreate.getWidth() / 2;
             int cy = (int) _fabCreate.getY() + _fabCreate.getHeight() / 2;
@@ -128,21 +130,17 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
-                    Intent intent = new Intent(getBaseContext(), VideoCaptureActivity.class);
-                    intent.putExtra(Utility.UNIQUE_ID_INTENT,
-                            Long.toString(System.currentTimeMillis()));
                     startActivityForResult(intent, Utility.VIDEO_CAPTURE);
                 }
             });
         } else {
-            Intent intent = new Intent(getBaseContext(), VideoCaptureActivity.class);
-            intent.putExtra(Utility.UNIQUE_ID_INTENT, Long.toString(System.currentTimeMillis()));
             startActivityForResult(intent, Utility.VIDEO_CAPTURE);
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        _viewReveal.setVisibility(View.GONE);
         if (requestCode == Utility.VIDEO_CAPTURE) {
             if (resultCode == RESULT_OK && data != null) {
                 String uid = data.getStringExtra(Utility.UNIQUE_ID_INTENT);
