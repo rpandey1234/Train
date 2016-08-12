@@ -29,7 +29,6 @@ import butterknife.ButterKnife;
 public class ConversationViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
 
     @Bind(R.id.conversation_title) TextView _conversationTitle;
-    @Bind(R.id.video_count) TextView _videoCount;
     @Bind(R.id.timestamp) TextView _timestamp;
     @Bind(R.id.participants_rv) RecyclerView _rvParticipants;
     @Bind(R.id.image_preview) ImageView _videoImagePreview;
@@ -53,7 +52,6 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements O
         _cardView.setCardBackgroundColor(_context.getResources().getColor(colorId));
         _vidTrain = vidTrain;
         _conversationTitle.setText(vidTrain.getTitle());
-        _videoCount.setText(_context.getString(R.string.unseen, numUnseen));
         _timestamp.setText(Utility.getRelativeTime(vidTrain.getUpdatedAt().getTime()));
         _rvParticipants.setLayoutManager(
                 new LinearLayoutManager(_context, LinearLayoutManager.HORIZONTAL, false));
