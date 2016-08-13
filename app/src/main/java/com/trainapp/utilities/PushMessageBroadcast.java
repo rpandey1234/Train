@@ -6,12 +6,11 @@ import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
 
-import com.trainapp.R;
-import com.trainapp.activities.LogInActivity;
-import com.trainapp.activities.MainActivity;
 import com.parse.ParseAnalytics;
 import com.parse.ParsePushBroadcastReceiver;
 import com.parse.ParseUser;
+import com.trainapp.activities.LogInActivity;
+import com.trainapp.activities.MainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;

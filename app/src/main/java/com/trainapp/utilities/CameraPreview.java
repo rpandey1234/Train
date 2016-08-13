@@ -13,8 +13,6 @@ import com.trainapp.networking.VidtrainApplication;
 
 import java.io.IOException;
 
-import butterknife.OnClick;
-
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
     private SurfaceHolder _holder;
     private int _cameraId;
