@@ -113,4 +113,8 @@ public class VideoPreview extends FrameLayout {
             layoutUnseen.addRule(RelativeLayout.RIGHT_OF, 0);
         }
     }
+
+    public void setOnThumbnailClick(OnClickListener onThumbnailClick) {
+        _ivThumbnail.setOnClickListener(onThumbnailClick);
+    }
 }

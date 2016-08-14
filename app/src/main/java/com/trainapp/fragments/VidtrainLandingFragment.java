@@ -112,7 +112,7 @@ public class VidtrainLandingFragment extends Fragment {
         for (final VideoModel video : _vidtrainModel.getVideoModelsToShow()) {
             VideoPreview videoPreview = new VideoPreview(getContext());
             videoPreview.setFromCurrentUser(currentUserId.equals(video.getUserId()));
-            videoPreview.setOnClickListener(new OnClickListener() {
+            videoPreview.setOnThumbnailClick(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     System.out.println("Landing Fragment: clicked on video preview");
