@@ -59,7 +59,7 @@ public class VidtrainModel implements Parcelable {
     // If this videoId is contained in the videos shown of this vidtrain
     public boolean containsVideo(String videoId) {
         for (VideoModel videoModel : _videoModelsToShow) {
-            if (videoModel.getId().equals(videoId)) {
+            if (videoModel.getVideoId().equals(videoId)) {
                 return true;
             }
         }

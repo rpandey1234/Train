@@ -23,6 +23,7 @@ import android.widget.VideoView;
 import com.bumptech.glide.Glide;
 import com.trainapp.R;
 import com.trainapp.models.Video;
+import com.trainapp.models.VideoModel;
 import com.trainapp.utilities.Utility;
 
 import butterknife.Bind;
@@ -68,6 +69,18 @@ public class VideoPageFragment extends Fragment {
         args.putString(VIDEO_TIME, Utility.getRelativeTime(video.getCreatedAt().getTime()));
         args.putString(VIDEO_USER_URL, video.getUser().getProfileImageUrl());
         args.putString(VIDEO_ID, video.getObjectId());
+        videoPageFragment.setArguments(args);
+        return videoPageFragment;
+    }
+
+    public static VideoPageFragment newInstance(VideoModel videoModel) {
+        VideoPageFragment videoPageFragment = new VideoPageFragment();
+        Bundle args = new Bundle();
+        args.putString(VIDEO_URL, videoModel.getVideoUrl());
+        args.putString(VIDEO_THUMBNAIL_URL, videoModel.getThumbnailUrl());
+        args.putString(VIDEO_TIME, Utility.getRelativeTime(videoModel.getCreatedAtTime()));
+        args.putString(VIDEO_USER_URL, videoModel.getUserUrl());
+        args.putString(VIDEO_ID, videoModel.getVideoId());
         videoPageFragment.setArguments(args);
         return videoPageFragment;
     }

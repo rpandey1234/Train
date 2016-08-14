@@ -12,15 +12,19 @@ public class VideoModel implements Parcelable {
     private final String _userUrl;
     private final String _userId;
     private final String _thumbnailUrl;
+    private final String _videoUrl;
+    private final long _createdAtTime;
 
     public VideoModel(Video video) {
         _videoId = video.getObjectId();
         _userId = video.getUser().getObjectId();
         _userUrl = video.getUser().getProfileImageUrl();
         _thumbnailUrl = video.getThumbnail().getUrl();
+        _videoUrl = video.getVideoFile().getUrl();
+        _createdAtTime = video.getCreatedAt().getTime();
     }
 
-    public String getId() {
+    public String getVideoId() {
         return _videoId;
     }
 
@@ -36,11 +40,21 @@ public class VideoModel implements Parcelable {
         return _thumbnailUrl;
     }
 
+    public String getVideoUrl() {
+        return _videoUrl;
+    }
+
+    public long getCreatedAtTime() {
+        return _createdAtTime;
+    }
+
     protected VideoModel(Parcel in) {
         _videoId = in.readString();
         _userUrl = in.readString();
         _userId = in.readString();
         _thumbnailUrl = in.readString();
+        _videoUrl = in.readString();
+        _createdAtTime = in.readLong();
     }
 
     @Override
@@ -54,6 +68,8 @@ public class VideoModel implements Parcelable {
         dest.writeString(_userUrl);
         dest.writeString(_userId);
         dest.writeString(_thumbnailUrl);
+        dest.writeString(_videoUrl);
+        dest.writeLong(_createdAtTime);
     }
 
     @SuppressWarnings("unused")

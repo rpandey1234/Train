@@ -128,7 +128,7 @@ public class VidtrainLandingFragment extends Fragment {
                 _videoPreviews.get(0).addSeenUsers(unseenMap.get(USERS_ALL_SEEN));
                 for (int i = 0; i < _videoPreviews.size(); i++) {
                     VideoPreview videoPreview = _videoPreviews.get(i);
-                    videoPreview.addUnseenUsers(unseenMap.get(videosShown.get(i).getId()));
+                    videoPreview.addUnseenUsers(unseenMap.get(videosShown.get(i).getVideoId()));
                 }
                 _videoPreviews.get(_videoPreviews.size() - 1)
                         .addUnseenUsers(unseenMap.get(USERS_NONE_SEEN));
