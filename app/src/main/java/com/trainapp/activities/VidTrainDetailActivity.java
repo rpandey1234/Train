@@ -80,8 +80,7 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
                             return;
                         }
                         int unseenIndex;
-//                        if (BuildConfig.VIEW_ALL_VIDEOS) {
-                        if (true) {
+                        if (BuildConfig.VIEW_ALL_VIDEOS) {
                             unseenIndex = 0;
                         } else if (unseenList.isEmpty()) {
                             // This should not happen (only for older vidtrains)

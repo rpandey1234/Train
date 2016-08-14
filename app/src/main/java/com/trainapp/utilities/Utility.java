@@ -161,9 +161,7 @@ public class Utility {
     public static void sendNotification(User user, VidTrain vidtrain, Context context) {
         JSONObject data = new JSONObject();
         try {
-            String notficationText = context.getString(R.string.sent_notification_text,
-                    User.getCurrentUser().getName());
-            data.put("alert", notficationText);
+            data.put("alert", User.getCurrentUser().getName());
             data.put("title", context.getString(R.string.app_name));
             data.put(Video.VIDTRAIN_KEY, vidtrain.getObjectId());
         } catch (JSONException e) {

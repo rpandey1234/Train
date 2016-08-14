@@ -3,7 +3,6 @@ package com.trainapp.utilities;
 import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.util.Log;
 
 import com.parse.ParseAnalytics;
@@ -11,9 +10,7 @@ import com.parse.ParsePushBroadcastReceiver;
 import com.parse.ParseUser;
 import com.trainapp.activities.LogInActivity;
 import com.trainapp.activities.MainActivity;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.trainapp.networking.VidtrainApplication;
 
 public class PushMessageBroadcast extends ParsePushBroadcastReceiver {
     @Override
@@ -23,7 +20,7 @@ public class PushMessageBroadcast extends ParsePushBroadcastReceiver {
         if (ParseUser.getCurrentUser() != null) {
             String parseData = intent.getExtras().getString("com.parse.Data");
             // Here is data you sent
-            Log.i("ParsePush", parseData);
+            Log.i(VidtrainApplication.TAG, parseData);
             i = new Intent(context, MainActivity.class);
             i.putExtras(intent.getExtras());
         } else {
@@ -35,32 +32,13 @@ public class PushMessageBroadcast extends ParsePushBroadcastReceiver {
 
     @Override
     protected Notification getNotification(Context context, Intent intent) {
-        Notification notification = super.getNotification(context, intent);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            notification.color = context.getResources().getColor(android.R.color.white);
-        }
-        return notification;
-    }
-
-    @Override
-    protected void onPushDismiss(Context context, Intent intent) {
-        super.onPushDismiss(context, intent);
+        // could change notification color here, but fails on Nexus devices
+        return super.getNotification(context, intent);
     }
 
     @Override
     protected void onPushReceive(Context context, Intent intent) {
         // Here You can handle push before appearing into status e.g if you want to stop it.
         super.onPushReceive(context, intent);
-    }
-
-    private String getVidtrainFromData(String jsonData) {
-        // Parse JSON Data
-        try {
-            JSONObject obj = new JSONObject(jsonData);
-            return obj.getString("vidTrain");
-        } catch(JSONException jse) {
-            jse.printStackTrace();
-        }
-        return null;
     }
 }
