@@ -36,6 +36,7 @@ import butterknife.OnClick;
 public class MainActivity extends AppCompatActivity {
 
     public static final String VIDEO_PATH = "VIDEO_PATH";
+    public static final int RESULT_TOO_SHORT = 99;
 
     @Bind(R.id.toolbar) Toolbar _toolbar;
     @Bind(R.id.conversations_fragment) FrameLayout _conversationsFragment;
@@ -148,6 +149,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, R.string.recording_cancelled,  Toast.LENGTH_LONG).show();
+            } else if (resultCode == RESULT_TOO_SHORT) {
+                Toast.makeText(this, R.string.not_long_enough,  Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(this, R.string.recording_failed,  Toast.LENGTH_LONG).show();
             }

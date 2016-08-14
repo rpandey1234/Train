@@ -141,7 +141,13 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
 
     private void finishRecording() {
         // stop recording and release camera
-        _mediaRecorder.stop();  // stop the recording
+        try {
+            _mediaRecorder.stop();  // stop the recording
+        } catch (RuntimeException exception) {
+            Log.w(VidtrainApplication.TAG, "Caught run time exception: " + exception.toString());
+            setResult(MainActivity.RESULT_TOO_SHORT);
+            finish();
+        }
         releaseMediaRecorder(); // release the MediaRecorder object
         mCamera.lock();         // take camera access back from MediaRecorder
 

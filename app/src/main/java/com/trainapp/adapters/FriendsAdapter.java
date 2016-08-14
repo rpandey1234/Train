@@ -114,7 +114,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendViewHolder> {
                 } else {
                     Toast.makeText(
                             _context,
-                            "Sorry! The group limit is " + MAX_NUM_COLLABORATORS,
+                            _context.getString(R.string.group_size_error, MAX_NUM_COLLABORATORS),
                             Toast.LENGTH_SHORT)
                             .show();
                     isValid = false;
