@@ -25,6 +25,7 @@
         android:layout_alignTop="@id/friendImage"
         android:layout_alignBottom="@id/friendImage"
         android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+        android:checkMarkTint="@android:color/holo_green_dark"
         android:textColor="@android:color/black"
         android:layout_toRightOf="@id/friendImage" />
 
