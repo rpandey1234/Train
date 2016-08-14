@@ -180,6 +180,10 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
 
     @Override
     public void onBackPressed() {
+        if (_videoPagerAdapter == null) {
+            super.onBackPressed();
+            return;
+        }
         VidtrainLandingFragment landingFragment = _videoPagerAdapter.getLandingFragment();
         if (landingFragment != null && landingFragment.isVideoPlaying()) {
             landingFragment.videoFragmentClicked();
