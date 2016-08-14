@@ -35,7 +35,6 @@ import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final int VIDEO_CAPTURE = 101;
     public static final String VIDEO_PATH = "VIDEO_PATH";
 
     @Bind(R.id.toolbar) Toolbar _toolbar;

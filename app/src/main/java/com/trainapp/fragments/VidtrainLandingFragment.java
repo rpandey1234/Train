@@ -57,6 +57,7 @@ public class VidtrainLandingFragment extends Fragment {
     @Bind(R.id.tvTitle) TextView _tvTitle;
     @Bind(R.id.previewContainer) LinearLayout _previewContainer;
     @Bind(R.id.childFragment) FrameLayout _childFragment;
+    @Bind(R.id.videosExpired) TextView _videosExpired;
 
     public static final int MAX_VIDEOS_SHOWN = 100;
     private static final String USERS_ALL_SEEN = "-1";
@@ -180,7 +181,7 @@ public class VidtrainLandingFragment extends Fragment {
                 }
             });
         } else {
-            // TODO: show empty message that all videos have expired
+            _videosExpired.setVisibility(View.VISIBLE);
         }
         return v;
     }

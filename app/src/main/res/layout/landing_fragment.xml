@@ -21,6 +21,19 @@
             android:orientation="vertical" />
     </ScrollView>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/videosExpired"
+        android:text="@string/videos_expired"
+        android:visibility="gone"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/bluePrimary"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        />
+
     <LinearLayout
         android:id="@+id/addContainer"
         android:layout_width="match_parent"
