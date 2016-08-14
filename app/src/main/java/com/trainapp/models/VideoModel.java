@@ -50,10 +50,13 @@ public class VideoModel implements Parcelable {
         return _createdAtTime;
     }
 
-    public long getHoursLeft() {
+    public String getTimeLeft() {
         long timePassed = System.currentTimeMillis() - getCreatedAtTime();
         long timeRemaining = Video.TIME_TO_EXPIRE - timePassed;
-        return TimeUnit.MILLISECONDS.toHours(timeRemaining);
+        long hours = TimeUnit.MILLISECONDS.toHours(timeRemaining);
+        return String.format("%d:%02d",
+                hours,
+                TimeUnit.MILLISECONDS.toMinutes(timeRemaining) - TimeUnit.HOURS.toMinutes(hours));
     }
 
     protected VideoModel(Parcel in) {

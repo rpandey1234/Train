@@ -56,9 +56,7 @@ public class VideoPreview extends FrameLayout {
     public void bind(VideoModel videoModel) {
         Glide.with(_context).load(videoModel.getThumbnailUrl()).into(_ivThumbnail);
         Glide.with(_context).load(videoModel.getUserUrl()).into(_ivUserPic);
-        int numHours = (int) videoModel.getHoursLeft();
-        _timeLeft.setText(
-                getResources().getQuantityString(R.plurals.time_left, numHours, numHours));
+        _timeLeft.setText(getResources().getString(R.string.time_left, videoModel.getTimeLeft()));
     }
 
     public void addUnseenUsers(List<User> users) {

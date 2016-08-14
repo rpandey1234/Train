@@ -41,8 +41,5 @@
     <string name="videos_expired">All these videos have expired!</string>
     <string name="not_long_enough">Sorry! That wasn\'t long enough</string>
     <string name="group_size_error">"Sorry! The group limit is %d."</string>
-    <plurals name="time_left">
-        <item quantity="one">%d hours left</item>
-        <item quantity="other">%d hours left</item>
-    </plurals>
+    <string name="time_left">%s left</string>
 </resources>
