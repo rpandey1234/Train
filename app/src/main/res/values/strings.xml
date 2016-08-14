@@ -2,10 +2,6 @@
     <string name="app_name">Train</string>
     <string name="facebook_app_id">184379281936418</string>
     <string name="loading">Loading…</string>
-    <plurals name="videos_count">
-        <item quantity="one">%d video</item>
-        <item quantity="other">%d videos</item>
-    </plurals>
     <string name="profile_image">Profile Image</string>
     <string name="fb_login">Log In With Facebook</string>
     <string name="fb_login_fail">Failed to log into Facebook</string>
@@ -45,4 +41,8 @@
     <string name="videos_expired">All these videos have expired!</string>
     <string name="not_long_enough">Sorry! That wasn\'t long enough</string>
     <string name="group_size_error">"Sorry! The group limit is %d."</string>
+    <plurals name="time_left">
+        <item quantity="one">%d hours left</item>
+        <item quantity="other">%d hours left</item>
+    </plurals>
 </resources>

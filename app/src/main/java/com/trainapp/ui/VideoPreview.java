@@ -8,6 +8,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -29,6 +30,7 @@ public class VideoPreview extends FrameLayout {
     @Bind(R.id.ivUserPic) ImageView _ivUserPic;
     @Bind(R.id.usersSeen) LinearLayout _usersSeen;
     @Bind(R.id.usersUnseen) LinearLayout _usersUnseen;
+    @Bind(R.id.timeLeft) TextView _timeLeft;
 
     private Context _context;
 
@@ -54,6 +56,9 @@ public class VideoPreview extends FrameLayout {
     public void bind(VideoModel videoModel) {
         Glide.with(_context).load(videoModel.getThumbnailUrl()).into(_ivThumbnail);
         Glide.with(_context).load(videoModel.getUserUrl()).into(_ivUserPic);
+        int numHours = (int) videoModel.getHoursLeft();
+        _timeLeft.setText(
+                getResources().getQuantityString(R.plurals.time_left, numHours, numHours));
     }
 
     public void addUnseenUsers(List<User> users) {
@@ -90,14 +95,18 @@ public class VideoPreview extends FrameLayout {
     public void setFromCurrentUser(boolean fromCurrentUser) {
         RelativeLayout.LayoutParams layoutIvThumbnail =
                 (RelativeLayout.LayoutParams) _ivThumbnail.getLayoutParams();
+        RelativeLayout.LayoutParams layoutTimeLeft =
+                (RelativeLayout.LayoutParams) _timeLeft.getLayoutParams();
         RelativeLayout.LayoutParams layoutSeen =
                 (RelativeLayout.LayoutParams) _usersSeen.getLayoutParams();
         RelativeLayout.LayoutParams layoutUnseen =
                 (RelativeLayout.LayoutParams) _usersUnseen.getLayoutParams();
         if (fromCurrentUser) {
             layoutIvThumbnail.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            layoutTimeLeft.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             // remove existing rule
             layoutIvThumbnail.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
+            layoutTimeLeft.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
 
             layoutSeen.addRule(RelativeLayout.LEFT_OF, R.id.ivThumbnail);
             layoutSeen.addRule(RelativeLayout.RIGHT_OF, 0);

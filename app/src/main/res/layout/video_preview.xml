@@ -28,6 +28,14 @@
         android:contentDescription="@string/profile_image"
         app:riv_corner_radius="20dp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/timeLeft"
+        android:layout_below="@id/ivThumbnail"
+        android:layout_marginTop="8dp"
+        android:textStyle="bold" />
+
     <!-- Only used for the first video to indicate users who have seen everything -->
     <LinearLayout
         android:id="@+id/usersSeen"

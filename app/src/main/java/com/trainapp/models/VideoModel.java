@@ -3,6 +3,8 @@ package com.trainapp.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * This class mirrors the Video ParseObject, except it is Parcelable
  */
@@ -46,6 +48,12 @@ public class VideoModel implements Parcelable {
 
     public long getCreatedAtTime() {
         return _createdAtTime;
+    }
+
+    public long getHoursLeft() {
+        long timePassed = System.currentTimeMillis() - getCreatedAtTime();
+        long timeRemaining = Video.TIME_TO_EXPIRE - timePassed;
+        return TimeUnit.MILLISECONDS.toHours(timeRemaining);
     }
 
     protected VideoModel(Parcel in) {
