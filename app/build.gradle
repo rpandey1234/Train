@@ -44,6 +44,8 @@ android {
     }
     buildTypes {
         debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
             // If true, this will make the API call to mark a video as seen
             buildConfigField "boolean", "MARK_SEEN_VIDEOS", "true"
             // If true, this will add a user's recordings to their unseen list
