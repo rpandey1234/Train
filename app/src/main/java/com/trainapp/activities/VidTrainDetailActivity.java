@@ -10,6 +10,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.trainapp.BuildConfig;
 import com.trainapp.R;
 import com.trainapp.adapters.VideoFragmentPagerAdapter;
@@ -17,16 +22,12 @@ import com.trainapp.fragments.SwipeViewPager;
 import com.trainapp.fragments.SwipeViewPager.NextVideoListener;
 import com.trainapp.fragments.VideoPageFragment;
 import com.trainapp.fragments.VideoPageFragment.VideoFinishedListener;
+import com.trainapp.fragments.VidtrainLandingFragment;
 import com.trainapp.models.Unseen;
 import com.trainapp.models.User;
 import com.trainapp.models.VidTrain;
 import com.trainapp.models.Video;
 import com.trainapp.networking.VidtrainApplication;
-import com.parse.FindCallback;
-import com.parse.GetCallback;
-import com.parse.ParseException;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,7 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
     public static final String VIDTRAIN_KEY = "vidTrain";
     private VidTrain _vidTrain;
     private int _lastPosition = -1;
+    private VideoFragmentPagerAdapter _videoPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +80,8 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
                             return;
                         }
                         int unseenIndex;
-                        if (BuildConfig.VIEW_ALL_VIDEOS) {
+//                        if (BuildConfig.VIEW_ALL_VIDEOS) {
+                        if (true) {
                             unseenIndex = 0;
                         } else if (unseenList.isEmpty()) {
                             // This should not happen (only for older vidtrains)
@@ -117,8 +120,8 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
             // User can view the videos starting at this position.
             videos = _vidTrain.getVideos().subList(position, _vidTrain.getVideosCount());
         }
-        final VideoFragmentPagerAdapter _videoPagerAdapter =
-                new VideoFragmentPagerAdapter(getSupportFragmentManager(), videos, _vidTrain);
+        _videoPagerAdapter = new VideoFragmentPagerAdapter(
+                getSupportFragmentManager(), videos, _vidTrain);
         _viewPager.setNextVideoListener(new NextVideoListener() {
             @Override
             public void onNextVideo(int position) {
@@ -170,5 +173,19 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
         }
         // View pager takes care of not allowing OOB issues.
         _viewPager.setCurrentItem(_viewPager.getCurrentItem() + 1, true);
+        VidtrainLandingFragment landingFragment = _videoPagerAdapter.getLandingFragment();
+        if (landingFragment != null) {
+            landingFragment.videoCompleted();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        VidtrainLandingFragment landingFragment = _videoPagerAdapter.getLandingFragment();
+        if (landingFragment != null && landingFragment.isVideoPlaying()) {
+            landingFragment.videoFragmentClicked();
+            return;
+        }
+        super.onBackPressed();
     }
 }

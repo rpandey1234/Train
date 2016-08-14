@@ -11,7 +11,9 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -54,6 +56,7 @@ public class VidtrainLandingFragment extends Fragment {
     @Bind(R.id.tvVideoCount) TextView _tvVideoCount;
     @Bind(R.id.tvTitle) TextView _tvTitle;
     @Bind(R.id.previewContainer) LinearLayout _previewContainer;
+    @Bind(R.id.childFragment) FrameLayout _childFragment;
 
     public static final int MAX_VIDEOS_SHOWN = 100;
     private static final String USERS_ALL_SEEN = "-1";
@@ -64,6 +67,8 @@ public class VidtrainLandingFragment extends Fragment {
     private String _videoPath;
     private VidtrainModel _vidtrainModel;
     private List<VideoPreview> _videoPreviews;
+    private VideoPageFragment _videoPageFragment;
+    private boolean _videoPlaying;
 
     public static Fragment newInstance(VidTrain vidtrain) {
         VidtrainLandingFragment vidtrainLandingFragment = new VidtrainLandingFragment();
@@ -73,6 +78,29 @@ public class VidtrainLandingFragment extends Fragment {
         return vidtrainLandingFragment;
     }
 
+    /**
+     * The video that the user clicked on has completed.
+     */
+    public void videoCompleted() {
+        _childFragment.setVisibility(View.GONE);
+        _videoPlaying = false;
+        // TODO: closing animation
+    }
+
+    @OnClick(R.id.childFragment)
+    public void videoFragmentClicked() {
+        _childFragment.setVisibility(View.GONE);
+        if (_videoPageFragment != null) {
+            _videoPageFragment.stopVideo();
+        }
+        _videoPlaying = false;
+        // TODO: closing animation
+    }
+
+    public boolean isVideoPlaying() {
+        return _videoPlaying;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,9 +108,24 @@ public class VidtrainLandingFragment extends Fragment {
         _vidtrainModel = arguments.getParcelable(VIDTRAIN_MODEL_KEY);
         _videoPreviews = new ArrayList<>();
         String currentUserId = User.getCurrentUser().getObjectId();
-        for (VideoModel video : _vidtrainModel.getVideoModelsToShow()) {
+        for (final VideoModel video : _vidtrainModel.getVideoModelsToShow()) {
             VideoPreview videoPreview = new VideoPreview(getContext());
             videoPreview.setFromCurrentUser(currentUserId.equals(video.getUserId()));
+            videoPreview.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    System.out.println("Landing Fragment: clicked on video preview");
+                    _videoPageFragment = VideoPageFragment.newInstance(video);
+                    // TODO: opening animation
+                    getChildFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.childFragment, _videoPageFragment)
+                            .addToBackStack(null)
+                            .commit();
+                    _videoPlaying = true;
+                    _childFragment.setVisibility(View.VISIBLE);
+                }
+            });
             _videoPreviews.add(videoPreview);
         }
     }

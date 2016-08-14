@@ -24,6 +24,7 @@ public class VideoFragmentPagerAdapter extends FragmentPagerAdapter {
     private VidTrain _vidTrain;
     private List<Video> _videos = new ArrayList<>();
     private Map<Integer, VideoPageFragment> _fragmentMap;
+    private VidtrainLandingFragment _landingFragment;
 
     public VideoFragmentPagerAdapter(FragmentManager fm, List<Video> videos, VidTrain vidTrain) {
         super(fm);
@@ -53,7 +54,8 @@ public class VideoFragmentPagerAdapter extends FragmentPagerAdapter {
             _fragmentMap.put(position, fragment);
             return fragment;
         } else {
-            return super.instantiateItem(container, position);
+            _landingFragment = (VidtrainLandingFragment) super.instantiateItem(container, position);
+            return _landingFragment;
         }
     }
 
@@ -65,5 +67,9 @@ public class VideoFragmentPagerAdapter extends FragmentPagerAdapter {
         } else {
             return null;
         }
+    }
+
+    public VidtrainLandingFragment getLandingFragment() {
+        return _landingFragment;
     }
 }

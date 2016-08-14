@@ -78,4 +78,11 @@
             android:textColor="@android:color/white"
             android:textSize="20sp" />
     </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/childFragment"
+        android:visibility="gone"
+        />
 </RelativeLayout>

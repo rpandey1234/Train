@@ -47,6 +47,7 @@ public class VideoPageFragment extends Fragment {
     public static final String VIDEO_TIME = "VIDEO_TIME";
     public static final String VIDEO_USER_URL = "VIDEO_USER_URL";
     public static final String VIDEO_ID = "VIDEO_ID";
+    private static final String FROM_LANDING_FRAGMENT = "FROM_LANDING_FRAGMENT";
     public static final int UPDATE_FREQUENCY = 50;
     public static final int ADVANCE_DELAY = 500;
 
@@ -60,6 +61,7 @@ public class VideoPageFragment extends Fragment {
     private Runnable _runnableCode;
     private int _width;
     private boolean _isVideoPrepared;
+    private boolean _fromLandingFragment;
 
     public static VideoPageFragment newInstance(Video video) {
         VideoPageFragment videoPageFragment = new VideoPageFragment();
@@ -69,6 +71,7 @@ public class VideoPageFragment extends Fragment {
         args.putString(VIDEO_TIME, Utility.getRelativeTime(video.getCreatedAt().getTime()));
         args.putString(VIDEO_USER_URL, video.getUser().getProfileImageUrl());
         args.putString(VIDEO_ID, video.getObjectId());
+        args.putBoolean(FROM_LANDING_FRAGMENT, false);
         videoPageFragment.setArguments(args);
         return videoPageFragment;
     }
@@ -81,6 +84,7 @@ public class VideoPageFragment extends Fragment {
         args.putString(VIDEO_TIME, Utility.getRelativeTime(videoModel.getCreatedAtTime()));
         args.putString(VIDEO_USER_URL, videoModel.getUserUrl());
         args.putString(VIDEO_ID, videoModel.getVideoId());
+        args.putBoolean(FROM_LANDING_FRAGMENT, true);
         videoPageFragment.setArguments(args);
         return videoPageFragment;
     }
@@ -95,6 +99,7 @@ public class VideoPageFragment extends Fragment {
             _videoThumbnailUrl = arguments.getString(VIDEO_THUMBNAIL_URL);
             _videoTime = arguments.getString(VIDEO_TIME);
             _userUrl = arguments.getString(VIDEO_USER_URL);
+            _fromLandingFragment = arguments.getBoolean(FROM_LANDING_FRAGMENT);
         }
     }
 
@@ -160,6 +165,9 @@ public class VideoPageFragment extends Fragment {
                 view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
+        if (_fromLandingFragment) {
+            playVideo();
+        }
     }
 
     public void playVideo() {
