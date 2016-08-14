@@ -1,8 +1,5 @@
 package com.trainapp.models;
 
-import android.util.Log;
-
-import com.trainapp.networking.VidtrainApplication;
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -12,10 +9,13 @@ import java.io.Serializable;
 
 @ParseClassName("Video")
 public class Video extends ParseObject implements Serializable {
+    public final static long MILLIS_PER_DAY = 24 * 60 * 60 * 1000L;
     public static final String USER_KEY = "user";
     public static final String VIDEO_FILE_KEY = "videoFile";
     public static final String VIDTRAIN_KEY = "vidTrain";
     public static final String THUMBNAIL_KEY = "thumbnail";
+
+    public final static long TIME_TO_EXPIRE = MILLIS_PER_DAY;
 
     public void setUser(ParseUser user) {
         put(USER_KEY, user);
@@ -42,13 +42,10 @@ public class Video extends ParseObject implements Serializable {
     }
 
     public ParseFile getThumbnail() {
-        // TODO: this check is a hack to prevent random crash:
-        // java.lang.IllegalStateException: ParseObject has no data for 'thumbnail'.
-        // Call fetchIfNeeded() to get the data.
-        if (containsKey(THUMBNAIL_KEY)) {
-            return getParseFile(THUMBNAIL_KEY);
-        }
-        Log.d(VidtrainApplication.TAG, "just saved a crash! rejoice");
-        return null;
+        return getParseFile(THUMBNAIL_KEY);
+    }
+
+    public boolean hasVideoExpired() {
+        return System.currentTimeMillis() - getCreatedAt().getTime() < TIME_TO_EXPIRE;
     }
 }

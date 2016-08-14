@@ -153,30 +153,35 @@ public class VidtrainLandingFragment extends Fragment {
             }
         });
 
-        ParseQuery<Unseen> query = ParseQuery.getQuery("Unseen");
-        // need to wrap in vidtrain object because pointer field needs a pointer value
-        VidTrain vidtrain = new VidTrain();
-        vidtrain.setObjectId(_vidtrainModel.getId());
-        query.whereEqualTo(Unseen.VIDTRAIN_KEY, vidtrain);
-        query.include(Unseen.USER_KEY);
-        query.include(Unseen.VIDEOS_KEY);
-        query.findInBackground(new FindCallback<Unseen>() {
-            @Override
-            public void done(List<Unseen> unseens, ParseException e) {
-                if (e != null) {
-                    Log.d(VidtrainApplication.TAG, "Could not get unseen data: " + e.toString());
-                    return;
+        if (size > 0) {
+            ParseQuery<Unseen> query = ParseQuery.getQuery("Unseen");
+            // need to wrap in vidtrain object because pointer field needs a pointer value
+            VidTrain vidtrain = new VidTrain();
+            vidtrain.setObjectId(_vidtrainModel.getId());
+            query.whereEqualTo(Unseen.VIDTRAIN_KEY, vidtrain);
+            query.include(Unseen.USER_KEY);
+            query.include(Unseen.VIDEOS_KEY);
+            query.findInBackground(new FindCallback<Unseen>() {
+                @Override
+                public void done(List<Unseen> unseens, ParseException e) {
+                    if (e != null) {
+                        Log.d(VidtrainApplication.TAG,
+                                "Could not get unseen data: " + e.toString());
+                        return;
+                    }
+                    Map<String, List<User>> unseenMap = generateUnseenMap(unseens);
+                    _videoPreviews.get(0).addSeenUsers(unseenMap.get(USERS_ALL_SEEN));
+                    for (int i = 0; i < _videoPreviews.size(); i++) {
+                        VideoPreview videoPreview = _videoPreviews.get(i);
+                        videoPreview.addUnseenUsers(unseenMap.get(videosShown.get(i).getVideoId()));
+                    }
+                    _videoPreviews.get(_videoPreviews.size() - 1)
+                            .addUnseenUsers(unseenMap.get(USERS_NONE_SEEN));
                 }
-                Map<String, List<User>> unseenMap = generateUnseenMap(unseens);
-                _videoPreviews.get(0).addSeenUsers(unseenMap.get(USERS_ALL_SEEN));
-                for (int i = 0; i < _videoPreviews.size(); i++) {
-                    VideoPreview videoPreview = _videoPreviews.get(i);
-                    videoPreview.addUnseenUsers(unseenMap.get(videosShown.get(i).getVideoId()));
-                }
-                _videoPreviews.get(_videoPreviews.size() - 1)
-                        .addUnseenUsers(unseenMap.get(USERS_NONE_SEEN));
-            }
-        });
+            });
+        } else {
+            // TODO: show empty message that all videos have expired
+        }
         return v;
     }
 

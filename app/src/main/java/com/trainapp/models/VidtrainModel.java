@@ -29,7 +29,9 @@ public class VidtrainModel implements Parcelable {
         for (int i = 0; i < videos.size(); i++) {
             if (i < numVideosShown) {
                 Video video = videos.get(videos.size() - 1 - i);
-                _videoModelsToShow.add(new VideoModel(video));
+                if (video.hasVideoExpired()) {
+                    _videoModelsToShow.add(new VideoModel(video));
+                }
             }
             _videoModels.add(new VideoModel(videos.get(i)));
         }
