@@ -92,7 +92,7 @@ public class Unseen extends ParseObject {
         });
     }
 
-    public static void removeUnseen(VidTrain vidtrain, User user, final Video video) {
+    public static void removeUnseen(VidTrain vidtrain, User user, final String videoId) {
         ParseQuery<Unseen> query = ParseQuery.getQuery("Unseen");
         query.whereEqualTo(USER_KEY, user);
         query.whereEqualTo(VIDTRAIN_KEY, vidtrain);
@@ -106,7 +106,7 @@ public class Unseen extends ParseObject {
                     return;
                 }
                 List<Video> unseenVideos = unseen.getUnseenVideos();
-                int location = Utility.indexOf(unseenVideos, video);
+                int location = Utility.indexOf(unseenVideos, videoId);
                 if (location == -1) {
                     Log.d(VidtrainApplication.TAG, "Unseen video was not in list");
                     return;

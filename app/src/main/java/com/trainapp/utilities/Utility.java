@@ -114,11 +114,18 @@ public class Utility {
      *  Returns the index of the contained object, or -1 if not found.
      */
     public static int indexOf(List<? extends ParseObject> objects, ParseObject object) {
-        if (objects == null || object == null) {
+        if (object == null) {
+            return -1;
+        }
+        return indexOf(objects, object.getObjectId());
+    }
+
+    public static int indexOf(List<? extends ParseObject> objects, String objectId) {
+        if (objects == null || objectId == null) {
             return -1;
         }
         for (int i = 0; i < objects.size(); i++) {
-            if (object.getObjectId().equals(objects.get(i).getObjectId())) {
+            if (objectId.equals(objects.get(i).getObjectId())) {
                 return i;
             }
         }

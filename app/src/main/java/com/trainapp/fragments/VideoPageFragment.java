@@ -45,7 +45,7 @@ public class VideoPageFragment extends Fragment {
     public static final String VIDEO_THUMBNAIL_URL = "VIDEO_THUMBNAIL_URL";
     public static final String VIDEO_TIME = "VIDEO_TIME";
     public static final String VIDEO_USER_URL = "VIDEO_USER_URL";
-    public static final String VIDEO = "VIDEO";
+    public static final String VIDEO_ID = "VIDEO_ID";
     public static final int UPDATE_FREQUENCY = 50;
     public static final int ADVANCE_DELAY = 500;
 
@@ -54,7 +54,7 @@ public class VideoPageFragment extends Fragment {
     private VideoFinishedListener _listener;
     private String _videoTime;
     private String _userUrl;
-    private Video _video;
+    private String _videoId;
     private Handler _handler = new Handler();
     private Runnable _runnableCode;
     private int _width;
@@ -67,7 +67,7 @@ public class VideoPageFragment extends Fragment {
         args.putString(VIDEO_THUMBNAIL_URL, video.getThumbnail().getUrl());
         args.putString(VIDEO_TIME, Utility.getRelativeTime(video.getCreatedAt().getTime()));
         args.putString(VIDEO_USER_URL, video.getUser().getProfileImageUrl());
-        args.putSerializable(VIDEO, video);
+        args.putString(VIDEO_ID, video.getObjectId());
         videoPageFragment.setArguments(args);
         return videoPageFragment;
     }
@@ -77,7 +77,7 @@ public class VideoPageFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
         if (arguments != null) {
-            _video = (Video) arguments.getSerializable(VIDEO);
+            _videoId = arguments.getString(VIDEO_ID);
             _videoUrl = arguments.getString(VIDEO_URL);
             _videoThumbnailUrl = arguments.getString(VIDEO_THUMBNAIL_URL);
             _videoTime = arguments.getString(VIDEO_TIME);
@@ -131,7 +131,7 @@ public class VideoPageFragment extends Fragment {
         _videoView.setOnCompletionListener(new OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                _listener.onVideoCompleted(_video);
+                _listener.onVideoCompleted(_videoId);
             }
         });
         return v;
@@ -174,9 +174,7 @@ public class VideoPageFragment extends Fragment {
 
     public interface VideoFinishedListener {
 
-        // TODO: may need to pass in video id here instead, since parse objects internals are not
-        // passed in through serializable.
-        void onVideoCompleted(Video video);
+        void onVideoCompleted(String videoId);
     }
 
     @Override

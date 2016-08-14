@@ -129,7 +129,7 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
                                 "can't auto-advance while current video is loading");
                         return;
                     }
-                    goNextVideo(videos.get(position));
+                    goNextVideo(videos.get(position).getObjectId());
                 }
             }
         });
@@ -160,13 +160,13 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
     }
 
     @Override
-    public void onVideoCompleted(Video video) {
-        goNextVideo(video);
+    public void onVideoCompleted(String videoId) {
+        goNextVideo(videoId);
     }
 
-    private void goNextVideo(Video currentVideo) {
+    private void goNextVideo(String currentVideoId) {
         if (BuildConfig.MARK_SEEN_VIDEOS) {
-            Unseen.removeUnseen(_vidTrain, User.getCurrentUser(), currentVideo);
+            Unseen.removeUnseen(_vidTrain, User.getCurrentUser(), currentVideoId);
         }
         // View pager takes care of not allowing OOB issues.
         _viewPager.setCurrentItem(_viewPager.getCurrentItem() + 1, true);
