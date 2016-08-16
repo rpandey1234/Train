@@ -1,6 +1,9 @@
 package com.trainapp.utilities;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.media.ThumbnailUtils;
@@ -205,5 +208,40 @@ public class Utility {
         Log.d(VidtrainApplication.TAG, "result: " + result);
         VideoCaptureActivity.orientation = result;
         camera.setDisplayOrientation(result);
+    }
+
+    public static void updateBadgeCount(Context context, int count) {
+        String launcherClassName = getLauncherClassName(context);
+        //TODO - I am manually setting to 100. We need to include the logic here
+        //TODO - If you pass zero then badger will be in invicible mode
+        //count=0;
+        count = 100;
+        if (launcherClassName == null) {
+            return;
+        }
+
+        Intent intent = new Intent("android.intent.action.BADGE_COUNT_UPDATE");
+        intent.putExtra("badge_count", count);
+        intent.putExtra("badge_count_package_name", context.getPackageName());
+        intent.putExtra("badge_count_class_name", launcherClassName);
+        context.sendBroadcast(intent);
+    }
+
+    public static String getLauncherClassName(Context context) {
+
+        PackageManager pm = context.getPackageManager();
+
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+
+        List<ResolveInfo> resolveInfos = pm.queryIntentActivities(intent, 0);
+        for (ResolveInfo resolveInfo : resolveInfos) {
+            String pkgName = resolveInfo.activityInfo.applicationInfo.packageName;
+            if (pkgName.equalsIgnoreCase(context.getPackageName())) {
+                String className = resolveInfo.activityInfo.name;
+                return className;
+            }
+        }
+        return null;
     }
 }
