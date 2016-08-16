@@ -2,9 +2,12 @@ package com.trainapp.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
@@ -29,6 +32,8 @@ import com.trainapp.fragments.ConversationsFragment;
 import com.trainapp.utilities.PermissionHelper;
 import com.trainapp.utilities.Utility;
 
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -38,16 +43,22 @@ public class MainActivity extends AppCompatActivity {
     public static final String VIDEO_PATH = "VIDEO_PATH";
     public static final int RESULT_TOO_SHORT = 99;
 
-    @Bind(R.id.toolbar) Toolbar _toolbar;
-    @Bind(R.id.conversations_fragment) FrameLayout _conversationsFragment;
-    @Bind(R.id.rootLayout) CoordinatorLayout _rootLayout;
-    @Bind(R.id.fab_create) FloatingActionButton _fabCreate;
-    @Bind(R.id.viewReveal) View _viewReveal;
+    @Bind(R.id.toolbar)
+    Toolbar _toolbar;
+    @Bind(R.id.conversations_fragment)
+    FrameLayout _conversationsFragment;
+    @Bind(R.id.rootLayout)
+    CoordinatorLayout _rootLayout;
+    @Bind(R.id.fab_create)
+    FloatingActionButton _fabCreate;
+    @Bind(R.id.viewReveal)
+    View _viewReveal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        badgeCount(this, 0);
         ButterKnife.bind(this);
         setSupportActionBar(_toolbar);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -148,12 +159,51 @@ public class MainActivity extends AppCompatActivity {
                 i.putExtra(VIDEO_PATH, Utility.getOutputMediaFile(uid).getPath());
                 startActivity(i);
             } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(this, R.string.recording_cancelled,  Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.recording_cancelled, Toast.LENGTH_LONG).show();
             } else if (resultCode == RESULT_TOO_SHORT) {
-                Toast.makeText(this, R.string.not_long_enough,  Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.not_long_enough, Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(this, R.string.recording_failed,  Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.recording_failed, Toast.LENGTH_LONG).show();
             }
         }
     }
+
+    public static void badgeCount(Context context, int count) {
+        String launcherClassName = getLauncherClassName(context);
+        //TODO - I am manually setting to 100. We need to include the logic here
+        //TODO - If you pass zero then badger will be in invicible mode
+
+        //count=0;
+        count = 100;
+        if (launcherClassName == null) {
+            return;
+        }
+
+        Intent intent = new Intent("android.intent.action.BADGE_COUNT_UPDATE");
+        intent.putExtra("badge_count", count);
+        intent.putExtra("badge_count_package_name", context.getPackageName());
+        intent.putExtra("badge_count_class_name", launcherClassName);
+        context.sendBroadcast(intent);
+    }
+
+
+    public static String getLauncherClassName(Context context) {
+
+        PackageManager pm = context.getPackageManager();
+
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+
+        List<ResolveInfo> resolveInfos = pm.queryIntentActivities(intent, 0);
+        for (ResolveInfo resolveInfo : resolveInfos) {
+            String pkgName = resolveInfo.activityInfo.applicationInfo.packageName;
+            if (pkgName.equalsIgnoreCase(context.getPackageName())) {
+                String className = resolveInfo.activityInfo.name;
+                return className;
+            }
+        }
+        return null;
+    }
+
+
 }
