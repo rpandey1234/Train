@@ -1,83 +1,9 @@
 <resources>
-
-    <!-- Base application theme. -->
-    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowContentTransitions">true</item>
-    </style>
-
-    <style name="AppBaseLightTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/bluePrimary</item>
-        <item name="colorPrimaryDark">@color/bluePrimaryDark</item>
-        <item name="colorAccent">@color/blueAccent</item>
-        <item name="android:textColor">@android:color/white</item>
-        <!--<item name="colorAccent">@color/blueAccent</item>-->
-        <item name="android:windowContentTransitions">true</item>
-    </style>
-
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="actionBarTheme">@style/Theme.AppCompat.Light.DarkActionBar</item>
         <item name="android:windowContentTransitions">true</item>
-    </style>
-
-    <style name="AppTheme.ActionBarTheme" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="colorControlActivated">#FFffff</item>
-        <!--<item name="android:titleTextColor">#FFffff</item>-->
-    </style>
-
-    <style name="section_item_divider">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">1dp</item>
-        <item name="android:background">@android:color/darker_gray</item>
-    </style>
-    
-    <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="android:background">@color/bluePrimary</item>
-        <!-- android:textColorPrimary is the color of the title text in the Toolbar  -->
-        <item name="android:textColorPrimary">@android:color/white</item>
-        <!-- android:actionMenuTextColor is the color of the text of action (menu) items  -->
-        <item name="actionMenuTextColor">@android:color/white</item>
-    </style>
-
-    <style name="Widget.Toolbar" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:textColor">@android:color/white</item>
-        <!--<item name="android:titleTextColor">#FFffff</item>-->
-        <!--<item name="contentInsetStart">0dp</item>-->
-    </style>
-
-    <style name="CustomTabLayout" parent="Widget.Design.TabLayout">
-        <item name="tabIndicatorColor">@color/bluePrimary</item>
-        <item name="background">@android:color/white</item>
-        <item name="tabTextAppearance">@style/CustomTabTextAppearance</item>
-        <item name="tabSelectedTextColor">@color/bluePrimary</item>
-    </style>
-
-    <style name="CustomTabTextAppearance" parent="TextAppearance.Design.Tab">
-        <item name="android:textColor">@android:color/darker_gray</item>
-        <item name="textAllCaps">true</item>
-    </style>
-
-    <style name="CustomColoredButtonStyle" parent="Widget.AppCompat.Button.Colored">
-        <item name="android:layout_margin">0dp</item>
-        <item name="android:padding">0dp</item>
-    </style>
-
-    <style name="BottomSheetButtonStyle" parent="Widget.AppCompat.Button.Colored">
-        <item name="android:layout_marginBottom">20dp</item>
-        <item name="android:padding">0dp</item>
-        <item name="colorButtonNormal">@color/blueAccent</item>
-    </style>
-
-    <style name="FollowButtonStyle" parent="Widget.AppCompat.Button.Colored">
-        <item name="android:padding">10dp</item>
-        <item name="colorButtonNormal">@android:color/white</item>
-        <item name="android:textColor">@color/bluePrimary</item>
     </style>
 </resources>

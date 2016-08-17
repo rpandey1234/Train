@@ -7,9 +7,9 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        style="@style/Widget.Toolbar"
+        style="?attr/toolbarStyle"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:theme="@style/ToolbarTheme"
-        app:popupTheme="@style/AppBaseLightTheme" />
+        android:theme="@style/Theme.AppCompat"
+        app:popupTheme="@style/Theme.AppCompat.Light" />
 </LinearLayout>

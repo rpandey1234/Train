@@ -8,8 +8,7 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppBaseLightTheme">
+        android:layout_height="wrap_content">
 
         <!-- Toolbar is the actual app bar with text and action items -->
 
