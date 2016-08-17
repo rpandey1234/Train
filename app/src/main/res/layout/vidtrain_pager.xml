@@ -25,7 +25,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:background="@color/bluePrimary"
+        android:background="@color/colorPrimary"
         android:contentDescription="@string/video_thumbnail"
         android:scaleType="centerCrop"
         android:src="@drawable/placeholder_video"
@@ -89,6 +89,6 @@
         android:layout_width="0dp"
         android:layout_height="10dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/bluePrimary"
+        android:background="@color/colorPrimary"
         />
 </RelativeLayout>

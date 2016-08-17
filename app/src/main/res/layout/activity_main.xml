@@ -48,7 +48,7 @@
         android:layout_margin="16dp"
         android:src="@android:drawable/ic_input_add"
         android:tint="@android:color/white"
-        app:backgroundTint="@color/bluePrimary"
+        app:backgroundTint="@color/colorPrimary"
         app:fabSize="normal"
         app:layout_anchor="@id/container"
         app:layout_anchorGravity="bottom|right|end"
@@ -58,7 +58,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/viewReveal"
-        android:background="@color/bluePrimary"
+        android:background="@color/colorPrimary"
         android:visibility="gone"
         />
 </android.support.design.widget.CoordinatorLayout>

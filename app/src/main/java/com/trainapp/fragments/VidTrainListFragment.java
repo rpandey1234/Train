@@ -55,7 +55,7 @@ public class VidTrainListFragment extends Fragment {
         _rvVidTrains.setAdapter(_aVidtrains);
         _rvVidTrains.setLayoutManager(_linearLayoutManager);
         _rvVidTrains.setHasFixedSize(true);
-        _swipeContainer.setColorSchemeResources(R.color.bluePrimary);
+        _swipeContainer.setColorSchemeResources(R.color.colorPrimary);
         showProgressBar();
 
         _rvVidTrains.addOnScrollListener(

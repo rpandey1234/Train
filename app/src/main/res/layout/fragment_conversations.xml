@@ -32,7 +32,7 @@
         android:layout_centerVertical="true"
         android:text="@string/conversations_none"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/bluePrimary"
+        android:textColor="@color/colorPrimary"
         android:textStyle="bold"
         android:visibility="gone" />
 
