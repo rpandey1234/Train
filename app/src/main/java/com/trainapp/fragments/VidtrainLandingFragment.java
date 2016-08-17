@@ -202,7 +202,8 @@ public class VidtrainLandingFragment extends Fragment {
         for (Unseen unseen : unseens) {
             User user = unseen.getUser();
             if (User.getCurrentUser().getObjectId().equals(user.getObjectId())) {
-                usersAllSeen.add(user);
+                // Do not show the signed-in user among seen/unseen, since they have
+                // obviously seen everything. 
                 continue;
             }
             List<Video> unseenVideos = unseen.getUnseenVideos();
