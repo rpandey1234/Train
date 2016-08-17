@@ -53,6 +53,9 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements O
         // Revert to simply adding views to a linear layout since there should not be many
         // participants in a conversation. Drawback is that this won't scroll
         for (User user : _vidTrain.getCollaborators()) {
+            if (User.getCurrentUser().getObjectId().equals(user.getObjectId())) {
+                continue;
+            }
             Participant participant = new Participant(_context);
             participant.bind(user);
             _participants.addView(participant);
