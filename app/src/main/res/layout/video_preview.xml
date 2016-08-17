@@ -8,11 +8,19 @@
     android:layout_marginRight="8dp"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:id="@+id/usersUnseen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:orientation="horizontal" />
+
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/ivThumbnail"
         android:layout_width="140dp"
         android:layout_height="200dp"
         android:layout_alignParentLeft="true"
+        android:layout_below="@id/usersUnseen"
         android:contentDescription="@string/video_thumbnail"
         android:scaleType="centerCrop"
         app:riv_border_width="4dp"
@@ -36,21 +44,14 @@
         android:layout_marginTop="8dp"
         android:textStyle="bold" />
 
-    <!-- Only used for the first video to indicate users who have seen everything -->
+    <!-- Only used for the most recent video to indicate users who have seen everything -->
     <LinearLayout
         android:id="@+id/usersSeen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/ivThumbnail"
-        android:layout_toRightOf="@+id/ivThumbnail"
+        android:layout_below="@id/timeLeft"
+        android:layout_alignParentRight="true"
         android:orientation="horizontal"
         android:visibility="gone" />
 
-    <LinearLayout
-        android:id="@+id/usersUnseen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/ivThumbnail"
-        android:layout_toRightOf="@+id/ivThumbnail"
-        android:orientation="horizontal" />
 </RelativeLayout>

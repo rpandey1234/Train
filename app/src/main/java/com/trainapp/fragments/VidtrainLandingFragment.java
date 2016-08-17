@@ -146,13 +146,7 @@ public class VidtrainLandingFragment extends Fragment {
             _videoPreviews.get(i).bind(video);
             _previewContainer.addView(_videoPreviews.get(i));
         }
-        // Scroll to the bottom
-        _scrollView.post(new Runnable() {
-            @Override
-            public void run() {
-                _scrollView.fullScroll(ScrollView.FOCUS_DOWN);
-            }
-        });
+        scrollToBottom();
 
         if (size > 0) {
             ParseQuery<Unseen> query = ParseQuery.getQuery("Unseen");
@@ -178,12 +172,23 @@ public class VidtrainLandingFragment extends Fragment {
                     }
                     _videoPreviews.get(_videoPreviews.size() - 1)
                             .addUnseenUsers(unseenMap.get(USERS_NONE_SEEN));
+                    scrollToBottom();
                 }
             });
         } else {
             _videosExpired.setVisibility(View.VISIBLE);
         }
         return v;
+    }
+
+    private void scrollToBottom() {
+        // Scroll to the bottom
+        _scrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                _scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+            }
+        });
     }
 
     /**
