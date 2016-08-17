@@ -110,7 +110,7 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
         return intent.getStringExtra(VIDTRAIN_KEY);
     }
 
-    void layoutVidTrain(int position) {
+    private void layoutVidTrain(int position) {
         final List<Video> videos;
         if (position == Unseen.ALL_SEEN_FLAG) {
             // User has seen all the videos. They only get to see the final landing page.

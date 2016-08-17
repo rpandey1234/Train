@@ -1,7 +1,6 @@
 package com.trainapp.adapters.holders;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,13 +12,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.trainapp.R;
-import com.trainapp.activities.VidTrainDetailActivity;
 import com.trainapp.models.User;
 import com.trainapp.models.VidTrain;
 import com.trainapp.models.Video;
 import com.trainapp.utilities.Utility;
-import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
 
@@ -63,9 +61,7 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements O
     @Override
     public void onClick(View v) {
         if (_vidTrain != null) {
-            Intent i = new Intent(_context, VidTrainDetailActivity.class);
-            i.putExtra(VidTrainDetailActivity.VIDTRAIN_KEY, _vidTrain.getObjectId());
-            _context.startActivity(i);
+            Utility.goVidtrainDetail(_context, _vidTrain.getObjectId());
         }
     }
 
@@ -113,9 +109,7 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements O
         @Override
         public void onClick(View v) {
             if (_vidTrain != null) {
-                Intent i = new Intent(_context, VidTrainDetailActivity.class);
-                i.putExtra(VidTrainDetailActivity.VIDTRAIN_KEY, _vidTrain.getObjectId());
-                _context.startActivity(i);
+                Utility.goVidtrainDetail(_context, _vidTrain.getObjectId());
             }
         }
     }

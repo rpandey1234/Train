@@ -333,7 +333,9 @@ public class VidtrainLandingFragment extends Fragment {
                                                 Toast.makeText(getContext(),
                                                         R.string.add_success,
                                                         Toast.LENGTH_SHORT).show();
-                                                getActivity().onBackPressed();
+                                                // force activity refresh
+                                                Utility.goVidtrainDetail(
+                                                        getContext(), _vidtrainModel.getId());
                                             }
                                         });
                                     }

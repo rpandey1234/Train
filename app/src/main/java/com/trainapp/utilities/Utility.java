@@ -1,6 +1,7 @@
 package com.trainapp.utilities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.media.ThumbnailUtils;
@@ -19,6 +20,7 @@ import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.trainapp.R;
+import com.trainapp.activities.VidTrainDetailActivity;
 import com.trainapp.activities.VideoCaptureActivity;
 import com.trainapp.models.User;
 import com.trainapp.models.VidTrain;
@@ -205,5 +207,11 @@ public class Utility {
         Log.d(VidtrainApplication.TAG, "result: " + result);
         VideoCaptureActivity.orientation = result;
         camera.setDisplayOrientation(result);
+    }
+
+    public static void goVidtrainDetail(Context context, String vidtrainId) {
+        Intent i = new Intent(context, VidTrainDetailActivity.class);
+        i.putExtra(VidTrainDetailActivity.VIDTRAIN_KEY, vidtrainId);
+        context.startActivity(i);
     }
 }
