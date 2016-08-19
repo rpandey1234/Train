@@ -2,6 +2,8 @@ package com.trainapp.utilities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.media.ThumbnailUtils;
@@ -11,6 +13,7 @@ import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Surface;
 import android.view.WindowManager;
+
 import com.google.common.io.Files;
 
 import com.facebook.GraphResponse;
@@ -52,7 +55,9 @@ public class Utility {
                 DateUtils.SECOND_IN_MILLIS).toString();
     }
 
-    /** Create a File for saving an image or video */
+    /**
+     * Create a File for saving an image or video
+     */
     public static File getOutputMediaFile(String objectId) {
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_MOVIES), "VidTrainApp");
@@ -112,8 +117,8 @@ public class Utility {
     }
 
     /**
-     *  Equality checks on ParseObject fails, so we need this helper method :(
-     *  Returns the index of the contained object, or -1 if not found.
+     * Equality checks on ParseObject fails, so we need this helper method :(
+     * Returns the index of the contained object, or -1 if not found.
      */
     public static int indexOf(List<? extends ParseObject> objects, ParseObject object) {
         if (object == null) {
@@ -187,10 +192,18 @@ public class Utility {
         int degrees = 0;
 
         switch (rotation) {
-            case Surface.ROTATION_0: degrees = 0; break;
-            case Surface.ROTATION_90: degrees = 90; break;
-            case Surface.ROTATION_180: degrees = 180; break;
-            case Surface.ROTATION_270: degrees = 270; break;
+            case Surface.ROTATION_0:
+                degrees = 0;
+                break;
+            case Surface.ROTATION_90:
+                degrees = 90;
+                break;
+            case Surface.ROTATION_180:
+                degrees = 180;
+                break;
+            case Surface.ROTATION_270:
+                degrees = 270;
+                break;
         }
         // always seems to be 0
         Log.d(VidtrainApplication.TAG, "degrees: " + degrees);
@@ -213,5 +226,36 @@ public class Utility {
         Intent i = new Intent(context, VidTrainDetailActivity.class);
         i.putExtra(VidTrainDetailActivity.VIDTRAIN_KEY, vidtrainId);
         context.startActivity(i);
+    }
+
+    public static void updateBadgeCount(Context context, int count) {
+        String launcherClassName = getLauncherClassName(context);
+        //TODO - I am manually setting to 100. We need to include the logic here
+        //TODO - If you pass zero then badger will be in invicible mode
+        //count=0;
+        count = 100;
+        if (launcherClassName == null) {
+            return;
+        }
+        Intent intent = new Intent("android.intent.action.BADGE_COUNT_UPDATE");
+        intent.putExtra("badge_count", count);
+        intent.putExtra("badge_count_package_name", context.getPackageName());
+        intent.putExtra("badge_count_class_name", launcherClassName);
+        context.sendBroadcast(intent);
+    }
+
+    public static String getLauncherClassName(Context context) {
+        PackageManager pm = context.getPackageManager();
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        List<ResolveInfo> resolveInfos = pm.queryIntentActivities(intent, 0);
+        for (ResolveInfo resolveInfo : resolveInfos) {
+            String pkgName = resolveInfo.activityInfo.applicationInfo.packageName;
+            if (pkgName.equalsIgnoreCase(context.getPackageName())) {
+                String className = resolveInfo.activityInfo.name;
+                return className;
+            }
+        }
+        return null;
     }
 }
