@@ -90,6 +90,14 @@ public class VidTrainListFragment extends Fragment {
         _pbProgressAction.setVisibility(View.GONE);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        // This is needed to show the most up-to-date info with seen information.
+        // TODO: this causes us to lose scroll position. 
+        requestVidTrains(0);
+    }
+
     private void clearNotifications() {
         Utility.setBadgeCount(getContext(), 0);
         NotificationManager notificationManager =
