@@ -2,12 +2,9 @@ package com.trainapp.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
@@ -31,8 +28,6 @@ import com.trainapp.R;
 import com.trainapp.fragments.ConversationsFragment;
 import com.trainapp.utilities.PermissionHelper;
 import com.trainapp.utilities.Utility;
-
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

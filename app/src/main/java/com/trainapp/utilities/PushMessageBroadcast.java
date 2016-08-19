@@ -23,6 +23,7 @@ public class PushMessageBroadcast extends ParsePushBroadcastReceiver {
             Log.i(VidtrainApplication.TAG, parseData);
             i = new Intent(context, MainActivity.class);
             i.putExtras(intent.getExtras());
+            Utility.setBadgeCount(context, 0);
         } else {
             i = new Intent(context, LogInActivity.class);
         }
@@ -32,6 +33,7 @@ public class PushMessageBroadcast extends ParsePushBroadcastReceiver {
 
     @Override
     protected Notification getNotification(Context context, Intent intent) {
+        Utility.setBadgeCount(context, Utility.getBadgeCount(context) + 1);
         // could change notification color here, but fails on Nexus devices
         return super.getNotification(context, intent);
     }

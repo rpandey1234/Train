@@ -15,6 +15,7 @@ import com.trainapp.adapters.VidTrainArrayAdapter;
 import com.trainapp.models.Unseen;
 import com.trainapp.models.VidTrain;
 import com.trainapp.utilities.EndlessRecyclerViewScrollListener;
+import com.trainapp.utilities.Utility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +74,7 @@ public class VidTrainListFragment extends Fragment {
             }
         });
         requestVidTrains(0);
+        Utility.setBadgeCount(getContext(), 0);
         return v;
     }
 

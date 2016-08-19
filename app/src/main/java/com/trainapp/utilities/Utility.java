@@ -2,6 +2,8 @@ package com.trainapp.utilities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
@@ -13,7 +15,6 @@ import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Surface;
 import android.view.WindowManager;
-
 import com.google.common.io.Files;
 
 import com.facebook.GraphResponse;
@@ -46,6 +47,8 @@ public class Utility {
     public static final String FILENAME = "video.mp4";
     public static final String UNIQUE_ID_INTENT = "UNIQUE_ID";
     public static final int VIDEO_CAPTURE = 101;
+    public static final String PREFS_NAME = "com.trainapp";
+    public static final String BADGE_COUNT = "BADGE_COUNT";
 
     /**
      * Gets the relative time from now for the time passed in
@@ -170,6 +173,7 @@ public class Utility {
         try {
             data.put("alert", User.getCurrentUser().getName());
             data.put("title", context.getString(R.string.app_name));
+            data.put("badge", "Increment");
             data.put(Video.VIDTRAIN_KEY, vidtrain.getObjectId());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -230,10 +234,6 @@ public class Utility {
 
     public static void updateBadgeCount(Context context, int count) {
         String launcherClassName = getLauncherClassName(context);
-        //TODO - I am manually setting to 100. We need to include the logic here
-        //TODO - If you pass zero then badge will be in invisible mode
-        //count=0;
-        count = 100;
         if (launcherClassName == null) {
             return;
         }
@@ -252,10 +252,22 @@ public class Utility {
         for (ResolveInfo resolveInfo : resolveInfos) {
             String pkgName = resolveInfo.activityInfo.applicationInfo.packageName;
             if (pkgName.equalsIgnoreCase(context.getPackageName())) {
-                String className = resolveInfo.activityInfo.name;
-                return className;
+                return resolveInfo.activityInfo.name;
             }
         }
         return null;
+    }
+
+    public static int getBadgeCount(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        return prefs.getInt(BADGE_COUNT, 0);
+    }
+
+    public static void setBadgeCount(Context context, int count) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        Editor editor = prefs.edit();
+        editor.putInt(BADGE_COUNT, count);
+        editor.apply();
+        updateBadgeCount(context, count);
     }
 }
