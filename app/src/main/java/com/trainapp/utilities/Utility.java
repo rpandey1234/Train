@@ -231,7 +231,7 @@ public class Utility {
     public static void updateBadgeCount(Context context, int count) {
         String launcherClassName = getLauncherClassName(context);
         //TODO - I am manually setting to 100. We need to include the logic here
-        //TODO - If you pass zero then badger will be in invicible mode
+        //TODO - If you pass zero then badge will be in invisible mode
         //count=0;
         count = 100;
         if (launcherClassName == null) {
