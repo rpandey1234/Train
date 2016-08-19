@@ -1,5 +1,7 @@
 package com.trainapp.fragments;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -74,7 +76,7 @@ public class VidTrainListFragment extends Fragment {
             }
         });
         requestVidTrains(0);
-        Utility.setBadgeCount(getContext(), 0);
+        clearNotifications();
         return v;
     }
 
@@ -86,5 +88,12 @@ public class VidTrainListFragment extends Fragment {
 
     public void hideProgressBar() {
         _pbProgressAction.setVisibility(View.GONE);
+    }
+
+    private void clearNotifications() {
+        Utility.setBadgeCount(getContext(), 0);
+        NotificationManager notificationManager =
+                (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
     }
 }
