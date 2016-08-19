@@ -29,8 +29,6 @@ public class Unseen extends ParseObject {
 
     public static final int ALL_SEEN_FLAG = -1;
 
-    public Unseen() {}
-
     public static void addUnseen(VidTrain vidtrain) {
         List<User> collaborators = vidtrain.getCollaborators();
         for (User user : collaborators) {

@@ -3,13 +3,13 @@ package com.trainapp.fragments;
 import android.util.Log;
 import android.view.View;
 
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.trainapp.models.Unseen;
 import com.trainapp.models.User;
 import com.trainapp.models.VidTrain;
 import com.trainapp.networking.VidtrainApplication;
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseQuery;
 
 import java.util.List;
 

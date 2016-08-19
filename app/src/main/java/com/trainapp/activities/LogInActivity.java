@@ -13,14 +13,14 @@ import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphRequest.GraphJSONObjectCallback;
 import com.facebook.GraphResponse;
-import com.trainapp.R;
-import com.trainapp.models.User;
-import com.trainapp.networking.VidtrainApplication;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
+import com.trainapp.R;
+import com.trainapp.models.User;
+import com.trainapp.networking.VidtrainApplication;
 
 import org.json.JSONObject;
 

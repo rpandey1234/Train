@@ -2,13 +2,13 @@ package com.trainapp.models;
 
 import android.util.Log;
 
-import com.trainapp.networking.VidtrainApplication;
-import com.trainapp.utilities.Utility;
 import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.trainapp.networking.VidtrainApplication;
+import com.trainapp.utilities.Utility;
 
 import java.io.File;
 import java.io.Serializable;
@@ -22,8 +22,6 @@ public class VidTrain extends ParseObject implements Serializable {
     public static final String TITLE_KEY = "title";
     public static final String VIDEOS_KEY = "videos";
     public static final String COLLABORATORS = "collaborators";
-
-    public VidTrain() {}
 
     public void setUser(ParseUser user) {
         put(USER_KEY, user);

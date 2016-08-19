@@ -8,9 +8,9 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.trainapp.R;
 import com.trainapp.models.User;
-import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
 

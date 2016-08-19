@@ -3,13 +3,13 @@ package com.trainapp.networking;
 import android.app.Application;
 
 import com.facebook.FacebookSdk;
+import com.parse.Parse;
+import com.parse.ParseFacebookUtils;
+import com.parse.ParseObject;
 import com.trainapp.models.Unseen;
 import com.trainapp.models.User;
 import com.trainapp.models.VidTrain;
 import com.trainapp.models.Video;
-import com.parse.Parse;
-import com.parse.ParseFacebookUtils;
-import com.parse.ParseObject;
 
 /**
  * Database: mongodb://vidtrain:vidtrain@ds017514.mlab.com:17514/vidtrain

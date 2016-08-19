@@ -1,9 +1,9 @@
 package com.trainapp.models;
 
 import com.facebook.GraphResponse;
-import com.trainapp.utilities.Utility;
 import com.parse.ParseClassName;
 import com.parse.ParseUser;
+import com.trainapp.utilities.Utility;
 
 import org.json.JSONException;
 import org.json.JSONObject;

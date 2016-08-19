@@ -11,11 +11,11 @@ import android.widget.CheckedTextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.trainapp.R;
 import com.trainapp.adapters.FriendsAdapter.FriendViewHolder;
 import com.trainapp.models.User;
 import com.trainapp.utilities.Utility;
-import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
 import java.util.List;

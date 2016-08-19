@@ -11,6 +11,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.parse.ParseACL;
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.SaveCallback;
 import com.trainapp.R;
 import com.trainapp.adapters.FriendsAdapter;
 import com.trainapp.models.Unseen;
@@ -20,10 +24,6 @@ import com.trainapp.models.Video;
 import com.trainapp.utilities.FacebookUtility;
 import com.trainapp.utilities.FriendLoaderCallback;
 import com.trainapp.utilities.Utility;
-import com.parse.ParseACL;
-import com.parse.ParseException;
-import com.parse.ParseFile;
-import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
