@@ -54,6 +54,7 @@ public class VideoModel implements Parcelable {
         long timePassed = System.currentTimeMillis() - getCreatedAtTime();
         long timeRemaining = Video.TIME_TO_EXPIRE - timePassed;
         long hours = TimeUnit.MILLISECONDS.toHours(timeRemaining);
+        // TODO: format this better for days left
         return String.format("%d:%02d",
                 hours,
                 TimeUnit.MILLISECONDS.toMinutes(timeRemaining) - TimeUnit.HOURS.toMinutes(hours));
