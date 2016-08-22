@@ -208,7 +208,11 @@ public class VidtrainLandingFragment extends Fragment {
             }
             List<Video> unseenVideos = unseen.getUnseenVideos();
             if (unseenVideos.isEmpty()) {
-                usersAllSeen.add(user);
+                if (Utility.indexOf(usersAllSeen, user) == -1) {
+                    // This shouldn't happen, just a defensive check in case the same user
+                    // shows up twice
+                    usersAllSeen.add(user);
+                }
             } else {
                 Video firstUnseen = unseenVideos.get(0);
                 if (!_vidtrainModel.containsVideo(firstUnseen.getObjectId())) {
