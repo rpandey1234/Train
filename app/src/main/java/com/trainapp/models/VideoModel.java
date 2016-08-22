@@ -1,7 +1,10 @@
 package com.trainapp.models;
 
+import android.content.res.Resources;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.trainapp.R;
 
 import java.util.concurrent.TimeUnit;
 
@@ -50,14 +53,25 @@ public class VideoModel implements Parcelable {
         return _createdAtTime;
     }
 
-    public String getTimeLeft() {
+    public String getTimeLeft(Resources resources) {
         long timePassed = System.currentTimeMillis() - getCreatedAtTime();
         long timeRemaining = Video.TIME_TO_EXPIRE - timePassed;
-        long hours = TimeUnit.MILLISECONDS.toHours(timeRemaining);
-        // TODO: format this better for days left
-        return String.format("%d:%02d",
-                hours,
-                TimeUnit.MILLISECONDS.toMinutes(timeRemaining) - TimeUnit.HOURS.toMinutes(hours));
+        long totalHours = TimeUnit.MILLISECONDS.toHours(timeRemaining);
+
+        int days = (int) TimeUnit.MILLISECONDS.toDays(timeRemaining);
+        int hours = (int) (TimeUnit.MILLISECONDS.toHours(timeRemaining) - TimeUnit.DAYS.toHours(
+                days));
+        int minutes = (int) (TimeUnit.MILLISECONDS.toMinutes(timeRemaining) - TimeUnit.HOURS
+                .toMinutes(totalHours));
+        String daysLeft = resources.getQuantityString(R.plurals.days_plural, days, days);
+        String hoursLeft = resources.getQuantityString(R.plurals.hours_plural, hours, hours);
+        String minLeft = resources.getQuantityString(R.plurals.minutes_plural, minutes, minutes);
+        if (days == 0) {
+            return resources.getString(R.string.time_left_multiple, hoursLeft, minLeft);
+        } else if (days == 1) {
+            return resources.getString(R.string.time_left_multiple, daysLeft, hoursLeft);
+        }
+        return resources.getString(R.string.time_left, daysLeft);
     }
 
     protected VideoModel(Parcel in) {

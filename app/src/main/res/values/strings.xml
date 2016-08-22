@@ -42,4 +42,17 @@
     <string name="not_long_enough">Sorry! That wasn\'t long enough</string>
     <string name="group_size_error">"Sorry! The group limit is %d."</string>
     <string name="time_left">%s left</string>
+    <string name="time_left_multiple">%1$s, %2$s left</string>
+    <plurals name="days_plural">
+        <item quantity="one">%d day</item>
+        <item quantity="other">%d days</item>
+    </plurals>
+    <plurals name="hours_plural">
+        <item quantity="one">%d hour</item>
+        <item quantity="other">%d hours</item>
+    </plurals>
+    <plurals name="minutes_plural">
+        <item quantity="one">%d minute</item>
+        <item quantity="other">%d minutes</item>
+    </plurals>
 </resources>
