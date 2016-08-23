@@ -6,14 +6,16 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.parse.GetCallback;
 import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 import com.trainapp.R;
 import com.trainapp.adapters.FriendsAdapter;
@@ -21,6 +23,7 @@ import com.trainapp.models.Unseen;
 import com.trainapp.models.User;
 import com.trainapp.models.VidTrain;
 import com.trainapp.models.Video;
+import com.trainapp.networking.VidtrainApplication;
 import com.trainapp.utilities.FacebookUtility;
 import com.trainapp.utilities.FriendLoaderCallback;
 import com.trainapp.utilities.Utility;
@@ -83,7 +86,6 @@ public class CreationDetailActivity extends AppCompatActivity {
                 getResources().getString(R.string.working_message),
                 true);
         final Video video = new Video();
-        final VidTrain vidTrain = new VidTrain();
 
         final List<User> collaborators = new ArrayList<>();
         // collaborators is never empty since it always contains the current user
@@ -101,43 +103,75 @@ public class CreationDetailActivity extends AppCompatActivity {
                 video.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
-                        vidTrain.setTitle(titleText);
-                        vidTrain.setUser(user);
-                        ArrayList<Video> videos = new ArrayList<>();
-                        videos.add(video);
-                        ParseACL userAcl = new ParseACL();
-                        for (User user : collaborators) {
-                            userAcl.setReadAccess(user.getObjectId(), true);
-                            userAcl.setWriteAccess(user.getObjectId(), true);
-                        }
-                        vidTrain.setACL(userAcl);
-                        vidTrain.setVideos(videos);
-                        vidTrain.setCollaborators(collaborators);
-                        vidTrain.saveInBackground(new SaveCallback() {
+                        // Check to see if there is already a vidtrain with the same collaborators
+                        ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
+                        query.whereContainsAll(VidTrain.COLLABORATORS, collaborators);
+                        query.whereEqualTo(VidTrain.COLLABORATOR_COUNT, collaborators.size());
+                        query.getFirstInBackground(new GetCallback<VidTrain>() {
                             @Override
-                            public void done(ParseException e) {
-                                video.setVidTrain(vidTrain);
-                                video.saveInBackground();
-                                Unseen.addUnseen(vidTrain);
-                                user.put(User.VIDTRAINS_KEY, user.maybeInitAndAdd(vidTrain));
-                                user.put(User.VIDEOS_KEY, user.maybeInitAndAdd(video));
-                                user.saveInBackground(new SaveCallback() {
-                                    @Override
-                                    public void done(ParseException e) {
-                                        Utility.sendNotification(vidTrain, getBaseContext());
-                                        _progressDialog.dismiss();
-                                        Toast.makeText(getBaseContext(),
-                                                R.string.save_success, Toast.LENGTH_SHORT)
-                                                .show();
-                                        finish();
+                            public void done(VidTrain vidtrain, ParseException e) {
+                                if (e != null) {
+                                    Log.d(VidtrainApplication.TAG,
+                                            "Could not find existing thread: " + e.toString());
+                                    final VidTrain vidTrain = new VidTrain();
+                                    vidTrain.setTitle(titleText);
+                                    vidTrain.setUser(user);
+                                    ArrayList<Video> videos = new ArrayList<>();
+                                    videos.add(video);
+                                    ParseACL userAcl = new ParseACL();
+                                    for (User user : collaborators) {
+                                        userAcl.setReadAccess(user.getObjectId(), true);
+                                        userAcl.setWriteAccess(user.getObjectId(), true);
                                     }
-                                });
+                                    vidTrain.setACL(userAcl);
+                                    vidTrain.setVideos(videos);
+                                    vidTrain.setCollaborators(collaborators);
+                                    vidTrain.setCollaboratorCount(collaborators.size());
+                                    vidTrain.saveInBackground(new SaveCallback() {
+                                        @Override
+                                        public void done(ParseException e) {
+                                            video.setVidTrain(vidTrain);
+                                            video.saveInBackground();
+                                            user.put(User.VIDTRAINS_KEY, user.maybeInitAndAdd(vidTrain));
+                                            user.put(User.VIDEOS_KEY, user.maybeInitAndAdd(video));
+                                            user.saveInBackground(new SaveCallback() {
+                                                @Override
+                                                public void done(ParseException e) {
+                                                    videoSaved(vidTrain);
+                                                }
+                                            });
+                                        }
+                                    });
+                                    return;
+                                }
+                                updateVidtrain(vidtrain, video);
                             }
                         });
                     }
                 });
             }
         });
+    }
+
+    private void updateVidtrain(final VidTrain vidtrain, Video video) {
+        Log.d(VidtrainApplication.TAG, "Found existing vidtrain, title: " + vidtrain.getTitle());
+        // update to new title
+        vidtrain.setTitle(_etTitle.getText().toString());
+        vidtrain.setVideos(vidtrain.maybeInitAndAdd(video));
+        vidtrain.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                videoSaved(vidtrain);
+            }
+        });
+    }
+
+    private void videoSaved(VidTrain vidtrain) {
+        Utility.sendNotification(vidtrain, getBaseContext());
+        Unseen.addUnseen(vidtrain);
+        _progressDialog.dismiss();
+        Toast.makeText(getBaseContext(), R.string.save_success, Toast.LENGTH_SHORT).show();
+        finish();
     }
 
     @Override

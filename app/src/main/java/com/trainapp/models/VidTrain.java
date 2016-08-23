@@ -22,6 +22,7 @@ public class VidTrain extends ParseObject implements Serializable {
     public static final String TITLE_KEY = "title";
     public static final String VIDEOS_KEY = "videos";
     public static final String COLLABORATORS = "collaborators";
+    public static final String COLLABORATOR_COUNT = "collaboratorCount";
 
     public void setUser(ParseUser user) {
         put(USER_KEY, user);
@@ -57,6 +58,10 @@ public class VidTrain extends ParseObject implements Serializable {
 
     public void setCollaborators(List<User> collaborators) {
         put(COLLABORATORS, collaborators);
+    }
+
+    public void setCollaboratorCount(int count) {
+        put(COLLABORATOR_COUNT, count);
     }
 
     public List<User> getCollaborators() {
