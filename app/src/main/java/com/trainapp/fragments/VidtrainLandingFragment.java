@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +29,7 @@ import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 import com.trainapp.R;
 import com.trainapp.activities.VideoCaptureActivity;
+import com.trainapp.adapters.MessagesAdapter;
 import com.trainapp.models.Unseen;
 import com.trainapp.models.User;
 import com.trainapp.models.VidTrain;
@@ -52,11 +55,12 @@ import butterknife.OnClick;
  */
 public class VidtrainLandingFragment extends Fragment {
 
-    @Bind(R.id.scrollView) ScrollView _scrollView;
+//    @Bind(R.id.scrollView) ScrollView _scrollView;
     @Bind(R.id.tvVideoCount) TextView _tvVideoCount;
     @Bind(R.id.tvTitle) TextView _tvTitle;
-    @Bind(R.id.previewContainer) LinearLayout _previewContainer;
-    @Bind(R.id.childFragment) FrameLayout _childFragment;
+//    @Bind(R.id.previewContainer) LinearLayout _previewContainer;
+    @Bind(R.id.rvMessages) RecyclerView _rvMessages;
+    public @Bind(R.id.childFragment) FrameLayout _childFragment;
     @Bind(R.id.videosExpired) TextView _videosExpired;
 
     public static final int MAX_VIDEOS_SHOWN = 100;
@@ -67,9 +71,12 @@ public class VidtrainLandingFragment extends Fragment {
     private ProgressDialog _progress;
     private String _videoPath;
     private VidtrainModel _vidtrainModel;
-    private List<VideoPreview> _videoPreviews;
+//    private List<VideoPreview> _videoPreviews;
     private VideoPageFragment _videoPageFragment;
-    private boolean _videoPlaying;
+    public boolean _videoPlaying;
+
+    private MessagesAdapter mMessagesAdapter;
+    private LinearLayoutManager mLinearLayoutManager;
 
     public static Fragment newInstance(VidTrain vidtrain) {
         VidtrainLandingFragment vidtrainLandingFragment = new VidtrainLandingFragment();
@@ -107,28 +114,32 @@ public class VidtrainLandingFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
         _vidtrainModel = arguments.getParcelable(VIDTRAIN_MODEL_KEY);
-        _videoPreviews = new ArrayList<>();
-        String currentUserId = User.getCurrentUser().getObjectId();
-        for (final VideoModel video : _vidtrainModel.getVideoModelsToShow()) {
-            VideoPreview videoPreview = new VideoPreview(getContext());
-            videoPreview.setFromCurrentUser(currentUserId.equals(video.getUserId()));
-            videoPreview.setOnThumbnailClick(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    System.out.println("Landing Fragment: clicked on video preview");
-                    _videoPageFragment = VideoPageFragment.newInstance(video);
-                    // TODO: opening animation
-                    getChildFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.childFragment, _videoPageFragment)
-                            .addToBackStack(null)
-                            .commit();
-                    _videoPlaying = true;
-                    _childFragment.setVisibility(View.VISIBLE);
-                }
-            });
-            _videoPreviews.add(videoPreview);
-        }
+//        _videoPreviews = new ArrayList<>();
+//        String currentUserId = User.getCurrentUser().getObjectId();
+//        for (final VideoModel video : _vidtrainModel.getVideoModelsToShow()) {
+//            VideoPreview videoPreview = new VideoPreview(getContext());
+//            videoPreview.setFromCurrentUser(currentUserId.equals(video.getUserId()));
+//            videoPreview.setOnThumbnailClick(new OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    System.out.println("Landing Fragment: clicked on video preview");
+//                    _videoPageFragment = VideoPageFragment.newInstance(video);
+//                    // TODO: opening animation
+//                    getChildFragmentManager()
+//                            .beginTransaction()
+//                            .replace(R.id.childFragment, _videoPageFragment)
+//                            .addToBackStack(null)
+//                            .commit();
+//                    _videoPlaying = true;
+//                    _childFragment.setVisibility(View.VISIBLE);
+//                }
+//            });
+//            _videoPreviews.add(videoPreview);
+//        }
+
+        mMessagesAdapter = new MessagesAdapter(getContext(), _vidtrainModel.getVideoModelsToShow(), this);
+        mLinearLayoutManager =  new LinearLayoutManager(getContext());
+
     }
 
     @Nullable
@@ -137,44 +148,42 @@ public class VidtrainLandingFragment extends Fragment {
             @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.landing_fragment, container, false);
         ButterKnife.bind(this, v);
+        _rvMessages.setAdapter(mMessagesAdapter);
+        _rvMessages.setLayoutManager(mLinearLayoutManager);
         _tvTitle.setText(_vidtrainModel.getTitle());
         _tvVideoCount.setText(String.valueOf(_vidtrainModel.getVideoCount()));
         final List<VideoModel> videosShown = _vidtrainModel.getVideoModelsToShow();
         int size = videosShown.size();
-        for (int i = size - 1; i >= 0; i--) {
-            VideoModel video = videosShown.get(i);
-            _videoPreviews.get(i).bind(video);
-            _previewContainer.addView(_videoPreviews.get(i));
-        }
         scrollToBottom();
 
         if (size > 0) {
-            ParseQuery<Unseen> query = ParseQuery.getQuery("Unseen");
-            // need to wrap in vidtrain object because pointer field needs a pointer value
-            VidTrain vidtrain = new VidTrain();
-            vidtrain.setObjectId(_vidtrainModel.getId());
-            query.whereEqualTo(Unseen.VIDTRAIN_KEY, vidtrain);
-            query.include(Unseen.USER_KEY);
-            query.include(Unseen.VIDEOS_KEY);
-            query.findInBackground(new FindCallback<Unseen>() {
-                @Override
-                public void done(List<Unseen> unseens, ParseException e) {
-                    if (e != null) {
-                        Log.d(VidtrainApplication.TAG,
-                                "Could not get unseen data: " + e.toString());
-                        return;
-                    }
-                    Map<String, List<User>> unseenMap = generateUnseenMap(unseens);
-                    _videoPreviews.get(0).addSeenUsers(unseenMap.get(USERS_ALL_SEEN));
-                    for (int i = 0; i < _videoPreviews.size(); i++) {
-                        VideoPreview videoPreview = _videoPreviews.get(i);
-                        videoPreview.addUnseenUsers(unseenMap.get(videosShown.get(i).getVideoId()));
-                    }
-                    _videoPreviews.get(_videoPreviews.size() - 1)
-                            .addUnseenUsers(unseenMap.get(USERS_NONE_SEEN));
-                    scrollToBottom();
-                }
-            });
+//            ParseQuery<Unseen> querry = ParseQuery.getQuery("Unseen");
+//            // need to wrap in vidtrain object because pointer field needs a pointer value
+//            VidTrain vidtrain = new VidTrain();
+//            vidtrain.setObjectId(_vidtrainModel.getId());
+//            query.whereEqualTo(Unseen.VIDTRAIN_KEY, vidtrain);
+//            query.include(Unseen.USER_KEY);
+//            query.include(Unseen.VIDEOS_KEY);
+//            query.findInBackground(new FindCallback<Unseen>() {
+//                @Override
+//                public void done(List<Unseen> unseens, ParseException e) {
+//                    if (e != null) {
+//                        Log.d(VidtrainApplication.TAG,
+//                                "Could not get unseen data: " + e.toString());
+//                        return;
+//                    }
+//                    Map<String, List<User>> unseenMap = generateUnseenMap(unseens);
+//                    mMessagesAdapter.
+//                    _videoPreviews.get(0).addSeenUsers(unseenMap.get(USERS_ALL_SEEN));
+//                    for (int i = 0; i < _videoPreviews.size(); i++) {
+//                        VideoPreview videoPreview = _videoPreviews.get(i);
+//                        videoPreview.addUnseenUsers(unseenMap.get(videosShown.get(i).getVideoId()));
+//                    }
+//                    _videoPreviews.get(_videoPreviews.size() - 1)
+//                            .addUnseenUsers(unseenMap.get(USERS_NONE_SEEN));
+//                    scrollToBottom();
+//                }
+//            });
         } else {
             _videosExpired.setVisibility(View.VISIBLE);
         }
@@ -183,12 +192,7 @@ public class VidtrainLandingFragment extends Fragment {
 
     private void scrollToBottom() {
         // Scroll to the bottom
-        _scrollView.post(new Runnable() {
-            @Override
-            public void run() {
-                _scrollView.fullScroll(ScrollView.FOCUS_DOWN);
-            }
-        });
+        mLinearLayoutManager.scrollToPosition(mMessagesAdapter.getItemCount());
     }
 
     /**
