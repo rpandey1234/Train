@@ -70,8 +70,8 @@ public class VidtrainLandingFragment extends Fragment {
     private VideoPageFragment _videoPageFragment;
     public boolean _videoPlaying;
 
-    private MessagesAdapter mMessagesAdapter;
-    private LinearLayoutManager mLinearLayoutManager;
+    private MessagesAdapter _messagesAdapter;
+    private LinearLayoutManager _linearLayoutManager;
 
     public static Fragment newInstance(VidTrain vidtrain) {
         VidtrainLandingFragment vidtrainLandingFragment = new VidtrainLandingFragment();
@@ -111,9 +111,9 @@ public class VidtrainLandingFragment extends Fragment {
         _vidtrainModel = arguments.getParcelable(VIDTRAIN_MODEL_KEY);
 
         setUpVideoMessages();
-        mMessagesAdapter = new MessagesAdapter(getContext(), _vidtrainMessages, this);
-        mLinearLayoutManager = new LinearLayoutManager(getContext());
-        mLinearLayoutManager.setReverseLayout(true);
+        _messagesAdapter = new MessagesAdapter(getContext(), _vidtrainMessages, this);
+        _linearLayoutManager = new LinearLayoutManager(getContext());
+        _linearLayoutManager.setReverseLayout(true);
 
     }
 
@@ -129,8 +129,8 @@ public class VidtrainLandingFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.landing_fragment, container, false);
         ButterKnife.bind(this, v);
-        _rvMessages.setAdapter(mMessagesAdapter);
-        _rvMessages.setLayoutManager(mLinearLayoutManager);
+        _rvMessages.setAdapter(_messagesAdapter);
+        _rvMessages.setLayoutManager(_linearLayoutManager);
         _tvTitle.setText(_vidtrainModel.getTitle());
         _tvVideoCount.setText(String.valueOf(_vidtrainModel.getVideoCount()));
         setUpSeenAndUnseenUsers();
@@ -158,14 +158,14 @@ public class VidtrainLandingFragment extends Fragment {
                     }
                     Map<String, List<User>> unseenMap = generateUnseenMap(unseens);
 
-                    _vidtrainMessages.get(0).set_seenUsers(unseenMap.get(USERS_ALL_SEEN));
+                    _vidtrainMessages.get(0).setSeenUsers(unseenMap.get(USERS_ALL_SEEN));
                     for (int i = 0; i < _vidtrainMessages.size(); i++) {
                         VidtrainMessage vidtrainMessage = _vidtrainMessages.get(i);
-                        vidtrainMessage.set_unSeenUsers(unseenMap.get(videosShown.get(i).getVideoId()));
+                        vidtrainMessage.setUnseenUsers(unseenMap.get(videosShown.get(i).getVideoId()));
                     }
                     _vidtrainMessages.get(_vidtrainMessages.size() - 1)
-                            .set_unSeenUsers(unseenMap.get(USERS_NONE_SEEN));
-                    mMessagesAdapter.notifyDataSetChanged();
+                            .setUnseenUsers(unseenMap.get(USERS_NONE_SEEN));
+                    _messagesAdapter.notifyDataSetChanged();
                 }
             });
         } else {
@@ -175,7 +175,7 @@ public class VidtrainLandingFragment extends Fragment {
 
     private void scrollToBottom() {
         // Scroll to the bottom
-        mLinearLayoutManager.scrollToPosition(0);
+        _linearLayoutManager.scrollToPosition(0);
     }
 
     /**
@@ -329,7 +329,7 @@ public class VidtrainLandingFragment extends Fragment {
                                                 List<VideoModel> videoModelsToShow = _vidtrainModel.getVideoModelsToShow();
                                                 //Reload videos
                                                 setUpVideoMessages();
-                                                mMessagesAdapter.notifyDataSetChanged();
+                                                _messagesAdapter.notifyDataSetChanged();
                                                 setUpSeenAndUnseenUsers();
                                             }
                                         });

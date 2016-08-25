@@ -3,18 +3,18 @@ package com.trainapp.models;
 import java.util.List;
 
 /**
- * Created by franklinho on 8/24/16.
+ * Class that contains a VideoModel as well as a list of seen and unseen users. This is used to construct the views of the video messages in the VidtrainLandingFragment's recyclerview
  */
 public class VidtrainMessage {
     private List<User> _unSeenUsers;
     private List<User> _seenUsers;
 
-    public VideoModel get_videoModel() {
+    public VideoModel getVideoModel() {
         return _videoModel;
     }
 
-    public void set_videoModel(VideoModel _videoModel) {
-        this._videoModel = _videoModel;
+    public void setVideoModel(VideoModel videoModel) {
+        _videoModel = videoModel;
     }
 
     private VideoModel _videoModel;
@@ -23,19 +23,19 @@ public class VidtrainMessage {
         _videoModel = videoModel;
     }
 
-    public List<User> get_unSeenUsers() {
+    public List<User> getUnseenUsers() {
         return _unSeenUsers;
     }
 
-    public void set_unSeenUsers(List<User> _unSeenUsers) {
-        this._unSeenUsers = _unSeenUsers;
+    public void setUnseenUsers(List<User> unseenUsers) {
+        this._unSeenUsers = unseenUsers;
     }
 
-    public List<User> get_seenUsers() {
+    public List<User> getSeenUsers() {
         return _seenUsers;
     }
 
-    public void set_seenUsers(List<User> _seenUsers) {
-        this._seenUsers = _seenUsers;
+    public void setSeenUsers(List<User> seenUsers) {
+        this._seenUsers = seenUsers;
     }
 }
