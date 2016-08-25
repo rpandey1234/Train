@@ -114,7 +114,6 @@ public class VidtrainLandingFragment extends Fragment {
         _messagesAdapter = new MessagesAdapter(getContext(), _vidtrainMessages, this);
         _linearLayoutManager = new LinearLayoutManager(getContext());
         _linearLayoutManager.setReverseLayout(true);
-
     }
 
     private void setUpVideoMessages() {
