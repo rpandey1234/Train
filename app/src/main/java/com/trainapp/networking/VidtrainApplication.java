@@ -3,9 +3,11 @@ package com.trainapp.networking;
 import android.app.Application;
 
 import com.facebook.FacebookSdk;
+import com.facebook.stetho.Stetho;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseObject;
+import com.parse.interceptors.ParseStethoInterceptor;
 import com.trainapp.models.Unseen;
 import com.trainapp.models.User;
 import com.trainapp.models.VidTrain;
@@ -27,8 +29,11 @@ public class VidtrainApplication extends Application {
         ParseObject.registerSubclass(VidTrain.class);
         ParseObject.registerSubclass(Unseen.class);
 
-        //Normal Parse Configuration
+        Stetho.initializeWithDefaults(this);
+
+        // Normal Parse Configuration
         FacebookSdk.sdkInitialize(getApplicationContext());
+        Parse.addParseNetworkInterceptor(new ParseStethoInterceptor());
         Parse.initialize(this, "0y0WMVmGrDXEfgMgVNzA32ryMuM2gdanfMhH0NMY",
                 "MnKZ0GQhxkAblowrw4xVzftapFBT27yeEt4RKd7b");
         ParseFacebookUtils.initialize(getApplicationContext());
