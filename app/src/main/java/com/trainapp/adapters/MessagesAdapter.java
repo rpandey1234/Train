@@ -1,14 +1,10 @@
 package com.trainapp.adapters;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.trainapp.R;
 import com.trainapp.adapters.holders.MessagesViewHolder;
@@ -16,27 +12,22 @@ import com.trainapp.fragments.VideoPageFragment;
 import com.trainapp.fragments.VidtrainLandingFragment;
 import com.trainapp.models.User;
 import com.trainapp.models.VideoModel;
+import com.trainapp.models.VidtrainMessage;
 import com.trainapp.ui.VideoPreview;
 
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-
-/**
- * Created by franklinho on 8/23/16.
- */
 public class MessagesAdapter extends
         RecyclerView.Adapter<MessagesViewHolder> {
 
-    private List<VideoModel> mVideoModels;
-    private Context mContext;
-    private VidtrainLandingFragment vidtrainLandingFragment;
+    private List<VidtrainMessage> _vidtrainMessages;
+    private Context _context;
+    private VidtrainLandingFragment _vidtrainLandingFragment;
 
-    public MessagesAdapter(Context context, List<VideoModel> videoModels, VidtrainLandingFragment fragment) {
-        mVideoModels = videoModels;
-        mContext = context;
-        vidtrainLandingFragment = fragment;
+    public MessagesAdapter(Context context, List<VidtrainMessage> vidtrainMessages, VidtrainLandingFragment fragment) {
+        _vidtrainMessages = vidtrainMessages;
+        _context = context;
+        _vidtrainLandingFragment = fragment;
     }
 
     @Override
@@ -54,32 +45,39 @@ public class MessagesAdapter extends
 
     @Override
     public void onBindViewHolder(final MessagesViewHolder holder, int position) {
-        final VideoModel video = mVideoModels.get(position);
+        VidtrainMessage vidtrainMessage = _vidtrainMessages.get(position);
+        final VideoModel video = vidtrainMessage.get_videoModel();
 
         String currentUserId = User.getCurrentUser().getObjectId();
-        holder.videoPreview.setFromCurrentUser(currentUserId.equals(video.getUserId()));
-        holder.videoPreview.setOnThumbnailClick(new View.OnClickListener() {
+        holder._videoPreview.setFromCurrentUser(currentUserId.equals(video.getUserId()));
+        holder._videoPreview.setOnThumbnailClick(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 System.out.println("Landing Fragment: clicked on video preview");
                 VideoPageFragment _videoPageFragment = VideoPageFragment.newInstance(video);
                 // TODO: opening animation
-                vidtrainLandingFragment.getChildFragmentManager()
+                _vidtrainLandingFragment.getChildFragmentManager()
                         .beginTransaction()
                         .replace(R.id.childFragment, _videoPageFragment)
                         .addToBackStack(null)
                         .commit();
-                vidtrainLandingFragment._videoPlaying = true;
-                vidtrainLandingFragment._childFragment.setVisibility(View.VISIBLE);
+                _vidtrainLandingFragment._videoPlaying = true;
+                _vidtrainLandingFragment._childFragment.setVisibility(View.VISIBLE);
             }
         });
-        holder.videoPreview.bind(video);
+        holder._videoPreview.bind(video);
 
+        if (vidtrainMessage.get_seenUsers() != null) {
+            holder._videoPreview.addSeenUsers(vidtrainMessage.get_seenUsers());
+        }
+        if (vidtrainMessage.get_unSeenUsers() != null) {
+            holder._videoPreview.addUnseenUsers(vidtrainMessage.get_seenUsers());
+        }
 
     }
 
     @Override
     public int getItemCount() {
-        return mVideoModels.size();
+        return _vidtrainMessages.size();
     }
 }
