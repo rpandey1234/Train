@@ -1,6 +1,7 @@
 package com.trainapp.activities;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -43,6 +44,7 @@ public class CreationDetailActivity extends AppCompatActivity {
     private ProgressDialog _progressDialog;
     private String _videoPath;
     private FriendsAdapter _friendsAdapter;
+    private Context _context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,7 @@ public class CreationDetailActivity extends AppCompatActivity {
             }
         });
         _videoPath = getIntent().getStringExtra(MainActivity.VIDEO_PATH);
+        _context = this;
     }
 
     @OnClick(R.id.btnSubmit)
@@ -112,7 +115,7 @@ public class CreationDetailActivity extends AppCompatActivity {
                             public void done(VidTrain vidtrain, ParseException e) {
                                 if (e != null) {
                                     Log.d(VidtrainApplication.TAG,
-                                            "Could not find existing thread: " + e.toString());
+                                            "Could not find existing convo: " + e.toString());
                                     final VidTrain vidTrain = new VidTrain();
                                     vidTrain.setTitle(titleText);
                                     vidTrain.setUser(user);
@@ -137,7 +140,7 @@ public class CreationDetailActivity extends AppCompatActivity {
                                             user.saveInBackground(new SaveCallback() {
                                                 @Override
                                                 public void done(ParseException e) {
-                                                    videoSaved(vidTrain);
+                                                    videoSaved(vidTrain, R.string.save_success);
                                                 }
                                             });
                                         }
@@ -154,23 +157,24 @@ public class CreationDetailActivity extends AppCompatActivity {
     }
 
     private void updateVidtrain(final VidTrain vidtrain, Video video) {
-        Log.d(VidtrainApplication.TAG, "Found existing vidtrain, title: " + vidtrain.getTitle());
+        Log.d(VidtrainApplication.TAG, "Found existing convo, title: " + vidtrain.getTitle());
         // update to new title
         vidtrain.setTitle(_etTitle.getText().toString());
         vidtrain.setVideos(vidtrain.maybeInitAndAdd(video));
         vidtrain.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                videoSaved(vidtrain);
+                videoSaved(vidtrain, R.string.update_success);
+                Utility.goVidtrainDetail(_context, vidtrain.getObjectId());
             }
         });
     }
 
-    private void videoSaved(VidTrain vidtrain) {
-        Utility.sendNotification(vidtrain, getBaseContext());
+    private void videoSaved(VidTrain vidtrain, int toastMessage) {
+        Utility.sendNotification(vidtrain, _context);
         Unseen.addUnseen(vidtrain);
         _progressDialog.dismiss();
-        Toast.makeText(getBaseContext(), R.string.save_success, Toast.LENGTH_SHORT).show();
+        Toast.makeText(_context, toastMessage, Toast.LENGTH_SHORT).show();
         finish();
     }
 

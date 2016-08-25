@@ -37,6 +37,7 @@
     <string name="add_friends_instructions">Create a group:</string>
     <string name="logout_confirm">Are you sure you want to logout?</string>
     <string name="save_success">Successfully saved Train!</string>
+    <string name="update_success">Successfully updated Train!</string>
     <string name="add_success">Successfully added video!</string>
     <string name="videos_expired">All these videos have expired!</string>
     <string name="not_long_enough">Sorry! That wasn\'t long enough</string>
