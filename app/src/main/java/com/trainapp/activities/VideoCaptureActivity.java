@@ -246,6 +246,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
     protected void onResume() {
         super.onResume();
         if(mCamera == null){
+            _preview.removeAllViews(); // We need to remove the preview
             initializeCamera();
         }
     }
