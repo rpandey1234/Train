@@ -13,11 +13,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +35,6 @@ import com.trainapp.models.VideoModel;
 import com.trainapp.models.VidtrainMessage;
 import com.trainapp.models.VidtrainModel;
 import com.trainapp.networking.VidtrainApplication;
-import com.trainapp.ui.VideoPreview;
 import com.trainapp.utilities.PermissionHelper;
 import com.trainapp.utilities.Utility;
 
