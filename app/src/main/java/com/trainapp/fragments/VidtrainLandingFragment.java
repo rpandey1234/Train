@@ -325,7 +325,6 @@ public class VidtrainLandingFragment extends Fragment {
                                                         Toast.LENGTH_SHORT).show();
                                                 //Reset Vidtrain Model
                                                 _vidtrainModel = new VidtrainModel(vidtrain, vidtrain.getVideosCount());
-                                                List<VideoModel> videoModelsToShow = _vidtrainModel.getVideoModelsToShow();
                                                 //Reload videos
                                                 setUpVideoMessages();
                                                 _messagesAdapter.notifyDataSetChanged();

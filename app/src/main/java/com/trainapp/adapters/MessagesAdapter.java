@@ -47,6 +47,8 @@ public class MessagesAdapter extends
 
     @Override
     public void onBindViewHolder(final MessagesViewHolder holder, int position) {
+        holder._videoPreview.prepareForReuse();
+
         VidtrainMessage vidtrainMessage = _vidtrainMessages.get(position);
         final VideoModel video = vidtrainMessage.getVideoModel();
 

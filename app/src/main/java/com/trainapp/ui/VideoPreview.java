@@ -73,6 +73,11 @@ public class VideoPreview extends FrameLayout {
         }
     }
 
+    public void removeUnseenUsers() {
+        _usersUnseen.removeAllViews();
+        _usersSeen.invalidate();
+    }
+
     public void addSeenUsers(List<User> users) {
         if (users == null) {
             return;
@@ -90,6 +95,11 @@ public class VideoPreview extends FrameLayout {
         }
     }
 
+    public void removeSeenUsers() {
+        _usersSeen.removeAllViews();
+        _usersSeen.invalidate();
+    }
+
     public void setFromCurrentUser(boolean fromCurrentUser) {
         RelativeLayout.LayoutParams layoutIvThumbnail =
                 (RelativeLayout.LayoutParams) _ivThumbnail.getLayoutParams();
@@ -105,16 +115,24 @@ public class VideoPreview extends FrameLayout {
             // remove existing rule
             layoutIvThumbnail.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
             layoutTimeLeft.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
-
-            layoutSeen.addRule(RelativeLayout.LEFT_OF, R.id.ivThumbnail);
-            layoutSeen.addRule(RelativeLayout.RIGHT_OF, 0);
-
-            layoutUnseen.addRule(RelativeLayout.LEFT_OF, R.id.ivThumbnail);
-            layoutUnseen.addRule(RelativeLayout.RIGHT_OF, 0);
+        } else {
+            layoutIvThumbnail.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            layoutTimeLeft.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            // remove existing rule
+            layoutIvThumbnail.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
+            layoutTimeLeft.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
         }
     }
 
     public void setOnThumbnailClick(OnClickListener onThumbnailClick) {
         _ivThumbnail.setOnClickListener(onThumbnailClick);
+    }
+
+    public void prepareForReuse() {
+        _ivThumbnail.setImageResource(0);
+        _ivUserPic.setImageResource(0);
+        _timeLeft.setText("");
+        removeSeenUsers();
+        removeUnseenUsers();
     }
 }
