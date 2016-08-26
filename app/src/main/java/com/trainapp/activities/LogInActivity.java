@@ -18,6 +18,7 @@ import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
+import com.trainapp.BuildConfig;
 import com.trainapp.R;
 import com.trainapp.models.User;
 import com.trainapp.networking.VidtrainApplication;
@@ -39,7 +40,10 @@ public class LogInActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
+        if (!BuildConfig.DEBUG) {
+            // only report crashes that occur in the release app
+            Fabric.with(this, new Crashlytics());
+        }
         setContentView(R.layout.activity_log_in);
         ButterKnife.bind(this);
         User currentUser = User.getCurrentUser();
@@ -113,7 +117,9 @@ public class LogInActivity extends AppCompatActivity {
     private void logUser() {
         User currentUser = User.getCurrentUser();
         assert currentUser != null;
-        Crashlytics.setUserName(currentUser.getName());
+        if (!BuildConfig.DEBUG) {
+            Crashlytics.setUserName(currentUser.getName());
+        }
     }
 
     public void showProgressBar() {
