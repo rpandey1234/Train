@@ -2,6 +2,7 @@ package com.trainapp.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.media.CamcorderProfile;
@@ -11,6 +12,7 @@ import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -107,8 +109,9 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
                 // Camera is available and unlocked, MediaRecorder is prepared,
                 // now you can start recording
                 _mediaRecorder.start();
-                _captureButton.setImageDrawable(getResources().getDrawable(
-                        R.drawable.icon_square_white));
+                Drawable drawable = ContextCompat.getDrawable(getApplicationContext(),
+                        R.drawable.icon_square_white);
+                _captureButton.setImageDrawable(drawable);
                 // Start the initial runnable task by posting through the handler
                 _handler.post(_runnableCode);
                 // inform the user that recording has started

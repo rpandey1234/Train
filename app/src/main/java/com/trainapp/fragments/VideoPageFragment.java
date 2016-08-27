@@ -2,6 +2,7 @@ package com.trainapp.fragments;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -167,8 +169,9 @@ public class VideoPageFragment extends Fragment {
     private void updateSound() {
         // Reference: https://thenounproject.com/search/?q=sound&i=369924,
         // https://thenounproject.com/search/?q=sound&i=369926
-        _btnSound.setBackground(getResources()
-                .getDrawable(_shouldPlaySound ? R.drawable.sound_on : R.drawable.sound_off));
+        Drawable drawable = ContextCompat.getDrawable(getContext(),
+                _shouldPlaySound ? R.drawable.sound_on : R.drawable.sound_off);
+        _btnSound.setBackground(drawable);
         if (_mediaPlayer == null) {
             return;
         }

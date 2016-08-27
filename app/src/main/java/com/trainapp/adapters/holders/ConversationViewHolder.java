@@ -1,6 +1,7 @@
 package com.trainapp.adapters.holders;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -43,7 +44,7 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements O
         if (numUnseen > 0) {
             colorId = R.color.cardBackground;
         }
-        _cardView.setCardBackgroundColor(_context.getResources().getColor(colorId));
+        _cardView.setCardBackgroundColor(ContextCompat.getColor(_context, colorId));
         _vidTrain = vidTrain;
         _conversationTitle.setText(vidTrain.getTitle());
         _timestamp.setText(Utility.getRelativeTime(vidTrain.getUpdatedAt().getTime()));
