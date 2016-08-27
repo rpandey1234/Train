@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -28,6 +29,7 @@ import com.trainapp.utilities.Utility;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Fragment which holds a single video from a vidtrain.
@@ -41,6 +43,7 @@ public class VideoPageFragment extends Fragment {
     @Bind(R.id.tvTime) TextView _tvTime;
     @Bind(R.id.videoInformation) RelativeLayout _videoInformation;
     @Bind(R.id.timer) View _timerView;
+    @Bind(R.id.btnSound) Button _btnSound;
 
     public static final String VIDEO_URL = "VIDEO_URL";
     public static final String VIDEO_THUMBNAIL_URL = "VIDEO_THUMBNAIL_URL";
@@ -62,6 +65,8 @@ public class VideoPageFragment extends Fragment {
     private int _width;
     private boolean _isVideoPrepared;
     private boolean _fromLandingFragment;
+    private boolean _shouldPlaySound;
+    private MediaPlayer _mediaPlayer;
 
     public static VideoPageFragment newInstance(Video video) {
         VideoPageFragment videoPageFragment = new VideoPageFragment();
@@ -100,6 +105,7 @@ public class VideoPageFragment extends Fragment {
             _videoTime = arguments.getString(VIDEO_TIME);
             _userUrl = arguments.getString(VIDEO_USER_URL);
             _fromLandingFragment = arguments.getBoolean(FROM_LANDING_FRAGMENT);
+            _shouldPlaySound = _fromLandingFragment;
         }
     }
 
@@ -116,10 +122,13 @@ public class VideoPageFragment extends Fragment {
         _tvTime.setText(_videoTime);
         Glide.with(getContext()).load(_userUrl).into(_ivAuthor);
 
+        updateSound();
         _isVideoPrepared = false;
         _videoView.setOnPreparedListener(new OnPreparedListener() {
             @Override
             public void onPrepared(final MediaPlayer mp) {
+                _mediaPlayer = mp;
+                updateSound();
                 _ivThumbnail.setVisibility(View.GONE);
                 _progressBar.setVisibility(View.GONE);
                 final int duration = mp.getDuration();
@@ -153,6 +162,24 @@ public class VideoPageFragment extends Fragment {
             }
         });
         return v;
+    }
+
+    private void updateSound() {
+        // Reference: https://thenounproject.com/search/?q=sound&i=369924,
+        // https://thenounproject.com/search/?q=sound&i=369926
+        _btnSound.setBackground(getResources()
+                .getDrawable(_shouldPlaySound ? R.drawable.sound_on : R.drawable.sound_off));
+        if (_mediaPlayer == null) {
+            return;
+        }
+        int volume = _shouldPlaySound ? 1 : 0;
+        _mediaPlayer.setVolume(volume, volume);
+    }
+
+    @OnClick(R.id.btnSound)
+    public void onSoundButtonClicked() {
+        _shouldPlaySound = !_shouldPlaySound;
+        updateSound();
     }
 
     @Override
