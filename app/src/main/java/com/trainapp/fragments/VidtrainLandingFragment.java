@@ -55,7 +55,7 @@ public class VidtrainLandingFragment extends Fragment {
     @Bind(R.id.tvVideoCount) TextView _tvVideoCount;
     @Bind(R.id.tvTitle) TextView _tvTitle;
     @Bind(R.id.rvMessages) RecyclerView _rvMessages;
-    public @Bind(R.id.childFragment) FrameLayout _childFragment;
+    @Bind(R.id.childFragment) FrameLayout _childFragment;
     @Bind(R.id.videosExpired) TextView _videosExpired;
 
     public static final int MAX_VIDEOS_SHOWN = 100;
@@ -66,8 +66,8 @@ public class VidtrainLandingFragment extends Fragment {
     private ProgressDialog _progress;
     private String _videoPath;
     private VidtrainModel _vidtrainModel;
-    private List<VidtrainMessage> _vidtrainMessages = new ArrayList<>();
-    private VideoPageFragment _videoPageFragment;
+    private List<VidtrainMessage> _vidtrainMessages;
+    public VideoPageFragment _videoPageFragment;
     public boolean _videoPlaying;
 
     private MessagesAdapter _messagesAdapter;
@@ -100,6 +100,10 @@ public class VidtrainLandingFragment extends Fragment {
         // TODO: closing animation
     }
 
+    public void setChildFragmentVisibility(int visibility) {
+        _childFragment.setVisibility(visibility);
+    }
+
     public boolean isVideoPlaying() {
         return _videoPlaying;
     }
@@ -109,7 +113,7 @@ public class VidtrainLandingFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
         _vidtrainModel = arguments.getParcelable(VIDTRAIN_MODEL_KEY);
-
+        _vidtrainMessages = new ArrayList<>();
         setUpVideoMessages();
         _messagesAdapter = new MessagesAdapter(getContext(), _vidtrainMessages, this);
         _linearLayoutManager = new LinearLayoutManager(getContext());
@@ -117,15 +121,17 @@ public class VidtrainLandingFragment extends Fragment {
     }
 
     private void setUpVideoMessages() {
+        // Do not create a new array list, otherwise the adapter will not get updates
         _vidtrainMessages.clear();
-        for (final VideoModel video : _vidtrainModel.getVideoModelsToShow()) {
+        for (VideoModel video : _vidtrainModel.getVideoModelsToShow()) {
             _vidtrainMessages.add(new VidtrainMessage(video));
         }
     }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+            @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.landing_fragment, container, false);
         ButterKnife.bind(this, v);
         _rvMessages.setAdapter(_messagesAdapter);
@@ -138,8 +144,7 @@ public class VidtrainLandingFragment extends Fragment {
 
     private void setUpSeenAndUnseenUsers() {
         final List<VideoModel> videosShown = _vidtrainModel.getVideoModelsToShow();
-        int size = videosShown.size();
-        if (size > 0) {
+        if (videosShown.size() > 0) {
             ParseQuery<Unseen> query = ParseQuery.getQuery("Unseen");
             // need to wrap in vidtrain object because pointer field needs a pointer value
             VidTrain vidtrain = new VidTrain();
@@ -151,30 +156,24 @@ public class VidtrainLandingFragment extends Fragment {
                 @Override
                 public void done(List<Unseen> unseens, ParseException e) {
                     if (e != null) {
-                        Log.d(VidtrainApplication.TAG,
-                                "Could not get unseen data: " + e.toString());
+                        Log.d(VidtrainApplication.TAG, "Unseen data error: " + e.toString());
                         return;
                     }
                     Map<String, List<User>> unseenMap = generateUnseenMap(unseens);
 
-                    _vidtrainMessages.get(0).setSeenUsers(unseenMap.get(USERS_ALL_SEEN));
+                    _vidtrainMessages.get(0).addSeenUsers(unseenMap.get(USERS_ALL_SEEN));
                     for (int i = 0; i < _vidtrainMessages.size(); i++) {
                         VidtrainMessage vidtrainMessage = _vidtrainMessages.get(i);
-                        vidtrainMessage.setUnseenUsers(unseenMap.get(videosShown.get(i).getVideoId()));
+                        vidtrainMessage.addUnseenUsers(unseenMap.get(videosShown.get(i).getVideoId()));
                     }
                     _vidtrainMessages.get(_vidtrainMessages.size() - 1)
-                            .setUnseenUsers(unseenMap.get(USERS_NONE_SEEN));
+                            .addUnseenUsers(unseenMap.get(USERS_NONE_SEEN));
                     _messagesAdapter.notifyDataSetChanged();
                 }
             });
         } else {
             _videosExpired.setVisibility(View.VISIBLE);
         }
-    }
-
-    private void scrollToBottom() {
-        // Scroll to the bottom
-        _linearLayoutManager.scrollToPosition(0);
     }
 
     /**
@@ -323,9 +322,9 @@ public class VidtrainLandingFragment extends Fragment {
                                                 Toast.makeText(getContext(),
                                                         R.string.add_success,
                                                         Toast.LENGTH_SHORT).show();
-                                                //Reset Vidtrain Model
+                                                // Reset Vidtrain Model
                                                 _vidtrainModel = new VidtrainModel(vidtrain, vidtrain.getVideosCount());
-                                                //Reload videos
+                                                // Reload videos
                                                 setUpVideoMessages();
                                                 _messagesAdapter.notifyDataSetChanged();
                                                 setUpSeenAndUnseenUsers();

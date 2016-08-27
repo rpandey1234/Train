@@ -60,44 +60,24 @@ public class VideoPreview extends FrameLayout {
     }
 
     public void addUnseenUsers(List<User> users) {
-        if (users == null) {
-            return;
-        }
-        for (User user : users) {
-            View profileImage = LayoutInflater.from(_context)
-                    .inflate(R.layout.profile_image, this, false);
-            RoundedImageView ivUserPic = (RoundedImageView) profileImage
-                    .findViewById(R.id.ivProfileCollaborator);
-            Glide.with(_context).load(user.getProfileImageUrl()).into(ivUserPic);
-            _usersUnseen.addView(profileImage);
-        }
-    }
-
-    public void removeUnseenUsers() {
-        _usersUnseen.removeAllViews();
-        _usersSeen.invalidate();
+        updateViewForUsers(_usersUnseen, users);
     }
 
     public void addSeenUsers(List<User> users) {
+        updateViewForUsers(_usersSeen, users);
+    }
+
+    private void updateViewForUsers(LinearLayout usersView, List<User> users) {
         if (users == null) {
             return;
         }
         for (User user : users) {
-            View profileImage = LayoutInflater.from(_context)
-                    .inflate(R.layout.profile_image, this, false);
-            RoundedImageView ivUserPic = (RoundedImageView) profileImage
-                    .findViewById(R.id.ivProfileCollaborator);
+            View img = LayoutInflater.from(_context).inflate(R.layout.profile_image, this, false);
+            RoundedImageView ivUserPic = (RoundedImageView) img.findViewById(R.id.ivProfileCollaborator);
             Glide.with(_context).load(user.getProfileImageUrl()).into(ivUserPic);
-            _usersSeen.addView(profileImage);
+            usersView.addView(img);
         }
-        if (!users.isEmpty()) {
-            _usersSeen.setVisibility(VISIBLE);
-        }
-    }
-
-    public void removeSeenUsers() {
-        _usersSeen.removeAllViews();
-        _usersSeen.invalidate();
+        usersView.setVisibility(users.isEmpty() ? GONE : VISIBLE);
     }
 
     public void setFromCurrentUser(boolean fromCurrentUser) {
@@ -105,23 +85,23 @@ public class VideoPreview extends FrameLayout {
                 (RelativeLayout.LayoutParams) _ivThumbnail.getLayoutParams();
         RelativeLayout.LayoutParams layoutTimeLeft =
                 (RelativeLayout.LayoutParams) _timeLeft.getLayoutParams();
-        RelativeLayout.LayoutParams layoutSeen =
-                (RelativeLayout.LayoutParams) _usersSeen.getLayoutParams();
-        RelativeLayout.LayoutParams layoutUnseen =
-                (RelativeLayout.LayoutParams) _usersUnseen.getLayoutParams();
         if (fromCurrentUser) {
-            layoutIvThumbnail.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            layoutTimeLeft.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            // remove existing rule
-            layoutIvThumbnail.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
-            layoutTimeLeft.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
+            alignParentRight(layoutIvThumbnail);
+            alignParentRight(layoutTimeLeft);
         } else {
-            layoutIvThumbnail.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            layoutTimeLeft.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            // remove existing rule
-            layoutIvThumbnail.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
-            layoutTimeLeft.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
+            alignParentLeft(layoutIvThumbnail);
+            alignParentLeft(layoutTimeLeft);
         }
+    }
+
+    private void alignParentRight(RelativeLayout.LayoutParams layoutParams) {
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
+    }
+
+    private void alignParentLeft(RelativeLayout.LayoutParams layoutParams) {
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
     }
 
     public void setOnThumbnailClick(OnClickListener onThumbnailClick) {
@@ -132,7 +112,7 @@ public class VideoPreview extends FrameLayout {
         _ivThumbnail.setImageResource(0);
         _ivUserPic.setImageResource(0);
         _timeLeft.setText("");
-        removeSeenUsers();
-        removeUnseenUsers();
+        _usersSeen.removeAllViews();
+        _usersUnseen.removeAllViews();
     }
 }

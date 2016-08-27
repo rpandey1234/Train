@@ -1,5 +1,6 @@
 package com.trainapp.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,29 +14,33 @@ public class VidtrainMessage {
 
     public VidtrainMessage(VideoModel videoModel) {
         _videoModel = videoModel;
+        _seenUsers = new ArrayList<>();
+        _unseenUsers = new ArrayList<>();
     }
 
     public VideoModel getVideoModel() {
         return _videoModel;
     }
 
-    public void setVideoModel(VideoModel videoModel) {
-        _videoModel = videoModel;
-    }
-
     public List<User> getUnseenUsers() {
         return _unseenUsers;
     }
 
-    public void setUnseenUsers(List<User> unseenUsers) {
-        _unseenUsers = unseenUsers;
+    public void addUnseenUsers(List<User> unseenUsers) {
+        if (unseenUsers == null) {
+            return;
+        }
+        _unseenUsers.addAll(unseenUsers);
     }
 
     public List<User> getSeenUsers() {
         return _seenUsers;
     }
 
-    public void setSeenUsers(List<User> seenUsers) {
-        _seenUsers = seenUsers;
+    public void addSeenUsers(List<User> seenUsers) {
+        if (seenUsers == null) {
+            return;
+        }
+        _seenUsers.addAll(seenUsers);
     }
 }
