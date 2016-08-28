@@ -41,10 +41,17 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements O
 
     public void bind(VidTrain vidTrain, int numUnseen) {
         int colorId = android.R.color.white;
+        float alpha = 1.0f;
         if (numUnseen > 0) {
             colorId = R.color.cardBackground;
+        } else {
+            // Check if all videos expired. If so, gray out this conversation
+            if (vidTrain.getLatestVideo().isVideoExpired()) {
+                alpha = 0.4f;
+            }
         }
         _cardView.setCardBackgroundColor(ContextCompat.getColor(_context, colorId));
+        _cardView.setAlpha(alpha);
         _vidTrain = vidTrain;
         _conversationTitle.setText(vidTrain.getTitle());
         _timestamp.setText(Utility.getRelativeTime(vidTrain.getUpdatedAt().getTime()));

@@ -45,7 +45,7 @@ public class Video extends ParseObject implements Serializable {
         return getParseFile(THUMBNAIL_KEY);
     }
 
-    public boolean hasVideoExpired() {
-        return System.currentTimeMillis() - getCreatedAt().getTime() < TIME_TO_EXPIRE;
+    public boolean isVideoExpired() {
+        return System.currentTimeMillis() - getCreatedAt().getTime() > TIME_TO_EXPIRE;
     }
 }
