@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.media.ThumbnailUtils;
@@ -15,6 +16,7 @@ import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Surface;
 import android.view.WindowManager;
+import com.google.common.base.Joiner;
 import com.google.common.io.Files;
 
 import com.facebook.GraphResponse;
@@ -269,5 +271,39 @@ public class Utility {
         editor.putInt(BADGE_COUNT, count);
         editor.apply();
         updateBadgeCount(context, count);
+    }
+
+    public static String generateTitle(List<User> users, Resources resources) {
+        return generateTitle(users, -1, resources);
+    }
+
+    public static String generateTitle(List<User> users, int limit, Resources resources) {
+        if (users == null) {
+            return null;
+        }
+        List<String> usernames = new ArrayList<>();
+        for (User user : users) {
+            usernames.add(user.getName());
+        }
+        return formatNames(usernames, limit, resources);
+    }
+
+    /**
+     * Given a list of names, return a comma separated string of those names.
+     * formatNames(["A, "B, "C"], 5, resources) ==> "A, B, C"
+     * formatNames(["A", "B", "C"], 2, resources) ==> "A, B, 1 other"
+     * @param limit the amount of names to show in the list, the remaining will be shown
+     * as "x other(s)" at the end of the list
+     */
+    public static String formatNames(List<String> names, int limit, Resources resources) {
+        if (names == null) {
+            return null;
+        }
+        if (limit != -1 && names.size() > limit) {
+            int numLeft = names.size() - limit;
+            names = names.subList(0, limit);
+            names.add(resources.getQuantityString(R.plurals.others_plurals, numLeft, numLeft));
+        }
+        return Joiner.on(", ").join(names);
     }
 }

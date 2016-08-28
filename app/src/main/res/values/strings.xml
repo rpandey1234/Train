@@ -34,7 +34,11 @@
     <string name="image_preview">preview</string>
     <string name="image_placeholder">placeholder</string>
     <string name="friends_using">Friends using Train</string>
-    <string name="add_friends_instructions">Create a group:</string>
+    <string name="add_friends_instructions">Pick a group:</string>
+    <plurals name="others_plurals">
+        <item quantity="one">%d other</item>
+        <item quantity="other">%d others</item>
+    </plurals>
     <string name="logout_confirm">Are you sure you want to logout?</string>
     <string name="save_success">Successfully saved Train!</string>
     <string name="update_success">Successfully updated Train!</string>

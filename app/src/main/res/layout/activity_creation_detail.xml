@@ -9,15 +9,6 @@
         android:layout_margin="12dp"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/etTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/title_prompt"
-            android:inputType="textCapSentences"
-            android:maxLength="60"
-            android:singleLine="true" />
-
         <TextView
             android:id="@+id/tvFriendsInstructions"
             android:layout_width="match_parent"

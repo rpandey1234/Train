@@ -18,6 +18,8 @@ import com.trainapp.models.Video;
 import com.trainapp.ui.Participant;
 import com.trainapp.utilities.Utility;
 
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -53,15 +55,20 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements O
         _cardView.setCardBackgroundColor(ContextCompat.getColor(_context, colorId));
         _cardView.setAlpha(alpha);
         _vidTrain = vidTrain;
-        _conversationTitle.setText(vidTrain.getTitle());
+        // TODO: may want to generate title on our own so we can pass in a limit here
+        // for large groups
+        _conversationTitle.setText(_vidTrain.getTitle());
         _timestamp.setText(Utility.getRelativeTime(vidTrain.getUpdatedAt().getTime()));
         _participants.removeAllViews();
         // Too many issues with the layout width/clicks when trying to put participants into a
         // (nested) recycler view, e.g. http://stackoverflow.com/questions/26649406.
         // Revert to simply adding views to a linear layout since there should not be many
         // participants in a conversation. Drawback is that this won't scroll
-        for (User user : _vidTrain.getCollaborators()) {
-            if (User.getCurrentUser().getObjectId().equals(user.getObjectId())) {
+        List<User> collaborators = _vidTrain.getCollaborators();
+        for (User user : collaborators) {
+            if (User.getCurrentUser().getObjectId().equals(user.getObjectId())
+                    && collaborators.size() != 1) {
+                // If the user is having a conversation with themselves (size == 1), show their face
                 continue;
             }
             Participant participant = new Participant(_context);

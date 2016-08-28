@@ -38,7 +38,6 @@ import butterknife.OnClick;
 
 public class CreationDetailActivity extends AppCompatActivity {
 
-    @Bind(R.id.etTitle) EditText _etTitle;
     @Bind(R.id.friendsRecyclerView) RecyclerView _friendsRecyclerView;
 
     private ProgressDialog _progressDialog;
@@ -74,11 +73,6 @@ public class CreationDetailActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.video_file_fail, Toast.LENGTH_LONG).show();
             return;
         }
-        final String titleText = _etTitle.getText().toString();
-        if (titleText.isEmpty()) {
-            Toast.makeText(this, R.string.add_title, Toast.LENGTH_LONG).show();
-            return;
-        }
         final User user = User.getCurrentUser();
         if (user == null) {
             Toast.makeText(this, R.string.sign_in_to_create, Toast.LENGTH_LONG).show();
@@ -93,7 +87,16 @@ public class CreationDetailActivity extends AppCompatActivity {
         final List<User> collaborators = new ArrayList<>();
         // collaborators is never empty since it always contains the current user
         collaborators.add(user);
-        collaborators.addAll(_friendsAdapter.getCollaborators());
+        List<User> selectedFriends = _friendsAdapter.getCollaborators();
+        collaborators.addAll(selectedFriends);
+
+        final String title;
+        if (selectedFriends.size() == 0) {
+            // a self-conversation (no others are involved)
+            title = user.getName();
+        } else {
+            title = Utility.generateTitle(selectedFriends, getResources());
+        }
 
         Bitmap thumbnailBitmap = Utility.getImageBitmap(_videoPath);
         final ParseFile parseThumbnail = Utility.createParseFileFromBitmap(thumbnailBitmap);
@@ -117,7 +120,7 @@ public class CreationDetailActivity extends AppCompatActivity {
                                     Log.d(VidtrainApplication.TAG,
                                             "Could not find existing convo: " + e.toString());
                                     final VidTrain vidTrain = new VidTrain();
-                                    vidTrain.setTitle(titleText);
+                                    vidTrain.setTitle(title);
                                     vidTrain.setUser(user);
                                     ArrayList<Video> videos = new ArrayList<>();
                                     videos.add(video);
@@ -159,7 +162,6 @@ public class CreationDetailActivity extends AppCompatActivity {
     private void updateVidtrain(final VidTrain vidtrain, Video video) {
         Log.d(VidtrainApplication.TAG, "Found existing convo, title: " + vidtrain.getTitle());
         // update to new title
-        vidtrain.setTitle(_etTitle.getText().toString());
         vidtrain.setVideos(vidtrain.maybeInitAndAdd(video));
         vidtrain.saveInBackground(new SaveCallback() {
             @Override
