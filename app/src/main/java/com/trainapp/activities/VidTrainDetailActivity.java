@@ -21,6 +21,7 @@ import com.trainapp.adapters.VideoFragmentPagerAdapter;
 import com.trainapp.fragments.SwipeViewPager;
 import com.trainapp.fragments.SwipeViewPager.NextVideoListener;
 import com.trainapp.fragments.VideoPageFragment;
+import com.trainapp.fragments.VideoPageFragment.PlaySoundListener;
 import com.trainapp.fragments.VideoPageFragment.VideoFinishedListener;
 import com.trainapp.fragments.VidtrainLandingFragment;
 import com.trainapp.models.Unseen;
@@ -35,7 +36,8 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class VidTrainDetailActivity extends FragmentActivity implements VideoFinishedListener {
+public class VidTrainDetailActivity extends FragmentActivity
+        implements VideoFinishedListener, PlaySoundListener {
 
     @Bind(R.id.viewPager) SwipeViewPager _viewPager;
 
@@ -43,6 +45,7 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
     private VidTrain _vidTrain;
     private int _lastPosition = -1;
     private VideoFragmentPagerAdapter _videoPagerAdapter;
+    private boolean _shouldPlaySound = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,6 +150,7 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
                 VideoPageFragment fragment = _videoPagerAdapter.getFragment(position);
                 if (fragment != null) {
                     fragment.playVideo();
+                    fragment.setSound(_shouldPlaySound);
                 }
                 _lastPosition = position;
             }
@@ -190,5 +194,15 @@ public class VidTrainDetailActivity extends FragmentActivity implements VideoFin
             return;
         }
         super.onBackPressed();
+    }
+
+    @Override
+    public void setPlaySound(boolean shouldPlaySound) {
+        _shouldPlaySound = shouldPlaySound;
+    }
+
+    @Override
+    public boolean getPlaySound() {
+        return _shouldPlaySound;
     }
 }

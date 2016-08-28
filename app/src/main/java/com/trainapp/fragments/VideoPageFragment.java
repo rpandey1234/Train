@@ -58,7 +58,8 @@ public class VideoPageFragment extends Fragment {
 
     private String _videoUrl;
     private String _videoThumbnailUrl;
-    private VideoFinishedListener _listener;
+    private VideoFinishedListener _videoListener;
+    private PlaySoundListener _soundListener;
     private String _videoTime;
     private String _userUrl;
     private String _videoId;
@@ -67,7 +68,6 @@ public class VideoPageFragment extends Fragment {
     private int _width;
     private boolean _isVideoPrepared;
     private boolean _fromLandingFragment;
-    private boolean _shouldPlaySound;
     private MediaPlayer _mediaPlayer;
 
     public static VideoPageFragment newInstance(Video video) {
@@ -107,7 +107,7 @@ public class VideoPageFragment extends Fragment {
             _videoTime = arguments.getString(VIDEO_TIME);
             _userUrl = arguments.getString(VIDEO_USER_URL);
             _fromLandingFragment = arguments.getBoolean(FROM_LANDING_FRAGMENT);
-            _shouldPlaySound = _fromLandingFragment;
+            _soundListener.setPlaySound(_fromLandingFragment || _soundListener.getPlaySound());
         }
     }
 
@@ -124,13 +124,13 @@ public class VideoPageFragment extends Fragment {
         _tvTime.setText(_videoTime);
         Glide.with(getContext()).load(_userUrl).into(_ivAuthor);
 
-        updateSound();
+        setSound(_soundListener.getPlaySound());
         _isVideoPrepared = false;
         _videoView.setOnPreparedListener(new OnPreparedListener() {
             @Override
             public void onPrepared(final MediaPlayer mp) {
                 _mediaPlayer = mp;
-                updateSound();
+                setSound(_soundListener.getPlaySound());
                 _ivThumbnail.setVisibility(View.GONE);
                 _progressBar.setVisibility(View.GONE);
                 final int duration = mp.getDuration();
@@ -160,29 +160,29 @@ public class VideoPageFragment extends Fragment {
         _videoView.setOnCompletionListener(new OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                _listener.onVideoCompleted(_videoId);
+                _videoListener.onVideoCompleted(_videoId);
             }
         });
         return v;
     }
 
-    private void updateSound() {
-        // Reference: https://thenounproject.com/search/?q=sound&i=369924,
+    public void setSound(boolean shouldPlaySound) {
+        // Icon reference: https://thenounproject.com/search/?q=sound&i=369924,
         // https://thenounproject.com/search/?q=sound&i=369926
         Drawable drawable = ContextCompat.getDrawable(getContext(),
-                _shouldPlaySound ? R.drawable.sound_on : R.drawable.sound_off);
+                shouldPlaySound ? R.drawable.sound_on : R.drawable.sound_off);
         _btnSound.setBackground(drawable);
         if (_mediaPlayer == null) {
             return;
         }
-        int volume = _shouldPlaySound ? 1 : 0;
+        int volume = shouldPlaySound ? 1 : 0;
         _mediaPlayer.setVolume(volume, volume);
     }
 
     @OnClick(R.id.btnSound)
     public void onSoundButtonClicked() {
-        _shouldPlaySound = !_shouldPlaySound;
-        updateSound();
+        _soundListener.setPlaySound(!_soundListener.getPlaySound());
+        setSound(_soundListener.getPlaySound());
     }
 
     @Override
@@ -228,14 +228,27 @@ public class VideoPageFragment extends Fragment {
         void onVideoCompleted(String videoId);
     }
 
+    public interface PlaySoundListener {
+
+        void setPlaySound(boolean shouldPlaySound);
+
+        boolean getPlaySound();
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof VideoFinishedListener) {
-            _listener = (VideoFinishedListener) context;
+            _videoListener = (VideoFinishedListener) context;
         } else {
             throw new ClassCastException(
                     context.toString() + " must implement VideoPageFragment.VideoFinishedListener");
+        }
+        if (context instanceof PlaySoundListener) {
+            _soundListener = (PlaySoundListener) context;
+        } else {
+            throw new ClassCastException(
+                    context.toString() + " must implement VideoPageFragment.PlaySoundListener");
         }
     }
 }
