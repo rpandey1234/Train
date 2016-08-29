@@ -69,7 +69,7 @@ public class Unseen extends ParseObject {
                             }
                             Log.d(VidtrainApplication.TAG,
                                     "Saved unseen object! For user/vidtrain: " + user.getName()
-                                            + ", " + vidtrain.getTitle());
+                                            + ", " + vidtrain.getObjectId());
                         }
                     });
                     return;

@@ -123,7 +123,7 @@ public class VidTrainDetailActivity extends FragmentActivity
             videos = _vidTrain.getVideos().subList(position, _vidTrain.getVideosCount());
         }
         _videoPagerAdapter = new VideoFragmentPagerAdapter(
-                getSupportFragmentManager(), videos, _vidTrain);
+                getSupportFragmentManager(), videos, _vidTrain, this);
         _viewPager.setNextVideoListener(new NextVideoListener() {
             @Override
             public void onNextVideo(int position) {

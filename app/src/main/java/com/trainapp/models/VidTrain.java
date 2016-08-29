@@ -1,5 +1,6 @@
 package com.trainapp.models;
 
+import android.content.res.Resources;
 import android.util.Log;
 
 import com.parse.ParseClassName;
@@ -52,10 +53,6 @@ public class VidTrain extends ParseObject implements Serializable {
         return (User) getParseUser(USER_KEY);
     }
 
-    public String getTitle() {
-        return getString(TITLE_KEY);
-    }
-
     public void setCollaborators(List<User> collaborators) {
         put(COLLABORATORS, collaborators);
     }
@@ -75,6 +72,20 @@ public class VidTrain extends ParseObject implements Serializable {
         }
         videos.add(video);
         return videos;
+    }
+
+    public String getGeneratedTitle(Resources resources) {
+        String title;
+        List<User> collaborators = getCollaborators();
+        if (collaborators.size() == 1) {
+            // a self-conversation (no others are involved)
+            title = collaborators.get(0).getName();
+        } else {
+            // remove current user from the collaborators list
+            Utility.remove(collaborators, User.getCurrentUser().getObjectId());
+            title = Utility.generateTitle(collaborators, resources);
+        }
+        return title;
     }
 
     /**

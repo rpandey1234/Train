@@ -144,6 +144,15 @@ public class Utility {
         return -1;
     }
 
+    public static boolean remove(List<? extends ParseObject> objects, String objectId) {
+        int index = indexOf(objects, objectId);
+        if (index != -1) {
+            objects.remove(index);
+            return true;
+        }
+        return false;
+    }
+
     public static List<String> getFacebookFriends(GraphResponse response, String key) {
         List<String> friends = new ArrayList<>();
         JSONObject jsonObject = response.getJSONObject();

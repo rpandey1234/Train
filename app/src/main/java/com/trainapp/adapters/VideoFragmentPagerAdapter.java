@@ -1,5 +1,6 @@
 package com.trainapp.adapters;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -25,11 +26,14 @@ public class VideoFragmentPagerAdapter extends FragmentPagerAdapter {
     private List<Video> _videos = new ArrayList<>();
     private Map<Integer, VideoPageFragment> _fragmentMap;
     private VidtrainLandingFragment _landingFragment;
+    private Context _context;
 
-    public VideoFragmentPagerAdapter(FragmentManager fm, List<Video> videos, VidTrain vidTrain) {
+    public VideoFragmentPagerAdapter(
+            FragmentManager fm, List<Video> videos, VidTrain vidTrain, Context context) {
         super(fm);
         _vidTrain = vidTrain;
         _videos = videos;
+        _context = context;
         _fragmentMap = new HashMap<>();
     }
 
@@ -38,7 +42,7 @@ public class VideoFragmentPagerAdapter extends FragmentPagerAdapter {
         if (position < _videos.size()) {
             return VideoPageFragment.newInstance(_videos.get(position));
         } else {
-            return VidtrainLandingFragment.newInstance(_vidTrain);
+            return VidtrainLandingFragment.newInstance(_vidTrain, _context);
         }
     }
 

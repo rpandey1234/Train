@@ -19,14 +19,14 @@ public class VidtrainModel implements Parcelable {
     // Reverse ordering of videos (newest first)
     private final List<VideoModel> _videoModelsToShow;
 
-    public VidtrainModel(VidTrain vidTrain, int numVideosShown) {
+    public VidtrainModel(VidTrain vidTrain, int numVideosShown, String title) {
         _vidTrainId = vidTrain.getObjectId();
-        _title = vidTrain.getTitle();
+        _title = title;
         _videoCount = vidTrain.getVideosCount();
         List<Video> videos = vidTrain.getVideos();
         _videoModels = new ArrayList<>();
         _videoModelsToShow = new ArrayList<>();
-        for (int i = 0; i < videos.size(); i++) {
+        for (int i = 0, size = videos.size(); i < size; i++) {
             if (i < numVideosShown) {
                 Video video = videos.get(videos.size() - 1 - i);
                 if (!video.isVideoExpired()) {

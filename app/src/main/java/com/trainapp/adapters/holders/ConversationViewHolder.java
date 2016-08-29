@@ -55,9 +55,7 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements O
         _cardView.setCardBackgroundColor(ContextCompat.getColor(_context, colorId));
         _cardView.setAlpha(alpha);
         _vidTrain = vidTrain;
-        // TODO: may want to generate title on our own so we can pass in a limit here
-        // for large groups
-        _conversationTitle.setText(_vidTrain.getTitle());
+        _conversationTitle.setText(_vidTrain.getGeneratedTitle(_context.getResources()));
         _timestamp.setText(Utility.getRelativeTime(vidTrain.getUpdatedAt().getTime()));
         _participants.removeAllViews();
         // Too many issues with the layout width/clicks when trying to put participants into a

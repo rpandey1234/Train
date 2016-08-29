@@ -2,6 +2,7 @@ package com.trainapp.fragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -73,10 +74,11 @@ public class VidtrainLandingFragment extends Fragment {
     private MessagesAdapter _messagesAdapter;
     private LinearLayoutManager _linearLayoutManager;
 
-    public static Fragment newInstance(VidTrain vidtrain) {
+    public static Fragment newInstance(VidTrain vidtrain, Context context) {
         VidtrainLandingFragment vidtrainLandingFragment = new VidtrainLandingFragment();
         Bundle args = new Bundle();
-        args.putParcelable(VIDTRAIN_MODEL_KEY, new VidtrainModel(vidtrain, MAX_VIDEOS_SHOWN));
+        String title = vidtrain.getGeneratedTitle(context.getResources());
+        args.putParcelable(VIDTRAIN_MODEL_KEY, new VidtrainModel(vidtrain, MAX_VIDEOS_SHOWN, title));
         vidtrainLandingFragment.setArguments(args);
         return vidtrainLandingFragment;
     }
@@ -123,7 +125,8 @@ public class VidtrainLandingFragment extends Fragment {
     private void setUpVideoMessages() {
         // Do not create a new array list, otherwise the adapter will not get updates
         _vidtrainMessages.clear();
-        for (VideoModel video : _vidtrainModel.getVideoModelsToShow()) {
+        List<VideoModel> videos = _vidtrainModel.getVideoModelsToShow();
+        for (VideoModel video : videos) {
             _vidtrainMessages.add(new VidtrainMessage(video));
         }
     }
@@ -323,7 +326,9 @@ public class VidtrainLandingFragment extends Fragment {
                                                         R.string.add_success,
                                                         Toast.LENGTH_SHORT).show();
                                                 // Reset Vidtrain Model
-                                                _vidtrainModel = new VidtrainModel(vidtrain, vidtrain.getVideosCount());
+                                                _vidtrainModel = new VidtrainModel(vidtrain,
+                                                        vidtrain.getVideosCount(),
+                                                        vidtrain.getGeneratedTitle(getResources()));
                                                 // Reload videos
                                                 setUpVideoMessages();
                                                 _messagesAdapter.notifyDataSetChanged();

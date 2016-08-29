@@ -87,17 +87,7 @@ public class CreationDetailActivity extends AppCompatActivity {
         final List<User> collaborators = new ArrayList<>();
         // collaborators is never empty since it always contains the current user
         collaborators.add(user);
-        List<User> selectedFriends = _friendsAdapter.getCollaborators();
-        collaborators.addAll(selectedFriends);
-
-        final String title;
-        if (selectedFriends.size() == 0) {
-            // a self-conversation (no others are involved)
-            title = user.getName();
-        } else {
-            title = Utility.generateTitle(selectedFriends, getResources());
-        }
-
+        collaborators.addAll(_friendsAdapter.getCollaborators());
         Bitmap thumbnailBitmap = Utility.getImageBitmap(_videoPath);
         final ParseFile parseThumbnail = Utility.createParseFileFromBitmap(thumbnailBitmap);
         parseFile.saveInBackground(new SaveCallback() {
@@ -120,7 +110,6 @@ public class CreationDetailActivity extends AppCompatActivity {
                                     Log.d(VidtrainApplication.TAG,
                                             "Could not find existing convo: " + e.toString());
                                     final VidTrain vidTrain = new VidTrain();
-                                    vidTrain.setTitle(title);
                                     vidTrain.setUser(user);
                                     ArrayList<Video> videos = new ArrayList<>();
                                     videos.add(video);
@@ -160,8 +149,7 @@ public class CreationDetailActivity extends AppCompatActivity {
     }
 
     private void updateVidtrain(final VidTrain vidtrain, Video video) {
-        Log.d(VidtrainApplication.TAG, "Found existing convo, title: " + vidtrain.getTitle());
-        // update to new title
+        Log.d(VidtrainApplication.TAG, "Found existing Train: " + vidtrain.getObjectId());
         vidtrain.setVideos(vidtrain.maybeInitAndAdd(video));
         vidtrain.saveInBackground(new SaveCallback() {
             @Override
