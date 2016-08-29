@@ -57,6 +57,21 @@
         android:layout_alignParentBottom="true"
         />
 
+    <EditText
+        android:id="@+id/edit_text_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:gravity="center_horizontal"
+        android:background="#30000000"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="120dp"
+        android:visibility="gone"
+        android:singleLine="true"
+        android:imeOptions="actionDone"
+        android:inputType="text"
+        />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/button_send"
         android:layout_width="50dp"

@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,7 @@ public class VideoPageFragment extends Fragment {
     @Bind(R.id.ivThumbnail) ImageView _ivThumbnail;
     @Bind(R.id.videoView) VideoView _videoView;
     @Bind(R.id.progressBar) ProgressBar _progressBar;
+    @Bind(R.id.tvMessage) TextView _tvMessage;
     @Bind(R.id.ivAuthor) ImageView _ivAuthor;
     @Bind(R.id.tvTime) TextView _tvTime;
     @Bind(R.id.videoInformation) RelativeLayout _videoInformation;
@@ -52,6 +54,7 @@ public class VideoPageFragment extends Fragment {
     public static final String VIDEO_TIME = "VIDEO_TIME";
     public static final String VIDEO_USER_URL = "VIDEO_USER_URL";
     public static final String VIDEO_ID = "VIDEO_ID";
+    public static final String VIDEO_MESSAGE = "VIDEO_MESSAGE";
     private static final String FROM_LANDING_FRAGMENT = "FROM_LANDING_FRAGMENT";
     public static final int UPDATE_FREQUENCY = 50;
     public static final int ADVANCE_DELAY = 500;
@@ -63,6 +66,7 @@ public class VideoPageFragment extends Fragment {
     private String _videoTime;
     private String _userUrl;
     private String _videoId;
+    private String _message;
     private Handler _handler = new Handler();
     private Runnable _runnableCode;
     private int _width;
@@ -78,6 +82,7 @@ public class VideoPageFragment extends Fragment {
         args.putString(VIDEO_TIME, Utility.getRelativeTime(video.getCreatedAt().getTime()));
         args.putString(VIDEO_USER_URL, video.getUser().getProfileImageUrl());
         args.putString(VIDEO_ID, video.getObjectId());
+        args.putString(VIDEO_MESSAGE, video.getMessage());
         args.putBoolean(FROM_LANDING_FRAGMENT, false);
         videoPageFragment.setArguments(args);
         return videoPageFragment;
@@ -91,6 +96,7 @@ public class VideoPageFragment extends Fragment {
         args.putString(VIDEO_TIME, Utility.getRelativeTime(videoModel.getCreatedAtTime()));
         args.putString(VIDEO_USER_URL, videoModel.getUserUrl());
         args.putString(VIDEO_ID, videoModel.getVideoId());
+        args.putString(VIDEO_MESSAGE, videoModel.getMessage());
         args.putBoolean(FROM_LANDING_FRAGMENT, true);
         videoPageFragment.setArguments(args);
         return videoPageFragment;
@@ -106,6 +112,7 @@ public class VideoPageFragment extends Fragment {
             _videoThumbnailUrl = arguments.getString(VIDEO_THUMBNAIL_URL);
             _videoTime = arguments.getString(VIDEO_TIME);
             _userUrl = arguments.getString(VIDEO_USER_URL);
+            _message = arguments.getString(VIDEO_MESSAGE);
             _fromLandingFragment = arguments.getBoolean(FROM_LANDING_FRAGMENT);
             _soundListener.setPlaySound(_fromLandingFragment || _soundListener.getPlaySound());
         }
@@ -122,6 +129,10 @@ public class VideoPageFragment extends Fragment {
         _videoView.setZOrderMediaOverlay(true);
 
         _tvTime.setText(_videoTime);
+        if (!TextUtils.isEmpty(_message)) {
+            _tvMessage.setText(_message);
+            _tvMessage.setVisibility(View.VISIBLE);
+        }
         Glide.with(getContext()).load(_userUrl).into(_ivAuthor);
 
         setSound(_soundListener.getPlaySound());

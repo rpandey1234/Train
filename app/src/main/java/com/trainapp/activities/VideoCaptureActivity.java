@@ -1,6 +1,7 @@
 package com.trainapp.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
@@ -15,10 +16,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Display;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.VideoView;
@@ -40,6 +45,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
     @Bind(R.id.button_capture) FloatingActionButton _captureButton;
     @Bind(R.id.button_change_camera) ImageButton _btnChangeCamera;
     @Bind(R.id.button_send) ImageButton _btnSend;
+    @Bind(R.id.edit_text_message) EditText _etMessage;
     @Bind(R.id.videoView) VideoView _videoView;
     @Bind(R.id.timer) View _timerView;
 
@@ -130,6 +136,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
     public void proceedCreationFlow(View view) {
         Intent dataBack = new Intent();
         dataBack.putExtra(Utility.UNIQUE_ID_INTENT, uniqueId);
+        dataBack.putExtra(Utility.MESSAGE_EXTRA_INTENT, _etMessage.getText().toString());
         setResult(Activity.RESULT_OK, dataBack);
         finish();
     }
@@ -175,6 +182,19 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         // Show the "send" button
         // Logo credit: http://www.flaticon.com/free-icon/send-button_60525
         _btnSend.setVisibility(View.VISIBLE);
+        _videoView.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // TODO: edit text should move when dragged by user. We will need to
+                // record the location of the text when user has ability to move it
+                _etMessage.setVisibility(View.VISIBLE);
+                _etMessage.requestFocus();
+                InputMethodManager imm = (InputMethodManager) getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(_etMessage, InputMethodManager.SHOW_IMPLICIT);
+                return true;
+            }
+        });
     }
 
     /**

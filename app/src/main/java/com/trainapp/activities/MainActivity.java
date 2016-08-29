@@ -36,6 +36,7 @@ import butterknife.OnClick;
 public class MainActivity extends AppCompatActivity {
 
     public static final String VIDEO_PATH = "VIDEO_PATH";
+    public static final String VIDEO_MESSAGE = "VIDEO_MESSAGE";
     public static final int RESULT_TOO_SHORT = 99;
 
     @Bind(R.id.toolbar) Toolbar _toolbar;
@@ -143,9 +144,11 @@ public class MainActivity extends AppCompatActivity {
         _viewReveal.setVisibility(View.GONE);
         if (requestCode == Utility.VIDEO_CAPTURE) {
             if (resultCode == RESULT_OK && data != null) {
+                String message = data.getStringExtra(Utility.MESSAGE_EXTRA_INTENT);
                 String uid = data.getStringExtra(Utility.UNIQUE_ID_INTENT);
                 Intent i = new Intent(this, CreationDetailActivity.class);
                 i.putExtra(VIDEO_PATH, Utility.getOutputMediaFile(uid).getPath());
+                i.putExtra(VIDEO_MESSAGE, message);
                 startActivity(i);
             } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, R.string.recording_cancelled, Toast.LENGTH_LONG).show();

@@ -14,6 +14,7 @@ public class Video extends ParseObject implements Serializable {
     public static final String VIDEO_FILE_KEY = "videoFile";
     public static final String VIDTRAIN_KEY = "vidTrain";
     public static final String THUMBNAIL_KEY = "thumbnail";
+    public static final String MESSAGE_KEY = "message";
 
     public final static long TIME_TO_EXPIRE = 7 * MILLIS_PER_DAY;
 
@@ -47,5 +48,13 @@ public class Video extends ParseObject implements Serializable {
 
     public boolean isVideoExpired() {
         return System.currentTimeMillis() - getCreatedAt().getTime() > TIME_TO_EXPIRE;
+    }
+
+    public void setMessage(String message) {
+        put(MESSAGE_KEY, message);
+    }
+
+    public String getMessage() {
+        return getString(MESSAGE_KEY);
     }
 }

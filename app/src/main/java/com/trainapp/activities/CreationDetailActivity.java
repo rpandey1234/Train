@@ -9,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.parse.GetCallback;
@@ -44,6 +43,7 @@ public class CreationDetailActivity extends AppCompatActivity {
     private String _videoPath;
     private FriendsAdapter _friendsAdapter;
     private Context _context;
+    private String _message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +63,7 @@ public class CreationDetailActivity extends AppCompatActivity {
             }
         });
         _videoPath = getIntent().getStringExtra(MainActivity.VIDEO_PATH);
+        _message = getIntent().getStringExtra(MainActivity.VIDEO_MESSAGE);
         _context = this;
     }
 
@@ -96,6 +97,7 @@ public class CreationDetailActivity extends AppCompatActivity {
                 video.setUser(user);
                 video.setVideoFile(parseFile);
                 video.setThumbnail(parseThumbnail);
+                video.setMessage(_message);
                 video.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
@@ -150,6 +152,8 @@ public class CreationDetailActivity extends AppCompatActivity {
 
     private void updateVidtrain(final VidTrain vidtrain, Video video) {
         Log.d(VidtrainApplication.TAG, "Found existing Train: " + vidtrain.getObjectId());
+        video.setVidTrain(vidtrain);
+        video.saveInBackground();
         vidtrain.setVideos(vidtrain.maybeInitAndAdd(video));
         vidtrain.saveInBackground(new SaveCallback() {
             @Override

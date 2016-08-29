@@ -48,6 +48,7 @@ public class Utility {
 
     public static final String FILENAME = "video.mp4";
     public static final String UNIQUE_ID_INTENT = "UNIQUE_ID";
+    public static final String MESSAGE_EXTRA_INTENT = "MESSAGE_EXTRA";
     public static final int VIDEO_CAPTURE = 101;
     public static final String PREFS_NAME = "com.trainapp";
     public static final String BADGE_COUNT = "BADGE_COUNT";

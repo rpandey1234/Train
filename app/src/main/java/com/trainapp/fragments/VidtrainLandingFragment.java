@@ -66,6 +66,7 @@ public class VidtrainLandingFragment extends Fragment {
 
     private ProgressDialog _progress;
     private String _videoPath;
+    private String _videoMessage;
     private VidtrainModel _vidtrainModel;
     private List<VidtrainMessage> _vidtrainMessages;
     public VideoPageFragment _videoPageFragment;
@@ -263,6 +264,7 @@ public class VidtrainLandingFragment extends Fragment {
             // <path> which is /storage/emulated/0/Movies/VidTrainApp/VID_CAPTURED.mp4
             _videoPath = Utility.getOutputMediaFile(
                     data.getStringExtra(Utility.UNIQUE_ID_INTENT)).getPath();
+            _videoMessage = data.getStringExtra(Utility.MESSAGE_EXTRA_INTENT);
             addVideoToVidtrain();
         } else if (resultCode == Activity.RESULT_CANCELED) {
             Toast.makeText(getContext(), R.string.recording_cancelled, Toast.LENGTH_LONG).show();
@@ -304,6 +306,7 @@ public class VidtrainLandingFragment extends Fragment {
                         video.setVideoFile(parseFile);
                         video.setVidTrain(vidtrain);
                         video.setThumbnail(parseThumbnail);
+                        video.setMessage(_videoMessage);
                         video.saveInBackground(new SaveCallback() {
                             @Override
                             public void done(ParseException e) {
