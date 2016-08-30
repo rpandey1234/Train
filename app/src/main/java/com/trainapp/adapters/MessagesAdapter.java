@@ -1,7 +1,14 @@
 package com.trainapp.adapters;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.transition.AutoTransition;
+import android.transition.ChangeTransform;
+import android.transition.Explode;
+import android.transition.Fade;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -12,6 +19,7 @@ import com.trainapp.fragments.VidtrainLandingFragment;
 import com.trainapp.models.User;
 import com.trainapp.models.VideoModel;
 import com.trainapp.models.VidtrainMessage;
+import com.trainapp.ui.ExpandFadeTransition;
 import com.trainapp.ui.VideoPreview;
 
 import java.util.List;
@@ -48,9 +56,22 @@ public class MessagesAdapter extends RecyclerView.Adapter<VideoPreviewViewHolder
             @Override
             public void onClick(View v) {
                 _vidtrainLandingFragment._videoPageFragment = VideoPageFragment.newInstance(video);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    // Setup exit transition on first fragment
+                    _vidtrainLandingFragment.setSharedElementReturnTransition(new ExpandFadeTransition());
+                    _vidtrainLandingFragment.setExitTransition(new Fade(Fade.OUT));
+
+                    // Setup enter transition on second fragment
+                    _vidtrainLandingFragment._videoPageFragment.setSharedElementEnterTransition(new ExpandFadeTransition());
+                    _vidtrainLandingFragment._videoPageFragment.setEnterTransition(new Fade(Fade.IN));
+                    _vidtrainLandingFragment._videoPageFragment.setSharedElementReturnTransition(new ExpandFadeTransition());
+                    _vidtrainLandingFragment._videoPageFragment.setExitTransition(new Fade(Fade.OUT));
+
+                }
                 // TODO: opening animation
                 _vidtrainLandingFragment.getChildFragmentManager()
                         .beginTransaction()
+                        .addSharedElement(holder._videoPreview._ivThumbnail, "thumbnailToVideo")
                         .replace(R.id.childFragment, _vidtrainLandingFragment._videoPageFragment)
                         .addToBackStack(null)
                         .commit();

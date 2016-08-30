@@ -26,7 +26,8 @@
         android:scaleType="centerCrop"
         app:riv_border_width="4dp"
         app:riv_border_color="@color/colorPrimary"
-        app:riv_corner_radius="40dp" />
+        app:riv_corner_radius="40dp"
+        android:transitionName="thumbnailToVideo"/>
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/ivUserPic"

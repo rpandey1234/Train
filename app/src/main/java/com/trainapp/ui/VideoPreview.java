@@ -1,6 +1,7 @@
 package com.trainapp.ui;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +27,7 @@ import butterknife.ButterKnife;
  */
 public class VideoPreview extends FrameLayout {
 
-    @Bind(R.id.ivThumbnail) ImageView _ivThumbnail;
+    public @Bind(R.id.ivThumbnail) ImageView _ivThumbnail;
     @Bind(R.id.ivUserPic) ImageView _ivUserPic;
     @Bind(R.id.usersSeen) LinearLayout _usersSeen;
     @Bind(R.id.usersUnseen) LinearLayout _usersUnseen;
@@ -51,6 +52,9 @@ public class VideoPreview extends FrameLayout {
         _context = getContext();
         LayoutInflater.from(_context).inflate(R.layout.video_preview, this, true);
         ButterKnife.bind(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            _ivThumbnail.setTransitionName("thumbnailToVideo");
+        }
     }
 
     public void bind(VideoModel videoModel) {
@@ -114,5 +118,9 @@ public class VideoPreview extends FrameLayout {
         _timeLeft.setText("");
         _usersSeen.removeAllViews();
         _usersUnseen.removeAllViews();
+    }
+
+    public View getThumbnailImageView() {
+        return _ivThumbnail;
     }
 }
