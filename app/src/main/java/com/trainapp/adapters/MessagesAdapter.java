@@ -3,15 +3,10 @@ package com.trainapp.adapters;
 import android.content.Context;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
-import android.transition.AutoTransition;
-import android.transition.ChangeTransform;
-import android.transition.Explode;
-import android.transition.Fade;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.trainapp.R;
 import com.trainapp.adapters.MessagesAdapter.VideoPreviewViewHolder;
@@ -20,7 +15,6 @@ import com.trainapp.fragments.VidtrainLandingFragment;
 import com.trainapp.models.User;
 import com.trainapp.models.VideoModel;
 import com.trainapp.models.VidtrainMessage;
-import com.trainapp.ui.ExpandFadeTransition;
 import com.trainapp.ui.VideoPreview;
 
 import java.util.List;
