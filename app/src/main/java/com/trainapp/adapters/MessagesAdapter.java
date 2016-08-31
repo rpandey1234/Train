@@ -66,6 +66,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<VideoPreviewViewHolder
                     _vidtrainLandingFragment._videoPageFragment.setEnterTransition(explodeTransform);
                 }
 
+                _vidtrainLandingFragment.setChildFragmentVisibility(View.VISIBLE);
                 _vidtrainLandingFragment.getChildFragmentManager()
                         .beginTransaction()
                         .replace(R.id.childFragment, _vidtrainLandingFragment._videoPageFragment)
@@ -73,7 +74,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<VideoPreviewViewHolder
                         .addToBackStack(null)
                         .commit();
 
-                _vidtrainLandingFragment.setChildFragmentVisibility(View.VISIBLE);
                 _vidtrainLandingFragment._videoPlaying = true;
             }
         });
