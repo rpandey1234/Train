@@ -17,6 +17,7 @@ public class ExpandFadeTransition extends TransitionSet {
         setDuration(3000);
         setOrdering(ORDERING_TOGETHER);
         addTransition(new ChangeBounds()).
+                addTransition(new ChangeTransform()).
                 addTransition(new ChangeImageTransform());
     }
 }

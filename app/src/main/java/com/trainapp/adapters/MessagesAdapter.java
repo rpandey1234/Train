@@ -11,6 +11,7 @@ import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.trainapp.R;
 import com.trainapp.adapters.MessagesAdapter.VideoPreviewViewHolder;
@@ -57,26 +58,29 @@ public class MessagesAdapter extends RecyclerView.Adapter<VideoPreviewViewHolder
             public void onClick(View v) {
                 _vidtrainLandingFragment._videoPageFragment = VideoPageFragment.newInstance(video);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    Transition changeTransform = TransitionInflater.from(_vidtrainLandingFragment.getActivity()).
+                    inflateTransition(R.transition.change_image_transform);
+                    Transition explodeTransform = TransitionInflater.from(_vidtrainLandingFragment.getActivity()).
+                    inflateTransition(android.R.transition.explode);
+
                     // Setup exit transition on first fragment
-                    _vidtrainLandingFragment.setSharedElementReturnTransition(new ExpandFadeTransition());
-                    _vidtrainLandingFragment.setExitTransition(new Fade(Fade.OUT));
+                    _vidtrainLandingFragment.setSharedElementReturnTransition(changeTransform);
+                    _vidtrainLandingFragment.setExitTransition(explodeTransform);
 
                     // Setup enter transition on second fragment
-                    _vidtrainLandingFragment._videoPageFragment.setSharedElementEnterTransition(new ExpandFadeTransition());
-                    _vidtrainLandingFragment._videoPageFragment.setEnterTransition(new Fade(Fade.IN));
-                    _vidtrainLandingFragment._videoPageFragment.setSharedElementReturnTransition(new ExpandFadeTransition());
-                    _vidtrainLandingFragment._videoPageFragment.setExitTransition(new Fade(Fade.OUT));
-
+                    _vidtrainLandingFragment._videoPageFragment.setSharedElementEnterTransition(changeTransform);
+                    _vidtrainLandingFragment._videoPageFragment.setEnterTransition(explodeTransform);
                 }
-                // TODO: opening animation
+
                 _vidtrainLandingFragment.getChildFragmentManager()
                         .beginTransaction()
-                        .addSharedElement(holder._videoPreview._ivThumbnail, "thumbnailToVideo")
                         .replace(R.id.childFragment, _vidtrainLandingFragment._videoPageFragment)
+                        .addSharedElement(holder._videoPreview._ivThumbnail, "thumbnailToVideo")
                         .addToBackStack(null)
                         .commit();
-                _vidtrainLandingFragment._videoPlaying = true;
+
                 _vidtrainLandingFragment.setChildFragmentVisibility(View.VISIBLE);
+                _vidtrainLandingFragment._videoPlaying = true;
             }
         });
         holder._videoPreview.bind(video);
