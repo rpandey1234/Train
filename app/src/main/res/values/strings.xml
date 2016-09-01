@@ -20,7 +20,7 @@
     <!-- Recording strings -->
     <string name="capture">Capture</string>
     <string name="stop">Stop</string>
-    <string name="add">Add</string>
+    <string name="add">Add video</string>
     <string name="send">Send</string>
     <string name="switch_camera">Switch Camera</string>
     <string name="recording_cancelled">Video recording cancelled</string>
