@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.trainapp.R;
+import com.trainapp.activities.MainActivity;
 import com.trainapp.adapters.MessagesAdapter.VideoPreviewViewHolder;
 import com.trainapp.fragments.VideoPageFragment;
 import com.trainapp.fragments.VidtrainLandingFragment;
@@ -70,7 +71,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<VideoPreviewViewHolder
                 _vidtrainLandingFragment.getChildFragmentManager()
                         .beginTransaction()
                         .replace(R.id.childFragment, _vidtrainLandingFragment._videoPageFragment)
-                        .addSharedElement(holder._videoPreview._ivThumbnail, "thumbnailToVideo")
+                        .addSharedElement(holder._videoPreview.getThumbnailImageView(), MainActivity.THUMBNAIL_TO_VIDEO)
                         .addToBackStack(null)
                         .commit();
 

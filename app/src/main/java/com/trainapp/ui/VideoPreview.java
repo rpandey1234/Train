@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.trainapp.R;
+import com.trainapp.activities.MainActivity;
 import com.trainapp.models.User;
 import com.trainapp.models.VideoModel;
 
@@ -27,7 +28,7 @@ import butterknife.ButterKnife;
  */
 public class VideoPreview extends FrameLayout {
 
-    public @Bind(R.id.ivThumbnail) ImageView _ivThumbnail;
+    @Bind(R.id.ivThumbnail) ImageView _ivThumbnail;
     @Bind(R.id.ivUserPic) ImageView _ivUserPic;
     @Bind(R.id.usersSeen) LinearLayout _usersSeen;
     @Bind(R.id.usersUnseen) LinearLayout _usersUnseen;
@@ -53,7 +54,7 @@ public class VideoPreview extends FrameLayout {
         LayoutInflater.from(_context).inflate(R.layout.video_preview, this, true);
         ButterKnife.bind(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            _ivThumbnail.setTransitionName("thumbnailToVideo");
+            _ivThumbnail.setTransitionName(MainActivity.THUMBNAIL_TO_VIDEO);
         }
     }
 
