@@ -11,6 +11,7 @@
     <string name="add_title">Please add a title.</string>
     <string name="video_file_fail">Unable to create a video file.</string>
     <string name="saving">Saving</string>
+    <string name="adding_video">Adding your video</string>
     <string name="working_message">Just a moment please!</string>
     <string name="title_prompt">Enter a title</string>
     <string name="video_thumbnail">thumbnail</string>

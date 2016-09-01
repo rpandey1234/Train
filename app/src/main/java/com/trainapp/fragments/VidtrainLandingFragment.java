@@ -258,8 +258,10 @@ public class VidtrainLandingFragment extends Fragment {
             return;
         }
         if (resultCode == Activity.RESULT_OK && data != null) {
-            _progress = ProgressDialog
-                    .show(getContext(), "Adding your video", "Just a moment please!", true);
+            _progress = ProgressDialog.show(getContext(),
+                    getResources().getString(R.string.adding_video),
+                    getResources().getString(R.string.working_message),
+                    true);
             // data.getData().toString() is file://<path>, file is stored at
             // <path> which is /storage/emulated/0/Movies/VidTrainApp/VID_CAPTURED.mp4
             _videoPath = Utility.getOutputMediaFile(
