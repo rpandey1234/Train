@@ -1,15 +1,11 @@
 package com.trainapp.adapters;
 
 import android.content.Context;
-import android.os.Build;
 import android.support.v7.widget.RecyclerView;
-import android.transition.Transition;
-import android.transition.TransitionInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.trainapp.R;
-import com.trainapp.activities.MainActivity;
 import com.trainapp.adapters.MessagesAdapter.VideoPreviewViewHolder;
 import com.trainapp.fragments.VideoPageFragment;
 import com.trainapp.fragments.VidtrainLandingFragment;
@@ -52,30 +48,14 @@ public class MessagesAdapter extends RecyclerView.Adapter<VideoPreviewViewHolder
             @Override
             public void onClick(View v) {
                 _vidtrainLandingFragment._videoPageFragment = VideoPageFragment.newInstance(video);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    Transition changeTransform = TransitionInflater.from(_vidtrainLandingFragment.getActivity()).
-                    inflateTransition(R.transition.change_image_transform);
-                    Transition explodeTransform = TransitionInflater.from(_vidtrainLandingFragment.getActivity()).
-                    inflateTransition(android.R.transition.explode);
-
-                    // Setup exit transition on first fragment
-                    _vidtrainLandingFragment.setSharedElementReturnTransition(changeTransform);
-                    _vidtrainLandingFragment.setExitTransition(explodeTransform);
-
-                    // Setup enter transition on second fragment
-                    _vidtrainLandingFragment._videoPageFragment.setSharedElementEnterTransition(changeTransform);
-                    _vidtrainLandingFragment._videoPageFragment.setEnterTransition(explodeTransform);
-                }
-
-                _vidtrainLandingFragment.setChildFragmentVisibility(View.VISIBLE);
+                // TODO: opening animation
                 _vidtrainLandingFragment.getChildFragmentManager()
                         .beginTransaction()
                         .replace(R.id.childFragment, _vidtrainLandingFragment._videoPageFragment)
-                        .addSharedElement(holder._videoPreview.getThumbnailImageView(), MainActivity.THUMBNAIL_TO_VIDEO)
                         .addToBackStack(null)
                         .commit();
-
                 _vidtrainLandingFragment._videoPlaying = true;
+                _vidtrainLandingFragment.setChildFragmentVisibility(View.VISIBLE);
             }
         });
         holder._videoPreview.bind(video);

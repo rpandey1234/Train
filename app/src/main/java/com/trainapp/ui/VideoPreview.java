@@ -1,7 +1,6 @@
 package com.trainapp.ui;
 
 import android.content.Context;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.trainapp.R;
-import com.trainapp.activities.MainActivity;
 import com.trainapp.models.User;
 import com.trainapp.models.VideoModel;
 
@@ -53,9 +51,6 @@ public class VideoPreview extends FrameLayout {
         _context = getContext();
         LayoutInflater.from(_context).inflate(R.layout.video_preview, this, true);
         ButterKnife.bind(this);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            _ivThumbnail.setTransitionName(MainActivity.THUMBNAIL_TO_VIDEO);
-        }
     }
 
     public void bind(VideoModel videoModel) {
@@ -119,9 +114,5 @@ public class VideoPreview extends FrameLayout {
         _timeLeft.setText("");
         _usersSeen.removeAllViews();
         _usersUnseen.removeAllViews();
-    }
-
-    public View getThumbnailImageView() {
-        return _ivThumbnail;
     }
 }

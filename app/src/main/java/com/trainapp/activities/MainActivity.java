@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
     public static final String VIDEO_PATH = "VIDEO_PATH";
     public static final String VIDEO_MESSAGE = "VIDEO_MESSAGE";
     public static final int RESULT_TOO_SHORT = 99;
-    public static final String THUMBNAIL_TO_VIDEO = "thumbnailToVideo";
 
     @Bind(R.id.toolbar) Toolbar _toolbar;
     @Bind(R.id.conversations_fragment) FrameLayout _conversationsFragment;
