@@ -52,14 +52,16 @@ public class ConversationsFragment extends VidTrainListFragment {
                         if (e != null) {
                             Log.d(VidtrainApplication.TAG, e.toString());
                         }
+                        if (_unseens == null || _vidtrains == null) {
+                            // This means the network call came back after the fragment was
+                            // destroyed; don't do anything to avoid a crash
+                            return;
+                        }
                         _unseens.addAll(unseens);
                         _vidtrains.addAll(vidtrains);
                         _aVidtrains.notifyDataSetChanged();
-                        if (_vidtrains.size() == 0) {
-                            _tvNoConversations.setVisibility(View.VISIBLE);
-                        } else {
-                            _tvNoConversations.setVisibility(View.GONE);
-                        }
+                        _tvNoConversations.setVisibility(
+                                _vidtrains.isEmpty() ? View.VISIBLE : View.GONE);
                     }
                 });
                 hideProgressBar();
