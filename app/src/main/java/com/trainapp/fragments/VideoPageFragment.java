@@ -264,4 +264,11 @@ public class VideoPageFragment extends Fragment {
                     context.toString() + " must implement VideoPageFragment.PlaySoundListener");
         }
     }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        _videoListener = null;
+        _soundListener = null;
+    }
 }
