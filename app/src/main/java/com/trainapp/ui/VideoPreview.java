@@ -3,7 +3,6 @@ package com.trainapp.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -72,10 +71,10 @@ public class VideoPreview extends FrameLayout {
             return;
         }
         for (User user : users) {
-            View img = LayoutInflater.from(_context).inflate(R.layout.profile_image, this, false);
-            RoundedImageView ivUserPic = (RoundedImageView) img.findViewById(R.id.ivProfileCollaborator);
+            RoundedImageView ivUserPic = (RoundedImageView)
+                    LayoutInflater.from(_context).inflate(R.layout.profile_image, this, false);
             Glide.with(_context).load(user.getProfileImageUrl()).into(ivUserPic);
-            usersView.addView(img);
+            usersView.addView(ivUserPic);
         }
         usersView.setVisibility(users.isEmpty() ? GONE : VISIBLE);
     }
