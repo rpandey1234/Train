@@ -149,7 +149,7 @@ public class VidtrainLandingFragment extends Fragment {
     private void setUpSeenAndUnseenUsers() {
         final List<VideoModel> videosShown = _vidtrainModel.getVideoModelsToShow();
         if (videosShown.size() > 0) {
-            ParseQuery<Unseen> query = ParseQuery.getQuery("Unseen");
+            ParseQuery<Unseen> query = Unseen.getQuery();
             // need to wrap in vidtrain object because pointer field needs a pointer value
             VidTrain vidtrain = new VidTrain();
             vidtrain.setObjectId(_vidtrainModel.getId());
@@ -276,7 +276,7 @@ public class VidtrainLandingFragment extends Fragment {
     }
 
     private void addVideoToVidtrain() {
-        ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
+        ParseQuery<VidTrain> query = VidTrain.getQuery();
         query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
         query.whereEqualTo("objectId", _vidtrainModel.getId());
         query.include(VidTrain.USER_KEY);

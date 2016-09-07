@@ -56,7 +56,7 @@ public class VidTrainDetailActivity extends FragmentActivity
         setContentView(R.layout.activity_vid_train_detail);
         ButterKnife.bind(this);
         _viewPager.setPagingEnabled(false);
-        ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
+        ParseQuery<VidTrain> query = VidTrain.getQuery();
         query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
         query.whereEqualTo("objectId", getVidtrainId());
         query.include(VidTrain.USER_KEY);
@@ -70,7 +70,7 @@ public class VidTrainDetailActivity extends FragmentActivity
                     return;
                 }
                 _vidTrain = object;
-                ParseQuery<Unseen> query = ParseQuery.getQuery("Unseen");
+                ParseQuery<Unseen> query = Unseen.getQuery();
                 query.whereEqualTo(Unseen.USER_KEY, ParseUser.getCurrentUser());
                 query.whereEqualTo(Unseen.VIDTRAIN_KEY, _vidTrain);
                 query.include(Unseen.VIDTRAIN_KEY + "." + Unseen.VIDEOS_KEY);

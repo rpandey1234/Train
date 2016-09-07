@@ -102,7 +102,7 @@ public class CreationDetailActivity extends AppCompatActivity {
                     @Override
                     public void done(ParseException e) {
                         // Check to see if there is already a vidtrain with the same collaborators
-                        ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
+                        ParseQuery<VidTrain> query = VidTrain.getQuery();
                         query.whereContainsAll(VidTrain.COLLABORATORS, collaborators);
                         query.whereEqualTo(VidTrain.COLLABORATOR_COUNT, collaborators.size());
                         query.getFirstInBackground(new GetCallback<VidTrain>() {

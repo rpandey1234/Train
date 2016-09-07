@@ -29,7 +29,7 @@ public class ConversationsFragment extends VidTrainListFragment {
             _aVidtrains.notifyDataSetChanged();
         }
 
-        ParseQuery<VidTrain> query = ParseQuery.getQuery("VidTrain");
+        ParseQuery<VidTrain> query = VidTrain.getQuery();
         query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
         query.addDescendingOrder("updatedAt");
         query.include(VidTrain.COLLABORATORS);
@@ -43,7 +43,7 @@ public class ConversationsFragment extends VidTrainListFragment {
                 if (e != null) {
                     Log.e(VidtrainApplication.TAG, e.toString());
                 }
-                ParseQuery<Unseen> unseenQuery = ParseQuery.getQuery("Unseen");
+                ParseQuery<Unseen> unseenQuery = Unseen.getQuery();
                 unseenQuery.whereEqualTo(Unseen.USER_KEY, User.getCurrentUser());
                 unseenQuery.addDescendingOrder("updatedAt");
                 unseenQuery.findInBackground(new FindCallback<Unseen>() {

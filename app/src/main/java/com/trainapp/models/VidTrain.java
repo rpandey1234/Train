@@ -7,6 +7,7 @@ import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.trainapp.networking.VidtrainApplication;
 import com.trainapp.utilities.Utility;
@@ -24,6 +25,10 @@ public class VidTrain extends ParseObject implements Serializable {
     public static final String VIDEOS_KEY = "videos";
     public static final String COLLABORATORS = "collaborators";
     public static final String COLLABORATOR_COUNT = "collaboratorCount";
+
+    public static ParseQuery<VidTrain> getQuery() {
+        return ParseQuery.getQuery("VidTrain");
+    }
 
     public void setUser(ParseUser user) {
         put(USER_KEY, user);

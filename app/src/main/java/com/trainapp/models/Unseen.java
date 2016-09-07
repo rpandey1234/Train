@@ -29,6 +29,10 @@ public class Unseen extends ParseObject {
 
     public static final int ALL_SEEN_FLAG = -1;
 
+    public static ParseQuery<Unseen> getQuery() {
+        return ParseQuery.getQuery("Unseen");
+    }
+
     public static void addUnseen(VidTrain vidtrain) {
         List<User> collaborators = vidtrain.getCollaborators();
         for (User user : collaborators) {
@@ -41,7 +45,7 @@ public class Unseen extends ParseObject {
                 User.getCurrentUser().getObjectId());
         final Video latestVideo = vidtrain.getLatestVideo();
         // 1. Check if this user/vidtrain already exists
-        ParseQuery<Unseen> query = ParseQuery.getQuery("Unseen");
+        ParseQuery<Unseen> query = getQuery();
         query.whereEqualTo(USER_KEY, user);
         query.whereEqualTo(VIDTRAIN_KEY, vidtrain);
         query.findInBackground(new FindCallback<Unseen>() {
@@ -91,7 +95,7 @@ public class Unseen extends ParseObject {
     }
 
     public static void removeUnseen(VidTrain vidtrain, User user, final String videoId) {
-        ParseQuery<Unseen> query = ParseQuery.getQuery("Unseen");
+        ParseQuery<Unseen> query = Unseen.getQuery();
         query.whereEqualTo(USER_KEY, user);
         query.whereEqualTo(VIDTRAIN_KEY, vidtrain);
         query.getFirstInBackground(new GetCallback<Unseen>() {
