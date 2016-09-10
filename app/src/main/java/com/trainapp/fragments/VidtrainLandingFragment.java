@@ -338,6 +338,7 @@ public class VidtrainLandingFragment extends Fragment {
                                                 setUpVideoMessages();
                                                 _messagesAdapter.notifyDataSetChanged();
                                                 setUpSeenAndUnseenUsers();
+                                                _videosExpired.setVisibility(View.GONE);
                                             }
                                         });
                                     }
