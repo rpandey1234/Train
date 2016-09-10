@@ -37,10 +37,6 @@ public class VidTrainListFragment extends Fragment {
     VidTrainArrayAdapter _aVidtrains;
     LinearLayoutManager _linearLayoutManager;
 
-    public VidTrainListFragment() {
-        // Required empty public constructor
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,8 +71,6 @@ public class VidTrainListFragment extends Fragment {
                 requestVidTrains(0);
             }
         });
-        requestVidTrains(0);
-        clearNotifications();
         return v;
     }
 
@@ -95,5 +89,12 @@ public class VidTrainListFragment extends Fragment {
         NotificationManager notificationManager =
                 (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        requestVidTrains(0);
+        clearNotifications();
     }
 }

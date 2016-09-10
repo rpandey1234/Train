@@ -51,9 +51,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(_toolbar);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.conversations_fragment, ConversationsFragment.newInstance());
-        fragmentTransaction.commit();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.conversations_fragment, ConversationsFragment.newInstance());
+        ft.commit();
     }
 
     @Override
