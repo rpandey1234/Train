@@ -71,6 +71,7 @@
         android:singleLine="true"
         android:imeOptions="actionDone"
         android:inputType="text"
+        android:maxLength="40"
         />
 
     <android.support.design.widget.FloatingActionButton
