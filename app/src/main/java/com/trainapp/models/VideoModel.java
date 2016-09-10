@@ -74,10 +74,9 @@ public class VideoModel implements Parcelable {
         String minLeft = resources.getQuantityString(R.plurals.minutes_plural, minutes, minutes);
         if (days == 0) {
             return resources.getString(R.string.time_left_multiple, hoursLeft, minLeft);
-        } else if (days == 1) {
-            return resources.getString(R.string.time_left_multiple, daysLeft, hoursLeft);
         }
-        return resources.getString(R.string.time_left, daysLeft);
+        return resources.getString(R.string.time_left_multiple, daysLeft, hoursLeft);
+
     }
 
     protected VideoModel(Parcel in) {
