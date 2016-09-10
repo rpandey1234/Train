@@ -144,7 +144,6 @@ public class VideoPageFragment extends Fragment {
                 setSound(_soundListener.getPlaySound());
                 _ivThumbnail.setVisibility(View.GONE);
                 _progressBar.setVisibility(View.GONE);
-                final int duration = mp.getDuration();
                 // Wait some time before indicating that video is prepared, so user does not
                 // accidentally click to advance
                 _handler.postDelayed(new Runnable() {
@@ -153,15 +152,14 @@ public class VideoPageFragment extends Fragment {
                         _isVideoPrepared = true;
                     }
                 }, ADVANCE_DELAY);
+                final int duration = _mediaPlayer.getDuration();
                 _runnableCode = new Runnable() {
                     @Override
                     public void run() {
                         _handler.postDelayed(_runnableCode, UPDATE_FREQUENCY);
-                        double fraction = UPDATE_FREQUENCY / (double) duration;
-                        double widthToAdd = fraction * _width;
-                        double resultWidth = _timerView.getWidth() + widthToAdd;
+                        double fraction = _mediaPlayer.getCurrentPosition() / (double) duration;
                         LayoutParams layoutParams = _timerView.getLayoutParams();
-                        layoutParams.width = Math.round((long) resultWidth);
+                        layoutParams.width = (int) Math.round(fraction * _width);
                         _timerView.setLayoutParams(layoutParams);
                     }
                 };
@@ -172,6 +170,8 @@ public class VideoPageFragment extends Fragment {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 _videoListener.onVideoCompleted(_videoId);
+                _handler.removeCallbacks(_runnableCode);
+                _videoView.stopPlayback();
             }
         });
         return v;
