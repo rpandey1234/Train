@@ -14,6 +14,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import com.trainapp.R;
 import com.trainapp.models.User;
 import com.trainapp.models.VideoModel;
+import com.trainapp.utilities.Utility;
 
 import java.util.List;
 
@@ -75,6 +76,10 @@ public class VideoPreview extends FrameLayout {
                     LayoutInflater.from(_context).inflate(R.layout.profile_image, this, false);
             Glide.with(_context).load(user.getProfileImageUrl()).into(ivUserPic);
             usersView.addView(ivUserPic);
+            // Now the parent container is Linear Layout, we can set the margin
+            LinearLayout.LayoutParams layoutParams =
+                    (LinearLayout.LayoutParams) ivUserPic.getLayoutParams();
+            layoutParams.rightMargin = Utility.dpToPixels(getResources(), 4);
         }
         usersView.setVisibility(users.isEmpty() ? GONE : VISIBLE);
     }

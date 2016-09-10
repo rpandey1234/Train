@@ -24,18 +24,18 @@
         android:layout_below="@id/usersUnseen"
         android:contentDescription="@string/video_thumbnail"
         android:scaleType="centerCrop"
-        app:riv_border_width="4dp"
-        app:riv_border_color="@color/colorPrimary"
-        app:riv_corner_radius="40dp" />
+        app:riv_corner_radius="10dp" />
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/ivUserPic"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
         android:layout_alignBottom="@+id/ivThumbnail"
         android:layout_alignRight="@+id/ivThumbnail"
         android:contentDescription="@string/profile_image"
-        app:riv_corner_radius="20dp" />
+        app:riv_corner_radius="26dp"
+        app:riv_border_width="3dp"
+        app:riv_border_color="@color/colorPrimary" />
 
     <TextView
         android:layout_width="wrap_content"

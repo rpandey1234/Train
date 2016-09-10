@@ -14,6 +14,7 @@ import android.os.Environment;
 import android.provider.MediaStore.Video.Thumbnails;
 import android.text.format.DateUtils;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Surface;
 import android.view.WindowManager;
 import com.google.common.base.Joiner;
@@ -315,5 +316,10 @@ public class Utility {
             names.add(resources.getQuantityString(R.plurals.others_plurals, numLeft, numLeft));
         }
         return Joiner.on(", ").join(names);
+    }
+
+    public static int dpToPixels(Resources resources, int dp) {
+        return (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, dp, resources.getDisplayMetrics());
     }
 }
