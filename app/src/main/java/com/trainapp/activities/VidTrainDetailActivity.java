@@ -43,7 +43,7 @@ public class VidTrainDetailActivity extends FragmentActivity
 
     public static final String VIDTRAIN_KEY = "vidTrain";
     private VidTrain _vidTrain;
-    private int _lastPosition = -1;
+    private int _prevPosition = -1;
     private VideoFragmentPagerAdapter _videoPagerAdapter;
     private boolean _shouldPlaySound = false;
 
@@ -143,16 +143,16 @@ public class VidTrainDetailActivity extends FragmentActivity
             @Override
             public void onPageSelected(final int position) {
                 // Null checks are only needed for instant run
-                VideoPageFragment lastFragment = _videoPagerAdapter.getFragment(_lastPosition);
-                if (lastFragment != null) {
-                    lastFragment.stopVideo();
+                VideoPageFragment previousFragment = _videoPagerAdapter.getFragment(_prevPosition);
+                if (previousFragment != null) {
+                    previousFragment.stopVideo();
                 }
                 VideoPageFragment fragment = _videoPagerAdapter.getFragment(position);
                 if (fragment != null) {
                     fragment.playVideo();
                     fragment.setSound(_shouldPlaySound);
                 }
-                _lastPosition = position;
+                _prevPosition = position;
             }
         };
         _viewPager.addOnPageChangeListener(pageChangeListener);

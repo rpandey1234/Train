@@ -11,7 +11,6 @@ import com.trainapp.fragments.VidtrainLandingFragment;
 import com.trainapp.models.VidTrain;
 import com.trainapp.models.Video;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +22,7 @@ import java.util.Map;
 public class VideoFragmentPagerAdapter extends FragmentPagerAdapter {
 
     private VidTrain _vidTrain;
-    private List<Video> _videos = new ArrayList<>();
+    private List<Video> _videos;
     private Map<Integer, VideoPageFragment> _fragmentMap;
     private VidtrainLandingFragment _landingFragment;
     private Context _context;
@@ -53,13 +52,27 @@ public class VideoFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
+        Object object = super.instantiateItem(container, position);
         if (position < _videos.size()) {
-            VideoPageFragment fragment = (VideoPageFragment) super.instantiateItem(container, position);
-            _fragmentMap.put(position, fragment);
-            return fragment;
+            _fragmentMap.put(position, (VideoPageFragment) object);
         } else {
-            _landingFragment = (VidtrainLandingFragment) super.instantiateItem(container, position);
-            return _landingFragment;
+            _landingFragment = (VidtrainLandingFragment) object;
+        }
+        return object;
+    }
+
+    /**
+     * Need a custom unique identifier (rather than just position) since we remove videos once
+     * they are viewed. If we don't have this, going back to landing fragment after watching unseen
+     * videos causes a crash since instantiateItem will return a video fragment instead of the
+     * landing fragment.
+     */
+    @Override
+    public long getItemId(int position) {
+        if (position < _videos.size()) {
+            return _videos.get(position).getObjectId().hashCode();
+        } else {
+            return super.getItemId(position);
         }
     }
 

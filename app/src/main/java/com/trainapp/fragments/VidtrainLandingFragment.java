@@ -117,8 +117,8 @@ public class VidtrainLandingFragment extends Fragment {
         Bundle arguments = getArguments();
         _vidtrainModel = arguments.getParcelable(VIDTRAIN_MODEL_KEY);
         _vidtrainMessages = new ArrayList<>();
-        setUpVideoMessages();
         _messagesAdapter = new MessagesAdapter(getContext(), _vidtrainMessages, this);
+        setUpVideoMessages();
         _linearLayoutManager = new LinearLayoutManager(getContext());
         _linearLayoutManager.setReverseLayout(true);
     }
@@ -130,6 +130,7 @@ public class VidtrainLandingFragment extends Fragment {
         for (VideoModel video : videos) {
             _vidtrainMessages.add(new VidtrainMessage(video));
         }
+        _messagesAdapter.notifyDataSetChanged();
     }
 
     @Nullable
@@ -336,7 +337,6 @@ public class VidtrainLandingFragment extends Fragment {
                                                         vidtrain.getGeneratedTitle(getResources()));
                                                 // Reload videos
                                                 setUpVideoMessages();
-                                                _messagesAdapter.notifyDataSetChanged();
                                                 setUpSeenAndUnseenUsers();
                                                 _videosExpired.setVisibility(View.GONE);
                                             }
