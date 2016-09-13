@@ -95,12 +95,10 @@ public class VidtrainLandingFragment extends Fragment {
 
     @OnClick(R.id.childFragment)
     public void videoFragmentClicked() {
-        _childFragment.setVisibility(View.GONE);
         if (_videoPageFragment != null) {
             _videoPageFragment.stopVideo();
         }
-        _videoPlaying = false;
-        // TODO: closing animation
+        videoCompleted();
     }
 
     public void setChildFragmentVisibility(int visibility) {

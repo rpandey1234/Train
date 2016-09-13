@@ -52,7 +52,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<VideoPreviewViewHolder
                 _vidtrainLandingFragment.getChildFragmentManager()
                         .beginTransaction()
                         .replace(R.id.childFragment, _vidtrainLandingFragment._videoPageFragment)
-                        .addToBackStack(null)
                         .commit();
                 _vidtrainLandingFragment._videoPlaying = true;
                 _vidtrainLandingFragment.setChildFragmentVisibility(View.VISIBLE);
