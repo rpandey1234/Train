@@ -156,7 +156,6 @@ public class VidTrainDetailActivity extends FragmentActivity
             }
         };
         _viewPager.addOnPageChangeListener(pageChangeListener);
-        _viewPager.setCurrentItem(0);
         _viewPager.post(new Runnable() {
             @Override
             public void run() {
