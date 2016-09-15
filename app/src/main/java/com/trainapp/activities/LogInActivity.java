@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphRequest.GraphJSONObjectCallback;
@@ -40,10 +41,11 @@ public class LogInActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!BuildConfig.DEBUG) {
-            // only report crashes that occur in the release app
-            Fabric.with(this, new Crashlytics());
-        }
+        // Set up Crashlytics, disabled for debug builds
+        Crashlytics crashlyticsKit = new Crashlytics.Builder()
+                .core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
+                .build();
+        Fabric.with(this, crashlyticsKit);
         setContentView(R.layout.activity_log_in);
         ButterKnife.bind(this);
         User currentUser = User.getCurrentUser();
@@ -117,9 +119,7 @@ public class LogInActivity extends AppCompatActivity {
     private void logUser() {
         User currentUser = User.getCurrentUser();
         assert currentUser != null;
-        if (!BuildConfig.DEBUG) {
-            Crashlytics.setUserName(currentUser.getName());
-        }
+        Crashlytics.setUserName(currentUser.getName());
     }
 
     public void showProgressBar() {

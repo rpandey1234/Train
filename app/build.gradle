@@ -52,6 +52,8 @@ android {
             buildConfigField "boolean", "ADD_UNSEEN_FOR_OWN_VIDEO", "false"
             // If true, will play videos from the beginning of any vidtrain
             buildConfigField "boolean", "VIEW_ALL_VIDEOS", "false"
+            // Disable fabric build ID generation for debug builds
+            ext.enableCrashlytics = false
         }
         release {
             buildConfigField "boolean", "MARK_SEEN_VIDEOS", "true"
