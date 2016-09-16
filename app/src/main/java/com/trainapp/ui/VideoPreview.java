@@ -54,8 +54,16 @@ public class VideoPreview extends FrameLayout {
     }
 
     public void bind(VideoModel videoModel) {
-        Glide.with(_context).load(videoModel.getThumbnailUrl()).into(_ivThumbnail);
-        Glide.with(_context).load(videoModel.getUserUrl()).into(_ivUserPic);
+        Glide.with(_context)
+                .load(videoModel.getThumbnailUrl())
+                .asBitmap()
+                .placeholder(R.drawable.placeholder_video)
+                .into(_ivThumbnail);
+        Glide.with(_context)
+                .load(videoModel.getUserUrl())
+                .asBitmap()
+                .placeholder(R.drawable.profile_icon)
+                .into(_ivUserPic);
         _timeLeft.setText(videoModel.getTimeLeft(getResources()));
     }
 

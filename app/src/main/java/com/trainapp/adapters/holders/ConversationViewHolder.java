@@ -74,7 +74,11 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements O
             _participants.addView(participant);
         }
         Video lastVideo = _vidTrain.getLatestVideo();
-        Glide.with(_context).load(lastVideo.getThumbnail().getUrl()).into(_videoImagePreview);
+        Glide.with(_context)
+                .load(lastVideo.getThumbnail().getUrl())
+                .asBitmap()
+                .placeholder(R.drawable.placeholder_video)
+                .into(_videoImagePreview);
     }
 
     @Override
