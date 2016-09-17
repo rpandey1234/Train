@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -269,9 +270,49 @@ public class VidtrainLandingFragment extends Fragment {
             addVideoToVidtrain();
         } else if (resultCode == Activity.RESULT_CANCELED) {
             Toast.makeText(getContext(), R.string.recording_cancelled, Toast.LENGTH_LONG).show();
+            queryVidtrain();
         } else {
             Toast.makeText(getContext(), R.string.recording_failed, Toast.LENGTH_LONG).show();
+            queryVidtrain();
         }
+    }
+
+    /**
+     * I'm not sure why this hack is necessary, but on Samsung devices (not on Nexus) clicking
+     * the back button led to the recycler view getting screwed up: a blank screen would be shown
+     * and it seemed to have scrolled to an weird state where it wasn't displaying properly.
+     *
+     * This method just queries the API for the vidtrain and re-draws the landing fragment.
+     */
+    private void queryVidtrain() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ParseQuery<VidTrain> query = VidTrain.getQuery();
+                query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+                query.whereEqualTo("objectId", _vidtrainModel.getId());
+                query.include(VidTrain.USER_KEY);
+                query.include(VidTrain.VIDEOS_KEY + "." + Video.USER_KEY);
+                query.include(VidTrain.COLLABORATORS);
+                query.getFirstInBackground(new GetCallback<VidTrain>() {
+                    @Override
+                    public void done(final VidTrain vidtrain, ParseException e) {
+                        if (e != null) {
+                            Toast.makeText(getContext(), R.string.invalid_train, Toast.LENGTH_SHORT)
+                                    .show();
+                            return;
+                        }
+                        // Reset Vidtrain Model
+                        _vidtrainModel = new VidtrainModel(vidtrain,
+                                vidtrain.getVideosCount(),
+                                vidtrain.getGeneratedTitle(getResources()));
+                        // Reload videos
+                        setUpVideoMessages();
+                        setUpSeenAndUnseenUsers();
+                    }
+                });
+            }
+        }, 500);
     }
 
     private void addVideoToVidtrain() {
