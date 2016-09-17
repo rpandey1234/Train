@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ import com.bumptech.glide.Glide;
 import com.trainapp.R;
 import com.trainapp.models.Video;
 import com.trainapp.models.VideoModel;
+import com.trainapp.networking.VidtrainApplication;
 import com.trainapp.utilities.Utility;
 
 import butterknife.Bind;
@@ -157,10 +159,16 @@ public class VideoPageFragment extends Fragment {
                     @Override
                     public void run() {
                         _handler.postDelayed(_runnableCode, UPDATE_FREQUENCY);
-                        double fraction = _mediaPlayer.getCurrentPosition() / (double) duration;
-                        LayoutParams layoutParams = _timerView.getLayoutParams();
-                        layoutParams.width = (int) Math.round(fraction * _width);
-                        _timerView.setLayoutParams(layoutParams);
+                        try {
+                            double fraction = _mediaPlayer.getCurrentPosition() / (double) duration;
+                            LayoutParams layoutParams = _timerView.getLayoutParams();
+                            layoutParams.width = (int) Math.round(fraction * _width);
+                            _timerView.setLayoutParams(layoutParams);
+                        } catch (IllegalStateException e) {
+                            Log.e(VidtrainApplication.TAG,
+                                    "Caught IllegalStateException: " + e.toString());
+                            _mediaPlayer.release();
+                        }
                     }
                 };
                 _handler.post(_runnableCode);
@@ -215,7 +223,8 @@ public class VideoPageFragment extends Fragment {
 
     public void playVideo() {
         if (getView() == null) {
-            throw new IllegalStateException("calling playVideo when view is not ready!");
+            Log.e(VidtrainApplication.TAG, "calling playVideo when view is not ready!");
+            return;
         }
         _videoView.setVisibility(View.VISIBLE);
         _videoView.setVideoPath(_videoUrl);
@@ -224,10 +233,13 @@ public class VideoPageFragment extends Fragment {
 
     public void stopVideo() {
         if (getView() == null) {
-            throw new IllegalStateException("calling stopPlayback when view is not ready!");
+            Log.e(VidtrainApplication.TAG, "calling stopPlayback when view is not ready!");
+            return;
         }
         _handler.removeCallbacks(_runnableCode);
-        _videoView.stopPlayback();
+        if (_videoView.isPlaying()) {
+            _videoView.stopPlayback();
+        }
         _ivThumbnail.setVisibility(View.VISIBLE);
         _videoView.setVisibility(View.GONE);
     }
