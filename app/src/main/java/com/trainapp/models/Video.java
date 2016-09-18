@@ -6,6 +6,7 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @ParseClassName("Video")
 public class Video extends ParseObject implements Serializable {
@@ -47,7 +48,12 @@ public class Video extends ParseObject implements Serializable {
     }
 
     public boolean isVideoExpired() {
-        return System.currentTimeMillis() - getCreatedAt().getTime() > TIME_TO_EXPIRE;
+        Date createdAt = getCreatedAt();
+        if (createdAt == null) {
+            // createdAt is null- could be for newly created objects?
+            return true;
+        }
+        return System.currentTimeMillis() - createdAt.getTime() > TIME_TO_EXPIRE;
     }
 
     public void setMessage(String message) {
