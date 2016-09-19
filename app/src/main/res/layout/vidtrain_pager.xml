@@ -28,7 +28,7 @@
         android:background="@color/colorPrimary"
         android:contentDescription="@string/video_thumbnail"
         android:scaleType="centerCrop"
-        android:src="@drawable/placeholder_video"
+        android:src="@drawable/ic_placeholder_video"
         />
 
     <ProgressBar
@@ -101,7 +101,7 @@
         android:id="@+id/btnSound"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:background="@drawable/sound_off"
+        android:background="@drawable/ic_sound_off"
         android:backgroundTint="@android:color/white"
         android:layout_alignParentBottom="true"
         android:gravity="left"

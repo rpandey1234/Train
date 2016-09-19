@@ -116,7 +116,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
                 // now you can start recording
                 _mediaRecorder.start();
                 Drawable drawable = ContextCompat.getDrawable(getApplicationContext(),
-                        R.drawable.icon_square_white);
+                        R.drawable.ic_stop);
                 _captureButton.setImageDrawable(drawable);
                 // Start the initial runnable task by posting through the handler
                 _handler.post(_runnableCode);

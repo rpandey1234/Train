@@ -189,7 +189,7 @@ public class VideoPageFragment extends Fragment {
         // Icon reference: https://thenounproject.com/search/?q=sound&i=369924,
         // https://thenounproject.com/search/?q=sound&i=369926
         Drawable drawable = ContextCompat.getDrawable(getContext(),
-                shouldPlaySound ? R.drawable.sound_on : R.drawable.sound_off);
+                shouldPlaySound ? R.drawable.ic_sound_on : R.drawable.ic_sound_off);
         if (_btnSound != null) {
             _btnSound.setBackground(drawable);
         }

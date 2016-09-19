@@ -77,7 +77,7 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements O
         Glide.with(_context)
                 .load(lastVideo.getThumbnail().getUrl())
                 .asBitmap()
-                .placeholder(R.drawable.placeholder_video)
+                .placeholder(R.drawable.ic_placeholder_video)
                 .into(_videoImagePreview);
     }
 

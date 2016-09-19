@@ -57,7 +57,7 @@ public class VideoPreview extends FrameLayout {
         Glide.with(_context)
                 .load(videoModel.getThumbnailUrl())
                 .asBitmap()
-                .placeholder(R.drawable.placeholder_video)
+                .placeholder(R.drawable.ic_placeholder_video)
                 .into(_ivThumbnail);
         Glide.with(_context)
                 .load(videoModel.getUserUrl())
