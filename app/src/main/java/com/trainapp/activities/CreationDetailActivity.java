@@ -9,6 +9,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.parse.GetCallback;
@@ -38,6 +40,8 @@ import butterknife.OnClick;
 public class CreationDetailActivity extends AppCompatActivity {
 
     @Bind(R.id.friendsRecyclerView) RecyclerView _friendsRecyclerView;
+    @Bind(R.id.progressBar) ProgressBar _progressBar;
+    @Bind(R.id.btnSubmit) Button _submitButton;
 
     private ProgressDialog _progressDialog;
     private String _videoPath;
@@ -60,6 +64,8 @@ public class CreationDetailActivity extends AppCompatActivity {
             public void setUsers(List<User> users) {
                 friends.addAll(users);
                 _friendsAdapter.notifyDataSetChanged();
+                _progressBar.setVisibility(View.GONE);
+                _submitButton.setEnabled(true);
             }
         });
         _videoPath = getIntent().getStringExtra(MainActivity.VIDEO_PATH);

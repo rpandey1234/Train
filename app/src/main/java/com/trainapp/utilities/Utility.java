@@ -20,6 +20,7 @@ import android.view.WindowManager;
 import com.google.common.base.Joiner;
 import com.google.common.io.Files;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.GraphResponse;
 import com.parse.ParseFile;
 import com.parse.ParseInstallation;
@@ -158,6 +159,13 @@ public class Utility {
     public static List<String> getFacebookFriends(GraphResponse response, String key) {
         List<String> friends = new ArrayList<>();
         JSONObject jsonObject = response.getJSONObject();
+        if (jsonObject == null) {
+            Crashlytics.log("Null response from Facebook");
+            if (response.getError() != null) {
+                Crashlytics.setString("GraphResponse", response.getError().getErrorMessage());
+            }
+            return friends;
+        }
         try {
             // TODO: need to account for paging
             JSONArray data = jsonObject.getJSONArray("data");
@@ -166,8 +174,8 @@ public class Utility {
                 friends.add(friendData.getString(key));
             }
         } catch (JSONException e) {
+            Crashlytics.logException(e);
             e.printStackTrace();
-            return null;
         }
         return friends;
     }

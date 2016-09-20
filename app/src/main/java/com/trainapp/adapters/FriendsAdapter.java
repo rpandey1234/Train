@@ -88,8 +88,11 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendViewHolder> {
             _position = position;
             User user = _friends.get(_position);
             _friendName.setText(user.getName());
-            Glide.with(_context).load(user.getProfileImageUrl()).placeholder(
-                    R.drawable.profile_icon).into(_friendImage);
+            Glide.with(_context)
+                    .load(user.getProfileImageUrl())
+                    .asBitmap()
+                    .placeholder(R.drawable.profile_icon)
+                    .into(_friendImage);
         }
 
         @OnClick(R.id.friendName)
