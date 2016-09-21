@@ -20,7 +20,7 @@
         android:layout_alignParentEnd="true"
         android:contentDescription="@string/switch_camera"
         android:text="@string/switch_camera"
-        android:src="@drawable/ic_sync_black_24dp"
+        android:src="@drawable/ic_switch"
         android:tint="@color/colorPrimary"
         android:background="@android:color/transparent"
         android:layout_alignParentRight="true"
