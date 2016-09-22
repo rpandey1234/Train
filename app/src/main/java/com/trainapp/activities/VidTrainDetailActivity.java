@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
@@ -40,6 +42,7 @@ public class VidTrainDetailActivity extends FragmentActivity
         implements VideoFinishedListener, PlaySoundListener {
 
     @Bind(R.id.viewPager) SwipeViewPager _viewPager;
+    @Bind(R.id.progressBar) ProgressBar _progressBar;
 
     public static final String VIDTRAIN_KEY = "vidTrain";
     private VidTrain _vidTrain;
@@ -114,6 +117,7 @@ public class VidTrainDetailActivity extends FragmentActivity
     }
 
     private void layoutVidTrain(int position) {
+        _progressBar.setVisibility(View.GONE);
         final List<Video> videos;
         if (position == Unseen.ALL_SEEN_FLAG) {
             // User has seen all the videos. They only get to see the final landing page.
