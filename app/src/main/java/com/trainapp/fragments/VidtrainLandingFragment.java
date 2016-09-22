@@ -297,6 +297,9 @@ public class VidtrainLandingFragment extends Fragment {
                 query.getFirstInBackground(new GetCallback<VidTrain>() {
                     @Override
                     public void done(final VidTrain vidtrain, ParseException e) {
+                        if (!isAdded()) {
+                            return;
+                        }
                         if (e != null) {
                             Toast.makeText(getContext(), R.string.invalid_train, Toast.LENGTH_SHORT)
                                     .show();
