@@ -56,6 +56,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
     private static Camera mCamera = null;
     public static int orientation;
 
+    private String _videoPath;
     private CameraPreview _cameraPreview;
     private MediaRecorder _mediaRecorder;
     private boolean _isRecording = false;
@@ -87,6 +88,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         setContentView(R.layout.video_capture);
         ButterKnife.bind(this);
         uniqueId = getIntent().getStringExtra(Utility.UNIQUE_ID_INTENT);
+        _videoPath = Utility.getOutputMediaFile(uniqueId).getPath();
         initializeCamera();
     }
 
@@ -170,7 +172,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         _btnChangeCamera.setVisibility(View.GONE);
         _preview.removeAllViews();
         // play (and repeat) the video
-        _videoView.setVideoPath(Utility.getOutputMediaFile(uniqueId).getPath());
+        _videoView.setVideoPath(_videoPath);
         _videoView.start();
         _videoView.setOnCompletionListener(new OnCompletionListener() {
             @Override
@@ -239,7 +241,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         _mediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_480P));
 
         // Step 4: Set output file
-        _mediaRecorder.setOutputFile(Utility.getOutputMediaFile(uniqueId).toString());
+        _mediaRecorder.setOutputFile(_videoPath);
 
         // Step 5: Set the preview output
         _mediaRecorder.setPreviewDisplay(_cameraPreview.getHolder().getSurface());
@@ -318,7 +320,8 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        Utility.deleteFile(_videoPath);
         _handler.removeCallbacks(_runnableCode);
+        super.onBackPressed();
     }
 }

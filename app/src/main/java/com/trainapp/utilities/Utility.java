@@ -48,7 +48,8 @@ import java.util.List;
 
 public class Utility {
 
-    public static final String FILENAME = "video.mp4";
+    public static final String VIDEO_FILENAME = "video.mp4";
+    public static final String THUMBNAIL_FILENAME = "thumbnail.png";
     public static final String UNIQUE_ID_INTENT = "UNIQUE_ID";
     public static final String MESSAGE_EXTRA_INTENT = "MESSAGE_EXTRA";
     public static final int VIDEO_CAPTURE = 101;
@@ -68,7 +69,7 @@ public class Utility {
      */
     public static File getOutputMediaFile(String objectId) {
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_MOVIES), "VidTrainApp");
+                Environment.DIRECTORY_MOVIES), "Train");
         if (!mediaStorageDir.exists()) {
             // create directory if it doesn't exist
             if (!mediaStorageDir.mkdirs()) {
@@ -96,7 +97,7 @@ public class Utility {
         }
         try {
             byte[] videoFileData = Files.toByteArray(new File(path));
-            return new ParseFile(FILENAME, videoFileData);
+            return new ParseFile(VIDEO_FILENAME, videoFileData);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -117,7 +118,7 @@ public class Utility {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] byteArray = stream.toByteArray();
-        return new ParseFile("thumbnail.bmp", byteArray);
+        return new ParseFile(THUMBNAIL_FILENAME, byteArray);
     }
 
     public static Bitmap getImageBitmap(String filePath) {
