@@ -39,6 +39,9 @@ public class ConversationsFragment extends VidTrainListFragment {
         query.findInBackground(new FindCallback<VidTrain>() {
             @Override
             public void done(final List<VidTrain> vidtrains, ParseException e) {
+                if (!isAdded()) {
+                    return;
+                }
                 _swipeContainer.setRefreshing(false);
                 if (e != null) {
                     Log.e(VidtrainApplication.TAG, e.toString());
@@ -49,6 +52,9 @@ public class ConversationsFragment extends VidTrainListFragment {
                 unseenQuery.findInBackground(new FindCallback<Unseen>() {
                     @Override
                     public void done(List<Unseen> unseens, ParseException e) {
+                        if (!isAdded()) {
+                            return;
+                        }
                         if (e != null) {
                             Log.d(VidtrainApplication.TAG, e.toString());
                         }
