@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.GetCallback;
@@ -40,6 +41,7 @@ import butterknife.OnClick;
 public class CreationDetailActivity extends AppCompatActivity {
 
     @Bind(R.id.friendsRecyclerView) RecyclerView _friendsRecyclerView;
+    @Bind(R.id.noFriendsTextView) TextView _noFriendsTextView;
     @Bind(R.id.progressBar) ProgressBar _progressBar;
     @Bind(R.id.btnSubmit) Button _submitButton;
 
@@ -63,6 +65,9 @@ public class CreationDetailActivity extends AppCompatActivity {
             @Override
             public void setUsers(List<User> users) {
                 friends.addAll(users);
+                if (friends.isEmpty()) {
+                    _noFriendsTextView.setVisibility(View.VISIBLE);
+                }
                 _friendsAdapter.notifyDataSetChanged();
                 _progressBar.setVisibility(View.GONE);
                 _submitButton.setEnabled(true);

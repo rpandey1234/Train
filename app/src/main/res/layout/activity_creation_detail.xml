@@ -28,6 +28,17 @@
             android:scrollbars="vertical"
             />
 
+        <TextView
+            android:id="@+id/noFriendsTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/friends_none"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:visibility="gone"
+            />
+
         <ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyleLarge"

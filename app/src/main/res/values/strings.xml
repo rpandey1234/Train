@@ -30,6 +30,7 @@
     <string name="logout">Logout</string>
     <string name="friend_list">Friend List</string>
     <string name="conversations_none">You\'re not in any conversations!</string>
+    <string name="friends_none">You don\'t have any friends using Train. Tell them to download the app send them videos.</string>
     <string name="app_logo">logo</string>
     <string name="image_preview">preview</string>
     <string name="image_placeholder">placeholder</string>

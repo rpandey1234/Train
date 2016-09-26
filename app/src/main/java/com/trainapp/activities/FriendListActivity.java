@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.trainapp.R;
 import com.trainapp.adapters.FriendsAdapter;
@@ -28,6 +29,7 @@ import butterknife.ButterKnife;
 public class FriendListActivity extends AppCompatActivity {
 
     @Bind(R.id.friendsRecyclerView) RecyclerView _friendsRecyclerView;
+    @Bind(R.id.noFriendsTextView) TextView _noFriendsTextView;
     @Bind(R.id.toolbar) Toolbar _toolbar;
     @Bind(R.id.progressBar) ProgressBar _progressBar;
 
@@ -58,6 +60,9 @@ public class FriendListActivity extends AppCompatActivity {
             @Override
             public void setUsers(List<User> users) {
                 friends.addAll(users);
+                if (friends.isEmpty()) {
+                    _noFriendsTextView.setVisibility(View.VISIBLE);
+                }
                 friendsAdapter.notifyDataSetChanged();
                 _progressBar.setVisibility(View.GONE);
             }
