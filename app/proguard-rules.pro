@@ -15,3 +15,38 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+-keep class butterknife.** { *; }
+-dontwarn butterknife.internal.**
+-keep class **$$ViewBinder { *; }
+
+-keepclasseswithmembernames class * {
+    @butterknife.* <fields>;
+}
+
+-keepclasseswithmembernames class * {
+    @butterknife.* <methods>;
+}
+
+# Keep source file names, line numbers, and Parse class/method names for easier debugging
+-keepattributes SourceFile,LineNumberTable
+-keepnames class com.parse.** { *; }
+
+# Required for Parse
+-keepattributes *Annotation*
+-keepattributes Signature
+-dontwarn com.squareup.**
+-dontwarn okio.**
+
+-keep class com.parse.NotificationCompat.* { *; }
+-dontwarn com.parse.NotificationCompat.**
+
+-keep class com.parse.ParseApacheHttpClient.* { *; }
+-dontwarn com.parse.ParseApacheHttpClient.**
+-dontwarn android.app.Notification
+-dontwarn android.net.SSLCertificateSocketFactory
+
+-keep public class com.google.android.gms.* { public *; }
+-keep class com.google.common.* { *; }
+-dontwarn com.google.common.**
+-dontwarn com.google.android.gms.**
