@@ -59,7 +59,7 @@ android {
             buildConfigField "boolean", "MARK_SEEN_VIDEOS", "true"
             buildConfigField "boolean", "ADD_UNSEEN_FOR_OWN_VIDEO", "false"
             buildConfigField "boolean", "VIEW_ALL_VIDEOS", "false"
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             debuggable false
             signingConfig signingConfigs.release
