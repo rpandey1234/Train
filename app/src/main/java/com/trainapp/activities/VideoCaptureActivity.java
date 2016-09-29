@@ -16,6 +16,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Display;
+import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -90,6 +92,26 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         uniqueId = getIntent().getStringExtra(Utility.UNIQUE_ID_INTENT);
         _videoPath = Utility.getOutputMediaFile(uniqueId).getPath();
         initializeCamera();
+        final GestureDetector gestureDetector = new GestureDetector(
+                this,
+                new SimpleOnGestureListener() {
+                    @Override
+                    public void onLongPress(MotionEvent event) {
+                        toggleRecording();
+                    }
+
+                    @Override
+                    public boolean onSingleTapUp(MotionEvent event) {
+                        toggleRecording();
+                        return true;
+                    }
+        });
+        _captureButton.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return gestureDetector.onTouchEvent(event);
+            }
+        });
     }
 
     @OnClick(R.id.button_change_camera)
@@ -108,7 +130,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
     }
 
     @OnClick(R.id.button_capture)
-    public void toggleRecording(View view) {
+    public void toggleRecording() {
         if (_isRecording) {
             finishRecording();
         } else {
