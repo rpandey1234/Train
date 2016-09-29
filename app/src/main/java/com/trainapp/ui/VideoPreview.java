@@ -3,6 +3,7 @@ package com.trainapp.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * A view with an image and the author's profile picture in the bottom right.
@@ -29,7 +31,9 @@ public class VideoPreview extends FrameLayout {
     @Bind(R.id.ivThumbnail) ImageView _ivThumbnail;
     @Bind(R.id.ivUserPic) ImageView _ivUserPic;
     @Bind(R.id.usersSeen) LinearLayout _usersSeen;
+    @Bind(R.id.usersSeenLabel) TextView _usersSeenLabel;
     @Bind(R.id.usersUnseen) LinearLayout _usersUnseen;
+    @Bind(R.id.usersUnseenLabel) TextView _usersUnseenLabel;
     @Bind(R.id.timeLeft) TextView _timeLeft;
 
     private Context _context;
@@ -103,6 +107,25 @@ public class VideoPreview extends FrameLayout {
         } else {
             alignParentLeft(layoutIvThumbnail);
             alignParentLeft(layoutTimeLeft);
+        }
+    }
+
+    @OnClick({R.id.usersSeen, R.id.usersSeenLabel})
+    public void seenUsersClicked() {
+        toggleVisibility(_usersSeenLabel);
+    }
+
+    @OnClick({R.id.usersUnseen, R.id.usersUnseenLabel})
+    public void unseenUsersClicked() {
+        toggleVisibility(_usersUnseenLabel);
+    }
+
+    private void toggleVisibility(View view) {
+        int visibility = view.getVisibility();
+        if (visibility == VISIBLE) {
+            view.setVisibility(GONE);
+        } else if (visibility == GONE) {
+            view.setVisibility(VISIBLE);
         }
     }
 

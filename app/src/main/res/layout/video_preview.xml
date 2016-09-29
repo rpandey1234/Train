@@ -13,17 +13,33 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="4dp"
         android:orientation="horizontal"
-        android:visibility="gone" />
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/usersUnseenLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/usersUnseen"
+        android:text="@string/seen"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:layout_alignParentRight="true"
+        android:drawableLeft="@drawable/ic_checkmark_holo_light"
+        android:drawablePadding="2dp"
+        android:visibility="gone"
+        />
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/ivThumbnail"
         android:layout_width="140dp"
         android:layout_height="200dp"
         android:layout_alignParentLeft="true"
-        android:layout_below="@id/usersUnseen"
+        android:layout_below="@id/usersUnseenLabel"
         android:contentDescription="@string/video_thumbnail"
         android:scaleType="centerCrop"
-        app:riv_corner_radius="10dp" />
+        app:riv_corner_radius="10dp"
+        />
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/ivUserPic"
@@ -34,7 +50,8 @@
         android:contentDescription="@string/profile_image"
         app:riv_corner_radius="26dp"
         app:riv_border_width="3dp"
-        app:riv_border_color="@color/colorPrimary" />
+        app:riv_border_color="@color/colorPrimary"
+        />
 
     <TextView
         android:layout_width="wrap_content"
@@ -42,7 +59,8 @@
         android:id="@+id/timeLeft"
         android:layout_below="@id/ivThumbnail"
         android:layout_marginTop="8dp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        />
 
     <!-- Only used for the most recent video to indicate users who have seen everything -->
     <LinearLayout
@@ -53,5 +71,19 @@
         android:layout_alignParentRight="true"
         android:layout_marginTop="4dp"
         android:orientation="horizontal"
-        android:visibility="gone" />
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/usersSeenLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/usersSeen"
+        android:text="@string/seen"
+        android:layout_marginTop="4dp"
+        android:layout_alignParentRight="true"
+        android:drawableLeft="@drawable/ic_checkmark_holo_light"
+        android:drawablePadding="2dp"
+        android:visibility="gone"
+        />
 </RelativeLayout>
