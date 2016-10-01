@@ -25,7 +25,7 @@
     <application
         android:name="com.trainapp.networking.VidtrainApplication"
         android:allowBackup="false"
-        android:icon="@drawable/icon_vidtrain"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         tools:replace="android:theme">

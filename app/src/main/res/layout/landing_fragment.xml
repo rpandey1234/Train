@@ -58,12 +58,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawablePadding="8dp"
-                android:drawableStart="@drawable/icon_vidtrain_small"
                 android:textSize="20sp"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="8dp"
-                android:drawableLeft="@drawable/icon_vidtrain_small"
+                android:drawableLeft="@drawable/ic_video_small"
+                android:drawableTint="@color/colorAccent"
                 />
         </RelativeLayout>
 

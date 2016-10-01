@@ -25,8 +25,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="60dp"
         android:contentDescription="@string/app_logo"
-        android:src="@drawable/icon_vidtrain"
-        android:tint="@android:color/white" />
+        android:src="@drawable/ic_train" />
 
     <Button
         android:id="@+id/login_button"

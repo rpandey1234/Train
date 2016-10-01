@@ -41,7 +41,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:text="@string/capture"
-        android:src="@drawable/icon_vidtrain"
+        android:src="@drawable/ic_video"
         android:tint="@android:color/white"
         android:layout_marginBottom="30dp"
         app:fabSize="normal"
