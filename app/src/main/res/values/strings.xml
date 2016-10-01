@@ -42,7 +42,7 @@
     <string name="add_success">Successfully added video!</string>
     <string name="videos_expired">All these videos have expired!</string>
     <string name="not_long_enough">Sorry! That wasn\'t long enough</string>
-    <string name="group_size_error">"Sorry! The group limit is %d."</string>
+    <string name="group_size_error">Sorry! You can only have up to %d others in your group.</string>
     <string name="time_left_multiple">%1$s, %2$s left</string>
     <string name="seen">Seen</string>
     <plurals name="days_plural">
