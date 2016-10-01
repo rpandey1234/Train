@@ -58,7 +58,6 @@ public class VidTrainDetailActivity extends FragmentActivity
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_vid_train_detail);
         ButterKnife.bind(this);
-        _viewPager.setPagingEnabled(false);
         ParseQuery<VidTrain> query = VidTrain.getQuery();
         query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
         query.whereEqualTo("objectId", getVidtrainId());

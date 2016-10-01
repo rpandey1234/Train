@@ -331,4 +331,8 @@ public class Utility {
         return (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, dp, resources.getDisplayMetrics());
     }
+
+    public static float pxToDp(Resources resources, float px) {
+        return px / resources.getDisplayMetrics().density;
+    }
 }
