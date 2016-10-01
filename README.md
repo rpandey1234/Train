@@ -1,11 +1,7 @@
 # Train
 
-## About the app
-
-Train is video messaging for groups. Each participant in the train can only view the video once. 
-
-## Contact
-
-Built with love in San Francisco, CA. Send questions and comments to rpandey1234@gmail.com. 
+Train is video messaging for groups. Built with love in San Francisco, CA.
 
 Parse URL: https://www.parse.com/apps/vidtrain/
+
+Google Play: https://play.google.com/store/apps/details?id=com.trainapp
