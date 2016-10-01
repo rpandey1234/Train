@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ import com.trainapp.adapters.FriendsAdapter;
 import com.trainapp.models.User;
 import com.trainapp.utilities.FacebookUtility;
 import com.trainapp.utilities.FriendLoaderCallback;
+import com.trainapp.utilities.Utility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +34,7 @@ public class FriendListActivity extends AppCompatActivity {
     @Bind(R.id.noFriendsTextView) TextView _noFriendsTextView;
     @Bind(R.id.toolbar) Toolbar _toolbar;
     @Bind(R.id.progressBar) ProgressBar _progressBar;
+    @Bind(R.id.parentContainer) LinearLayout _parentContainer;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,6 +54,9 @@ public class FriendListActivity extends AppCompatActivity {
             }
         });
 
+        if (!Utility.isOnline()) {
+            Utility.showNoInternetSnackbar(_parentContainer);
+        }
         final List<User> friends = new ArrayList<>();
         final FriendsAdapter friendsAdapter = new FriendsAdapter(this, friends, false);
         _friendsRecyclerView.setAdapter(friendsAdapter);

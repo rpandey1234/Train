@@ -45,6 +45,7 @@ public class ConversationsFragment extends VidTrainListFragment {
                 _swipeContainer.setRefreshing(false);
                 if (e != null) {
                     Log.e(VidtrainApplication.TAG, e.toString());
+                    return;
                 }
                 ParseQuery<Unseen> unseenQuery = Unseen.getQuery();
                 unseenQuery.whereEqualTo(Unseen.USER_KEY, User.getCurrentUser());
@@ -57,6 +58,7 @@ public class ConversationsFragment extends VidTrainListFragment {
                         }
                         if (e != null) {
                             Log.d(VidtrainApplication.TAG, e.toString());
+                            return;
                         }
                         if (_unseens == null || _vidtrains == null) {
                             // This means the network call came back after the fragment was

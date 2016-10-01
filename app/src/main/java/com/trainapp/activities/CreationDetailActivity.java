@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +45,7 @@ public class CreationDetailActivity extends AppCompatActivity {
     @Bind(R.id.noFriendsTextView) TextView _noFriendsTextView;
     @Bind(R.id.progressBar) ProgressBar _progressBar;
     @Bind(R.id.btnSubmit) Button _submitButton;
+    @Bind(R.id.parentContainer) LinearLayout _parentContainer;
 
     private ProgressDialog _progressDialog;
     private String _videoPath;
@@ -56,6 +58,9 @@ public class CreationDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_creation_detail);
         ButterKnife.bind(this);
+        if (!Utility.isOnline()) {
+            Utility.showNoInternetSnackbar(_parentContainer);
+        }
         final List<User> friends = new ArrayList<>();
         _friendsAdapter = new FriendsAdapter(this, friends, true);
         _friendsRecyclerView.setAdapter(_friendsAdapter);

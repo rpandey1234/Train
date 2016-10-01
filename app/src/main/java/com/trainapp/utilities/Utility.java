@@ -12,10 +12,12 @@ import android.hardware.Camera;
 import android.media.ThumbnailUtils;
 import android.os.Environment;
 import android.provider.MediaStore.Video.Thumbnails;
+import android.support.design.widget.Snackbar;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Surface;
+import android.view.View;
 import android.view.WindowManager;
 import com.google.common.base.Joiner;
 import com.google.common.io.Files;
@@ -334,5 +336,26 @@ public class Utility {
 
     public static float pxToDp(Resources resources, float px) {
         return px / resources.getDisplayMetrics().density;
+    }
+
+    public static boolean isOnline() {
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int     exitValue = ipProcess.waitFor();
+            return (exitValue == 0);
+        } catch (IOException | InterruptedException e) { e.printStackTrace(); }
+        return false;
+    }
+
+    public static void showNoInternetSnackbar(View parentView) {
+        final Snackbar snackbar = Snackbar.make(
+                parentView, R.string.internet_trouble, Snackbar.LENGTH_INDEFINITE);
+
+        snackbar.setAction(android.R.string.ok, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {}
+        });
+        snackbar.show();
     }
 }

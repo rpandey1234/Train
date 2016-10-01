@@ -70,6 +70,7 @@ public class Unseen extends ParseObject {
                         public void done(ParseException e) {
                             if (e != null) {
                                 Log.e(VidtrainApplication.TAG, "Unable to save Unseen object");
+                                return;
                             }
                             Log.d(VidtrainApplication.TAG,
                                     "Saved unseen object! For user/vidtrain: " + user.getName()
