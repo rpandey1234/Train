@@ -8,18 +8,15 @@
 
     <!-- Creation strings -->
     <string name="sign_in_to_create">Sign in to create a Train</string>
-    <string name="add_title">Please add a title.</string>
     <string name="video_file_fail">Unable to create a video file.</string>
     <string name="saving">Saving</string>
     <string name="adding_video">Adding your video</string>
     <string name="working_message">Just a moment please!</string>
-    <string name="title_prompt">Enter a title</string>
     <string name="video_thumbnail">thumbnail</string>
     <string name="invalid_train">This Train is invalid</string>
 
     <!-- Recording strings -->
     <string name="capture">Capture</string>
-    <string name="stop">Stop</string>
     <string name="add">Add video</string>
     <string name="send">Send</string>
     <string name="switch_camera">Switch Camera</string>
@@ -33,7 +30,6 @@
     <string name="friends_none">You don\'t have any friends using Train. Tell them to download the app send them videos.</string>
     <string name="app_logo">logo</string>
     <string name="image_preview">preview</string>
-    <string name="image_placeholder">placeholder</string>
     <string name="friends_using">Friends using Train</string>
     <string name="add_friends_instructions">Create your group:</string>
     <plurals name="others_plurals">
@@ -47,7 +43,6 @@
     <string name="videos_expired">All these videos have expired!</string>
     <string name="not_long_enough">Sorry! That wasn\'t long enough</string>
     <string name="group_size_error">"Sorry! The group limit is %d."</string>
-    <string name="time_left">%s left</string>
     <string name="time_left_multiple">%1$s, %2$s left</string>
     <string name="seen">Seen</string>
     <plurals name="days_plural">
