@@ -85,8 +85,10 @@ header h2 {
 }
 
 #container {
-  min-height: 595px;
-  background: transparent url(../images/highlight-bg.jpg) 50% 0 no-repeat;
+  /*min-height: 595px;*/
+  min-height: 100%;
+  /*background: transparent url(../images/highlight-bg.jpg) 50% 0 no-repeat;*/
+  background: rgba(12, 172, 233, 0.2);
 }
 
 .inner {
@@ -313,7 +315,7 @@ dl dt {
 footer {
   padding-top: 20px;
   padding-bottom: 30px;
-  margin-top: 40px;
+  margin-top: 20px;
   font-size: 13px;
   color: #aaa;
   background: transparent url('../images/hr.png') 0 0 no-repeat;
@@ -371,3 +373,45 @@ footer a:hover {
 
 /* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) */
 @media only screen and (max-width: 479px) { }
+
+.topContainer {
+  display: inline-block; 
+  *display: inline;
+  zoom: 1;
+  vertical-align: middle;
+}
+
+.left {
+  display: inline-block;
+  /*width: 25%;*/
+  width: 180px;
+  margin: 25px 25px 0 25px;
+  vertical-align: middle;
+}
+
+.right {
+  display: inline-block;
+  width: 60%;
+  /*width: 465px;*/
+  vertical-align: top;
+  margin-top: 25px;
+}
+
+.left-play {
+  display: inline-block;
+  width: 200px;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.right-play {
+ display: inline-block; 
+ vertical-align: middle;
+}
+
+.screenshot {
+  max-height: 600px;
+}
+
+
+
