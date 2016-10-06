@@ -123,10 +123,6 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
             _cameraId = CameraInfo.CAMERA_FACING_BACK;
         }
         sCamera = Camera.open(_cameraId);
-//        Parameters parameters = sCamera.getParameters();
-//        if (parameters.isZoomSupported()) {
-//            ZoomControls zoomControls = new ZoomControls(getApplicationContext());
-//        }
         _cameraPreview = new CameraPreview(this, _cameraId, sCamera);
         _preview.removeAllViews();
         _preview.addView(_cameraPreview);
@@ -240,24 +236,16 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
     }
 
     private boolean prepareVideoRecorder() {
-        try {
-            releaseCameraAndPreview();
-            sCamera = Camera.open(_cameraId);
-        } catch (Exception e) {
-            Log.e(VidtrainApplication.TAG, "failed to open Camera");
-            e.printStackTrace();
-        }
-
-        Utility.setCameraDisplayOrientation(this.getWindowManager(), _cameraId, sCamera);
+        Camera camera = _cameraPreview.getCamera();
+        Utility.setCameraDisplayOrientation(this.getWindowManager(), _cameraId, camera);
         if (_cameraId == CameraInfo.CAMERA_FACING_FRONT) {
-            sCamera.setDisplayOrientation(90);
+            camera.setDisplayOrientation(90);
         }
         _mediaRecorder = new MediaRecorder();
 
         // Step 1: Unlock and set camera to MediaRecorder
-        sCamera.unlock();
-        //sCamera.setDisplayOrientation(90);
-        _mediaRecorder.setCamera(sCamera);
+        camera.unlock();
+        _mediaRecorder.setCamera(camera);
 
         // Step 2: Set sources
         _mediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
