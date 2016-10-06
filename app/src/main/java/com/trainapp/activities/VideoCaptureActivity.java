@@ -54,9 +54,9 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
     public static final int MAX_TIME = 7000;
     public static final int UPDATE_FREQUENCY = 50;
 
-    private static String uniqueId;
-    private static Camera mCamera = null;
-    public static int orientation;
+    private static String sUniqueId;
+    private static Camera sCamera = null;
+    public static int sOrientation;
 
     private String _videoPath;
     private CameraPreview _cameraPreview;
@@ -89,8 +89,8 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.video_capture);
         ButterKnife.bind(this);
-        uniqueId = getIntent().getStringExtra(Utility.UNIQUE_ID_INTENT);
-        _videoPath = Utility.getOutputMediaFile(uniqueId).getPath();
+        sUniqueId = getIntent().getStringExtra(Utility.UNIQUE_ID_INTENT);
+        _videoPath = Utility.getOutputMediaFile(sUniqueId).getPath();
         initializeCamera();
         final GestureDetector gestureDetector = new GestureDetector(
                 this,
@@ -122,11 +122,15 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
         } else {
             _cameraId = CameraInfo.CAMERA_FACING_BACK;
         }
-        mCamera = Camera.open(_cameraId);
-        _cameraPreview = new CameraPreview(this, _cameraId, mCamera);
+        sCamera = Camera.open(_cameraId);
+//        Parameters parameters = sCamera.getParameters();
+//        if (parameters.isZoomSupported()) {
+//            ZoomControls zoomControls = new ZoomControls(getApplicationContext());
+//        }
+        _cameraPreview = new CameraPreview(this, _cameraId, sCamera);
         _preview.removeAllViews();
         _preview.addView(_cameraPreview);
-        Utility.setCameraDisplayOrientation(this.getWindowManager(), _cameraId, mCamera);
+        Utility.setCameraDisplayOrientation(this.getWindowManager(), _cameraId, sCamera);
     }
 
     @OnClick(R.id.button_capture)
@@ -159,7 +163,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
     @OnClick(R.id.button_send)
     public void proceedCreationFlow(View view) {
         Intent dataBack = new Intent();
-        dataBack.putExtra(Utility.UNIQUE_ID_INTENT, uniqueId);
+        dataBack.putExtra(Utility.UNIQUE_ID_INTENT, sUniqueId);
         dataBack.putExtra(Utility.MESSAGE_EXTRA_INTENT, _etMessage.getText().toString());
         setResult(Activity.RESULT_OK, dataBack);
         finish();
@@ -167,9 +171,9 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
 
     protected void initializeCamera() {
         // Create an instance of Camera
-        mCamera = getCameraInstance();
+        sCamera = getCameraInstance();
         // Create our Preview view and set it as the content of our activity.
-        _cameraPreview = new CameraPreview(this, _cameraId, mCamera);
+        _cameraPreview = new CameraPreview(this, _cameraId, sCamera);
         _preview.addView(_cameraPreview);
     }
 
@@ -183,7 +187,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
             finish();
         }
         releaseMediaRecorder(); // release the MediaRecorder object
-        mCamera.lock();         // take camera access back from MediaRecorder
+        sCamera.lock();         // take camera access back from MediaRecorder
 
         // inform the user that recording has stopped
         _isRecording = false;
@@ -238,22 +242,22 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
     private boolean prepareVideoRecorder() {
         try {
             releaseCameraAndPreview();
-            mCamera = Camera.open(_cameraId);
+            sCamera = Camera.open(_cameraId);
         } catch (Exception e) {
             Log.e(VidtrainApplication.TAG, "failed to open Camera");
             e.printStackTrace();
         }
 
-        Utility.setCameraDisplayOrientation(this.getWindowManager(), _cameraId, mCamera);
+        Utility.setCameraDisplayOrientation(this.getWindowManager(), _cameraId, sCamera);
         if (_cameraId == CameraInfo.CAMERA_FACING_FRONT) {
-            mCamera.setDisplayOrientation(90);
+            sCamera.setDisplayOrientation(90);
         }
         _mediaRecorder = new MediaRecorder();
 
         // Step 1: Unlock and set camera to MediaRecorder
-        mCamera.unlock();
-        //mCamera.setDisplayOrientation(90);
-        _mediaRecorder.setCamera(mCamera);
+        sCamera.unlock();
+        //sCamera.setDisplayOrientation(90);
+        _mediaRecorder.setCamera(sCamera);
 
         // Step 2: Set sources
         _mediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
@@ -267,7 +271,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
 
         // Step 5: Set the preview output
         _mediaRecorder.setPreviewDisplay(_cameraPreview.getHolder().getSurface());
-        _mediaRecorder.setOrientationHint(VideoCaptureActivity.orientation);
+        _mediaRecorder.setOrientationHint(VideoCaptureActivity.sOrientation);
         // Only bitrate can reduce file size (not frame rate)
         _mediaRecorder.setVideoEncodingBitRate(500000);
         // Max parse file size is 10485760 bytes (~10MB)
@@ -292,7 +296,7 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
     @Override
     protected void onResume() {
         super.onResume();
-        if(mCamera == null){
+        if(sCamera == null){
             _preview.removeAllViews(); // We need to remove the preview
             initializeCamera();
         }
@@ -310,22 +314,22 @@ public class VideoCaptureActivity extends Activity implements MediaRecorder.OnIn
             _mediaRecorder.reset();   // clear recorder configuration
             _mediaRecorder.release(); // release the recorder object
             _mediaRecorder = null;
-            mCamera.lock();           // lock camera for later use
+            sCamera.lock();           // lock camera for later use
         }
     }
 
     private void releaseCamera() {
-        if (mCamera != null) {
-            mCamera.release();        // release the camera for other applications
-            mCamera = null;
+        if (sCamera != null) {
+            sCamera.release();        // release the camera for other applications
+            sCamera = null;
             _cameraPreview.getHolder().removeCallback(_cameraPreview);
         }
     }
 
     private void releaseCameraAndPreview() {
-        if (mCamera != null) {
-            mCamera.release();
-            mCamera = null;
+        if (sCamera != null) {
+            sCamera.release();
+            sCamera = null;
         }
     }
 

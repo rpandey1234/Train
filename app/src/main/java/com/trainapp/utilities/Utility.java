@@ -246,7 +246,7 @@ public class Utility {
             result = (info.orientation - degrees + 360) % 360;
         }
         Log.d(VidtrainApplication.TAG, "result: " + result);
-        VideoCaptureActivity.orientation = result;
+        VideoCaptureActivity.sOrientation = result;
         camera.setDisplayOrientation(result);
     }
 

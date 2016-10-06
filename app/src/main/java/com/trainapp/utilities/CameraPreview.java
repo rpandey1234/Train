@@ -76,7 +76,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         // start preview with new settings
         try {
             _camera.setDisplayOrientation(90);
-            // TODO(rahul): this is a major hack for Nexus 5x devices where camera orientation
+            // TODO(rahul): this is a major hack for Nexus 5x devices where camera sOrientation
             // is weird. Should be using Camera2 API.
             if (_cameraId == CameraInfo.CAMERA_FACING_FRONT && Build.MODEL.equals("Nexus 5X")) {
                 _camera.setDisplayOrientation(270);
