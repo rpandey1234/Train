@@ -71,7 +71,7 @@
         android:visibility="gone"
         android:singleLine="true"
         android:imeOptions="actionDone"
-        android:inputType="text"
+        android:inputType="textCapSentences"
         android:maxLength="40"
         />
 
