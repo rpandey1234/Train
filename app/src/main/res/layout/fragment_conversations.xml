@@ -12,7 +12,8 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvVidTrains"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            />
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <ProgressBar
@@ -22,7 +23,8 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:visibility="gone" />
+        android:visibility="gone"
+        />
 
     <TextView
         android:id="@+id/tvNoConversations"
@@ -34,5 +36,6 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/colorPrimary"
         android:textStyle="bold"
-        android:visibility="gone" />
+        android:visibility="gone"
+        />
 </RelativeLayout>

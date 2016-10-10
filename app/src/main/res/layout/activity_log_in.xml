@@ -15,7 +15,8 @@
         android:text="@string/app_name"
         android:textColor="@android:color/white"
         android:textSize="50sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        />
 
     <ImageView
         android:id="@+id/ivLogo"
@@ -25,7 +26,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="60dp"
         android:contentDescription="@string/app_logo"
-        android:src="@drawable/ic_train" />
+        android:src="@drawable/ic_train"
+        />
 
     <Button
         android:id="@+id/login_button"
@@ -41,7 +43,8 @@
         android:padding="10dp"
         android:text="@string/fb_login"
         android:textColor="@android:color/white"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        />
 
     <ProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/progressBar"
@@ -50,5 +53,6 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:visibility="gone" />
+        android:visibility="gone"
+        />
 </RelativeLayout>

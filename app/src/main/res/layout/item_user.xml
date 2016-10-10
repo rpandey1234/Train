@@ -27,6 +27,7 @@
         android:checkMark="?android:attr/listChoiceIndicatorMultiple"
         android:checkMarkTint="@android:color/holo_green_dark"
         android:textColor="@android:color/black"
-        android:layout_toRightOf="@id/friendImage" />
+        android:layout_toRightOf="@id/friendImage"
+        />
 
 </RelativeLayout>

@@ -21,7 +21,8 @@
             android:layout_marginRight="80dp"
             android:maxLines="4"
             android:ellipsize="end"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            />
 
         <LinearLayout
             android:id="@+id/participants"
@@ -34,13 +35,15 @@
             android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
             android:layout_toLeftOf="@+id/image_preview"
-            android:layout_toStartOf="@+id/image_preview" />
+            android:layout_toStartOf="@+id/image_preview"
+            />
 
         <TextView
             android:id="@+id/timestamp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/participants" />
+            android:layout_below="@id/participants"
+            />
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/image_preview"
@@ -52,6 +55,7 @@
             android:layout_alignTop="@+id/conversation_title"
             android:layout_margin="8dp"
             android:contentDescription="@string/image_preview"
-            app:riv_corner_radius="4dp" />
+            app:riv_corner_radius="4dp"
+            />
     </RelativeLayout>
 </android.support.v7.widget.CardView>
