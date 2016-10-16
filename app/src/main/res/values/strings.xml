@@ -32,6 +32,7 @@
     <string name="image_preview">preview</string>
     <string name="friends_using">Friends using Train</string>
     <string name="add_friends_instructions">Create your group:</string>
+    <string name="existing_group_instructions">Or send to existing groups:</string>
     <plurals name="others_plurals">
         <item quantity="one">%d other</item>
         <item quantity="other">%d others</item>
@@ -40,6 +41,10 @@
     <string name="save_success">Successfully saved Train!</string>
     <string name="update_success">Successfully updated Train!</string>
     <string name="add_success">Successfully added video!</string>
+    <plurals name="updated_vidtrains_success">
+        <item quantity="one">Successfully updated %d Train!</item>
+        <item quantity="other">Successfully updated %d Trains!</item>
+    </plurals>
     <string name="videos_expired">All these videos have expired!</string>
     <string name="not_long_enough">Sorry! That wasn\'t long enough</string>
     <string name="group_size_error">Sorry! You can only have up to %d others in your group.</string>

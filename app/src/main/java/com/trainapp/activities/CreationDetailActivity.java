@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseACL;
 import com.parse.ParseException;
@@ -23,6 +24,7 @@ import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 import com.trainapp.R;
 import com.trainapp.adapters.FriendsAdapter;
+import com.trainapp.adapters.VidtrainAdapter;
 import com.trainapp.models.Unseen;
 import com.trainapp.models.User;
 import com.trainapp.models.VidTrain;
@@ -42,6 +44,8 @@ import butterknife.OnClick;
 public class CreationDetailActivity extends AppCompatActivity {
 
     @Bind(R.id.friendsRecyclerView) RecyclerView _friendsRecyclerView;
+    @Bind(R.id.tvExistingGroupInstructions) TextView _existingGroupsInstructions;
+    @Bind(R.id.groupsRecyclerView) RecyclerView _vidtrainsRecyclerView;
     @Bind(R.id.noFriendsTextView) TextView _noFriendsTextView;
     @Bind(R.id.progressBar) ProgressBar _progressBar;
     @Bind(R.id.btnSubmit) Button _submitButton;
@@ -52,6 +56,7 @@ public class CreationDetailActivity extends AppCompatActivity {
     private FriendsAdapter _friendsAdapter;
     private Context _context;
     private String _message;
+    private VidtrainAdapter _vidtrainsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +81,36 @@ public class CreationDetailActivity extends AppCompatActivity {
                 _friendsAdapter.notifyDataSetChanged();
                 _progressBar.setVisibility(View.GONE);
                 _submitButton.setEnabled(true);
+            }
+        });
+
+        final List<VidTrain> vidtrains = new ArrayList<>();
+        _vidtrainsAdapter = new VidtrainAdapter(this, vidtrains);
+        _vidtrainsRecyclerView.setAdapter(_vidtrainsAdapter);
+        _vidtrainsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        _vidtrainsRecyclerView.setHasFixedSize(true);
+        ParseQuery<VidTrain> query = VidTrain.getQuery();
+        List<User> usersToMatch = new ArrayList<>();
+        usersToMatch.add(User.getCurrentUser());
+        query.whereContainedIn(VidTrain.COLLABORATORS, usersToMatch)
+                .orderByDescending("updatedAt")
+                .include(VidTrain.COLLABORATORS + "." + VidTrain.USER_KEY)
+                .include(VidTrain.VIDEOS_KEY)
+                .setLimit(10);
+        query.findInBackground(new FindCallback<VidTrain>() {
+            @Override
+            public void done(List<VidTrain> objects, ParseException e) {
+                if (e != null) {
+                    Log.e(VidtrainApplication.TAG, e.toString());
+                    return;
+                }
+                vidtrains.addAll(objects);
+                _vidtrainsAdapter.notifyDataSetChanged();
+                if (!vidtrains.isEmpty()) {
+                    _existingGroupsInstructions.setVisibility(View.VISIBLE);
+                    _vidtrainsRecyclerView.setVisibility(View.VISIBLE);
+                }
+
             }
         });
         _videoPath = getIntent().getStringExtra(MainActivity.VIDEO_PATH);
@@ -117,6 +152,24 @@ public class CreationDetailActivity extends AppCompatActivity {
                 video.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
+                        List<VidTrain> selectedVidtrains = _vidtrainsAdapter.getSelectedVidtrains();
+                        if (!selectedVidtrains.isEmpty()) {
+                            // Send to the selected vidtrains, do not create new train
+                            for (final VidTrain vidtrain : selectedVidtrains) {
+                                vidtrain.setVideos(vidtrain.maybeInitAndAdd(video));
+                                vidtrain.saveEventually();
+                                Utility.sendNotification(vidtrain, _context);
+                                Unseen.addUnseen(vidtrain);
+                            }
+                            _progressDialog.dismiss();
+                            String updatedMessage = _context.getResources().getQuantityString(
+                                    R.plurals.updated_vidtrains_success,
+                                    selectedVidtrains.size(),
+                                    selectedVidtrains.size());
+                            Toast.makeText(_context, updatedMessage, Toast.LENGTH_SHORT).show();
+                            finish();
+                            return;
+                        }
                         // Check to see if there is already a vidtrain with the same collaborators
                         ParseQuery<VidTrain> query = VidTrain.getQuery();
                         query.whereContainsAll(VidTrain.COLLABORATORS, collaborators);
