@@ -336,56 +336,48 @@ public class VidtrainLandingFragment extends Fragment {
                 // Need to re-fetch vidtrain since it becomes null on some phones/OS
                 final int videosCount = vidtrain.getVideosCount();
                 _tvVideoCount.setText(String.valueOf(videosCount + 1));
-                final Video video = new Video();
+
                 final User user = User.getCurrentUser();
                 final ParseFile parseFile = Utility.createParseFile(_videoPath);
                 if (parseFile == null) {
                     return;
                 }
                 Bitmap thumbnailBitmap = Utility.getImageBitmap(_videoPath);
-                final ParseFile parseThumbnail = Utility.createParseFileFromBitmap(thumbnailBitmap);
+                final ParseFile thumbnail = Utility.createParseFileFromBitmap(thumbnailBitmap);
+
                 parseFile.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
+                        final Video video = new Video();
                         video.setUser(user);
                         video.setVideoFile(parseFile);
                         video.setVidTrain(vidtrain);
-                        video.setThumbnail(parseThumbnail);
+                        video.setThumbnail(thumbnail);
                         video.setMessage(_videoMessage);
-                        video.saveInBackground(new SaveCallback() {
+
+                        vidtrain.setVideos(vidtrain.maybeInitAndAdd(video));
+                        vidtrain.saveInBackground(new SaveCallback() {
                             @Override
                             public void done(ParseException e) {
-                                vidtrain.setVideos(vidtrain.maybeInitAndAdd(video));
-                                vidtrain.saveInBackground(new SaveCallback() {
-                                    @Override
-                                    public void done(ParseException e) {
-                                        _progress.dismiss();
-                                        _tvVideoCount.setText(
-                                                String.valueOf(vidtrain.getVideosCount()));
-                                        Utility.sendNotification(vidtrain, getContext());
-                                        Unseen.addUnseen(vidtrain);
-                                        assert user != null;
-                                        user.put(User.VIDTRAINS_KEY, user.maybeInitAndAdd(vidtrain));
-                                        user.put(User.VIDEOS_KEY, user.maybeInitAndAdd(video));
-                                        user.saveInBackground(new SaveCallback() {
-                                            @Override
-                                            public void done(ParseException e) {
-                                                Toast.makeText(getContext(),
-                                                        R.string.add_success,
-                                                        Toast.LENGTH_SHORT).show();
-                                                // Reset Vidtrain Model
-                                                _vidtrainModel = new VidtrainModel(vidtrain,
-                                                        vidtrain.getVideosCount(),
-                                                        vidtrain.getGeneratedTitle(getResources()));
-                                                // Reload videos
-                                                setUpVideoMessages();
-                                                setUpSeenAndUnseenUsers();
-                                                _videosExpired.setVisibility(View.GONE);
-                                                _rvMessages.scrollToPosition(0);
-                                            }
-                                        });
-                                    }
-                                });
+                                _progress.dismiss();
+                                _tvVideoCount.setText(String.valueOf(vidtrain.getVideosCount()));
+                                Utility.sendNotification(vidtrain, getContext());
+                                Unseen.addUnseen(vidtrain);
+                                Toast.makeText(getContext(), R.string.add_success, Toast.LENGTH_SHORT)
+                                        .show();
+                                // Reset Vidtrain Model
+                                _vidtrainModel = new VidtrainModel(vidtrain,
+                                        vidtrain.getVideosCount(),
+                                        vidtrain.getGeneratedTitle(getResources()));
+                                // Reload videos
+                                setUpVideoMessages();
+                                setUpSeenAndUnseenUsers();
+                                _videosExpired.setVisibility(View.GONE);
+                                _rvMessages.scrollToPosition(0);
+                                assert user != null;
+                                user.put(User.VIDTRAINS_KEY, user.maybeInitAndAdd(vidtrain));
+                                user.put(User.VIDEOS_KEY, user.maybeInitAndAdd(video));
+                                user.saveInBackground();
                             }
                         });
                     }

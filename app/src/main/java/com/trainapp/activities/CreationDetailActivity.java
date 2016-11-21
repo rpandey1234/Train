@@ -134,20 +134,21 @@ public class CreationDetailActivity extends AppCompatActivity {
                 getResources().getString(R.string.saving),
                 getResources().getString(R.string.working_message),
                 true);
-        final Video video = new Video();
 
         final List<User> collaborators = new ArrayList<>();
         // collaborators is never empty since it always contains the current user
         collaborators.add(user);
         collaborators.addAll(_friendsAdapter.getCollaborators());
         Bitmap thumbnailBitmap = Utility.getImageBitmap(_videoPath);
-        final ParseFile parseThumbnail = Utility.createParseFileFromBitmap(thumbnailBitmap);
+        final ParseFile thumbnail = Utility.createParseFileFromBitmap(thumbnailBitmap);
+
         parseFile.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
+                final Video video = new Video();
                 video.setUser(user);
                 video.setVideoFile(parseFile);
-                video.setThumbnail(parseThumbnail);
+                video.setThumbnail(thumbnail);
                 video.setMessage(_message);
                 video.saveInBackground(new SaveCallback() {
                     @Override
@@ -196,8 +197,6 @@ public class CreationDetailActivity extends AppCompatActivity {
                                     vidTrain.saveInBackground(new SaveCallback() {
                                         @Override
                                         public void done(ParseException e) {
-                                            video.setVidTrain(vidTrain);
-                                            video.saveInBackground();
                                             user.put(User.VIDTRAINS_KEY, user.maybeInitAndAdd(vidTrain));
                                             user.put(User.VIDEOS_KEY, user.maybeInitAndAdd(video));
                                             user.saveInBackground(new SaveCallback() {
