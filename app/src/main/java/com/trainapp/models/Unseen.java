@@ -154,8 +154,10 @@ public class Unseen extends ParseObject {
         List<Video> allVideos = getVidtrain().getVideos();
         int unseenIndex = Utility.indexOf(allVideos, unseenVideos.get(0));
         if (unseenIndex == -1) {
-            throw new IllegalStateException(
-                    "Data corruption: could not find unseen video in list of vidtrain videos");
+            // Data corruption
+            Log.e(VidtrainApplication.TAG,
+                    "IllegalStateException: could not find unseen video in list of Train videos");
+            return allVideos.size() - 1;
         }
         return unseenIndex;
     }
