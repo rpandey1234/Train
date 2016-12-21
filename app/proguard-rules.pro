@@ -37,6 +37,7 @@
 -keepattributes Signature
 -dontwarn com.squareup.**
 -dontwarn okio.**
+-dontwarn okhttp3.**
 
 -keep class com.parse.NotificationCompat.* { *; }
 -dontwarn com.parse.NotificationCompat.**
