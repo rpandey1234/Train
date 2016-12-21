@@ -1,5 +1,7 @@
 package com.trainapp.utilities;
 
+import android.os.Bundle;
+
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
@@ -16,10 +18,12 @@ import java.util.List;
  */
 public class FacebookUtility {
     public static void getFacebookFriendsUsingApp(final FriendLoaderCallback friendLoader) {
+        Bundle parameters = new Bundle(1);
+        parameters.putInt("limit", 50);
         new GraphRequest(
                 AccessToken.getCurrentAccessToken(),
                 "/me/friends",
-                null,
+                parameters,
                 HttpMethod.GET,
                 new GraphRequest.Callback() {
                     @Override

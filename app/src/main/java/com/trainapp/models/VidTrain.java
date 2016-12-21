@@ -51,6 +51,9 @@ public class VidTrain extends ParseObject implements Serializable {
     }
 
     public Video getLatestVideo() {
+        if (getVideos().isEmpty()) {
+            return null;
+        }
         return getVideos().get(getVideosCount() - 1);
     }
 
