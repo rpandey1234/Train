@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "452312077295",
+    "firebase_url": "https://vidtrain-1374.firebaseio.com",
+    "project_id": "vidtrain-1374",
+    "storage_bucket": "vidtrain-1374.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:452312077295:android:07ce265c7c37945f",
+        "android_client_info": {
+          "package_name": "com.trainapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "452312077295-rvj37chgo6c7vrkqmlvf91cajal0jq8l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuRJXmU1zayb_ExsXcscsYNs4Vanvx5_c"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

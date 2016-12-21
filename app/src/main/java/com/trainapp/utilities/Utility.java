@@ -24,6 +24,7 @@ import com.google.common.io.Files;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.GraphResponse;
+import com.parse.ParseCloud;
 import com.parse.ParseFile;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
@@ -46,7 +47,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Utility {
 
@@ -193,22 +196,12 @@ public class Utility {
     }
 
     public static void sendNotification(User user, VidTrain vidtrain, Context context) {
-        JSONObject data = new JSONObject();
-        try {
-            data.put("alert", User.getCurrentUser().getName());
-            data.put("title", context.getString(R.string.app_name));
-            data.put("badge", "Increment");
-            data.put(Video.VIDTRAIN_KEY, vidtrain.getObjectId());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        ParseQuery<ParseInstallation> pushQuery = ParseInstallation.getQuery()
-                .whereEqualTo("user", user.getObjectId());
-        ParsePush push = new ParsePush();
-        push.setQuery(pushQuery);
-        push.setData(data);
-        push.sendInBackground();
+        Map<String, String> params = new HashMap<>();
+        params.put("alert", User.getCurrentUser().getName());
+        params.put("title", context.getString(R.string.app_name));
+        params.put("userId", user.getObjectId());
+        params.put(Video.VIDTRAIN_KEY, vidtrain.getObjectId());
+        ParseCloud.callFunctionInBackground("sendPush", params);
     }
 
     // Reference: https://developer.android.com/reference/android/hardware/Camera.html#setDisplayOrientation(int)

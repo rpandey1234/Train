@@ -31,11 +31,13 @@ public class VidtrainApplication extends Application {
 
         Stetho.initializeWithDefaults(this);
 
-        // Normal Parse Configuration
         FacebookSdk.sdkInitialize(getApplicationContext());
-        Parse.addParseNetworkInterceptor(new ParseStethoInterceptor());
-        Parse.initialize(this, "0y0WMVmGrDXEfgMgVNzA32ryMuM2gdanfMhH0NMY",
-                "MnKZ0GQhxkAblowrw4xVzftapFBT27yeEt4RKd7b");
+        Parse.initialize(new Parse.Configuration.Builder(getApplicationContext())
+                .applicationId("0y0WMVmGrDXEfgMgVNzA32ryMuM2gdanfMhH0NMY")
+                .clientKey(null)
+                .addNetworkInterceptor(new ParseStethoInterceptor())
+//                .server("http://localhost:1337/parse/").build());
+                .server("http://trainvideo.herokuapp.com/parse/").build());
         ParseFacebookUtils.initialize(getApplicationContext());
     }
 }
