@@ -17,7 +17,7 @@ public class Video extends ParseObject implements Serializable {
     public static final String THUMBNAIL_KEY = "thumbnail";
     public static final String MESSAGE_KEY = "message";
 
-    public final static long TIME_TO_EXPIRE = MILLIS_PER_DAY;
+    public final static long TIME_TO_EXPIRE = 7 * MILLIS_PER_DAY;
 
     public void setUser(ParseUser user) {
         put(USER_KEY, user);

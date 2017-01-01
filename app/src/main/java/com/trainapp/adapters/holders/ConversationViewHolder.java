@@ -42,16 +42,20 @@ public class ConversationViewHolder extends RecyclerView.ViewHolder implements O
     }
 
     public void bind(VidTrain vidTrain, int numUnseen) {
+        if (User.getCurrentUser() == null) {
+            return;
+        }
         int colorId = android.R.color.white;
         float alpha = 1.0f;
         Video latestVideo = vidTrain.getLatestVideo();
-        if (numUnseen > 0) {
-            colorId = R.color.cardBackground;
-        } else {
-            // Check if all videos expired. If so, gray out this conversation
-            if (latestVideo == null || latestVideo.isVideoExpired()) {
-                alpha = 0.4f;
-            }
+        // After the Dec. 2016 change with deleting older videos (but not deleting the relation
+        // from the Unseen object), the unseen highlighting is broken.
+//        if (numUnseen > 0) {
+//            colorId = R.color.cardBackground;
+//        }
+        // Check if all videos expired. If so, gray out this conversation
+        if (latestVideo == null || latestVideo.isVideoExpired()) {
+            alpha = 0.4f;
         }
         _cardView.setCardBackgroundColor(ContextCompat.getColor(_context, colorId));
         _cardView.setAlpha(alpha);
