@@ -65,6 +65,10 @@
             android:name="io.fabric.ApiKey"
             android:value="9ba9282424d60bca2b371ddeb7921c49f7582043"
             />
+        <meta-data
+            android:name="com.parse.push.notification_icon"
+            android:resource="@drawable/notif_icon_transparent"
+            />
         <activity
             android:name="com.trainapp.activities.MainActivity"
             android:configChanges="orientation|keyboardHidden"
