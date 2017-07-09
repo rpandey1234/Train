@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
     public static final int RESULT_TOO_SHORT = 99;
 
     @Bind(R.id.toolbar) Toolbar _toolbar;
-    @Bind(R.id.conversations_fragment) FrameLayout _conversationsFragment;
     @Bind(R.id.rootLayout) CoordinatorLayout _rootLayout;
     @Bind(R.id.fab_create) FloatingActionButton _fabCreate;
     @Bind(R.id.viewReveal) View _viewReveal;
